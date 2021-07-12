@@ -8,16 +8,31 @@ namespace WwiseTools.Basic
 {
     public class WwiseNode : IWwiseNode, IWwisePrintable
     {
+        /// <summary>
+        /// Create a Children List
+        /// </summary>
+        /// <param name="children"></param>
+        /// <returns></returns>
         public static WwiseNode NewChildrenList(List<IWwisePrintable> children)
         {
             return new WwiseNode("ChildrenList", children);
         }
 
+        /// <summary>
+        /// Create a Property List
+        /// </summary>
+        /// <param name="children"></param>
+        /// <returns></returns>
         public static WwiseNode NewPropertyList(List<IWwisePrintable> children)
         {
             return new WwiseNode("PropertyList", children);
         }
 
+        /// <summary>
+        /// Create a Reference List
+        /// </summary>
+        /// <param name="children"></param>
+        /// <returns></returns>
         public static WwiseNode NewReferenceList(List<IWwisePrintable> children)
         {
             return new WwiseNode("ReferenceList", children);

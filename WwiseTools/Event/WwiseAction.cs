@@ -15,8 +15,10 @@ namespace WwiseTools
         public WwiseAction(ActionType actionType, WwiseObjectRef reference) : base("", "Action")
         {
             AddProperty(new Properties.WwiseProperty("ActionType", "int16", ActionTypeCheck(actionType).ToString()));
-            WwiseNode referenceList = (WwiseNode)AddChildNode(new WwiseNode("ReferenceList"));
-            referenceList.AddChildNode(new WwiseNodeWithName("Reference", "Target", reference));
+            AddChildNode(WwiseNode.NewReferenceList(new List<IWwisePrintable>()
+            {
+                new WwiseNodeWithName("Reference", "Target", reference)
+            }));
         }
 
         private int ActionTypeCheck(ActionType type)
