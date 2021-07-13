@@ -30,6 +30,7 @@ namespace WwiseTools
             //eventParser.CommitChange();
 
             //Print()函数会将这个WorkUnit中的所有内容转换成字符串
+            Console.WriteLine(eventParser.GetSchemaVersion());
             Console.WriteLine(eventParser.ToString());
             
             Console.ReadLine();

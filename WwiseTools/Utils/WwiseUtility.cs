@@ -180,7 +180,7 @@ namespace WwiseTools.Utils
         {
             WwiseParser parser = new WwiseParser();
             string[] file = parser.Parse(@"Conversion Settings\Default Work Unit.wwu");
-            WwiseWorkUnit wu = parser.GetWorkUnit(file);
+            WwiseWorkUnit wu = parser.GetWorkUnit(parser.ToString());
             WwiseUnit unit = parser.GetUnitByName("Default Conversion Settings", file);
             string id = unit.id;
             string workUnitId = wu.id;
@@ -195,7 +195,7 @@ namespace WwiseTools.Utils
 
             WwiseParser parser = new WwiseParser();
             string[] file = parser.Parse("Master-Mixer Hierarchy\\Default Work Unit.wwu");
-            WwiseWorkUnit wu = parser.GetWorkUnit(file);
+            WwiseWorkUnit wu = parser.GetWorkUnit(parser.ToString());
             WwiseUnit unit = parser.GetUnitByName("Master Audio Bus", file);
             string id = unit.id;
             string workUnitId = wu.id;

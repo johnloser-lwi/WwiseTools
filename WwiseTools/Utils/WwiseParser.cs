@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Xml;
 using WwiseTools.Basic;
 
 namespace WwiseTools.Utils
@@ -335,52 +336,37 @@ namespace WwiseTools.Utils
         /// <returns></returns>
         public WwiseWorkUnit GetWorkUnit()
         {
-            return GetWorkUnit(WorkUnit);
+            return GetWorkUnit(ToString());
         }
 
         /// <summary>
-        /// 获取指定字符串数组中的工作单元信息
+        /// 获取XML模式版本
         /// </summary>
         /// <returns></returns>
-        public WwiseWorkUnit GetWorkUnit(string[] file)
+        public int GetSchemaVersion()
         {
-            string name="";
-            string type="";
-            string guid="";
-            foreach (var line in file)
-            {
-                if (line == null || line.Trim() == "")
-                {
-                    break;
-                }
-                if (GetTabCount(line) == 1)
-                {
-                    string tmp = line.Trim().Replace('<', ' ');
-                    tmp = tmp.Trim().Replace('>', ' ');
-                    type = tmp.Trim();
-                }
-                if (GetTabCount(line) == 2)
-                {
-                    var properties = line.Split(' ');
+            XmlDocument doc = new XmlDocument();
+            doc.LoadXml(ToString());
+            return Int32.Parse(doc.ChildNodes[1].Attributes[2].Value);
+        }
 
-                    int id_index = 0;
-                    string n = null;
+        /// <summary>
+        /// 获取指定字符串中的工作单元信息
+        /// </summary>
+        /// <param name="txt_file"></param>
+        /// <returns></returns>
+        public WwiseWorkUnit GetWorkUnit(string txt_file)
+        {
+            XmlDocument doc = new XmlDocument();
+            doc.LoadXml(txt_file);
+            //Console.WriteLine(doc.ChildNodes[1].Attributes[0].Value);
 
-                    n = GetName(ref id_index, properties);
+            string name = doc.ChildNodes[1].FirstChild.FirstChild.Attributes[0].Value;
+            string id = doc.ChildNodes[1].FirstChild.FirstChild.Attributes[1].Value.Replace("{", "").Replace("}", "").Trim();
+            string type = doc.ChildNodes[1].FirstChild.Name;
 
-                    n = n.Replace("Name=\"", "");
-                    n = n.Replace("\"", "");
-                    name = n.Trim();
+            return new WwiseWorkUnit(name, type, id);
 
-                    string g = properties[id_index].Replace("ID=\"{", "");
-                    g = g.Replace("}\"", "");
-                    g = g.Replace(">", "");
-                    guid = g.Trim();
-                    break;
-                }
-            }
-
-            return new WwiseWorkUnit(name, type, guid);
         }
 
         private string GetName(ref int index, string[] properties)
