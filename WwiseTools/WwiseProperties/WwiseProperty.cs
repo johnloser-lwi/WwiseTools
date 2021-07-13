@@ -42,6 +42,7 @@ namespace WwiseTools.Properties
 
         /// <summary>
         /// 初始化属性的名称、类型以及值
+        /// </summary>
         /// <param name="name"></param>
         /// <param name="type"></param>
         /// <param name="value"></param>
