@@ -29,10 +29,8 @@ namespace WwiseTools
             eventParser.AddChildToWorkUnit(action);
             //eventParser.CommitChange();
 
-            WwiseFolder folder = new WwiseFolder("ddd");
-
             //Print()函数会将这个WorkUnit中的所有内容转换成字符串
-            Console.WriteLine(folder.Print());
+            Console.WriteLine(eventParser.ToString());
             
             Console.ReadLine();
         }

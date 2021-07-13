@@ -376,7 +376,6 @@ namespace WwiseTools.Utils
                     g = g.Replace("}\"", "");
                     g = g.Replace(">", "");
                     guid = g.Trim();
-                    Console.WriteLine( "332" + name + guid);
                     break;
                 }
             }
