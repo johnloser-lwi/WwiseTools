@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace WwiseTools
 {
+    /// <summary>
+    /// Wwise的工作单元
+    /// </summary>
     public class WwiseWorkUnit : WwiseUnit, IWwiseID, IWwisePrintable
     {
 
@@ -14,17 +17,30 @@ namespace WwiseTools
 
         public string id { get { return guid;  }}
 
+        /// <summary>
+        /// 获取工作单元的xml模式版本
+        /// </summary>
         public int SchemaVersion { get => schemaVersion; set { schemaVersion = value; xml_head = String.Format("<WwiseDocument Type=\"WorkUnit\" ID=\"{{{0}}}\" SchemaVersion=\"{1}\">", id, schemaVersion); } }
 
         private int schemaVersion = 97;
 
-
+        /// <summary>
+        /// 创建一个包含名称、类型的工作单元
+        /// </summary>
+        /// <param name="_name"></param>
+        /// <param name="u_type"></param>
         public WwiseWorkUnit(string _name, string u_type): base(_name, u_type)
         {
             Init(_name, u_type, Guid.NewGuid().ToString().ToUpper());
             AddChildrenList();
         }
 
+        /// <summary>
+        /// 创建一个包含名称、类型的工作单元，并设置GUID
+        /// </summary>
+        /// <param name="_name"></param>
+        /// <param name="u_type"></param>
+        /// <param name="guid"></param>
         public WwiseWorkUnit(string _name, string u_type, string guid):base(_name, u_type, guid)
         {
 

@@ -9,6 +9,9 @@ using WwiseTools.Utils;
 
 namespace WwiseTools
 {
+    /// <summary>
+    /// 容器继承WwiseUnit，默认引用了Default Conversion Settings, Master Audio Bus
+    /// </summary>
     public class WwiseContainer : WwiseUnit
     {
 

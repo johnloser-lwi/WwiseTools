@@ -8,10 +8,19 @@ using WwiseTools.Properties;
 
 namespace WwiseTools.Audio
 {
+    /// <summary>
+    /// Wwise中的Music Playlist Container
+    /// </summary>
     public class WwiseMusicPlaylistContainer : WwiseContainer
     {
         WwiseMusicPlaylistItem playlistItem;
 
+        /// <summary>
+        /// 初始化名称、类型以及循环(默认为1)
+        /// </summary>
+        /// <param name="_name"></param>
+        /// <param name="playlistType"></param>
+        /// <param name="loopCount"></param>
         public WwiseMusicPlaylistContainer(string _name, WwiseMusicPlaylistItem.PlaylistType playlistType, int loopCount = 1) : base(_name, "MusicPlaylistContainer")
         {
             AddChildrenList();
@@ -19,6 +28,12 @@ namespace WwiseTools.Audio
             InitPlaylist(playlistType, loopCount);
         }
 
+        /// <summary>
+        /// 设置速度与拍号信息
+        /// </summary>
+        /// <param name="tempo"></param>
+        /// <param name="timeSigUpper"></param>
+        /// <param name="timeSigLower"></param>
         public void SetTempoAndTimeSignature(float tempo, int timeSigUpper, int timeSigLower)
         {
             AddProperty(new WwiseProperty("Tempo", "Real64", tempo.ToString()));
@@ -26,6 +41,11 @@ namespace WwiseTools.Audio
             AddProperty(new WwiseProperty("TimeSignatureUpper", "int16", timeSigUpper.ToString()));
         }
 
+        /// <summary>
+        /// 添加Music Segment并将其添加至默认的Playlist Item中
+        /// </summary>
+        /// <param name="segment"></param>
+        /// <returns></returns>
         public WwiseMusicSegment AddSegment(WwiseMusicSegment segment)
         {
             AddChild(segment);
@@ -33,6 +53,12 @@ namespace WwiseTools.Audio
             return segment;
         }
 
+        /// <summary>
+        /// 添加Playlist Item，设置类型以及循环并返回该组
+        /// </summary>
+        /// <param name="playlistType"></param>
+        /// <param name="loopCount"></param>
+        /// <returns></returns>
         public WwiseMusicPlaylistItem AddGroup(WwiseMusicPlaylistItem.PlaylistType playlistType, int loopCount = 1)
         {
             var group = new WwiseMusicPlaylistItem(playlistType, loopCount);

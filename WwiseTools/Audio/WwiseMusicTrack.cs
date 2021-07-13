@@ -8,6 +8,9 @@ using WwiseTools.Properties;
 
 namespace WwiseTools.Audio
 {
+    /// <summary>
+    /// Wwise中的Music Track
+    /// </summary>
     public class WwiseMusicTrack : WwiseSound
     {
         public enum TrackType { Normal, RandomStep, SequenceStep, Switch }
@@ -23,6 +26,14 @@ namespace WwiseTools.Audio
             AddChildNode(new WwiseNode("SequenceList", seq));
         }
 
+        /// <summary>
+        /// 设置Stream模式
+        /// </summary>
+        /// <param name="stream"></param>
+        /// <param name="nonCache"></param>
+        /// <param name="zeroLatency"></param>
+        /// <param name="preFetchLength"></param>
+        /// <param name="lookAheadTime"></param>
         public void SetStream(bool stream, bool nonCache, bool zeroLatency, int preFetchLength = 100, int lookAheadTime = 100)
         {
             base.SetStream(stream, nonCache, zeroLatency, preFetchLength);

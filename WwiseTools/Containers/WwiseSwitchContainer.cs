@@ -7,6 +7,10 @@ using WwiseTools.Basic;
 
 namespace WwiseTools
 {
+ 
+    /// <summary>
+    /// Wwise中的Switch Container
+    /// </summary>
     public class WwiseSwitchContainer : WwiseContainer
     {
         public WwiseSwitchContainer(string _name) : base(_name, "SwitchContainer")

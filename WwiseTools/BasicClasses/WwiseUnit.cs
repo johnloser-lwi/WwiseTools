@@ -9,8 +9,14 @@ using WwiseTools.Utils;
 
 namespace WwiseTools
 {
+    /// <summary>
+    /// 所有可以被Wwise显示的节点被称为单元(Unit)
+    /// </summary>
     public class WwiseUnit : WwiseNode, IWwiseID, IWwiseName
     {
+        /// <summary>
+        /// 获取该单元的所有子单元
+        /// </summary>
         public WwiseNode Children => children;
         protected WwiseNode children;
 
@@ -18,55 +24,29 @@ namespace WwiseTools
         protected WwiseNode properties;
         protected List<WwiseProperty> propertyList = new List<WwiseProperty>();
 
-        public static WwiseUnit CreateSound(string name, string language, string file)
-        {
-
-            if (WwiseUtility.ProjectPath == null)
-            {
-                Console.WriteLine("WwiseUtility not initialized!");
-                return null;
-            }
-            WwiseUnit sound = new WwiseUnit(name, "Sound");
-
-            if (language != "SFX")
-            {
-                sound.AddChildNode(WwiseNode.NewPropertyList(new List<IWwisePrintable>()
-                {
-                    new WwiseProperty("IsVoice", "bool", "True")
-                }));
-            }
-           
-
-            WwiseUnit audioFileSource = new WwiseUnit(name, "AudioFileSource");
-            audioFileSource.AddChildNode(new WwiseProperty("Language", language));
-            audioFileSource.AddChildNode(new WwiseProperty("AudioFile", file));
-
-            sound.AddChildNode(WwiseNode.NewReferenceList(new List<IWwisePrintable>()
-            {
-                WwiseUtility.DefualtConversionSettings,
-                WwiseUtility.MasterAudioBus
-            }));
-            sound.AddChildNode(WwiseNode.NewChildrenList(new List<IWwisePrintable>()
-            {
-                audioFileSource
-            }));
-
-            
-            //sound_cl.AddChildNode(audioFileSource);
-            return sound;
-        }
-
         public string name => unit_name;
 
         public string id => guid;
 
         protected string guid;
         protected string unit_name;
+
+        /// <summary>
+        /// 创建一个包含名称、类型的单元
+        /// </summary>
+        /// <param name="_name"></param>
+        /// <param name="u_type"></param>
         public WwiseUnit(string _name, string u_type) : base(u_type)
         {
             Init(_name, u_type, Guid.NewGuid().ToString().ToUpper());
         }
 
+        /// <summary>
+        /// 创建一个包含名称、类型的单元，并设置GUID
+        /// </summary>
+        /// <param name="_name"></param>
+        /// <param name="u_type"></param>
+        /// <param name="guid"></param>
         public WwiseUnit(string _name, string u_type, string guid): base(u_type)
         {
             Init(_name, u_type, guid);
@@ -81,6 +61,11 @@ namespace WwiseTools
             xml_tail = String.Format("</{0}>", u_type);
         }
 
+        /// <summary>
+        /// 添加子单元
+        /// </summary>
+        /// <param name="child"></param>
+        /// <returns></returns>
         public virtual WwiseUnit AddChild(WwiseUnit child)
         {
             AddChildrenList();
@@ -88,6 +73,12 @@ namespace WwiseTools
             return child;
         }
 
+
+        /// <summary>
+        /// 为单元添加属性
+        /// </summary>
+        /// <param name="property"></param>
+        /// <returns></returns>
         public virtual WwiseProperty AddProperty(WwiseProperty property)
         {
             if (properties == null)
@@ -117,9 +108,6 @@ namespace WwiseTools
             return property;
         }
 
-        /// <summary>
-        /// Generate children list and add it anyway.
-        /// </summary>
         protected virtual void AddChildrenList()
         {
             if (children != null) return;

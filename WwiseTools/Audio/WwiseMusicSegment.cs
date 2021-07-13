@@ -10,17 +10,32 @@ using WwiseTools.Utils;
 
 namespace WwiseTools.Audio
 {
+
+    /// <summary>
+    /// Wwise中的Music Segment
+    /// </summary>
     public class WwiseMusicSegment : WwiseContainer
     {
         List<WwiseMusicCue> cueList = new List<WwiseMusicCue>();
 
         WwiseNode cues;
+
+        /// <summary>
+        /// 初始化名称
+        /// </summary>
+        /// <param name="_name"></param>
         public WwiseMusicSegment(string _name) : base(_name, "MusicSegment")
         {
             AddChildrenList();
             AddDefaultCue(new WwiseMusicCue("Entry Cue", WwiseMusicCue.CueType.Entry));
         }
 
+        /// <summary>
+        /// 设置速度与拍号信息
+        /// </summary>
+        /// <param name="tempo"></param>
+        /// <param name="timeSigUpper"></param>
+        /// <param name="timeSigLower"></param>
         public void SetTempoAndTimeSignature(float tempo, int timeSigUpper, int timeSigLower)
         {
             AddProperty(new WwiseProperty("Tempo", "Real64", tempo.ToString()));
@@ -28,6 +43,13 @@ namespace WwiseTools.Audio
             AddProperty(new WwiseProperty("TimeSignatureUpper", "int16", timeSigUpper.ToString()));
         }
 
+        /// <summary>
+        /// 添加轨道，需要轨道名、文件以及轨道类型
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="file"></param>
+        /// <param name="trackType"></param>
+        /// <returns></returns>
         public WwiseMusicTrack AddTrack(string name, string file, WwiseMusicTrack.TrackType trackType)
         {
             float length = 0;
@@ -70,6 +92,11 @@ namespace WwiseTools.Audio
             cues.AddChildNode(newCue);
         }
 
+        /// <summary>
+        /// 添加自定义Cue
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="time"></param>
         public void AddCue(string name, float time)
         {
             WwiseMusicCue newCue = new WwiseMusicCue(name, WwiseMusicCue.CueType.Custom);
@@ -78,6 +105,10 @@ namespace WwiseTools.Audio
             //RefreshCue();
         }
 
+        /// <summary>
+        /// 移除自定义Cue
+        /// </summary>
+        /// <param name="name"></param>
         public void RemoveCue(string name)
         {
             foreach (var cue in cueList)

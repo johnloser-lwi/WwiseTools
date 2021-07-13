@@ -9,6 +9,9 @@ using WwiseTools.Basic;
 
 namespace WwiseTools.Utils
 {
+    /// <summary>
+    /// 用于解析现有工作单元(Work Unit)的工具
+    /// </summary>
     public class WwiseParser
     {
         public string[] WorkUnit => workUnit;
@@ -26,6 +29,11 @@ namespace WwiseTools.Utils
             }
         }
 
+        /// <summary>
+        /// 根据文件路径解析工作单元，并返回一个字符串数组
+        /// </summary>
+        /// <param name="file_path"></param>
+        /// <returns></returns>
         public string[] Parse(string file_path)
         {
             string _path = Path.Combine(WwiseUtility.ProjectPath, file_path);
@@ -61,12 +69,21 @@ namespace WwiseTools.Utils
             return workUnit = lines.ToArray();
         }
 
+        /// <summary>
+        /// 根据指定字符串解析工作单元，并返回一个字符串数组
+        /// </summary>
+        /// <param name="text"></param>
+        /// <returns></returns>
         public string[] ParseText(string text)
         {
             var result = Regex.Split(text, "\r\n|\r|\n");
             return result;
         }
 
+        /// <summary>
+        /// 将对于该工作单元的修改保存，设置是否为原始工作单元创建备份(默认为true)
+        /// </summary>
+        /// <param name="backup"></param>
         public void CommitChange(bool backup = true)
         {
             File.Copy(path, path + ".backup", true);
@@ -78,6 +95,11 @@ namespace WwiseTools.Utils
             File.WriteAllText(path, text, Encoding.UTF8);
         }
 
+
+        /// <summary>
+        /// 为工作单元添加子单元
+        /// </summary>
+        /// <param name="child"></param>
         public void AddChildToWorkUnit(WwiseUnit child)
         {
             if (WorkUnit == null)
@@ -114,6 +136,12 @@ namespace WwiseTools.Utils
             }
         }
 
+        /// <summary>
+        /// 为单元添加子单元，需要该单元的名称、类型以及子单元
+        /// </summary>
+        /// <param name="unitName"></param>
+        /// <param name="type"></param>
+        /// <param name="child"></param>
         public void AddChildToUnit(string unitName, string type, WwiseUnit child)
         {
             if (WorkUnit == null)
@@ -248,6 +276,10 @@ namespace WwiseTools.Utils
             }
         }
 
+        /// <summary>
+        /// 将Parser转换成字符串输出
+        /// </summary>
+        /// <returns></returns>
         public override string ToString()
         {
             string result = "";
@@ -258,6 +290,12 @@ namespace WwiseTools.Utils
             return result;
         }
 
+        /// <summary>
+        /// 通过名称搜索单元，需要一个parser的字符串数组
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="file"></param>
+        /// <returns></returns>
         public WwiseUnit GetUnitByName(string name, string[] file)
         {
             string type = "";
@@ -291,11 +329,19 @@ namespace WwiseTools.Utils
             return new WwiseUnit(name, type, guid);
         }
 
+        /// <summary>
+        /// 获取Parser中的工作单元信息
+        /// </summary>
+        /// <returns></returns>
         public WwiseWorkUnit GetWorkUnit()
         {
             return GetWorkUnit(WorkUnit);
         }
 
+        /// <summary>
+        /// 获取指定字符串数组中的工作单元信息
+        /// </summary>
+        /// <returns></returns>
         public WwiseWorkUnit GetWorkUnit(string[] file)
         {
             string name="";

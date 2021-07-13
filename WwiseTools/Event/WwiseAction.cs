@@ -8,10 +8,21 @@ using WwiseTools.Basic;
 
 namespace WwiseTools
 {
+    /// <summary>
+    /// Wwise事件中的Action
+    /// </summary>
     public class WwiseAction : WwiseUnit
     {
+        /// <summary>
+        /// Action类型
+        /// </summary>
         public enum ActionType { Play, Stop, StopAll, Pause, PauseAll, Resume, ResumeAll, Break, Seek, SeekAll, PostEvent }
 
+        /// <summary>
+        /// 初始化Action Type以及一个Wwise的物体应用
+        /// </summary>
+        /// <param name="actionType"></param>
+        /// <param name="reference"></param>
         public WwiseAction(ActionType actionType, WwiseObjectRef reference) : base("", "Action")
         {
             AddProperty(new Properties.WwiseProperty("ActionType", "int16", ActionTypeCheck(actionType).ToString()));

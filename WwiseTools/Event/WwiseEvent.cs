@@ -7,6 +7,9 @@ using WwiseTools.Basic;
 
 namespace WwiseTools
 {
+    /// <summary>
+    /// Wwise中的事件
+    /// </summary>
     public class WwiseEvent : WwiseUnit
     {
         public WwiseEvent(string _name) : base(_name, "Event")

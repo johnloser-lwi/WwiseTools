@@ -9,10 +9,17 @@ using WwiseTools.Utils;
 
 namespace WwiseTools
 {
+    /// <summary>
+    /// Wwise中的Sequence Contianer
+    /// </summary>
     public class WwiseSequenceContainer : WwiseRandomContainer
     {
-        WwiseNode PlayList => playlist;
+        /// <summary>
+        /// 获取播放列表(Playlist)
+        /// </summary>
+        public WwiseNode PlayList => playlist;
         WwiseNode playlist;
+
 
         public WwiseSequenceContainer(string _name) : base(_name)
         {
@@ -33,7 +40,10 @@ namespace WwiseTools
         }
 
         
-
+        /// <summary>
+        /// 设置重新开始或者倒序播放
+        /// </summary>
+        /// <param name="restart"></param>
         public void SetEndRestartOrBackward(bool restart)
         {
             int s = 0;
