@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using WwiseTools.Utils;
 
 namespace WwiseTools
 {
@@ -20,9 +21,7 @@ namespace WwiseTools
         /// <summary>
         /// 获取工作单元的xml模式版本
         /// </summary>
-        public int SchemaVersion { get => schemaVersion; set { schemaVersion = value; xml_head = String.Format("<WwiseDocument Type=\"WorkUnit\" ID=\"{{{0}}}\" SchemaVersion=\"{1}\">", id, schemaVersion); } }
-
-        private int schemaVersion = 97;
+        public int SchemaVersion { get => WwiseUtility.SchemaVersion; }
 
         /// <summary>
         /// 创建一个包含名称、类型的工作单元
@@ -74,7 +73,7 @@ namespace WwiseTools
             unit_name = _name;
             this.u_type = u_type;
             this.guid = guid;
-            xml_head = String.Format(xml_head, id, schemaVersion);
+            xml_head = String.Format(xml_head, id, SchemaVersion);
 
             xml_head = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" + xml_head;
             xml_head += String.Format("\n\t<{0}>", type);

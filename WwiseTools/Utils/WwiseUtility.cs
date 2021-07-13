@@ -152,12 +152,15 @@ namespace WwiseTools.Utils
 
         private static string file_path;
         private static string project_path;
+        private static int schema_version;
 
         private static  WwiseNodeWithName default_conversion_settings;
         private static WwiseNodeWithName master_audio_bus;
 
         public static string FilePath { get => file_path; set => file_path = value; }
         public static string ProjectPath { get => project_path; }
+
+        public static int SchemaVersion => schema_version;
 
         /// <summary>
         /// 设置是否执行复制
@@ -187,6 +190,7 @@ namespace WwiseTools.Utils
             WwiseNodeWithName reference = new WwiseNodeWithName("Reference", "Conversion");
             reference.AddChildNode(new WwiseObjectRef("Default Conversion Settings", id, workUnitId));
 
+            schema_version = parser.GetSchemaVersion();
             default_conversion_settings = reference;
         }
 
