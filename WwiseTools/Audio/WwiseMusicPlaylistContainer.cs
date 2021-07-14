@@ -13,7 +13,12 @@ namespace WwiseTools.Audio
     /// </summary>
     public class WwiseMusicPlaylistContainer : WwiseContainer
     {
+
+        public WwiseMusicPlaylistItem Playlist => playlistItem;
         WwiseMusicPlaylistItem playlistItem;
+
+        public List<WwiseMusicSegment> MusicSegments => segments;
+        List<WwiseMusicSegment> segments;
 
         /// <summary>
         /// 初始化名称、类型以及循环(默认为1)
@@ -41,15 +46,30 @@ namespace WwiseTools.Audio
             AddProperty(new WwiseProperty("TimeSignatureUpper", "int16", timeSigUpper.ToString()));
         }
 
-        /// <summary>
-        /// 添加Music Segment并将其添加至默认的Playlist Item中
-        /// </summary>
-        /// <param name="segment"></param>
-        /// <returns></returns>
+        
         public WwiseMusicSegment AddSegment(WwiseMusicSegment segment)
         {
+            if (segments == null) segments = new List<WwiseMusicSegment>();
             AddChild(segment);
             playlistItem.AddChild(new WwiseMusicPlaylistItem(new WwiseSegmentRef(segment.name, segment.id)));
+
+
+            foreach (var c in Children.body)
+            {
+                try
+                {
+                    WwiseMusicSegment s = (WwiseMusicSegment)c;
+                    if (s != null)
+                    {
+                        segments.Add(s);
+                    }
+                }
+                catch
+                {
+                    continue;
+                }
+            }
+
             return segment;
         }
 
@@ -67,10 +87,30 @@ namespace WwiseTools.Audio
             return group;
         }
 
+        /// <summary>
+        /// 通过名称查找包含的MusicSegment
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public WwiseMusicSegment FindSegmentByName(string name)
+        {
+            foreach (var s in MusicSegments)
+            {
+                if (s.name == name)
+                {
+                    return s;
+                }
+            }
+
+            return null;
+        }
+
+
         private void InitPlaylist(WwiseMusicPlaylistItem.PlaylistType playlistType, int loopCount = 1)
         {
             WwiseNode playlist = (WwiseNode)AddChildNode(new WwiseNode("Playlist"));
             playlistItem = (WwiseMusicPlaylistItem)playlist.AddChildNode(new WwiseMusicPlaylistItem(playlistType, loopCount));
+            
         }
 
         private void AddTransitionList()

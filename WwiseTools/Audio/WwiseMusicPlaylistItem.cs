@@ -40,6 +40,31 @@ namespace WwiseTools.Audio
             AddChildNode(segment);
         }
 
+        /// <summary>
+        /// 将SegmentRef其添加至Playlist Item中
+        /// </summary>
+        /// <param name="segment"></param>
+        /// <returns></returns>
+        public WwiseSegmentRef AddSegment(WwiseSegmentRef segment)
+        {
+            AddChild(new WwiseMusicPlaylistItem(segment));
+            return segment;
+        }
+
+        /// <summary>
+        /// 添加Playlist Item，设置类型以及循环并返回该组
+        /// </summary>
+        /// <param name="playlistType"></param>
+        /// <param name="loopCount"></param>
+        /// <returns></returns>
+        public WwiseMusicPlaylistItem AddGroup(WwiseMusicPlaylistItem.PlaylistType playlistType, int loopCount = 1)
+        {
+            var group = new WwiseMusicPlaylistItem(playlistType, loopCount);
+            AddChild(group);
+
+            return group;
+        }
+
         private int PlaylistTypeCheck(PlaylistType type)
         {
             switch (type)

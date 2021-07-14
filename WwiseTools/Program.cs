@@ -18,6 +18,12 @@ namespace WwiseTools
 
             WwiseMusicPlaylistContainer container = WwiseUtility.GenerateMusicPlaylistFromFolder(@"TestTrapTrack", WwiseMusicPlaylistItem.PlaylistType.SequenceContinous, 0);
             container.SetTempoAndTimeSignature(140, 4, 4);
+            var group = container.Playlist.AddGroup(WwiseMusicPlaylistItem.PlaylistType.RandomContinous, 1);
+            WwiseMusicSegment track = (WwiseMusicSegment)container.Children.body[0];
+            group.AddSegment(new WwiseSegmentRef(track.name, track.id));
+
+            Console.WriteLine("id {0}", container.FindSegmentByName("TrapTest").id);
+
             WwiseParser parser = new WwiseParser();
             parser.Parse(@"Interactive Music Hierarchy/New Work Unit.wwu");
             parser.AddChildToWorkUnit(container);
@@ -30,8 +36,8 @@ namespace WwiseTools
             //eventParser.CommitChange();
 
             //Print()函数会将这个WorkUnit中的所有内容转换成字符串
-            Console.WriteLine(eventParser.GetSchemaVersion());
-            Console.WriteLine(eventParser.ToString());
+            //Console.WriteLine(eventParser.GetSchemaVersion());
+            //Console.WriteLine(eventParser.ToString());
             
             Console.ReadLine();
         }
