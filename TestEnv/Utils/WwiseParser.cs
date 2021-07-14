@@ -32,6 +32,22 @@ namespace WwiseTools.Utils
             }
         }
 
+        internal WwiseParser(XmlDocument xmlDocument)
+        {
+            this.xmlDocument = xmlDocument;
+
+            if (WwiseUtility.ProjectPath == null)
+            {
+                Console.WriteLine("WwiseUtility not initialized!");
+                return;
+            }
+        }
+
+        public static WwiseParser CreateParserFromNode(WwiseNode node)
+        {
+            return new WwiseParser(node.XML);
+        }
+
         public XmlDocument Document => xmlDocument; // Temp
         private XmlDocument xmlDocument;
 

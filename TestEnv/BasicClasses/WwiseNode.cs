@@ -49,6 +49,8 @@ namespace WwiseTools.Basic
 
         public virtual string Type => node.Name;
 
+        public virtual XmlDocument XML => xmlDocument;
+
         //public string head => xml_head;
 
         //public string tail => xml_tail;
@@ -86,7 +88,9 @@ namespace WwiseTools.Basic
         /// <param name="child"></param>
         public WwiseNode(string u_type, WwiseParser parser, WwiseNode child)
         {
-            xmlDocument = parser.Document;
+
+            if (parser != null) xmlDocument = parser.Document;
+            else xmlDocument = new XmlDocument();
             node = xmlDocument.CreateElement(u_type);
 
             this.AddChildNode(child);
@@ -99,7 +103,8 @@ namespace WwiseTools.Basic
         /// <param name="children"></param>
         public WwiseNode(string u_type, WwiseParser parser, List<WwiseNode> children)
         {
-            xmlDocument = parser.Document;
+            if (parser != null) xmlDocument = parser.Document;
+            else xmlDocument = new XmlDocument();
             node = xmlDocument.CreateElement(u_type);
 
             foreach (var c in children)
