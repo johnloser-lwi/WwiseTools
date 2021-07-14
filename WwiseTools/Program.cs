@@ -19,7 +19,7 @@ namespace WwiseTools
             WwiseMusicPlaylistContainer container = WwiseUtility.GenerateMusicPlaylistFromFolder(@"TestTrapTrack", WwiseMusicPlaylistItem.PlaylistType.SequenceContinous, 0);
             container.SetTempoAndTimeSignature(140, 4, 4);
             var group = container.Playlist.AddGroup(WwiseMusicPlaylistItem.PlaylistType.RandomContinous, 1);
-            WwiseMusicSegment track = (WwiseMusicSegment)container.Children.body[0];
+            WwiseMusicSegment track = (WwiseMusicSegment)container.Children.ChildNodes[0];
             group.AddSegment(new WwiseSegmentRef(track.name, track.id));
 
             Console.WriteLine("id {0}", container.FindSegmentByName("TrapTest").id);

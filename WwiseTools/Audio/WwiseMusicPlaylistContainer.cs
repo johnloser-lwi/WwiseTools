@@ -54,7 +54,7 @@ namespace WwiseTools.Audio
             playlistItem.AddChild(new WwiseMusicPlaylistItem(new WwiseSegmentRef(segment.name, segment.id)));
 
 
-            foreach (var c in Children.body)
+            foreach (var c in Children.ChildNodes)
             {
                 try
                 {

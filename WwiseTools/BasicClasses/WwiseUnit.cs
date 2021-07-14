@@ -94,7 +94,7 @@ namespace WwiseTools
                 if (p.Name == null) continue;
                 if (p.Name == property.Name)
                 {
-                    properties.body.RemoveAt(remove_index);
+                    properties.ChildNodes.RemoveAt(remove_index);
                     remove = true;
                     break;
                     //propertyList.Remove(p);

@@ -20,7 +20,7 @@ namespace WwiseTools.Basic
         /// </summary>
         /// <param name="children"></param>
         /// <returns></returns>
-        public static WwiseNode NewChildrenList(List<IWwisePrintable> children, WwiseParser parser)
+        public static WwiseNode NewChildrenList(WwiseParser parser)
         {
             return new WwiseNode("ChildrenList", parser);
         }
@@ -30,7 +30,7 @@ namespace WwiseTools.Basic
         /// </summary>
         /// <param name="children"></param>
         /// <returns></returns>
-        public static WwiseNode NewPropertyList(List<IWwisePrintable> children, WwiseParser parser)
+        public static WwiseNode NewPropertyList(WwiseParser parser)
         {
             return new WwiseNode("PropertyList", parser);
         }
@@ -40,14 +40,14 @@ namespace WwiseTools.Basic
         /// </summary>
         /// <param name="children"></param>
         /// <returns></returns>
-        public static WwiseNode NewReferenceList(List<IWwisePrintable> children, WwiseParser parser)
+        public static WwiseNode NewReferenceList(WwiseParser parser)
         {
             return new WwiseNode("ReferenceList", parser);
         }
 
         //public virtual int tabs { get => p_tabs; set { p_tabs = value; } }
 
-        public string Type => node.Name;
+        public virtual string Type => node.Name;
 
         //public string head => xml_head;
 
@@ -135,7 +135,7 @@ namespace WwiseTools.Basic
             using (var stringWriter = new StringWriter())
             using (var xmlTextWriter = XmlWriter.Create(stringWriter))
             {
-                xmlDocument.WriteTo(xmlTextWriter);
+                Node.WriteTo(xmlTextWriter);
                 xmlTextWriter.Flush();
                 return stringWriter.GetStringBuilder().ToString();
             }

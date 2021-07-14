@@ -81,7 +81,7 @@ namespace WwiseTools.Audio
                     if (cue.name == newCue.name)
                     {
                         //cueList.Remove(cue);
-                        cues.body.Remove(cue);
+                        cues.ChildNodes.Remove(cue);
                     }
                 }
                 if (remove != null) cueList.Remove(remove);
@@ -115,7 +115,7 @@ namespace WwiseTools.Audio
             {
                 if (cue.name == name)
                 {
-                    cues.body.Remove(cue);
+                    cues.ChildNodes.Remove(cue);
                     cueList.Remove(cue);
                 }
             }

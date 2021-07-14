@@ -14,7 +14,7 @@ namespace WwiseTools
     public class WwiseWorkUnit : WwiseUnit, IWwiseID, IWwisePrintable
     {
 
-        public override int tabs { get => 0; set { return; } }
+        //public override int tabs { get => 0; set { return; } }
 
         public string id { get { return guid;  }}
 
@@ -76,9 +76,9 @@ namespace WwiseTools
             xml_head = String.Format(xml_head, id, SchemaVersion);
 
             xml_head = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" + xml_head;
-            xml_head += String.Format("\n\t<{0}>", type);
+            xml_head += String.Format("\n\t<{0}>", Type);
             xml_head += String.Format("\n\t\t<WorkUnit Name=\"{0}\" ID=\"{{{1}}}\">", unit_name, guid);
-            xml_tail = String.Format("\n\t</{0}>\n", type) + xml_tail;
+            xml_tail = String.Format("\n\t</{0}>\n", Type) + xml_tail;
             xml_tail = "\n\t\t</WorkUnit>" + xml_tail;
         }
 

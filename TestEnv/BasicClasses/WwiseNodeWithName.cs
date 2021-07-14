@@ -41,18 +41,9 @@ namespace WwiseTools.Basic
         /// <param name="u_type"></param>
         /// <param name="name"></param>
         /// <param name="children"></param>
-        public WwiseNodeWithName(string u_type, string name, List<IWwisePrintable> children) : base(u_type)
+        public WwiseNodeWithName(string u_type, string name, WwiseParser parser, List<WwiseNode> children) : base(u_type, parser, children)
         {
-            unit_name = name;
-            this.u_type = u_type;
-            xml_head = String.Format("<{0} Name=\"{1}\">", u_type, name);
-            xml_tail = String.Format("</{0}>", u_type);
-            xml_body = new List<IWwisePrintable>();
-
-            foreach (var c in children)
-            {
-                AddChildNode(c);
-            }
+            node.SetAttribute("Name", name);
         }
 
         public string Name => node.GetAttribute("Name");
