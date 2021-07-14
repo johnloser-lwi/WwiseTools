@@ -11,6 +11,14 @@ using WwiseTools.Utils;
 
 namespace WwiseTools
 {
+
+    public struct wwiseUnit
+    {
+        public string Name;
+        public string Type;
+        public string ID;
+    }
+
     /// <summary>
     /// 所有可以被Wwise显示的节点被称为单元(Unit)
     /// </summary>
@@ -34,7 +42,8 @@ namespace WwiseTools
         /// <param name="u_type"></param>
         public WwiseUnit(string _name, string u_type, WwiseParser parser) : base(u_type, _name, parser)
         {
-            node.SetAttribute("ID", "{" + Guid.NewGuid().ToString().ToUpper().Trim() + "}");
+            this.guid = Guid.NewGuid().ToString().ToUpper().Trim();
+            node.SetAttribute("ID", "{" + guid + "}");
             childrenList = new WwiseNode("ChildrenList", parser);
             propertyList = new WwiseNode("PropertyList", parser);
         }
@@ -47,6 +56,7 @@ namespace WwiseTools
         /// <param name="guid"></param>
         public WwiseUnit(string _name, string u_type, string guid, WwiseParser parser) : base(u_type, _name, parser)
         {
+            this.guid = guid;
             node.SetAttribute("ID", "{" + guid + "}");
             childrenList = new WwiseNode("ChildrenList", parser);
             propertyList = new WwiseNode("PropertyList", parser);

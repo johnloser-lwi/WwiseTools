@@ -13,22 +13,20 @@ namespace TestEnv
     {
         static void Main(string[] args)
         {
-            //WwiseTools.Utils.WwiseUtility.Init(@"D:\UnityProject\project_WwiseProject", @"D:\", false);//初始化Wwise工程路径
-            //WwiseTools.Utils.WwiseParser parser = new WwiseTools.Utils.WwiseParser();
-            //parser.Parse(@"Interactive Music Hierarchy/New Work Unit.wwu");
-            //WwiseNodeWithName node = new WwiseNodeWithName("Folder", "TestFolder", parser);
-            //WwiseFolder folder = new WwiseFolder("TestFolder", parser);
+            WwiseTools.Utils.WwiseUtility.Init(@"C:\Users\Loser\Desktop\TestWwise", @"C:\", false);//初始化Wwise工程路径
+            WwiseTools.Utils.WwiseParser parser = new WwiseTools.Utils.WwiseParser();
+            parser.Parse(@"Actor-Mixer Hierarchy\New Work Unit.wwu");
+            WwiseNodeWithName node = new WwiseNodeWithName("Folder", "TestFolder", parser);
+            WwiseFolder folder = new WwiseFolder("TestFolder", parser);
 
-            //WwiseContainer c = new WwiseContainer("Test", "RandomSequenceContainer", parser);
+            WwiseSwitchContainer c = new WwiseSwitchContainer("Test", "RandomSequenceContainer", parser);
+            c.AddChild(new WwiseUnit("testchild", "Sound", parser));
 
-            //folder.AddChild(c);
+            folder.AddChild(c);
 
-            //parser.AddChildToWorkUnit(folder);
+            parser.AddChildToWorkUnit(folder);
 
             //parser.ToFile("test.xml");
-
-            WwiseWorkUnit wu = new WwiseWorkUnit("Test", "Events");
-            var parser = WwiseParser.CreateParserFromNode(wu);
 
             parser.ToFile("test.xml");
 

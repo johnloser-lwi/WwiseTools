@@ -39,6 +39,7 @@ namespace WwiseTools
             }
 
             referenceList = new WwiseNode("ReferenceList", parser);
+            WwiseUtility.GetWwiseDefaultConversionSettings(parser);
             referenceList.AddChildNode(WwiseUtility.GetWwiseDefaultConversionSettings(parser));
             referenceList.AddChildNode(WwiseUtility.GetMasterAudioBus(parser));
             AddChildNode(referenceList);

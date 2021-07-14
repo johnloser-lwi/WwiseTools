@@ -10,9 +10,19 @@ using System.Xml;
 
 namespace WwiseTools
 {
+
+    public struct wwiseWorkUnit
+    {
+        public string Name;
+        public string Type;
+        public string ID;
+    }
+
+    /*
     /// <summary>
     /// Wwise的工作单元
     /// </summary>
+    /// 
     public class WwiseWorkUnit : WwiseUnit//, IWwiseID, IWwisePrintable
     {
 
@@ -32,7 +42,7 @@ namespace WwiseTools
         /// </summary>
         /// <param name="name"></param>
         /// <param name="u_type"></param>
-        public WwiseWorkUnit(string name, string workUnitType, WwiseParser parser = null) : base(name, "WwiseDocument", parser)
+        public WwiseWorkUnit(string name, string workUnitType, WwiseParser parser) : base(name, "WwiseDocument", parser)
         {
             Init(name, workUnitType, Guid.NewGuid().ToString().ToUpper());
             childrenList = new WwiseNode("ChildrenList", parser);
@@ -45,7 +55,7 @@ namespace WwiseTools
         /// <param name="name"></param>
         /// <param name="u_type"></param>
         /// <param name="guid"></param>
-        public WwiseWorkUnit(string name, string workUnitType, string guid, WwiseParser parser = null) : base(name, "WwiseDocument", guid, parser)
+        public WwiseWorkUnit(string name, string workUnitType, string guid, WwiseParser parser) : base(name, "WwiseDocument", guid, parser)
         {
 
             Init(name, workUnitType, guid);
@@ -56,8 +66,8 @@ namespace WwiseTools
 
         private void Init(string name, string workUnitType, string guid)
         {
-            if (xmlDocument == null) xmlDocument = new XmlDocument();
-            XmlElement document = xmlDocument.CreateElement("WwiseDocument");
+            xmlDocument.LoadXml("<?xml version=\"1.0\" encoding=\"utf-8\"?><WwiseDocument></WwiseDocument>");
+            XmlElement document = (XmlElement)xmlDocument.GetElementsByTagName("WwiseDocument")[0];
             document.SetAttribute("Type", "WorkUnit");
             document.SetAttribute("ID", "{" + guid + "}");
             document.SetAttribute("SchemaVersion", WwiseUtility.SchemaVersion.ToString());
@@ -66,18 +76,24 @@ namespace WwiseTools
             workUnit.SetAttribute("Name", name);
             workUnit.SetAttribute("ID", "{" + guid + "}");
             workUnit.SetAttribute("PersistMode", "Standalone");
+
+            type.AppendChild(workUnit);
+            document.AppendChild(type);
+            xmlDocument.AppendChild(document);
+
             this.node = document;
             this.type = type.Name;
-        }
 
-        protected override void AddChildrenList()
-        {
             foreach (XmlElement c in ChildNodes)
             {
                 if (c.Name == "ChildrenList") return;
             }
 
-            node.GetElementsByTagName("WorkUnit")[0].AppendChild(childrenList.Node);
+            workUnit.AppendChild(childrenList.Node);
         }
-    }
+
+        protected override void AddChildrenList()
+        {
+        }
+    }*/
 }

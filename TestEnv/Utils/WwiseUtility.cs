@@ -179,30 +179,32 @@ namespace WwiseTools.Utils
         /// </summary>
         public static WwiseNodeWithName MasterAudioBus { get => master_audio_bus; }
         */
-        public static WwiseNodeWithName GetWwiseDefaultConversionSettings(WwiseParser externameParser)
+        public static WwiseNodeWithName GetWwiseDefaultConversionSettings(WwiseParser externalParser)
         {
             WwiseParser parser = new WwiseParser();
             parser.Parse(@"Conversion Settings\Default Work Unit.wwu");
-            WwiseWorkUnit wu = parser.GetWorkUnit();
-            WwiseUnit unit = parser.GetUnitByName("Default Conversion Settings", "Conversion");
+            //Console.WriteLine(parser.Document.InnerXml);
+            wwiseWorkUnit wu = parser.GetWorkUnit();
+            Console.WriteLine(parser.Document.InnerXml);
+            wwiseUnit unit = parser.GetUnitByName("Default Conversion Settings", "Conversion");
             string id = unit.ID;
             string workUnitId = wu.ID;
-            WwiseNodeWithName reference = new WwiseNodeWithName("Reference", "Conversion", externameParser);
-            reference.AddChildNode(new WwiseObjectRef("Default Conversion Settings", id, workUnitId, externameParser));
+            WwiseNodeWithName reference = new WwiseNodeWithName("Reference", "Conversion", externalParser);
+            reference.AddChildNode(new WwiseObjectRef("Default Conversion Settings", id, workUnitId, externalParser));
             return reference;
         }
 
-        public static WwiseNodeWithName GetMasterAudioBus(WwiseParser externameParser)
+        public static WwiseNodeWithName GetMasterAudioBus(WwiseParser externalParser)
         {
 
             WwiseParser parser = new WwiseParser();
             parser.Parse(@"Master-Mixer Hierarchy\Default Work Unit.wwu");
-            WwiseWorkUnit wu = parser.GetWorkUnit();
-            WwiseUnit unit = parser.GetUnitByName("Master Audio Bus", "Bus");
+            wwiseWorkUnit wu = parser.GetWorkUnit();
+            wwiseUnit unit = parser.GetUnitByName("Master Audio Bus", "Bus");
             string id = unit.ID;
             string workUnitId = wu.ID;
-            WwiseNodeWithName reference = new WwiseNodeWithName("Reference", "OutputBus", externameParser);
-            reference.AddChildNode(new WwiseObjectRef("Master Audio Bus", id, workUnitId, externameParser));
+            WwiseNodeWithName reference = new WwiseNodeWithName("Reference", "OutputBus", externalParser);
+            reference.AddChildNode(new WwiseObjectRef("Master Audio Bus", id, workUnitId, externalParser));
 
             //master_audio_bus = reference;
 

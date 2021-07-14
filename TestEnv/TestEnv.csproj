@@ -43,9 +43,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BasicClasses\WwiseWorkUnit.cs" />
+    <Compile Include="BasicClasses\wwiseWorkUnit.cs" />
     <Compile Include="Containers\WwiseContainer.cs" />
     <Compile Include="Containers\WwiseFolder.cs" />
+    <Compile Include="Containers\WwiseRandomContainer.cs" />
+    <Compile Include="Containers\WwiseSequenceContainer.cs" />
+    <Compile Include="Containers\WwiseSwitchContainer.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="BasicClasses\WwiseNode.cs" />
@@ -53,6 +56,7 @@
     <Compile Include="Utils\WwiseParser.cs" />
     <Compile Include="BasicClasses\WwiseUnit.cs" />
     <Compile Include="Utils\WwiseUtility.cs" />
+    <Compile Include="WwiseProperties\WwiseItemRef.cs" />
     <Compile Include="WwiseProperties\WwiseObjectRef.cs" />
     <Compile Include="WwiseProperties\WwiseProperty.cs" />
   </ItemGroup>

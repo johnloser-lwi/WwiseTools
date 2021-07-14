@@ -290,20 +290,30 @@ namespace WwiseTools.Utils
         /// <param name="name"></param>
         /// <param name="file"></param>
         /// <returns></returns>
-        public WwiseUnit GetUnitByName(string name, string type)
+        public wwiseUnit GetUnitByName(string name, string type)
         {
-            XmlNodeList list = xmlDocument.GetElementsByTagName(type);
-
-
-            foreach (XmlElement u in list)
+            XmlNodeList elements = xmlDocument.GetElementsByTagName("ChildrenList");
+            Console.WriteLine(elements[0].ChildNodes.Count);
+            foreach (XmlElement e in elements[0].ChildNodes)
             {
-                if (u.GetAttribute("Name") == name)
+                Console.WriteLine("{0} : {1}", e.Name, e.GetAttribute("Name"));
+                if (e.GetAttribute("Name") == name)
                 {
-                    return new WwiseUnit(name, u.Name, u.GetAttribute("ID").Replace("{", "").Replace("}", "").Trim(), this);
+                    wwiseUnit wu;
+                    wu.Name = name;
+                    wu.Type = type;
+                    wu.ID = e.GetAttribute("ID");
+                    return wu;
                 }
+
             }
 
-            return null;
+            wwiseUnit unit;
+            unit.ID = null;
+            unit.Name = null;
+            unit.Type = null;
+
+            return unit;
         }
         
         /// <summary>
@@ -322,17 +332,18 @@ namespace WwiseTools.Utils
         /// </summary>
         /// <param name="txt_file"></param>
         /// <returns></returns>
-        public WwiseWorkUnit GetWorkUnit()
+        public wwiseWorkUnit GetWorkUnit()
         {
             //Console.WriteLine(doc.ChildNodes[1].Attributes[0].Value);
 
             XmlElement workUnit = (XmlElement)xmlDocument.GetElementsByTagName("WorkUnit")[0];
+            wwiseWorkUnit wu;
+            wu.Name = workUnit.GetAttribute("Name");
+            wu.ID = workUnit.GetAttribute("ID").Replace("{", "").Replace("}", "").Trim() ;
+            wu.Type = xmlDocument.GetElementsByTagName("WwiseDocument")[0].FirstChild.Name;
 
-            string name = workUnit.GetAttribute("Name");
-            string id = workUnit.GetAttribute("ID").Replace("{", "").Replace("}", "").Trim() ;
-            string type = xmlDocument.GetElementsByTagName("WwiseDocument")[0].FirstChild.Name;
-
-            return new WwiseWorkUnit(name, type, id, this);
+            
+            return wu;
         }
         /*
 
