@@ -6,7 +6,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml;
-using WwiseTools.Basic;
+using WwiseTools.Basics;
 
 namespace WwiseTools.Utils
 {
@@ -63,17 +63,6 @@ namespace WwiseTools.Utils
             xmlDocument.Load(_path);
         }
 
-        /// <summary>
-        /// 根据指定字符串解析工作单元，并返回一个字符串数组
-        /// </summary>
-        /// <param name="text"></param>
-        /// <returns></returns>
-        public string[] ParseText(string text)
-        {
-            var result = Regex.Split(text, "\r\n|\r|\n");
-            return result;
-        }
-
         public void ToFile(string path)
         {
             xmlDocument.Save(path);
@@ -83,16 +72,12 @@ namespace WwiseTools.Utils
         /// 将对于该工作单元的修改保存，设置是否为原始工作单元创建备份(默认为true)
         /// </summary>
         /// <param name="backup"></param>
-        /*public void CommitChange(bool backup = true)
+        public void CommitChange(bool backup = true)
         {
             File.Copy(path, path + ".backup", true);
             string text = "";
-            foreach (var l in workUnit)
-            {
-                text += l + "\n";
-            }
-            File.WriteAllText(path, text, Encoding.UTF8);
-        }*/
+            ToFile(path);
+        }
 
 
         /// <summary>
@@ -128,6 +113,19 @@ namespace WwiseTools.Utils
             
 
         }
+
+        public void AddChildToUnit(string unitName, string unitType, string id, WwiseUnit child)
+        {
+            XmlNodeList list = xmlDocument.GetElementsByTagName(unitType);
+            foreach (XmlElement el in list)
+            {
+                if (el.GetAttribute("Name") == unitName && el.GetAttribute("ID").Replace("{", "").Replace("}", "").Trim() == id)
+                {
+                    el.AppendChild(child.Node);
+                }
+            }
+        }
+
         /*
         /// <summary>
         /// 为单元添加子单元，需要该单元的名称、类型以及子单元
@@ -290,7 +288,7 @@ namespace WwiseTools.Utils
         /// <param name="name"></param>
         /// <param name="file"></param>
         /// <returns></returns>
-        public wwiseUnit GetUnitByName(string name, string type)
+        public wwiseObject GetUnitByName(string name, string type)
         {
             XmlNodeList elements = xmlDocument.GetElementsByTagName("ChildrenList");
             Console.WriteLine(elements[0].ChildNodes.Count);
@@ -299,7 +297,7 @@ namespace WwiseTools.Utils
                 Console.WriteLine("{0} : {1}", e.Name, e.GetAttribute("Name"));
                 if (e.GetAttribute("Name") == name)
                 {
-                    wwiseUnit wu;
+                    wwiseObject wu;
                     wu.Name = name;
                     wu.Type = type;
                     wu.ID = e.GetAttribute("ID").Replace("{", "").Replace("}", "").Trim();
@@ -308,7 +306,7 @@ namespace WwiseTools.Utils
 
             }
 
-            wwiseUnit unit;
+            wwiseObject unit;
             unit.ID = null;
             unit.Name = null;
             unit.Type = null;
@@ -332,12 +330,12 @@ namespace WwiseTools.Utils
         /// </summary>
         /// <param name="txt_file"></param>
         /// <returns></returns>
-        public wwiseWorkUnit GetWorkUnit()
+        public wwiseObject GetWorkUnit()
         {
             //Console.WriteLine(doc.ChildNodes[1].Attributes[0].Value);
 
             XmlElement workUnit = (XmlElement)xmlDocument.GetElementsByTagName("WorkUnit")[0];
-            wwiseWorkUnit wu;
+            wwiseObject wu;
             wu.Name = workUnit.GetAttribute("Name");
             wu.ID = workUnit.GetAttribute("ID").Replace("{", "").Replace("}", "").Trim();
             wu.Type = xmlDocument.GetElementsByTagName("WwiseDocument")[0].FirstChild.Name;

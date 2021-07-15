@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WwiseTools.Utils;
-using WwiseTools.Basic;
+using WwiseTools.Basics;
 
 namespace WwiseTools.Reference
 {

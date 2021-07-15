@@ -8,7 +8,7 @@ using System.Xml;
 
 using WwiseTools.Utils;
 
-namespace WwiseTools.Basic
+namespace WwiseTools.Basics
 {
     /// <summary>
     /// 一切可以添加至wwu文件中的内容均为节点(Node)

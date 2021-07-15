@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using WwiseTools.Basic;
+using WwiseTools.Basics;
 using WwiseTools.Properties;
 using WwiseTools.Reference;
 using WwiseTools.Utils;

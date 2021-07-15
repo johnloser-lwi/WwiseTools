@@ -8,7 +8,7 @@ using System.Xml;
 
 using WwiseTools.Utils;
 
-namespace WwiseTools.Basic
+namespace WwiseTools.Basics
 {
     /// <summary>
     /// 一切可以添加至wwu文件中的内容均为节点(Node)
@@ -151,6 +151,15 @@ namespace WwiseTools.Basic
                 xmlTextWriter.Flush();
                 return stringWriter.GetStringBuilder().ToString();
             }
+        }
+
+        public virtual wwiseObject ToObject()
+        {
+            wwiseObject result;
+            result.Type = Type;
+            result.Name = null;
+            result.ID = null;
+            return result;
         }
 
     }

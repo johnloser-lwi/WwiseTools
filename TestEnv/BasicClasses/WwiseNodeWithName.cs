@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using WwiseTools.Utils;
 
-namespace WwiseTools.Basic
+namespace WwiseTools.Basics
 {
 
     /// <summary>
@@ -47,6 +47,14 @@ namespace WwiseTools.Basic
         }
 
         public string Name => node.GetAttribute("Name");
-        //string unit_name;
+
+        public override wwiseObject ToObject()
+        {
+            wwiseObject result;
+            result.Type = Type;
+            result.Name = Name;
+            result.ID = null;
+            return result;
+        }
     }
 }

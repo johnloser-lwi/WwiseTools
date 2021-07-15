@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using WwiseTools.Properties;
 using WwiseTools.Utils;
 using WwiseTools.Audio;
-using WwiseTools.Basic;
+using WwiseTools.Basics;
 
 namespace WwiseTools
 {

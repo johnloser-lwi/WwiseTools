@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using WwiseTools.Basic;
+using WwiseTools.Basics;
 using WwiseTools.Utils;
 
 namespace WwiseTools.Properties
@@ -11,7 +11,7 @@ namespace WwiseTools.Properties
     /// <summary>
     /// Wwise属性，可添加至WwiseUnit
     /// </summary>
-    public class WwiseProperty : Basic.WwiseNodeWithName// : IWwisePrintable
+    public class WwiseProperty : Basics.WwiseNodeWithName// : IWwisePrintable
     {
 
         /// <summary>

@@ -3,22 +3,23 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WwiseTools.Properties;
 using WwiseTools.Basics;
 using WwiseTools.Utils;
 
-namespace WwiseTools.Reference
+namespace WwiseTools
 {
     /// <summary>
-    /// 对于子单元的引用
+    /// 对于Music Segment的引用
     /// </summary>
-    public class WwiseItemRef : WwiseNodeWithName
+    public class WwiseSegmentRef : WwiseNodeWithName
     {
         /// <summary>
-        /// 初始化子单元的名称以及GUID
+        /// 初始化需要Music Segment的名称与GUID
         /// </summary>
         /// <param name="name"></param>
         /// <param name="id"></param>
-        public WwiseItemRef(string name, string id, WwiseParser parser) : base("ItemRef", name, parser)
+        public WwiseSegmentRef(string name, string id, WwiseParser parser) : base("SegmentRef", name, parser)
         {
             node.SetAttribute("ID", "{" + id + "}");
         }

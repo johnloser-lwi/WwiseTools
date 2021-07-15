@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using WwiseTools.Basic;
+using WwiseTools.Basics;
 using WwiseTools.Properties;
 using WwiseTools.Reference;
 
@@ -185,9 +185,9 @@ namespace WwiseTools.Utils
             WwiseParser parser = new WwiseParser();
             parser.Parse(@"Conversion Settings\Default Work Unit.wwu");
             //Console.WriteLine(parser.Document.InnerXml);
-            wwiseWorkUnit wu = parser.GetWorkUnit();
+            wwiseObject wu = parser.GetWorkUnit();
             Console.WriteLine(parser.Document.InnerXml);
-            wwiseUnit unit = parser.GetUnitByName("Default Conversion Settings", "Conversion");
+            wwiseObject unit = parser.GetUnitByName("Default Conversion Settings", "Conversion");
             string id = unit.ID;
             string workUnitId = wu.ID;
             WwiseNodeWithName reference = new WwiseNodeWithName("Reference", "Conversion", externalParser);
@@ -200,8 +200,8 @@ namespace WwiseTools.Utils
 
             WwiseParser parser = new WwiseParser();
             parser.Parse(@"Master-Mixer Hierarchy\Default Work Unit.wwu");
-            wwiseWorkUnit wu = parser.GetWorkUnit();
-            wwiseUnit unit = parser.GetUnitByName("Master Audio Bus", "Bus");
+            wwiseObject wu = parser.GetWorkUnit();
+            wwiseObject unit = parser.GetUnitByName("Master Audio Bus", "Bus");
             string id = unit.ID;
             string workUnitId = wu.ID;
             WwiseNodeWithName reference = new WwiseNodeWithName("Reference", "OutputBus", externalParser);

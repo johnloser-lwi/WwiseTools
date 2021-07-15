@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using WwiseTools.Basic;
+using WwiseTools.Basics;
 using WwiseTools;
 using WwiseTools.Utils;
 using WwiseTools.Audio;
@@ -28,7 +28,10 @@ namespace TestEnv
             WwiseMusicSegment segment = new WwiseMusicSegment("Test", parser);
             segment.AddTrack("Test", "dd.wav", WwiseMusicTrack.TrackType.RandomStep);
 
-            parser.AddChildToWorkUnit(segment);
+            WwiseMusicPlaylistContainer container = new WwiseMusicPlaylistContainer("TestPlaylist", WwiseMusicPlaylistItem.PlaylistType.SequenceContinous, parser);
+            container.AddSegment(segment);
+
+            parser.AddChildToWorkUnit(container);
             //parser.AddChildToWorkUnit(folder);
 
             //parser.ToFile("test.xml");

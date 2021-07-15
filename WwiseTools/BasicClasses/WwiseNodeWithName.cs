@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using WwiseTools.Utils;
 
-namespace WwiseTools.Basic
+namespace WwiseTools.Basics
 {
 
     /// <summary>

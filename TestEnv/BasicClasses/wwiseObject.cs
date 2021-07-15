@@ -5,13 +5,13 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using WwiseTools.Utils;
-using WwiseTools.Basic;
+using WwiseTools.Basics;
 using System.Xml;
 
 namespace WwiseTools
 {
 
-    public struct wwiseWorkUnit
+    public struct wwiseObject
     {
         public string Name;
         public string Type;

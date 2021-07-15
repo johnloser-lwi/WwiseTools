@@ -46,12 +46,14 @@
     <Compile Include="Audio\WwiseAudioFileSource.cs" />
     <Compile Include="Audio\WwiseMusicClip.cs" />
     <Compile Include="Audio\WwiseMusicCue.cs" />
+    <Compile Include="Audio\WwiseMusicPlaylistContainer.cs" />
+    <Compile Include="Audio\WwiseMusicPlaylistItem.cs" />
     <Compile Include="Audio\WwiseMusicSegment.cs" />
     <Compile Include="Audio\WwiseMusicTrack.cs" />
     <Compile Include="Audio\WwiseMusicTrackSequence.cs" />
     <Compile Include="Audio\WwiseMusicTransition.cs" />
     <Compile Include="Audio\WwiseSound.cs" />
-    <Compile Include="BasicClasses\wwiseWorkUnit.cs" />
+    <Compile Include="BasicClasses\wwiseObject.cs" />
     <Compile Include="Containers\WwiseContainer.cs" />
     <Compile Include="Containers\WwiseFolder.cs" />
     <Compile Include="Containers\WwiseRandomContainer.cs" />
@@ -69,6 +71,7 @@
     <Compile Include="WwiseReference\WwiseItemRef.cs" />
     <Compile Include="WwiseReference\WwiseObjectRef.cs" />
     <Compile Include="WwiseProperties\WwiseProperty.cs" />
+    <Compile Include="WwiseReference\WwiseSegmentRef.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

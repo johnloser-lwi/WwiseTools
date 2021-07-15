@@ -4,21 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
-using WwiseTools.Basic;
+using WwiseTools.Basics;
 using WwiseTools.Utils;
 //using WwiseTools.Properties;
 //using WwiseTools.Utils;
 
 namespace WwiseTools
 {
-
-    public struct wwiseUnit
-    {
-        public string Name;
-        public string Type;
-        public string ID;
-    }
-
     /// <summary>
     /// 所有可以被Wwise显示的节点被称为单元(Unit)
     /// </summary>
@@ -115,6 +107,15 @@ namespace WwiseTools
             }
 
             AddChildNode(childrenList);
+        }
+
+        public override wwiseObject ToObject()
+        {
+            wwiseObject result;
+            result.Type = Type;
+            result.Name = Name;
+            result.ID = ID;
+            return result;
         }
     }
 }
