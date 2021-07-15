@@ -27,6 +27,7 @@ namespace WwiseTools
         /// <param name="name"></param>
         /// <param name="language"></param>
         /// <param name="file"></param>
+        /// <param name="parser"></param>
         public WwiseSound(string name, string language, string file, WwiseParser parser) : base(name, "Sound", parser)
         {
             this.language = language;
@@ -40,6 +41,7 @@ namespace WwiseTools
         /// <param name="language"></param>
         /// <param name="file"></param>
         /// <param name="guid"></param>
+        /// <param name="parser"></param>
         public WwiseSound(string name, string language, string file, string guid, WwiseParser parser) : base(name, "Sound", guid, parser)
         {
             this.language = language;

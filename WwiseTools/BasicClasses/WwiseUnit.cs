@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using WwiseTools.Basics;
+using WwiseTools.Properties;
 using WwiseTools.Utils;
 //using WwiseTools.Properties;
 //using WwiseTools.Utils;
@@ -32,6 +33,7 @@ namespace WwiseTools
         /// </summary>
         /// <param name="_name"></param>
         /// <param name="u_type"></param>
+        /// <param name="parser"></param>
         public WwiseUnit(string _name, string u_type, WwiseParser parser) : base(u_type, _name, parser)
         {
             this.guid = Guid.NewGuid().ToString().ToUpper().Trim();
@@ -46,6 +48,7 @@ namespace WwiseTools
         /// <param name="_name"></param>
         /// <param name="u_type"></param>
         /// <param name="guid"></param>
+        /// <param name="parser"></param>
         public WwiseUnit(string _name, string u_type, string guid, WwiseParser parser) : base(u_type, _name, parser)
         {
             this.guid = guid;
@@ -55,12 +58,17 @@ namespace WwiseTools
         }
 
         /// <summary>
-        /// 添加子单元
+        /// 添加子单元，返回该单元，如果该单元为null则返回null
         /// </summary>
         /// <param name="child"></param>
         /// <returns></returns>
         public virtual WwiseUnit AddChild(WwiseUnit child)
         {
+            if (child == null)
+            {
+                Console.WriteLine("Child is null!");
+                return null;
+            }
             AddChildrenList();
             childrenList.AddChildNode(child);
             return child;
@@ -68,35 +76,50 @@ namespace WwiseTools
 
 
         /// <summary>
-        /// 为单元添加属性
+        /// 为单元添加属性，返回该属性，如果该属性为null则返回null
         /// </summary>
         /// <param name="property"></param>
         /// <returns></returns>
-        public virtual WwiseNodeWithName AddProperty(WwiseNodeWithName property)
+        public virtual WwiseProperty AddProperty(WwiseProperty property)
         {
-            bool added_propertyList = false;
-            foreach (XmlElement c in ChildNodes)
+            if (property == null)
             {
-                if (c.Name == "PropertyList")
-                {
-                    added_propertyList = true;
-                    break;
-                }
-            }
-            if (!added_propertyList) AddChildNodeAtFront(PropertyList);
-
-            foreach (XmlElement p in PropertyList.ChildNodes)
-            {
-                if (p.Attributes[0].Value == property.Name)
-                {
-                    p.SetAttribute("Value", property.Attributes[2].Value);
-                    return property;
-                }
-
+                Console.WriteLine("Property is null!");
+                return null;
             }
 
-            PropertyList.AddChildNode(property);
-            return property;
+            try
+            {
+                bool added_propertyList = false;
+                foreach (XmlElement c in ChildNodes)
+                {
+                    if (c.Name == "PropertyList")
+                    {
+                        added_propertyList = true;
+                        break;
+                    }
+                }
+                if (!added_propertyList) AddChildNodeAtFront(PropertyList);
+
+                foreach (XmlElement p in PropertyList.ChildNodes)
+                {
+                    if (p.Attributes[0].Value == property.Name)
+                    {
+                        p.SetAttribute("Value", property.Attributes[2].Value);
+                        return property;
+                    }
+
+                }
+
+                PropertyList.AddChildNode(property);
+                return property;
+            }
+            catch
+            {
+                Console.WriteLine("Failed to add property!");
+                return null;
+            }
+            
         }
 
         protected virtual void AddChildrenList()

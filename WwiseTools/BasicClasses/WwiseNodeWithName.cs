@@ -18,6 +18,7 @@ namespace WwiseTools.Basics
         /// </summary>
         /// <param name="u_type"></param>
         /// <param name="name"></param>
+        /// <param name="parser"></param>
         public WwiseNodeWithName(string u_type, string name, WwiseParser parser) : base (u_type, parser)
         {
             node.SetAttribute("Name", name);
@@ -29,6 +30,7 @@ namespace WwiseTools.Basics
         /// </summary>
         /// <param name="u_type"></param>
         /// <param name="name"></param>
+        /// <param name="parser"></param>
         /// <param name="child"></param>
         public WwiseNodeWithName(string u_type, string name, WwiseParser parser, WwiseNode child) : base(u_type, parser, child)
         {
@@ -40,6 +42,7 @@ namespace WwiseTools.Basics
         /// </summary>
         /// <param name="u_type"></param>
         /// <param name="name"></param>
+        /// <param name="parser"></param>
         /// <param name="children"></param>
         public WwiseNodeWithName(string u_type, string name, WwiseParser parser, List<WwiseNode> children) : base(u_type, parser, children)
         {

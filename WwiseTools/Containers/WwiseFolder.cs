@@ -15,17 +15,18 @@ namespace WwiseTools
         /// <summary>
         /// 创建并设置名称
         /// </summary>
-        /// <param name="_name"></param>
-        public WwiseFolder(string _name, WwiseParser parser) : base(_name, "Folder", parser)
+        /// <param name="name"></param>
+        public WwiseFolder(string name, WwiseParser parser) : base(name, "Folder", parser)
         {
         }
 
         /// <summary>
         /// 创建并设置名称、GUID
         /// </summary>
-        /// <param name="_name"></param>
+        /// <param name="name"></param>
         /// <param name="guid"></param>
-        public WwiseFolder(string _name, string guid, WwiseParser parser) : base(_name, "Folder", guid, parser)
+        /// <param name="parser"></param>
+        public WwiseFolder(string name, string guid, WwiseParser parser) : base(name, "Folder", guid, parser)
         {
         }
     }

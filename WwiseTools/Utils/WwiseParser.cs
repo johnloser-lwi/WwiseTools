@@ -97,7 +97,6 @@ namespace WwiseTools.Utils
                     workUnit.AppendChild(childlist);
                 }
 
-                Console.WriteLine(child.Print());
                 if (childlist != null)
                 {
                     childlist.AppendChild(child.Node);

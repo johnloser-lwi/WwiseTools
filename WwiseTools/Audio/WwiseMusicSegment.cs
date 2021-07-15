@@ -25,6 +25,7 @@ namespace WwiseTools.Audio
         /// 初始化名称
         /// </summary>
         /// <param name="_name"></param>
+        /// <param name="parser"></param>
         public WwiseMusicSegment(string _name, WwiseParser parser) : base(_name, "MusicSegment", parser)
         {
             AddChildrenList();
@@ -68,6 +69,11 @@ namespace WwiseTools.Audio
 
         private void AddDefaultCue(WwiseMusicCue newCue, bool replace = false)
         {
+            if (newCue == null)
+            {
+                return;
+            }
+
             if (cueList == null)
             {
                 cueList = new WwiseNode("CueList", parser);

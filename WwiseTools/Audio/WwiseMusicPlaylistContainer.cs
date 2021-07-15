@@ -26,6 +26,7 @@ namespace WwiseTools.Audio
         /// </summary>
         /// <param name="name"></param>
         /// <param name="playlistType"></param>
+        /// <param name="parser"></param>
         /// <param name="loopCount"></param>
         public WwiseMusicPlaylistContainer(string name, WwiseMusicPlaylistItem.PlaylistType playlistType, WwiseParser parser, int loopCount = 1) : base(name, "MusicPlaylistContainer", parser)
         {
@@ -47,9 +48,18 @@ namespace WwiseTools.Audio
             AddProperty(new WwiseProperty("TimeSignatureUpper", "int16", timeSigUpper.ToString(), parser));
         }
 
-        
+        /// <summary>
+        /// 添加Music Segment，返回Segenmt，如果Segment为null则返回null
+        /// </summary>
+        /// <param name="segment"></param>
+        /// <returns></returns>
         public WwiseMusicSegment AddSegment(WwiseMusicSegment segment)
         {
+            if (segment == null)
+            {
+                Console.WriteLine("Music Segment is null!");
+                return null;
+            }
             AddChild(segment);
             playlistItem.AddChild(new WwiseMusicPlaylistItem(new WwiseSegmentRef(segment.Name, segment.ID, parser), parser));
 

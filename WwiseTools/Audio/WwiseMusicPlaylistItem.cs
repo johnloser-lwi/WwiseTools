@@ -23,6 +23,7 @@ namespace WwiseTools.Audio
         /// 初始化类型以及循环(默认为1)
         /// </summary>
         /// <param name="playlistType"></param>
+        /// <param name="parser"></param>
         /// <param name="loopCount"></param>
         public WwiseMusicPlaylistItem(PlaylistType playlistType, WwiseParser parser, int loopCount = 1) : base("", "MusicPlaylistItem", parser)
         {
@@ -35,6 +36,7 @@ namespace WwiseTools.Audio
         /// 通过指定的SegmentRef初始化
         /// </summary>
         /// <param name="segment"></param>
+        /// <param name="parser"></param>
         public WwiseMusicPlaylistItem(WwiseSegmentRef segment, WwiseParser parser) : base("", "MusicPlaylistItem", parser)
         {
             AddProperty(new WwiseProperty("PlaylistItemType", "int16", "1", parser));
@@ -42,12 +44,17 @@ namespace WwiseTools.Audio
         }
 
         /// <summary>
-        /// 将SegmentRef其添加至Playlist Item中
+        /// 将SegmentRef其添加至Playlist Item中，返回该SegmentRef，如果SegmentRef为null则返回null
         /// </summary>
         /// <param name="segment"></param>
         /// <returns></returns>
         public WwiseSegmentRef AddSegment(WwiseSegmentRef segment)
         {
+            if (segment == null)
+            {
+                Console.WriteLine("Segment Ref is null!");
+                return null;
+            }
             AddChild(new WwiseMusicPlaylistItem(segment, parser));
             return segment;
         }

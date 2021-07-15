@@ -25,6 +25,7 @@ namespace WwiseTools
         /// </summary>
         /// <param name="actionType"></param>
         /// <param name="reference"></param>
+        /// <param name="parser"></param>
         public WwiseAction(ActionType actionType, WwiseObjectRef reference, WwiseParser parser) : base("", "Action", parser)
         {
             AddProperty(new Properties.WwiseProperty("ActionType", "int16", ActionTypeCheck(actionType).ToString(), parser));

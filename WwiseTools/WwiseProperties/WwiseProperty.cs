@@ -20,6 +20,7 @@ namespace WwiseTools.Properties
         /// <param name="name"></param>
         /// <param name="type"></param>
         /// <param name="value"></param>
+        /// <param name="parser"></param>
         public WwiseProperty(string name, string type, string value, WwiseParser parser) : base ("Property", name, parser)
         {
             node.SetAttribute("Type", type);

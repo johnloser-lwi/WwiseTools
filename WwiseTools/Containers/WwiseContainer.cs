@@ -38,11 +38,19 @@ namespace WwiseTools
                 return;
             }
 
-            referenceList = new WwiseNode("ReferenceList", parser);
-            WwiseUtility.GetWwiseDefaultConversionSettings(parser);
-            referenceList.AddChildNode(WwiseUtility.GetWwiseDefaultConversionSettings(parser));
-            referenceList.AddChildNode(WwiseUtility.GetMasterAudioBus(parser));
-            AddChildNode(referenceList);
+            try
+            {
+                referenceList = new WwiseNode("ReferenceList", parser);
+                WwiseUtility.GetWwiseDefaultConversionSettings(parser);
+                referenceList.AddChildNode(WwiseUtility.GetWwiseDefaultConversionSettings(parser));
+                referenceList.AddChildNode(WwiseUtility.GetMasterAudioBus(parser));
+                AddChildNode(referenceList);
+            }
+            catch
+            {
+                Console.WriteLine("Failed to add Reference List!");
+            }
+            
         }
 
 

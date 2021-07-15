@@ -48,12 +48,21 @@ namespace WwiseTools
         {
             base.AddChild(child);
 
-            if (playlist == null)
+
+            try
             {
-                playlist = new WwiseNode("Playlist", parser);
-                AddChildNode(playlist);
+                if (playlist == null)
+                {
+                    playlist = new WwiseNode("Playlist", parser);
+                    AddChildNode(playlist);
+                }
+                playlist.AddChildNode(new WwiseItemRef(child.Name, child.ID, parser));
             }
-            playlist.AddChildNode(new WwiseItemRef(child.Name, child.ID, parser));
+            catch
+            {
+                Console.WriteLine("Failed to add ItemRef!");
+            }
+            
 
             return child;
         }
