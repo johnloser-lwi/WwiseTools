@@ -18,20 +18,28 @@ namespace WwiseTools
         {
             this.language = language;
             //AddChildNode(new WwiseProperty("Language", language, parser));
-            Node.SetAttribute("Languange", language);
+            var lan = XML.CreateElement("Language");
+            lan.InnerText = language;
+            Node.AppendChild(lan);
             WwiseUtility.CopyFile(file, language);
             //AddChildNode(new WwiseProperty("AudioFile", file, parser));
-            Node.SetAttribute("AudioFile", file);
+            var au = XML.CreateElement("AudioFile");
+            au.InnerText = file;
+            Node.AppendChild(au);
         }
 
         public WwiseAudioFileSource(string name, string language, string file, string guid, WwiseParser parser) : base(name, "AudioFileSource", guid, parser)
         {
             this.language = language;
             //AddChildNode(new WwiseProperty("Language", language, parser));
-            Node.SetAttribute("Languange", language);
+            var lan = XML.CreateElement("Language");
+            lan.InnerText = language;
+            Node.AppendChild(lan);
             WwiseUtility.CopyFile(file, language);
             //AddChildNode(new WwiseProperty("AudioFile", file, parser));
-            Node.SetAttribute("AudioFile", file);
+            var au = XML.CreateElement("AudioFile");
+            au.InnerText = file;
+            Node.AppendChild(au);
         }
     }
 }
