@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using WwiseTools.Basics;
 using WwiseTools.Properties;
-using WwiseTools.Audio;
+using WwiseTools.Reference;
 
 namespace WwiseTools.Utils
 {
@@ -25,9 +25,9 @@ namespace WwiseTools.Utils
         {
             WwiseUtility.project_path = project_path;
             WwiseUtility.file_path = file_path;
-            WwiseUtility.commitCopy = commitCopy;
-            GetWwiseDefaultConversionSettings();
-            GetMasterAudioBus();
+            //WwiseUtility.commitCopy = commitCopy;
+            //GetWwiseDefaultConversionSettings();
+            //GetMasterAudioBus();
         }
 
 
@@ -39,7 +39,7 @@ namespace WwiseTools.Utils
         /// <param name="workUnit"></param>
         /// <param name="actionType"></param>
         /// <returns></returns>
-        public static WwiseEvent ToEvent(string name, WwiseUnit unit, WwiseWorkUnit workUnit, WwiseAction.ActionType actionType)
+       /* public static WwiseEvent ToEvent(string name, WwiseUnit unit, WwiseWorkUnit workUnit, WwiseAction.ActionType actionType)
         {
             if (String.IsNullOrEmpty(name)) name = unit.name;
 
@@ -126,7 +126,7 @@ namespace WwiseTools.Utils
 
             return result;
         }
-
+       */
         /// <summary>
         /// 将文件复制到Originals文件夹下
         /// </summary>
@@ -152,23 +152,24 @@ namespace WwiseTools.Utils
 
         private static string file_path;
         private static string project_path;
-        private static int schema_version;
+        private static int schema_version = 97;
 
-        private static  WwiseNodeWithName default_conversion_settings;
-        private static WwiseNodeWithName master_audio_bus;
+        //private static  WwiseNodeWithName default_conversion_settings;
+        //private static WwiseNodeWithName master_audio_bus;
 
         public static string FilePath { get => file_path; set => file_path = value; }
         public static string ProjectPath { get => project_path; }
 
         public static int SchemaVersion => schema_version;
 
+        
         /// <summary>
         /// 设置是否执行复制
         /// </summary>
         public static bool CommitCopy { get => commitCopy; set => commitCopy = value; }
 
         private static bool commitCopy = false;
-
+        /*
         /// <summary>
         /// 获取默认的转码设置(Default Conversion Settings)
         /// </summary>
@@ -178,35 +179,37 @@ namespace WwiseTools.Utils
         /// 获取默认的总线(Master Audio Bus)
         /// </summary>
         public static WwiseNodeWithName MasterAudioBus { get => master_audio_bus; }
-
-        private static void GetWwiseDefaultConversionSettings()
+        */
+        public static WwiseNodeWithName GetWwiseDefaultConversionSettings(WwiseParser externalParser)
         {
             WwiseParser parser = new WwiseParser();
-            string[] file = parser.Parse(@"Conversion Settings\Default Work Unit.wwu");
-            WwiseWorkUnit wu = parser.GetWorkUnit(parser.ToString());
-            WwiseUnit unit = parser.GetUnitByName("Default Conversion Settings", file);
-            string id = unit.id;
-            string workUnitId = wu.id;
-            WwiseNodeWithName reference = new WwiseNodeWithName("Reference", "Conversion");
-            reference.AddChildNode(new WwiseObjectRef("Default Conversion Settings", id, workUnitId));
-
-            schema_version = parser.GetSchemaVersion();
-            default_conversion_settings = reference;
+            parser.Parse(@"Conversion Settings\Default Work Unit.wwu");
+            //Console.WriteLine(parser.Document.InnerXml);
+            wwiseObject wu = parser.GetWorkUnit();
+            Console.WriteLine(parser.Document.InnerXml);
+            wwiseObject unit = parser.GetUnitByName("Default Conversion Settings", "Conversion");
+            string id = unit.ID;
+            string workUnitId = wu.ID;
+            WwiseNodeWithName reference = new WwiseNodeWithName("Reference", "Conversion", externalParser);
+            reference.AddChildNode(new WwiseObjectRef("Default Conversion Settings", id, workUnitId, externalParser));
+            return reference;
         }
 
-        private static void GetMasterAudioBus()
+        public static WwiseNodeWithName GetMasterAudioBus(WwiseParser externalParser)
         {
 
             WwiseParser parser = new WwiseParser();
-            string[] file = parser.Parse("Master-Mixer Hierarchy\\Default Work Unit.wwu");
-            WwiseWorkUnit wu = parser.GetWorkUnit(parser.ToString());
-            WwiseUnit unit = parser.GetUnitByName("Master Audio Bus", file);
-            string id = unit.id;
-            string workUnitId = wu.id;
-            WwiseNodeWithName reference = new WwiseNodeWithName("Reference", "OutputBus");
-            reference.AddChildNode(new WwiseObjectRef("Master Audio Bus", id, workUnitId));
+            parser.Parse(@"Master-Mixer Hierarchy\Default Work Unit.wwu");
+            wwiseObject wu = parser.GetWorkUnit();
+            wwiseObject unit = parser.GetUnitByName("Master Audio Bus", "Bus");
+            string id = unit.ID;
+            string workUnitId = wu.ID;
+            WwiseNodeWithName reference = new WwiseNodeWithName("Reference", "OutputBus", externalParser);
+            reference.AddChildNode(new WwiseObjectRef("Master Audio Bus", id, workUnitId, externalParser));
 
-            master_audio_bus = reference;
+            //master_audio_bus = reference;
+
+            return reference;
         }
         
     }

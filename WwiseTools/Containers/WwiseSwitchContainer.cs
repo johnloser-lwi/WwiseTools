@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WwiseTools.Basics;
+using WwiseTools.Utils;
 
 namespace WwiseTools
 {
@@ -13,21 +14,16 @@ namespace WwiseTools
     /// </summary>
     public class WwiseSwitchContainer : WwiseContainer
     {
-        public WwiseSwitchContainer(string _name) : base(_name, "SwitchContainer")
+        public WwiseSwitchContainer(string name, WwiseParser parser) : base(name, "SwitchContainer", parser)
         {
-            Init(_name, "SwitchContainer", guid);
-        }
-
-        public WwiseSwitchContainer(string _name, string guid) : base(_name, "SwitchContainer", guid)
-        {
-            Init(_name, "SwitchContainer", guid);
-        }
-
-        protected override void Init(string _name, string u_type, string guid)
-        {
-            base.Init(_name, u_type, guid);
             AddChildrenList();
-            AddChildNode(new WwiseNode("GroupingInfo"));
+            AddChildNode(new WwiseNode("GroupingInfo", parser));
+        }
+
+        public WwiseSwitchContainer(string name, string guid, WwiseParser parser) : base(name, "SwitchContainer", guid, parser)
+        {
+            AddChildrenList();
+            AddChildNode(new WwiseNode("GroupingInfo", parser));
         }
     }
 }

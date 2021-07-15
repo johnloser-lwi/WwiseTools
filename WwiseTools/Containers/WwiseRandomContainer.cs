@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using WwiseTools.Basics;
 using WwiseTools.Properties;
+using WwiseTools.Utils;
 
 namespace WwiseTools
 {
@@ -13,11 +14,11 @@ namespace WwiseTools
     /// </summary>
     public class WwiseRandomContainer : WwiseContainer
     {
-        public WwiseRandomContainer(string _name) : base(_name, "RandomSequenceContainer")
+        public WwiseRandomContainer(string name, WwiseParser parser) : base(name, "RandomSequenceContainer", parser)
         {
         }
 
-        public WwiseRandomContainer(string _name, string guid) : base(_name, "RandomSequenceContainer", guid)
+        public WwiseRandomContainer(string name, string guid, WwiseParser parser) : base(name, "RandomSequenceContainer", guid, parser)
         {
         }
 
@@ -29,7 +30,7 @@ namespace WwiseTools
         {
             int s = 0;
             if (step) s = 1;
-            AddProperty(new WwiseProperty("PlayMechanismStepOrContinuous", "int16", String.Format("{0}", s.ToString())));
+            AddProperty(new WwiseProperty("PlayMechanismStepOrContinuous", "int16", String.Format("{0}", s.ToString()), parser));
         }
 
         /// <summary>
@@ -40,7 +41,7 @@ namespace WwiseTools
         {
             int s = 0;
             if (!shuffle) s = 1;
-            AddProperty(new WwiseProperty("NormalOrShuffle", "int16", String.Format("{0}", s.ToString())));
+            AddProperty(new WwiseProperty("NormalOrShuffle", "int16", String.Format("{0}", s.ToString()), parser));
         }
     }
 }

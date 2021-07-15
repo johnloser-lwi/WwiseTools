@@ -23,6 +23,8 @@ namespace WwiseTools.Utils
 
         public WwiseParser()
         {
+            xmlDocument = new XmlDocument();
+
             if (WwiseUtility.ProjectPath == null)
             {
                 Console.WriteLine("WwiseUtility not initialized!");
@@ -30,57 +32,40 @@ namespace WwiseTools.Utils
             }
         }
 
-        public XmlDocument Document => new XmlDocument(); // Temp
+        internal WwiseParser(XmlDocument xmlDocument)
+        {
+            this.xmlDocument = xmlDocument;
+
+            if (WwiseUtility.ProjectPath == null)
+            {
+                Console.WriteLine("WwiseUtility not initialized!");
+                return;
+            }
+        }
+
+        public static WwiseParser CreateParserFromNode(WwiseNode node)
+        {
+            return new WwiseParser(node.XML);
+        }
+
+        public XmlDocument Document => xmlDocument; // Temp
+        private XmlDocument xmlDocument;
 
         /// <summary>
         /// 根据文件路径解析工作单元，并返回一个字符串数组
         /// </summary>
         /// <param name="file_path"></param>
         /// <returns></returns>
-        public string[] Parse(string file_path)
+        public void Parse(string file_path)
         {
             string _path = Path.Combine(WwiseUtility.ProjectPath, file_path);
-            
-            //StreamReader f = new StreamReader();
-            List<string> lines = new List<string>();
-            StreamReader f = File.OpenText(_path);
-            try
-            {
-                
-                while (true)
-                {
-                    string line = f.ReadLine();
-                    if (line == null || line.Trim() == "")
-                    {
-                        break;
-                    }
-                    lines.Add(line);
-                }
 
-                path = _path;
-
-            }
-            catch
-            {
-                Console.WriteLine("Invalid path!");
-            }
-            finally
-            {
-                f.Close();
-            }
-
-            return workUnit = lines.ToArray();
+            xmlDocument.Load(_path);
         }
 
-        /// <summary>
-        /// 根据指定字符串解析工作单元，并返回一个字符串数组
-        /// </summary>
-        /// <param name="text"></param>
-        /// <returns></returns>
-        public string[] ParseText(string text)
+        public void ToFile(string path)
         {
-            var result = Regex.Split(text, "\r\n|\r|\n");
-            return result;
+            xmlDocument.Save(path);
         }
 
         /// <summary>
@@ -91,11 +76,7 @@ namespace WwiseTools.Utils
         {
             File.Copy(path, path + ".backup", true);
             string text = "";
-            foreach (var l in workUnit)
-            {
-                text += l + "\n";
-            }
-            File.WriteAllText(path, text, Encoding.UTF8);
+            ToFile(path);
         }
 
 
@@ -105,40 +86,47 @@ namespace WwiseTools.Utils
         /// <param name="child"></param>
         public void AddChildToWorkUnit(WwiseUnit child)
         {
-            if (WorkUnit == null)
-            {
-                Console.WriteLine("Parse the file first!");
-                return;
-            }
 
-            if (WorkUnit[3].Contains("/>"))
+            try
             {
-                WwiseWorkUnit wu = GetWorkUnit();
-                wu.AddChild(child);
-                workUnit = ParseText(wu.Print());
+                XmlNode workUnit = xmlDocument.GetElementsByTagName("WorkUnit")[0];
+                XmlNode childlist = workUnit.FirstChild;
+                if (childlist == null)
+                {
+                    childlist = xmlDocument.CreateElement("ChildrenList");
+                    workUnit.AppendChild(childlist);
+                }
 
+                Console.WriteLine(child.Print());
+                if (childlist != null)
+                {
+                    childlist.AppendChild(child.Node);
+                    workUnit.AppendChild(childlist);
+                }
+
+                
             }
-            else
+            catch
             {
-                List<string> lines = new List<string>();
-                for (int i = 0; i < 5; i++)
+                Console.WriteLine("Error adding to Work Unit!");
+            }
+            
+
+        }
+
+        public void AddChildToUnit(string unitName, string unitType, string id, WwiseUnit child)
+        {
+            XmlNodeList list = xmlDocument.GetElementsByTagName(unitType);
+            foreach (XmlElement el in list)
+            {
+                if (el.GetAttribute("Name") == unitName && el.GetAttribute("ID").Replace("{", "").Replace("}", "").Trim() == id)
                 {
-                    lines.Add(workUnit[i]);
+                    el.AppendChild(child.Node);
                 }
-                child.tabs = 4;
-                string[] newLines = ParseText(child.Print(false));
-                foreach (var l in newLines)
-                {
-                    lines.Add(l);
-                }
-                for (int i = 5; i < workUnit.Length; i++)
-                {
-                    lines.Add(workUnit[i]);
-                }
-                workUnit = lines.ToArray();
             }
         }
 
+        /*
         /// <summary>
         /// 为单元添加子单元，需要该单元的名称、类型以及子单元
         /// </summary>
@@ -292,6 +280,7 @@ namespace WwiseTools.Utils
             }
             return result;
         }
+        */
 
         /// <summary>
         /// 通过名称搜索单元，需要一个parser的字符串数组
@@ -299,48 +288,32 @@ namespace WwiseTools.Utils
         /// <param name="name"></param>
         /// <param name="file"></param>
         /// <returns></returns>
-        public WwiseUnit GetUnitByName(string name, string[] file)
+        public wwiseObject GetUnitByName(string name, string type)
         {
-            string type = "";
-            string guid = "";
-            foreach (var l in file)
+            XmlNodeList elements = xmlDocument.GetElementsByTagName("ChildrenList");
+            Console.WriteLine(elements[0].ChildNodes.Count);
+            foreach (XmlElement e in elements[0].ChildNodes)
             {
-                if (l.Contains(name))
-                {   
-                    var properties = l.Replace('\t', ' ').Trim().Split(' ');
-                    string t = properties[0].Trim().Replace("<", "");
-                    type = t.Trim();
-
-                    int id_index = 0;
-                    string n = null;
-
-
-
-                    n = GetName(ref id_index, properties);
-
-                    n = n.Replace("Name=\"", "");
-                    n = n.Replace("\"", "");
-                    name = n.Trim();
-
-                    string g = properties[id_index].Replace("ID=\"{", "");
-                    g = g.Replace("}\">", "");
-                    guid = g.Trim();
-                    break;
+                Console.WriteLine("{0} : {1}", e.Name, e.GetAttribute("Name"));
+                if (e.GetAttribute("Name") == name)
+                {
+                    wwiseObject wu;
+                    wu.Name = name;
+                    wu.Type = type;
+                    wu.ID = e.GetAttribute("ID").Replace("{", "").Replace("}", "").Trim();
+                    return wu;
                 }
+
             }
 
-            return new WwiseUnit(name, type, guid);
-        }
+            wwiseObject unit;
+            unit.ID = null;
+            unit.Name = null;
+            unit.Type = null;
 
-        /// <summary>
-        /// 获取Parser中的工作单元信息
-        /// </summary>
-        /// <returns></returns>
-        public WwiseWorkUnit GetWorkUnit()
-        {
-            return GetWorkUnit(ToString());
+            return unit;
         }
-
+        
         /// <summary>
         /// 获取XML模式版本
         /// </summary>
@@ -357,19 +330,20 @@ namespace WwiseTools.Utils
         /// </summary>
         /// <param name="txt_file"></param>
         /// <returns></returns>
-        public WwiseWorkUnit GetWorkUnit(string txt_file)
+        public wwiseObject GetWorkUnit()
         {
-            XmlDocument doc = new XmlDocument();
-            doc.LoadXml(txt_file);
             //Console.WriteLine(doc.ChildNodes[1].Attributes[0].Value);
 
-            string name = doc.ChildNodes[1].FirstChild.FirstChild.Attributes[0].Value;
-            string id = doc.ChildNodes[1].FirstChild.FirstChild.Attributes[1].Value.Replace("{", "").Replace("}", "").Trim();
-            string type = doc.ChildNodes[1].FirstChild.Name;
+            XmlElement workUnit = (XmlElement)xmlDocument.GetElementsByTagName("WorkUnit")[0];
+            wwiseObject wu;
+            wu.Name = workUnit.GetAttribute("Name");
+            wu.ID = workUnit.GetAttribute("ID").Replace("{", "").Replace("}", "").Trim();
+            wu.Type = xmlDocument.GetElementsByTagName("WwiseDocument")[0].FirstChild.Name;
 
-            return new WwiseWorkUnit(name, type, id);
-
+            
+            return wu;
         }
+        /*
 
         private string GetName(ref int index, string[] properties)
         {
@@ -405,6 +379,6 @@ namespace WwiseTools.Utils
         private int GetTabCount(string line)
         {
             return line.Count(c => c == '\t');
-        }
+        }*/
     }
 }

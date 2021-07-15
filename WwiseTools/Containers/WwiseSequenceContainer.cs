@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using WwiseTools.Basics;
 using WwiseTools.Properties;
+using WwiseTools.Reference;
 using WwiseTools.Utils;
 
 namespace WwiseTools
@@ -21,22 +22,14 @@ namespace WwiseTools
         WwiseNode playlist;
 
 
-        public WwiseSequenceContainer(string _name) : base(_name)
+        public WwiseSequenceContainer(string name, WwiseParser parser) : base(name, parser)
         {
+            AddProperty(new WwiseProperty("RandomOrSequence", "int16", "0", parser));
         }
 
-        public WwiseSequenceContainer(string _name, string guid) : base(_name, guid)
+        public WwiseSequenceContainer(string name, string guid, WwiseParser parser) : base(name, guid, parser)
         {
-        }
-
-        protected override void Init(string _name, string u_type, string guid)
-        {
-            base.Init(_name, u_type, guid);
-
-            AddChildNodeAtFront(properties = WwiseNode.NewPropertyList(new List<IWwisePrintable>()
-            {
-                new WwiseProperty("RandomOrSequence", "int16", "0")
-            })); ;
+            AddProperty(new WwiseProperty("RandomOrSequence", "int16", "0", parser));
         }
 
         
@@ -48,7 +41,7 @@ namespace WwiseTools
         {
             int s = 0;
             if (restart) s = 1;
-            AddProperty(new WwiseProperty("RestartBeginningOrBackward", "int16", String.Format("{0}", s.ToString())));
+            AddProperty(new WwiseProperty("RestartBeginningOrBackward", "int16", String.Format("{0}", s.ToString()), parser));
         }
 
         public override WwiseUnit AddChild(WwiseUnit child)
@@ -57,10 +50,10 @@ namespace WwiseTools
 
             if (playlist == null)
             {
-                playlist = new WwiseNode("Playlist");
+                playlist = new WwiseNode("Playlist", parser);
                 AddChildNode(playlist);
             }
-            playlist.AddChildNode(new WwiseItemRef(child.name, child.id));
+            playlist.AddChildNode(new WwiseItemRef(child.Name, child.ID, parser));
 
             return child;
         }

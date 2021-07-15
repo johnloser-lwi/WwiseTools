@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using WwiseTools.Basics;
 using WwiseTools.Properties;
+using WwiseTools.Utils;
 
 namespace WwiseTools.Audio
 {
@@ -15,10 +16,10 @@ namespace WwiseTools.Audio
         public enum CueType { Entry, Exit, Custom }
         private CueType cueType;
 
-        public WwiseMusicCue(string _name, CueType cueType) : base(_name, "MusicCue")
+        public WwiseMusicCue(string name, CueType cueType, WwiseParser parser) : base(name, "MusicCue", parser)
         {
             this.cueType = cueType;
-            AddProperty(new WwiseProperty("CueType", "int16", CueTypeChecker(cueType).ToString()));
+            AddProperty(new WwiseProperty("CueType", "int16", CueTypeChecker(cueType).ToString(), parser));
         }
 
         private int CueTypeChecker(CueType trackType)

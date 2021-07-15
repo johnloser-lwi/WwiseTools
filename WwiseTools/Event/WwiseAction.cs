@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using WwiseTools.Properties;
 using WwiseTools.Basics;
+using WwiseTools.Reference;
+using WwiseTools.Utils;
 
 namespace WwiseTools
 {
@@ -23,13 +25,12 @@ namespace WwiseTools
         /// </summary>
         /// <param name="actionType"></param>
         /// <param name="reference"></param>
-        public WwiseAction(ActionType actionType, WwiseObjectRef reference) : base("", "Action")
+        public WwiseAction(ActionType actionType, WwiseObjectRef reference, WwiseParser parser) : base("", "Action", parser)
         {
-            AddProperty(new Properties.WwiseProperty("ActionType", "int16", ActionTypeCheck(actionType).ToString()));
-            AddChildNode(WwiseNode.NewReferenceList(new List<IWwisePrintable>()
-            {
-                new WwiseNodeWithName("Reference", "Target", reference)
-            }));
+            AddProperty(new Properties.WwiseProperty("ActionType", "int16", ActionTypeCheck(actionType).ToString(), parser));
+            var referenceList = WwiseNode.NewReferenceList(parser);
+            referenceList.AddChildNode(new WwiseNodeWithName("Reference", "Target", parser, reference));
+            AddChildNode(referenceList);
         }
 
         private int ActionTypeCheck(ActionType type)

@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using WwiseTools.Basics;
 using WwiseTools.Properties;
+using WwiseTools.Utils;
 
 namespace WwiseTools.Audio
 {
@@ -13,36 +14,29 @@ namespace WwiseTools.Audio
         public WwiseNode TransitionInfo { get => transitionInfo; }
         WwiseNode transitionInfo;
 
-        public WwiseMusicTransition() : base("Root", "MusicTransition")
+        public WwiseMusicTransition(WwiseParser parser) : base("Root", "MusicTransition", parser)
         {
             SetDefaultProperty();
             AddChildrenList();
-            AddChildNode(transitionInfo = new WwiseNode("TransitionInfo"));
+            AddChildNode(transitionInfo = new WwiseNode("TransitionInfo", parser));
+            Node.RemoveChild(Node.GetElementsByTagName("ReferenceList")[0]);
         }
 
-        public WwiseMusicTransition(string name) : base(name, "MusicTransition")
+        public WwiseMusicTransition(string name, WwiseParser parser) : base(name, "MusicTransition", parser)
         {
             //SetDefaultProperty();
             //AddChildrenList();
-            AddChildNode(transitionInfo = new WwiseNode("TransitionInfo"));
+            AddChildNode(transitionInfo = new WwiseNode("TransitionInfo", parser));
         }
 
-        public void AddTransitionInfo(IWwisePrintable info)
+        public void AddTransitionInfo(WwiseNode info)
         {
             transitionInfo.AddChildNode(info);
         }
 
         private void SetDefaultProperty()
         {
-            AddProperty(new WwiseProperty("IsFolder", "bool", "True"));
-        }
-
-        protected override void Init(string _name, string u_type, string audioSourceID)
-        {
-            this.unit_name = _name;
-            this.guid = Guid.NewGuid().ToString().ToUpper().Trim();
-            xml_head = String.Format("<{0} Name=\"{1}\" ID=\"{{{2}}}\">", u_type, unit_name, guid);
-            xml_tail = String.Format("</{0}>", u_type);
+            AddProperty(new WwiseProperty("IsFolder", "bool", "True", parser));
         }
     }
 }

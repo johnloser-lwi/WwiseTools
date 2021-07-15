@@ -24,10 +24,10 @@ namespace WwiseTools
         /// <summary>
         /// 初始化名称、语言以及源文件
         /// </summary>
-        /// <param name="_name"></param>
+        /// <param name="name"></param>
         /// <param name="language"></param>
         /// <param name="file"></param>
-        public WwiseSound(string _name, string language, string file) : base(_name, "Sound")
+        public WwiseSound(string name, string language, string file, WwiseParser parser) : base(name, "Sound", parser)
         {
             this.language = language;
             AddFile(file);
@@ -36,19 +36,21 @@ namespace WwiseTools
         /// <summary>
         /// 初始化名称、语言、源文件以及GUID
         /// </summary>
-        /// <param name="_name"></param>
+        /// <param name="name"></param>
         /// <param name="language"></param>
         /// <param name="file"></param>
         /// <param name="guid"></param>
-        public WwiseSound(string _name, string language, string file, string guid) : base(_name, "Sound", guid)
+        public WwiseSound(string name, string language, string file, string guid, WwiseParser parser) : base(name, "Sound", guid, parser)
         {
             this.language = language;
             AddFile(file);
         }
-        
-        public WwiseSound(string _name, string u_type) : base(_name, u_type)
+
+
+        public WwiseSound(string name, string u_type, WwiseParser parser) : base(name, u_type, parser)
         {
         }
+        
 
         /// <summary>
         /// 设置Stream模式
@@ -66,10 +68,10 @@ namespace WwiseTools
             if (nonCache) isNonCache = "True";
             if (zeroLatency) isZeroLatency = "True";
 
-            AddProperty(new WwiseProperty("IsNonCachable", "bool", isNonCache));
-            AddProperty(new WwiseProperty("IsStreamingEnabled", "bool", isStream));
-            AddProperty(new WwiseProperty("IsZeroLantency", "bool", isZeroLatency));
-            AddProperty(new WwiseProperty("PreFetchLength", "int16", preFetchLength.ToString()));
+            AddProperty(new WwiseProperty("IsNonCachable", "bool", isNonCache, parser));
+            AddProperty(new WwiseProperty("IsStreamingEnabled", "bool", isStream, parser));
+            AddProperty(new WwiseProperty("IsZeroLantency", "bool", isZeroLatency, parser));
+            AddProperty(new WwiseProperty("PreFetchLength", "int16", preFetchLength.ToString(), parser));
         }
 
         protected virtual void AddFile(string file)
@@ -81,13 +83,10 @@ namespace WwiseTools
             }
             if (language != "SFX")
             {
-                AddChildNode(WwiseNode.NewPropertyList(new List<IWwisePrintable>()
-                {
-                    new WwiseProperty("IsVoice", "bool", "True")
-                }));
+                AddProperty(new WwiseProperty("IsVoice", "bool", "True", parser));
             }
 
-            WwiseAudioFileSource audioFileSource = new WwiseAudioFileSource(name, language, file);
+            WwiseAudioFileSource audioFileSource = new WwiseAudioFileSource(Name, language, file, parser);
 
             AddChild(audioFileSource);
         }

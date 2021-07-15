@@ -47,6 +47,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Audio\WwiseAudioFileSource.cs" />
     <Compile Include="Audio\WwiseMusicClip.cs" />
     <Compile Include="Audio\WwiseMusicCue.cs" />
     <Compile Include="Audio\WwiseMusicPlaylistContainer.cs" />
@@ -54,31 +55,29 @@
     <Compile Include="Audio\WwiseMusicSegment.cs" />
     <Compile Include="Audio\WwiseMusicTrack.cs" />
     <Compile Include="Audio\WwiseMusicTrackSequence.cs" />
-    <Compile Include="Audio\WwiseAudioFileSource.cs" />
     <Compile Include="Audio\WwiseMusicTransition.cs" />
-    <Compile Include="Containers\WwiseContainer.cs" />
-    <Compile Include="Containers\WwiseFolder.cs" />
-    <Compile Include="Containers\WwiseSequenceContainer.cs" />
-    <Compile Include="Event\WwiseAction.cs" />
-    <Compile Include="Event\WwiseEvent.cs" />
-    <Compile Include="Interfaces\WwiseInterface.cs" />
-    <Compile Include="Program.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Audio\WwiseSound.cs" />
     <Compile Include="BasicClasses\WwiseNode.cs" />
     <Compile Include="BasicClasses\WwiseNodeWithName.cs" />
-    <Compile Include="Utils\SoundInfo.cs" />
-    <Compile Include="WwiseProperties\WwiseAudioSourceRef.cs" />
-    <Compile Include="WwiseProperties\WwiseItemRef.cs" />
-    <Compile Include="WwiseProperties\WwiseObjectRef.cs" />
-    <Compile Include="Utils\WwiseParser.cs" />
-    <Compile Include="WwiseProperties\WwiseProperty.cs" />
-    <Compile Include="Containers\WwiseRandomContainer.cs" />
-    <Compile Include="Containers\WwiseSwitchContainer.cs" />
+    <Compile Include="BasicClasses\wwiseObject.cs" />
     <Compile Include="BasicClasses\WwiseUnit.cs" />
+    <Compile Include="Containers\WwiseContainer.cs" />
+    <Compile Include="Containers\WwiseFolder.cs" />
+    <Compile Include="Containers\WwiseRandomContainer.cs" />
+    <Compile Include="Containers\WwiseSequenceContainer.cs" />
+    <Compile Include="Containers\WwiseSwitchContainer.cs" />
+    <Compile Include="Event\WwiseAction.cs" />
+    <Compile Include="Event\WwiseEvent.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utils\SoundInfo.cs" />
+    <Compile Include="Utils\WwiseParser.cs" />
     <Compile Include="Utils\WwiseUtility.cs" />
-    <Compile Include="BasicClasses\WwiseWorkUnit.cs" />
-    <Compile Include="Audio\WwiseSound.cs" />
-    <Compile Include="WwiseProperties\WwiseSegmentRef.cs" />
+    <Compile Include="WwiseProperties\WwiseProperty.cs" />
+    <Compile Include="WwiseReference\WwiseAudioSourceRef.cs" />
+    <Compile Include="WwiseReference\WwiseItemRef.cs" />
+    <Compile Include="WwiseReference\WwiseObjectRef.cs" />
+    <Compile Include="WwiseReference\WwiseSegmentRef.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

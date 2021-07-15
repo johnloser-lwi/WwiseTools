@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WwiseTools.Properties;
+using WwiseTools.Utils;
 
 namespace WwiseTools.Audio
 {
@@ -23,20 +24,20 @@ namespace WwiseTools.Audio
         /// </summary>
         /// <param name="playlistType"></param>
         /// <param name="loopCount"></param>
-        public WwiseMusicPlaylistItem(PlaylistType playlistType, int loopCount = 1) : base("", "MusicPlaylistItem")
+        public WwiseMusicPlaylistItem(PlaylistType playlistType, WwiseParser parser, int loopCount = 1) : base("", "MusicPlaylistItem", parser)
         {
             this.playlistType = playlistType;
-            AddProperty(new WwiseProperty("PlayMode", "int16", PlaylistTypeCheck(playlistType).ToString()));
-            AddProperty(new WwiseProperty("LoopCount", "int16", loopCount.ToString()));
+            AddProperty(new WwiseProperty("PlayMode", "int16", PlaylistTypeCheck(playlistType).ToString(), parser));
+            AddProperty(new WwiseProperty("LoopCount", "int16", loopCount.ToString(), parser));
         }
 
         /// <summary>
         /// 通过指定的SegmentRef初始化
         /// </summary>
         /// <param name="segment"></param>
-        public WwiseMusicPlaylistItem(WwiseSegmentRef segment) : base("", "MusicPlaylistItem")
+        public WwiseMusicPlaylistItem(WwiseSegmentRef segment, WwiseParser parser) : base("", "MusicPlaylistItem", parser)
         {
-            AddProperty(new WwiseProperty("PlaylistItemType", "int16", "1"));
+            AddProperty(new WwiseProperty("PlaylistItemType", "int16", "1", parser));
             AddChildNode(segment);
         }
 
@@ -47,7 +48,7 @@ namespace WwiseTools.Audio
         /// <returns></returns>
         public WwiseSegmentRef AddSegment(WwiseSegmentRef segment)
         {
-            AddChild(new WwiseMusicPlaylistItem(segment));
+            AddChild(new WwiseMusicPlaylistItem(segment, parser));
             return segment;
         }
 
@@ -59,7 +60,7 @@ namespace WwiseTools.Audio
         /// <returns></returns>
         public WwiseMusicPlaylistItem AddGroup(WwiseMusicPlaylistItem.PlaylistType playlistType, int loopCount = 1)
         {
-            var group = new WwiseMusicPlaylistItem(playlistType, loopCount);
+            var group = new WwiseMusicPlaylistItem(playlistType, parser, loopCount);
             AddChild(group);
 
             return group;

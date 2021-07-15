@@ -4,27 +4,20 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WwiseTools.Basics;
+using WwiseTools.Utils;
 
 namespace WwiseTools.Audio
 {
     class WwiseMusicTrackSequence : WwiseUnit
     {
-        public WwiseMusicTrackSequence() : base("", "MusicTrackSequence")
+        public WwiseMusicTrackSequence(WwiseParser parser) : base("", "MusicTrackSequence", parser)
         {
-        }
-
-        protected override void Init(string _name, string u_type, string audioSourceID)
-        {
-            this.unit_name = _name;
-            this.guid = Guid.NewGuid().ToString().ToUpper().Trim();
-            xml_head = String.Format("<{0} Name=\"{1}\" ID=\"{{{2}}}\">", u_type, unit_name, guid);
-            xml_tail = String.Format("</{0}>", u_type);
         }
 
         protected override void AddChildrenList()
         {
-            if (children != null) return;
-            AddChildNode(children = new WwiseNode("ClipList"));
+            if (childrenList != null) return;
+            AddChildNode(childrenList = new WwiseNode("ClipList", parser));
         }
     }
 }

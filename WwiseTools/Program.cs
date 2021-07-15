@@ -7,6 +7,7 @@ using WwiseTools.Properties;
 using WwiseTools.Utils;
 using WwiseTools.Audio;
 using WwiseTools.Basics;
+using WwiseTools.Reference;
 
 namespace WwiseTools
 {
@@ -14,31 +15,23 @@ namespace WwiseTools
     {
         static void Main(string[] args)
         {
-            WwiseUtility.Init(@"D:\UnityProject\project_WwiseProject", @"D:\", false);//初始化Wwise工程路径
+            WwiseTools.Utils.WwiseUtility.Init(@"D:\UnityProject\project_WwiseProject", @"C:\", false);//初始化Wwise工程路径
+            WwiseTools.Utils.WwiseParser parser = new WwiseTools.Utils.WwiseParser();
+            parser.Parse(@"Events\New Work Unit.wwu");
+            //WwiseNodeWithName node = new WwiseNodeWithName("Folder", "TestFolder", parser);
 
-            WwiseMusicPlaylistContainer container = WwiseUtility.GenerateMusicPlaylistFromFolder(@"TestTrapTrack", WwiseMusicPlaylistItem.PlaylistType.SequenceContinous, 0);
-            container.SetTempoAndTimeSignature(140, 4, 4);
-            var group = container.Playlist.AddGroup(WwiseMusicPlaylistItem.PlaylistType.RandomContinous, 1);
-            WwiseMusicSegment track = (WwiseMusicSegment)container.Children.ChildNodes[0];
-            group.AddSegment(new WwiseSegmentRef(track.name, track.id));
+            WwiseEvent ev = new WwiseEvent("PlayShit", parser);
+            WwiseSound sound = new WwiseSound("Shit", "SFX", "test.wav", parser);
+            WwiseObjectRef reference = new WwiseObjectRef("Shit", sound.ID, parser);
+            ev.AddChild
+                (
+                    new WwiseAction(WwiseAction.ActionType.Play, reference, parser)
+                );
 
-            Console.WriteLine("id {0}", container.FindSegmentByName("TrapTest").id);
+            parser.AddChildToWorkUnit(ev);
 
-            WwiseParser parser = new WwiseParser();
-            parser.Parse(@"Interactive Music Hierarchy/New Work Unit.wwu");
-            parser.AddChildToWorkUnit(container);
-            //parser.CommitChange();
+            parser.ToFile("test.xml");
 
-            WwiseParser eventParser = new WwiseParser();
-            eventParser.Parse(@"Events/New Work Unit.wwu");
-            var action = WwiseUtility.ToEvent("TrapMusic", container, parser.GetWorkUnit(), WwiseAction.ActionType.Play);
-            eventParser.AddChildToWorkUnit(action);
-            //eventParser.CommitChange();
-
-            //Print()函数会将这个WorkUnit中的所有内容转换成字符串
-            //Console.WriteLine(eventParser.GetSchemaVersion());
-            //Console.WriteLine(eventParser.ToString());
-            
             Console.ReadLine();
         }
     }

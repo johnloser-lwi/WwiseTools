@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WwiseTools.Basics;
+using WwiseTools.Utils;
 
 namespace WwiseTools
 {
@@ -12,7 +13,7 @@ namespace WwiseTools
     /// </summary>
     public class WwiseEvent : WwiseUnit
     {
-        public WwiseEvent(string _name) : base(_name, "Event")
+        public WwiseEvent(string _name, WwiseParser parser) : base(_name, "Event", parser)
         { 
         }
     }

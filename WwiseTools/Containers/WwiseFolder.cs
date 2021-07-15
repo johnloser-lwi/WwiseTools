@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WwiseTools.Utils;
 
 namespace WwiseTools
 {
@@ -15,7 +16,7 @@ namespace WwiseTools
         /// 创建并设置名称
         /// </summary>
         /// <param name="_name"></param>
-        public WwiseFolder(string _name) : base(_name, "Folder")
+        public WwiseFolder(string _name, WwiseParser parser) : base(_name, "Folder", parser)
         {
         }
 
@@ -24,7 +25,7 @@ namespace WwiseTools
         /// </summary>
         /// <param name="_name"></param>
         /// <param name="guid"></param>
-        public WwiseFolder(string _name, string guid) : base(_name, "Folder", guid)
+        public WwiseFolder(string _name, string guid, WwiseParser parser) : base(_name, "Folder", guid, parser)
         {
         }
     }

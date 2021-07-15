@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WwiseTools.Basics;
-using WwiseTools.Properties;
+//using WwiseTools.Properties;
 using WwiseTools.Utils;
 
 namespace WwiseTools
@@ -15,31 +15,34 @@ namespace WwiseTools
     public class WwiseContainer : WwiseUnit
     {
 
-        public WwiseContainer(string _name, string u_type) : base(_name, u_type)
+        protected WwiseNode referenceList;
+        public WwiseNode ReferenceList => referenceList;
+
+        public WwiseContainer(string name, string u_type, WwiseParser parser) : base(name, u_type, parser)
         {
             //AddChildrenList();
+            Init(parser);
         }
 
-        public WwiseContainer(string _name, string u_type, string guid) : base(_name, u_type, guid)
+        public WwiseContainer(string name, string u_type, string guid, WwiseParser parser) : base(name, u_type, guid, parser)
         {
             //AddChildrenList();
+            Init(parser);
         }
 
-        protected override void Init(string _name, string u_type, string guid)
+        protected virtual void Init(WwiseParser parser)
         {
-            base.Init(_name, u_type, guid);
-
             if (WwiseUtility.ProjectPath == null)
             {
                 Console.WriteLine("WwiseUtility not initialized!");
                 return;
             }
 
-            AddChildNode(WwiseNode.NewReferenceList(new List<IWwisePrintable>()
-            {
-                WwiseUtility.DefualtConversionSettings,
-                WwiseUtility.MasterAudioBus
-            }));
+            referenceList = new WwiseNode("ReferenceList", parser);
+            WwiseUtility.GetWwiseDefaultConversionSettings(parser);
+            referenceList.AddChildNode(WwiseUtility.GetWwiseDefaultConversionSettings(parser));
+            referenceList.AddChildNode(WwiseUtility.GetMasterAudioBus(parser));
+            AddChildNode(referenceList);
         }
 
 

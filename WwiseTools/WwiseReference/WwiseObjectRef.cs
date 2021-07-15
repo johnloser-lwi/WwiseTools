@@ -19,9 +19,15 @@ namespace WwiseTools.Reference
         /// <param name="name"></param>
         /// <param name="id"></param>
         /// <param name="work_unit_id"></param>
-        public WwiseObjectRef(string name, string id, string work_unit_id, WwiseParser parser) : base("ObjectRef", name, parser)
+        public WwiseObjectRef(string name, string id, WwiseParser parser) : base("ObjectRef", name, parser)
         {
             node.SetAttribute("ID", "{" + id + "}");
+            node.SetAttribute("WorkUnitID", "{" + parser.GetWorkUnit().ID + "}");
+        }
+
+        public WwiseObjectRef(string name, string id, string work_unit_id, WwiseParser parser) : base("ObjectRef", name, parser)
+        {
+            node.SetAttribute("ID", "{" + parser.GetWorkUnit().ID + "}");
             node.SetAttribute("WorkUnitID", "{" + work_unit_id + "}");
         }
     }

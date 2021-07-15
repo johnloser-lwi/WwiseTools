@@ -20,7 +20,7 @@ namespace WwiseTools.Basics
         /// </summary>
         /// <param name="children"></param>
         /// <returns></returns>
-        public static WwiseNode NewChildrenList(List<IWwisePrintable> children, WwiseParser parser)
+        public static WwiseNode NewChildrenList(WwiseParser parser)
         {
             return new WwiseNode("ChildrenList", parser);
         }
@@ -30,7 +30,7 @@ namespace WwiseTools.Basics
         /// </summary>
         /// <param name="children"></param>
         /// <returns></returns>
-        public static WwiseNode NewPropertyList(List<IWwisePrintable> children, WwiseParser parser)
+        public static WwiseNode NewPropertyList(WwiseParser parser)
         {
             return new WwiseNode("PropertyList", parser);
         }
@@ -40,14 +40,18 @@ namespace WwiseTools.Basics
         /// </summary>
         /// <param name="children"></param>
         /// <returns></returns>
-        public static WwiseNode NewReferenceList(List<IWwisePrintable> children, WwiseParser parser)
+        public static WwiseNode NewReferenceList(WwiseParser parser)
         {
             return new WwiseNode("ReferenceList", parser);
         }
 
         //public virtual int tabs { get => p_tabs; set { p_tabs = value; } }
 
-        public string Type => node.Name;
+        public virtual string Type => node.Name;
+
+        public virtual XmlDocument XML => xmlDocument;
+
+        protected WwiseParser parser;
 
         //public string head => xml_head;
 
@@ -75,6 +79,7 @@ namespace WwiseTools.Basics
         /// <param name="u_type"></param>
         public WwiseNode(string u_type, WwiseParser parser)
         {
+            this.parser = parser;
             xmlDocument = parser.Document;
             node = xmlDocument.CreateElement(u_type);
         }
@@ -86,6 +91,7 @@ namespace WwiseTools.Basics
         /// <param name="child"></param>
         public WwiseNode(string u_type, WwiseParser parser, WwiseNode child)
         {
+            this.parser = parser;
             xmlDocument = parser.Document;
             node = xmlDocument.CreateElement(u_type);
 
@@ -99,6 +105,7 @@ namespace WwiseTools.Basics
         /// <param name="children"></param>
         public WwiseNode(string u_type, WwiseParser parser, List<WwiseNode> children)
         {
+            this.parser = parser;
             xmlDocument = parser.Document;
             node = xmlDocument.CreateElement(u_type);
 
@@ -117,7 +124,12 @@ namespace WwiseTools.Basics
             Node.RemoveChild(node.Node);
         }
 
-        
+        public void RemoveChildNode(XmlElement node)
+        {
+            Node.RemoveChild(node);
+        }
+
+
         public WwiseNode AddChildNode(WwiseNode node)
         {
             XmlElement n = node.Node;
@@ -135,10 +147,19 @@ namespace WwiseTools.Basics
             using (var stringWriter = new StringWriter())
             using (var xmlTextWriter = XmlWriter.Create(stringWriter))
             {
-                xmlDocument.WriteTo(xmlTextWriter);
+                Node.WriteTo(xmlTextWriter);
                 xmlTextWriter.Flush();
                 return stringWriter.GetStringBuilder().ToString();
             }
+        }
+
+        public virtual wwiseObject ToObject()
+        {
+            wwiseObject result;
+            result.Type = Type;
+            result.Name = null;
+            result.ID = null;
+            return result;
         }
 
     }

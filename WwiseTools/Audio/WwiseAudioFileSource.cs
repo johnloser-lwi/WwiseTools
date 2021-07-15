@@ -14,20 +14,32 @@ namespace WwiseTools
 
         protected string language;
 
-        public WwiseAudioFileSource(string _name, string language, string file) : base(_name, "AudioFileSource")
+        public WwiseAudioFileSource(string name, string language, string file, WwiseParser parser) : base(name, "AudioFileSource", parser)
         {
             this.language = language;
-            AddChildNode(new WwiseProperty("Language", language));
+            //AddChildNode(new WwiseProperty("Language", language, parser));
+            var lan = XML.CreateElement("Language");
+            lan.InnerText = language;
+            Node.AppendChild(lan);
             WwiseUtility.CopyFile(file, language);
-            AddChildNode(new WwiseProperty("AudioFile", file));
+            //AddChildNode(new WwiseProperty("AudioFile", file, parser));
+            var au = XML.CreateElement("AudioFile");
+            au.InnerText = file;
+            Node.AppendChild(au);
         }
 
-        public WwiseAudioFileSource(string _name, string language, string file, string guid) : base(_name, "AudioFileSource", guid)
+        public WwiseAudioFileSource(string name, string language, string file, string guid, WwiseParser parser) : base(name, "AudioFileSource", guid, parser)
         {
             this.language = language;
-            AddChildNode(new WwiseProperty("Language", language));
+            //AddChildNode(new WwiseProperty("Language", language, parser));
+            var lan = XML.CreateElement("Language");
+            lan.InnerText = language;
+            Node.AppendChild(lan);
             WwiseUtility.CopyFile(file, language);
-            AddChildNode(new WwiseProperty("AudioFile", file));
+            //AddChildNode(new WwiseProperty("AudioFile", file, parser));
+            var au = XML.CreateElement("AudioFile");
+            au.InnerText = file;
+            Node.AppendChild(au);
         }
     }
 }

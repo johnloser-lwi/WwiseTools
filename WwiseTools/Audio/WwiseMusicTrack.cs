@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using WwiseTools.Basics;
 using WwiseTools.Properties;
+using WwiseTools.Utils;
 
 namespace WwiseTools.Audio
 {
@@ -15,15 +16,15 @@ namespace WwiseTools.Audio
     {
         public enum TrackType { Normal, RandomStep, SequenceStep, Switch }
 
-        public WwiseMusicTrack(string _name, string file, float endPosition, TrackType trackType) : base(_name, "MusicTrack")
+        public WwiseMusicTrack(string name, string file, float endPosition, TrackType trackType, WwiseParser parser) : base(name, "MusicTrack", parser)
         {
-            AddProperty(new WwiseProperty("MusicTrackType", "int16", TrackTypeChecker(trackType).ToString()));
+            AddProperty(new WwiseProperty("MusicTrackType", "int16", TrackTypeChecker(trackType).ToString(), parser));
             WwiseAudioFileSource source;
-            AddChild(source = new WwiseAudioFileSource(_name, "SFX", file));
-            AddChildNode(new WwiseNode("TransitionList", new WwiseMusicTransition()));
-            WwiseMusicTrackSequence seq = new WwiseMusicTrackSequence();
-            seq.AddChild(new WwiseMusicClip(_name, endPosition, file, source.id));
-            AddChildNode(new WwiseNode("SequenceList", seq));
+            AddChild(source = new WwiseAudioFileSource(name, "SFX", file, parser));
+            AddChildNode(new WwiseNode("TransitionList", parser, new WwiseMusicTransition(parser)));
+            WwiseMusicTrackSequence seq = new WwiseMusicTrackSequence(parser);
+            seq.AddChild(new WwiseMusicClip(name, endPosition, file, source.ID, parser));
+            AddChildNode(new WwiseNode("SequenceList", parser, seq));
         }
 
         /// <summary>
@@ -37,7 +38,7 @@ namespace WwiseTools.Audio
         public void SetStream(bool stream, bool nonCache, bool zeroLatency, int preFetchLength = 100, int lookAheadTime = 100)
         {
             base.SetStream(stream, nonCache, zeroLatency, preFetchLength);
-            AddProperty(new WwiseProperty("LookAheadTime", "int16", lookAheadTime.ToString()));
+            AddProperty(new WwiseProperty("LookAheadTime", "int16", lookAheadTime.ToString(), parser));
         }
 
         private int TrackTypeChecker(TrackType trackType)
