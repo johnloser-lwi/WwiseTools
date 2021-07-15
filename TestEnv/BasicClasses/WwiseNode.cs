@@ -124,7 +124,12 @@ namespace WwiseTools.Basic
             Node.RemoveChild(node.Node);
         }
 
-        
+        public void RemoveChildNode(XmlElement node)
+        {
+            Node.RemoveChild(node);
+        }
+
+
         public WwiseNode AddChildNode(WwiseNode node)
         {
             XmlElement n = node.Node;

@@ -45,12 +45,12 @@ namespace WwiseTools
             this.language = language;
             AddFile(file);
         }
-        
-        /*
+
+
         public WwiseSound(string name, string u_type, WwiseParser parser) : base(name, u_type, parser)
         {
         }
-        */
+        
 
         /// <summary>
         /// 设置Stream模式
