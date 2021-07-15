@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using WwiseTools.Basic;
 using WwiseTools.Properties;
+using WwiseTools.Reference;
 
 namespace WwiseTools.Utils
 {
@@ -125,7 +126,7 @@ namespace WwiseTools.Utils
 
             return result;
         }
-
+       */
         /// <summary>
         /// 将文件复制到Originals文件夹下
         /// </summary>
@@ -147,7 +148,7 @@ namespace WwiseTools.Utils
             {
                 Console.WriteLine(e.Message);
             }
-        }*/
+        }
 
         private static string file_path;
         private static string project_path;
@@ -161,14 +162,14 @@ namespace WwiseTools.Utils
 
         public static int SchemaVersion => schema_version;
 
-        /*
+        
         /// <summary>
         /// 设置是否执行复制
         /// </summary>
         public static bool CommitCopy { get => commitCopy; set => commitCopy = value; }
 
         private static bool commitCopy = false;
-
+        /*
         /// <summary>
         /// 获取默认的转码设置(Default Conversion Settings)
         /// </summary>

@@ -43,6 +43,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Audio\WwiseAudioFileSource.cs" />
+    <Compile Include="Audio\WwiseSound.cs" />
     <Compile Include="BasicClasses\wwiseWorkUnit.cs" />
     <Compile Include="Containers\WwiseContainer.cs" />
     <Compile Include="Containers\WwiseFolder.cs" />
@@ -56,8 +58,8 @@
     <Compile Include="Utils\WwiseParser.cs" />
     <Compile Include="BasicClasses\WwiseUnit.cs" />
     <Compile Include="Utils\WwiseUtility.cs" />
-    <Compile Include="WwiseProperties\WwiseItemRef.cs" />
-    <Compile Include="WwiseProperties\WwiseObjectRef.cs" />
+    <Compile Include="WwiseReference\WwiseItemRef.cs" />
+    <Compile Include="WwiseReference\WwiseObjectRef.cs" />
     <Compile Include="WwiseProperties\WwiseProperty.cs" />
   </ItemGroup>
   <ItemGroup>

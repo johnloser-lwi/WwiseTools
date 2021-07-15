@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using WwiseTools.Utils;
 using WwiseTools.Basic;
 
-namespace WwiseTools.Properties
+namespace WwiseTools.Reference
 {
     /// <summary>
     /// 对于Wwise物体(单元)的引用

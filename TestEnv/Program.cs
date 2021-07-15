@@ -13,14 +13,14 @@ namespace TestEnv
     {
         static void Main(string[] args)
         {
-            WwiseTools.Utils.WwiseUtility.Init(@"C:\Users\Loser\Desktop\TestWwise", @"C:\", false);//初始化Wwise工程路径
+            WwiseTools.Utils.WwiseUtility.Init(@"D:\UnityProject\project_WwiseProject", @"C:\", false);//初始化Wwise工程路径
             WwiseTools.Utils.WwiseParser parser = new WwiseTools.Utils.WwiseParser();
             parser.Parse(@"Actor-Mixer Hierarchy\New Work Unit.wwu");
             WwiseNodeWithName node = new WwiseNodeWithName("Folder", "TestFolder", parser);
             WwiseFolder folder = new WwiseFolder("TestFolder", parser);
 
-            WwiseSwitchContainer c = new WwiseSwitchContainer("Test", "RandomSequenceContainer", parser);
-            c.AddChild(new WwiseUnit("testchild", "Sound", parser));
+            WwiseSwitchContainer c = new WwiseSwitchContainer("TestContainer", parser);
+            c.AddChild(new WwiseSound("TestSound", "SFX", "xx.wav", parser));
 
             folder.AddChild(c);
 

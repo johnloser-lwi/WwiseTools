@@ -18,13 +18,13 @@ namespace WwiseTools
         protected WwiseNode referenceList;
         public WwiseNode ReferenceList => referenceList;
 
-        public WwiseContainer(string _name, string u_type, WwiseParser parser) : base(_name, u_type, parser)
+        public WwiseContainer(string name, string u_type, WwiseParser parser) : base(name, u_type, parser)
         {
             //AddChildrenList();
             Init(parser);
         }
 
-        public WwiseContainer(string _name, string u_type, string guid, WwiseParser parser) : base(_name, u_type, guid, parser)
+        public WwiseContainer(string name, string u_type, string guid, WwiseParser parser) : base(name, u_type, guid, parser)
         {
             //AddChildrenList();
             Init(parser);

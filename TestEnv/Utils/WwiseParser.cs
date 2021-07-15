@@ -302,7 +302,7 @@ namespace WwiseTools.Utils
                     wwiseUnit wu;
                     wu.Name = name;
                     wu.Type = type;
-                    wu.ID = e.GetAttribute("ID");
+                    wu.ID = e.GetAttribute("ID").Replace("{", "").Replace("}", "").Trim();
                     return wu;
                 }
 
@@ -339,7 +339,7 @@ namespace WwiseTools.Utils
             XmlElement workUnit = (XmlElement)xmlDocument.GetElementsByTagName("WorkUnit")[0];
             wwiseWorkUnit wu;
             wu.Name = workUnit.GetAttribute("Name");
-            wu.ID = workUnit.GetAttribute("ID").Replace("{", "").Replace("}", "").Trim() ;
+            wu.ID = workUnit.GetAttribute("ID").Replace("{", "").Replace("}", "").Trim();
             wu.Type = xmlDocument.GetElementsByTagName("WwiseDocument")[0].FirstChild.Name;
 
             

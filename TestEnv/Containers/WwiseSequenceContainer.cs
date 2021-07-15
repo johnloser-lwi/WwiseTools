@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using WwiseTools.Basic;
 using WwiseTools.Properties;
+using WwiseTools.Reference;
 using WwiseTools.Utils;
 
 namespace WwiseTools
