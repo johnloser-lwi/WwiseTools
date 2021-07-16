@@ -15,10 +15,9 @@ namespace WwiseTools
     {
         static void Main(string[] args)
         {
-            WwiseTools.Utils.WwiseUtility.Init(@"D:\UnityProject\project_WwiseProject", @"C:\", false);//初始化Wwise工程路径
+            WwiseTools.Utils.WwiseUtility.Init(@"../../../TestProject", @"C:\", false);//初始化Wwise工程路径
             WwiseTools.Utils.WwiseParser parser = new WwiseTools.Utils.WwiseParser();
-            parser.Parse(@"Events\New Work Unit.wwu");
-            //WwiseNodeWithName node = new WwiseNodeWithName("Folder", "TestFolder", parser);
+            parser.InitWorkUnit("Test", "Events", "Events/Test.wwu");
 
             WwiseEvent ev = new WwiseEvent("PlayShit", parser);
             WwiseSound sound = new WwiseSound("Shit", "SFX", "test.wav", parser);
@@ -32,6 +31,7 @@ namespace WwiseTools
             parser.AddChildToWorkUnit(ev);
 
             parser.ToFile("test.xml");
+            parser.CommitChange();
 
             Console.ReadLine();
         }

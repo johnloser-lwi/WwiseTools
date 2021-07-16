@@ -59,8 +59,34 @@ namespace WwiseTools.Utils
         public void Parse(string file_path)
         {
             string _path = Path.Combine(WwiseUtility.ProjectPath, file_path);
+            path = _path;
+            xmlDocument.Load(path);
+        }
 
-            xmlDocument.Load(_path);
+        public void InitWorkUnit(string workUnitName, string workUnitType, string file_path)
+        {
+            string _path = Path.Combine(WwiseUtility.ProjectPath, file_path);
+            path = _path;
+
+            xmlDocument.LoadXml("<?xml version=\"1.0\" encoding=\"utf-8\"?>" +
+                "<WwiseDocument>" +
+                "</WwiseDocument>");
+
+            string guid = Guid.NewGuid().ToString().ToUpper().Trim();
+
+            XmlElement document = (XmlElement)xmlDocument.GetElementsByTagName("WwiseDocument")[0];
+            document.SetAttribute("Type", "WorkUnit");
+            document.SetAttribute("ID", "{" + guid + "}");
+            document.SetAttribute("SchemaVersion", WwiseUtility.SchemaVersion.ToString());
+            XmlElement type = xmlDocument.CreateElement(workUnitType);
+            XmlElement workUnit = xmlDocument.CreateElement("WorkUnit");
+            workUnit.SetAttribute("Name", workUnitName);
+            workUnit.SetAttribute("ID", "{" + guid + "}");
+            workUnit.SetAttribute("PersistMode", "Standalone");
+
+            type.AppendChild(workUnit);
+            document.AppendChild(type);
+            xmlDocument.AppendChild(document);
         }
 
         public void ToFile(string path)
@@ -74,9 +100,19 @@ namespace WwiseTools.Utils
         /// <param name="backup"></param>
         public void CommitChange(bool backup = true)
         {
-            File.Copy(path, path + ".backup", true);
-            string text = "";
-            ToFile(path);
+            try
+            {
+                File.Copy(path, path + ".backup", true);
+
+            }
+            catch
+            {
+                Console.WriteLine("Backup failed!");
+            }
+            finally
+            {
+                ToFile(path);
+            }
         }
 
 
