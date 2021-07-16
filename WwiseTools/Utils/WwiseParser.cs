@@ -15,8 +15,8 @@ namespace WwiseTools.Utils
     /// </summary>
     public class WwiseParser
     {
-        public string[] WorkUnit => workUnit;
-        string[] workUnit;
+        //public string[] WorkUnit => workUnit;
+        //string[] workUnit;
 
         public string FilePath => path;
         string path;
@@ -89,6 +89,7 @@ namespace WwiseTools.Utils
 
             try
             {
+                
                 XmlNode workUnit = xmlDocument.GetElementsByTagName("WorkUnit")[0];
                 XmlNode childlist = workUnit.FirstChild;
                 if (childlist == null)
@@ -99,8 +100,8 @@ namespace WwiseTools.Utils
 
                 if (childlist != null)
                 {
-                    childlist.AppendChild(child.Node);
-                    workUnit.AppendChild(childlist);
+                    childlist.AppendChild(xmlDocument.ImportNode(child.Node, true));
+                    //workUnit.AppendChild(childlist);
                 }
 
                 
@@ -120,166 +121,10 @@ namespace WwiseTools.Utils
             {
                 if (el.GetAttribute("Name") == unitName && el.GetAttribute("ID").Replace("{", "").Replace("}", "").Trim() == id)
                 {
-                    el.AppendChild(child.Node);
+                    el.AppendChild(xmlDocument.ImportNode(child.Node, true));
                 }
             }
         }
-
-        /*
-        /// <summary>
-        /// 为单元添加子单元，需要该单元的名称、类型以及子单元
-        /// </summary>
-        /// <param name="unitName"></param>
-        /// <param name="type"></param>
-        /// <param name="child"></param>
-        public void AddChildToUnit(string unitName, string type, WwiseUnit child)
-        {
-            if (WorkUnit == null)
-            {
-                Console.WriteLine("Parse the file first!");
-                return;
-            }
-            string line = "";
-            int index = 0;
-            for (int i = 0; i < workUnit.Length; i++)
-            {
-
-                
-                if (workUnit[i].Contains("Name=" + String.Format("\"{0}\"", unitName)))
-                {
-                    line = workUnit[i];
-                    index = i;
-                    break;
-                }
-            }
-
-            if (line == "")
-            {
-                Console.WriteLine(type + " " +  unitName + " not found!");
-                return;
-            }
-
-            int tabs = GetTabCount(line);
-
-            if (line.Contains("/>"))
-            {
-                workUnit[index] = line.Replace("/>", ">");
-                WwiseNode list = WwiseNode.NewChildrenList(new List<IWwisePrintable>()
-                {
-                    child
-                });
-                list.tabs = tabs + 1;
-                List<string> newLines = ParseText(list.Print(false)).ToList();
-                string t = "";
-                for (int i = 0; i < tabs; i++)
-                {
-                    t += "\t";
-                }
-                newLines.Add(t + String.Format("</{0}>", type));
-
-                List<string> lines = new List<string>();
-                for (int i = 0; i < index + 1; i++)
-                {
-                    lines.Add(workUnit[i]);
-                }
-                foreach (var l in newLines)
-                {
-                    lines.Add(l);
-                }
-                for (int i = index + 1; i < workUnit.Length; i++)
-                {
-                    lines.Add(workUnit[i]);
-                }
-                workUnit = lines.ToArray();
-            }
-            else
-            {
-                int endIndex = -1;
-                for (int i = index + 1; i < workUnit.Length; i ++)
-                {
-                    if (GetTabCount(workUnit[index]) == GetTabCount(workUnit[i]) && workUnit[i].Replace("\t", "").Trim() == String.Format("</{0}>", type))
-                    {
-                        endIndex = i;
-                        break;
-                    }
-                }
-
-                if (endIndex == -1)
-                {
-                    Console.WriteLine("File is broken!");
-                    return;
-                }
-                int childIndex = -1;
-                for (int i = index + 1; i < endIndex; i++)
-                {
-                    if (GetTabCount(workUnit[index]) + 1 == GetTabCount(workUnit[i]) && workUnit[i].Replace("\t", "").Trim() == "<ChildrenList>")
-                    {
-                        childIndex = i;
-                        break;
-                    }
-                }
-                if (childIndex == -1) // No ChildrenList
-                {
-                    WwiseNode list = WwiseNode.NewChildrenList(new List<IWwisePrintable>()
-                    {
-                        child
-                    });
-                    list.tabs = tabs + 1;
-                    List<string> newLines = ParseText(list.Print(false)).ToList();
-
-                    List<string> lines = new List<string>();
-                    for (int i = 0; i < endIndex; i++)
-                    {
-                        lines.Add(workUnit[i]);
-                    }
-                    foreach (var l in newLines)
-                    {
-                        lines.Add(l);
-                    }
-                    for (int i = endIndex; i < workUnit.Length; i++)
-                    {
-                        lines.Add(workUnit[i]);
-                    }
-                    workUnit = lines.ToArray();
-                }
-                else // Has ChildrenList
-                {
-                    child.tabs = tabs + 2;
-                    List<string> newLines = ParseText(child.Print(false)).ToList();
-
-
-                    List<string> lines = new List<string>();
-                    for (int i = 0; i < childIndex + 1; i++)
-                    {
-                        lines.Add(workUnit[i]);
-                    }
-                    foreach (var l in newLines)
-                    {
-                        lines.Add(l);
-                    }
-                    for (int i = childIndex + 1; i < workUnit.Length; i++)
-                    {
-                        lines.Add(workUnit[i]);
-                    }
-                    workUnit = lines.ToArray();
-                }
-            }
-        }
-
-        /// <summary>
-        /// 将Parser转换成字符串输出
-        /// </summary>
-        /// <returns></returns>
-        public override string ToString()
-        {
-            string result = "";
-            foreach (var l in workUnit)
-            {
-                result += l + "\n";
-            }
-            return result;
-        }
-        */
 
         /// <summary>
         /// 通过名称搜索单元，需要一个parser的字符串数组
@@ -342,42 +187,5 @@ namespace WwiseTools.Utils
             
             return wu;
         }
-        /*
-
-        private string GetName(ref int index, string[] properties)
-        {
-            string n = "";
-            foreach (var s in properties)
-            {
-                if (s.StartsWith("Name="))
-                {
-                    n = "";
-                }
-                if (n != null && !s.StartsWith("ID="))
-                {
-                    n += s + " ";
-                }
-                if (s.StartsWith("ID="))
-                {
-                    foreach (var j in properties)
-                    {
-                        if (j == s)
-                        {
-                            break;
-                        }
-                        index += 1;
-                    }
-                    break;
-                }
-
-            }
-
-            return n;
-        }
-
-        private int GetTabCount(string line)
-        {
-            return line.Count(c => c == '\t');
-        }*/
     }
 }

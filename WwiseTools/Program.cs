@@ -22,6 +22,7 @@ namespace WwiseTools
 
             WwiseEvent ev = new WwiseEvent("PlayShit", parser);
             WwiseSound sound = new WwiseSound("Shit", "SFX", "test.wav", parser);
+            sound.SetInclusion(false);
             WwiseObjectRef reference = new WwiseObjectRef("Shit", sound.ID, parser);
             ev.AddChild
                 (
