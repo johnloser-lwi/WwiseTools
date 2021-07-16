@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("GUID_Generator")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("WwiseTools")]
+[assembly: AssemblyDescription("Wwise Work Unit generation tools.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("GUID_Generator")]
+[assembly: AssemblyCompany("Losers' World Industries")]
+[assembly: AssemblyProduct("WwiseTools")]
 [assembly: AssemblyCopyright("Copyright ©  2021")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
