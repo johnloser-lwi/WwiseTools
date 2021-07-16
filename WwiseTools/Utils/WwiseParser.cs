@@ -75,7 +75,6 @@ namespace WwiseTools.Utils
         public void CommitChange(bool backup = true)
         {
             File.Copy(path, path + ".backup", true);
-            string text = "";
             ToFile(path);
         }
 
