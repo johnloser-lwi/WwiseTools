@@ -76,6 +76,23 @@ namespace WwiseTools
             AddProperty(new WwiseProperty("PreFetchLength", "int16", preFetchLength.ToString(), parser));
         }
 
+
+        /// <summary>
+        /// 设置是否启动改音频
+        /// </summary>
+        /// <param name="include"></param>
+        public void SetInclusion(bool include)
+        {
+            if (include)
+            {
+                AddProperty(new WwiseProperty("Inclusion", "bool", "True", parser));
+            }
+            else
+            {
+                AddProperty(new WwiseProperty("Inclusion", "bool", "False", parser));
+            }
+        }
+
         protected virtual void AddFile(string file)
         {
             if (WwiseUtility.ProjectPath == null)

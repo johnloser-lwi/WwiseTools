@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WwiseTools.Audio;
 using WwiseTools.Basics;
 using WwiseTools.Properties;
 using WwiseTools.Reference;
@@ -39,13 +40,13 @@ namespace WwiseTools.Utils
         /// <param name="workUnit"></param>
         /// <param name="actionType"></param>
         /// <returns></returns>
-       /* public static WwiseEvent ToEvent(string name, WwiseUnit unit, WwiseWorkUnit workUnit, WwiseAction.ActionType actionType)
+        public static WwiseEvent ToEvent(string name, WwiseUnit unit, wwiseObject workUnit, WwiseAction.ActionType actionType, WwiseParser parser)
         {
-            if (String.IsNullOrEmpty(name)) name = unit.name;
+            if (String.IsNullOrEmpty(name)) name = unit.Name;
 
-            WwiseAction action = ToAction(unit, workUnit, actionType);
+            WwiseAction action = ToAction(unit, workUnit, actionType, parser);
 
-            WwiseEvent e = new WwiseEvent(name);
+            WwiseEvent e = new WwiseEvent(name, parser);
             e.AddChild(action);
 
             return e;
@@ -58,9 +59,9 @@ namespace WwiseTools.Utils
         /// <param name="workUnit"></param>
         /// <param name="actionType"></param>
         /// <returns></returns>
-        public static WwiseAction ToAction(WwiseUnit unit, WwiseWorkUnit workUnit, WwiseAction.ActionType actionType)
+        public static WwiseAction ToAction(WwiseUnit unit, wwiseObject workUnit, WwiseAction.ActionType actionType, WwiseParser parser)
         {
-            WwiseAction action = new WwiseAction(actionType, new WwiseObjectRef(unit.name, unit.id, workUnit.id));
+            WwiseAction action = new WwiseAction(actionType, new WwiseObjectRef(unit.Name, unit.ID, workUnit.ID, parser), parser);
 
             return action;
         }
@@ -71,9 +72,9 @@ namespace WwiseTools.Utils
         /// <param name="name"></param>
         /// <param name="actionList"></param>
         /// <returns></returns>
-        public static WwiseEvent ToEvent(string name, WwiseAction[] actionList)
+        public static WwiseEvent ToEvent(string name, WwiseAction[] actionList, WwiseParser parser)
         {
-            WwiseEvent e = new WwiseEvent(name);
+            WwiseEvent e = new WwiseEvent(name, parser);
             foreach (var action in actionList)
             {
                 e.AddChild(action);
@@ -89,15 +90,15 @@ namespace WwiseTools.Utils
         /// <param name="playlistType"></param>
         /// <param name="loopCount"></param>
         /// <returns></returns>
-        public static WwiseMusicPlaylistContainer GenerateMusicPlaylistFromFolder(string folderPath, WwiseMusicPlaylistItem.PlaylistType playlistType, int loopCount = 1)
+        public static WwiseMusicPlaylistContainer GenerateMusicPlaylistFromFolder(string folderPath, WwiseMusicPlaylistItem.PlaylistType playlistType, WwiseParser parser, int loopCount = 1)
         {
             string path = Path.Combine(file_path, folderPath);
             string[] folders = Directory.GetDirectories(path);
-            WwiseMusicPlaylistContainer container = new WwiseMusicPlaylistContainer(folderPath, playlistType, loopCount);
+            WwiseMusicPlaylistContainer container = new WwiseMusicPlaylistContainer(folderPath, playlistType, parser, loopCount);
             foreach (var f in folders)
             {
                 string folder = new DirectoryInfo(f).Name;
-                container.AddSegment(GenerateMusicSegmentFromFolder(Path.Combine(folderPath, folder)));
+                container.AddSegment(GenerateMusicSegmentFromFolder(Path.Combine(folderPath, folder), parser));
             }
 
             return container;
@@ -109,11 +110,11 @@ namespace WwiseTools.Utils
         /// <param name="folderPath"></param>
         /// <param name="trackType"></param>
         /// <returns></returns>
-        public static WwiseMusicSegment GenerateMusicSegmentFromFolder(string folderPath, WwiseMusicTrack.TrackType trackType = WwiseMusicTrack.TrackType.Normal)
+        public static WwiseMusicSegment GenerateMusicSegmentFromFolder(string folderPath, WwiseParser parser, WwiseMusicTrack.TrackType trackType = WwiseMusicTrack.TrackType.Normal)
         {
             string path = Path.Combine(file_path, folderPath);
             string[] fileList = Directory.GetFiles(path);
-            WwiseMusicSegment result = new WwiseMusicSegment(new DirectoryInfo(folderPath).Name);
+            WwiseMusicSegment result = new WwiseMusicSegment(new DirectoryInfo(folderPath).Name, parser);
 
             foreach (var file in fileList)
             {
@@ -126,7 +127,7 @@ namespace WwiseTools.Utils
 
             return result;
         }
-       */
+       
         /// <summary>
         /// 将文件复制到Originals文件夹下
         /// </summary>
@@ -169,17 +170,7 @@ namespace WwiseTools.Utils
         public static bool CommitCopy { get => commitCopy; set => commitCopy = value; }
 
         private static bool commitCopy = false;
-        /*
-        /// <summary>
-        /// 获取默认的转码设置(Default Conversion Settings)
-        /// </summary>
-        public static WwiseNodeWithName DefualtConversionSettings { get => default_conversion_settings;  }
 
-        /// <summary>
-        /// 获取默认的总线(Master Audio Bus)
-        /// </summary>
-        public static WwiseNodeWithName MasterAudioBus { get => master_audio_bus; }
-        */
         public static WwiseNodeWithName GetWwiseDefaultConversionSettings(WwiseParser externalParser)
         {
             WwiseParser parser = new WwiseParser();
