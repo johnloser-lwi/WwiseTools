@@ -2,5 +2,5 @@ bin
 obj
 .vs
 .DS_Store
-.wsettings
-.validationcache
+*.wsettings
+*.validationcache
