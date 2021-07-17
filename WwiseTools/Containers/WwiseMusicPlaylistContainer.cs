@@ -8,7 +8,7 @@ using WwiseTools.Basics;
 using WwiseTools.Properties;
 using WwiseTools.Utils;
 
-namespace WwiseTools.Audio
+namespace WwiseTools
 {
     /// <summary>
     /// Wwise中的Music Playlist Container

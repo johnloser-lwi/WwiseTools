@@ -48,7 +48,7 @@
     <Compile Include="Audio\WwiseAudioFileSource.cs" />
     <Compile Include="Audio\WwiseMusicClip.cs" />
     <Compile Include="Audio\WwiseMusicCue.cs" />
-    <Compile Include="Audio\WwiseMusicPlaylistContainer.cs" />
+    <Compile Include="Containers\WwiseMusicPlaylistContainer.cs" />
     <Compile Include="Audio\WwiseMusicPlaylistItem.cs" />
     <Compile Include="Audio\WwiseMusicSegment.cs" />
     <Compile Include="Audio\WwiseMusicTrack.cs" />
