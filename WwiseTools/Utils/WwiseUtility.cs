@@ -36,7 +36,7 @@ namespace WwiseTools.Utils
 
         }
 
-        public static async Task ImportFile(string file_path, string language = "SFX")
+        public static async Task ImportFile(string file_path, string language = "SFX", string subFolder = "", string parent_path = "", string work_unit = "Default Work Unit")
         {
             if (!file_path.EndsWith(".wav")) return;
 
@@ -54,22 +54,30 @@ namespace WwiseTools.Utils
             {
                 
 
-                var import_q = new
+                var import_q = new JObject
                 {
-                    importOperation = "useExisting",
-                    @default = new
+                    new JProperty("importOperation", "useExisting"),
+                    
+                    new JProperty("default", new JObject
                     {
-                        importLanguage = language
-                    },
-                    imports = new JArray
+                        new JProperty("importLanguage", language),
+                        
+                    }),
+                    new JProperty("imports", new JArray
                     {
                         new JObject
                         {
                             new JProperty("audioFile", file_path),
-                            new JProperty("objectPath", $"\\Actor-Mixer Hierarchy\\Default Work Unit\\<Sound>{file_name}")
+                            new JProperty("objectPath", $"\\Actor-Mixer Hierarchy\\{work_unit}\\{parent_path}\\<Sound>{file_name}")
                         }
-                    }
+                    })
                 };
+                
+                if (!String.IsNullOrEmpty(subFolder))
+                {
+                    (import_q["default"] as JObject).Add(new JProperty("originalsSubFolder", subFolder));
+                }
+                
 
                 await client.Call(
                     ak.wwise.core.audio.import, import_q);

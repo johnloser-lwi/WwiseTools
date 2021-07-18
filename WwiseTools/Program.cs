@@ -12,7 +12,7 @@ namespace WwiseTools
         static void Main(string[] args)
         {
             WwiseUtility.Init(@"../../../TestProject", @"C:\", false).Wait();
-            WwiseUtility.ImportFile("D:\\UI_Cancel.wav", "Chinese(CN)").Wait();
+            WwiseUtility.ImportFile("D:\\UI_Cancel.wav", "SFX", "UI", "<Folder>TestFolder\\<RandomSequenceContainer>TestContainer").Wait();
 
             Console.ReadLine();
         }
