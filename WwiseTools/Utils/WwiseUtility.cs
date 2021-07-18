@@ -14,8 +14,10 @@ namespace WwiseTools.Utils
     public class WwiseUtility
     {
         static JsonClient client;
-        public static async Task Init(string project_path, string file_path = @"", bool commitCopy = false) 
+        public static async Task Init() 
         {
+            if (client != null) return;
+
             try
             {
                 client = new JsonClient();
@@ -36,9 +38,11 @@ namespace WwiseTools.Utils
 
         }
 
-        public static async Task ImportFile(string file_path, string language = "SFX", string subFolder = "", string parent_path = "", string work_unit = "Default Work Unit")
+        public static async Task<WwiseObject> ImportSound(string file_path, string language = "SFX", string subFolder = "", string parent_path = "", string work_unit = "Default Work Unit", string hierarchy = "Actor-Mixer Hierarchy")
         {
-            if (!file_path.EndsWith(".wav")) return;
+            Init().Wait();
+
+            if (!file_path.EndsWith(".wav")) return new WwiseObject(null, null, null);
 
             string file_name = "";
             try
@@ -48,6 +52,7 @@ namespace WwiseTools.Utils
             catch (IOException e)
             {
                 Console.WriteLine(e.Message);
+                return new WwiseObject(null, null, null);
             }
 
             try
@@ -68,7 +73,7 @@ namespace WwiseTools.Utils
                         new JObject
                         {
                             new JProperty("audioFile", file_path),
-                            new JProperty("objectPath", $"\\Actor-Mixer Hierarchy\\{work_unit}\\{parent_path}\\<Sound>{file_name}")
+                            new JProperty("objectPath", $"\\{hierarchy}\\{work_unit}\\{parent_path}\\<Sound>{file_name}")
                         }
                     })
                 };
@@ -77,16 +82,18 @@ namespace WwiseTools.Utils
                 {
                     (import_q["default"] as JObject).Add(new JProperty("originalsSubFolder", subFolder));
                 }
-                
 
-                await client.Call(
+                var sound = await client.Call(
                     ak.wwise.core.audio.import, import_q);
 
                 Console.WriteLine("File imported successfully!");
+
+                return new WwiseObject(sound["name"].ToString(), sound["id"].ToString(), "Sound SFX");
             }
             catch (Wamp.ErrorException e)
             {
                 Console.WriteLine($"Failed to import file : {file_path} =======>" + e.Message);
+                return new WwiseObject(null, null, null);
             }
         }
         
