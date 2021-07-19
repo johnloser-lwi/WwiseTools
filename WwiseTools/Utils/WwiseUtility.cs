@@ -34,8 +34,13 @@ namespace WwiseTools.Utils
             {
                 Console.WriteLine("Connection Failed!");
             }
-            
+        }
 
+        public static async Task Close()
+        {
+            if (client == null) return;
+
+            await client.Close();
         }
 
         public static async Task<WwiseObject> ImportSound(string file_path, string language = "SFX", string subFolder = "", string parent_path = "", string work_unit = "Default Work Unit", string hierarchy = "Actor-Mixer Hierarchy")
@@ -83,12 +88,30 @@ namespace WwiseTools.Utils
                     (import_q["default"] as JObject).Add(new JProperty("originalsSubFolder", subFolder));
                 }
 
-                var sound = await client.Call(
-                    ak.wwise.core.audio.import, import_q);
 
-                Console.WriteLine("File imported successfully!");
+                var options = new JObject(
+                        new JProperty("return", new string[] { "name", "id", "type" }));
 
-                return new WwiseObject(sound["name"].ToString(), sound["id"].ToString(), "Sound SFX");
+                var result = await client.Call(
+                    ak.wwise.core.audio.import, import_q, options);
+
+                
+
+                try
+                {
+                    string name = result["objects"].Last["name"].ToString();
+                    string id = result["objects"].Last["id"].ToString();
+                    string type = result["objects"].Last["type"].ToString();
+
+                    Console.WriteLine("File imported successfully!");
+
+                    return new WwiseObject(name, id, type);
+                }
+                catch
+                {
+                    Console.WriteLine("Failed to return WwiseObject!");
+                    return new WwiseObject(null, null, null);
+                }
             }
             catch (Wamp.ErrorException e)
             {

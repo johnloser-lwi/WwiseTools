@@ -12,9 +12,11 @@ namespace WwiseTools
     {
         static void Main(string[] args)
         { 
-            Task<WwiseObject> obj = WwiseUtility.ImportSound(@"D:\\UI_Cancel.wav");//, "SFX", "UI", "<Folder>TestFolder\\<RandomSequenceContainer>TestContainer");
+            Task<WwiseObject> obj = WwiseUtility.ImportSound(@"D:\\BGM\\Login\\denglu_bpm120_4_4_1.wav");
             obj.Wait();
-            Console.WriteLine(obj.Result);
+            Console.WriteLine(obj.Result.ToString());
+
+            WwiseUtility.Close().Wait();
 
             Console.ReadLine();
         }
