@@ -43,7 +43,15 @@ namespace WwiseTools.Utils
             await client.Close();
         }
 
-        public static async Task<WwiseObject> ImportSound(string file_path, string language = "SFX", string subFolder = "", string parent_path = "", string work_unit = "Default Work Unit", string hierarchy = "Actor-Mixer Hierarchy")
+        public static WwiseObject ImportSound(string file_path, string language = "SFX", string subFolder = "", string parent_path = "", string work_unit = "Default Work Unit", string hierarchy = "Actor-Mixer Hierarchy")
+        {
+            Task<WwiseObject> obj = WwiseUtility.ImportSoundAsync(@"D:\\BGM\\Login\\denglu_bpm120_4_4_1.wav", "SFX", "UI", "<Folder>TEST");
+            obj.Wait();
+            return obj.Result;
+        }
+
+
+        public static async Task<WwiseObject> ImportSoundAsync(string file_path, string language = "SFX", string subFolder = "", string parent_path = "", string work_unit = "Default Work Unit", string hierarchy = "Actor-Mixer Hierarchy")
         {
             Init().Wait();
 

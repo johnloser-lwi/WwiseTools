@@ -12,9 +12,8 @@ namespace WwiseTools
     {
         static void Main(string[] args)
         { 
-            Task<WwiseObject> obj = WwiseUtility.ImportSound(@"D:\\BGM\\Login\\denglu_bpm120_4_4_1.wav");
-            obj.Wait();
-            Console.WriteLine(obj.Result.ToString());
+            var obj = WwiseUtility.ImportSound(@"D:\\BGM\\Login\\denglu_bpm120_4_4_1.wav", "SFX", "UI", "<Folder>TEST");
+            Console.WriteLine(obj.ToString());
 
             WwiseUtility.Close().Wait();
 
