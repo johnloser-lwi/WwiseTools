@@ -1,206 +1,212 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
+using Newtonsoft.Json.Linq;
+
+using AK.Wwise.Waapi;
 using System.Threading.Tasks;
-using WwiseTools.Audio;
-using WwiseTools.Basics;
-using WwiseTools.Properties;
-using WwiseTools.Reference;
 
 namespace WwiseTools.Utils
 {
     /// <summary>
-    /// 默认功能，负责初始化路径以及常用的转换等
+    /// 用于实现基础功能
     /// </summary>
     public class WwiseUtility
     {
-        /// <summary>
-        /// 初始化Wwise工程路径、用户指定文件夹路径以及是否自动复制文件
-        /// </summary>
-        /// <param name="project_path"></param>
-        /// <param name="file_path"></param>
-        /// <param name="commitCopy"></param>
-        public static void Init(string project_path, string file_path = @"", bool commitCopy = false) 
-        {
-            WwiseUtility.project_path = project_path;
-            WwiseUtility.file_path = file_path;
-            //WwiseUtility.commitCopy = commitCopy;
-            //GetWwiseDefaultConversionSettings();
-            //GetMasterAudioBus();
-        }
-
+        static JsonClient client;
 
         /// <summary>
-        /// 将指定Wwise单元转换为事件，需要指定该单元以及该单元所属的工作单元，并设置Action类型
+        /// 连接初始化
         /// </summary>
-        /// <param name="name"></param>
-        /// <param name="unit"></param>
-        /// <param name="workUnit"></param>
-        /// <param name="actionType"></param>
         /// <returns></returns>
-        public static WwiseEvent ToEvent(string name, WwiseUnit unit, wwiseObject workUnit, WwiseAction.ActionType actionType, WwiseParser parser)
+        public static async Task<bool> Init() // 初始化，返回连接状态
         {
-            if (String.IsNullOrEmpty(name)) name = unit.Name;
+            if (client != null) return client.IsConnected();
 
-            WwiseAction action = ToAction(unit, workUnit, actionType, parser);
-
-            WwiseEvent e = new WwiseEvent(name, parser);
-            e.AddChild(action);
-
-            return e;
-        }
-
-        /// <summary>
-        /// 将指定Wwise单元转换成事件中的Action，需要指定该单元以及该单元所属的工作单元，并设置Action类型
-        /// </summary>
-        /// <param name="unit"></param>
-        /// <param name="workUnit"></param>
-        /// <param name="actionType"></param>
-        /// <returns></returns>
-        public static WwiseAction ToAction(WwiseUnit unit, wwiseObject workUnit, WwiseAction.ActionType actionType, WwiseParser parser)
-        {
-            WwiseAction action = new WwiseAction(actionType, new WwiseObjectRef(unit.Name, unit.ID, workUnit.ID, parser), parser);
-
-            return action;
-        }
-
-        /// <summary>
-        /// 创建一个事件，并添加一组Action
-        /// </summary>
-        /// <param name="name"></param>
-        /// <param name="actionList"></param>
-        /// <returns></returns>
-        public static WwiseEvent ToEvent(string name, WwiseAction[] actionList, WwiseParser parser)
-        {
-            WwiseEvent e = new WwiseEvent(name, parser);
-            foreach (var action in actionList)
-            {
-                e.AddChild(action);
-            }
-
-            return e;
-        }
-
-        /// <summary>
-        /// 通过指定文件夹路径生成Music Playlist Container，可设置Playlist Type以及循环次数(默认为1)
-        /// </summary>
-        /// <param name="folderPath"></param>
-        /// <param name="playlistType"></param>
-        /// <param name="loopCount"></param>
-        /// <returns></returns>
-        public static WwiseMusicPlaylistContainer GenerateMusicPlaylistFromFolder(string folderPath, WwiseMusicPlaylistItem.PlaylistType playlistType, WwiseParser parser, int loopCount = 1)
-        {
-            string path = Path.Combine(file_path, folderPath);
-            string[] folders = Directory.GetDirectories(path);
-            WwiseMusicPlaylistContainer container = new WwiseMusicPlaylistContainer(folderPath, playlistType, parser, loopCount);
-            foreach (var f in folders)
-            {
-                string folder = new DirectoryInfo(f).Name;
-                container.AddSegment(GenerateMusicSegmentFromFolder(Path.Combine(folderPath, folder), parser));
-            }
-
-            return container;
-        }
-
-        /// <summary>
-        /// 通过指定文件夹路径生成Music Segment，可设置轨道Track Type(默认为Normal)
-        /// </summary>
-        /// <param name="folderPath"></param>
-        /// <param name="trackType"></param>
-        /// <returns></returns>
-        public static WwiseMusicSegment GenerateMusicSegmentFromFolder(string folderPath, WwiseParser parser, WwiseMusicTrack.TrackType trackType = WwiseMusicTrack.TrackType.Normal)
-        {
-            string path = Path.Combine(file_path, folderPath);
-            string[] fileList = Directory.GetFiles(path);
-            WwiseMusicSegment result = new WwiseMusicSegment(new DirectoryInfo(folderPath).Name, parser);
-
-            foreach (var file in fileList)
-            {
-                string file_name = Path.GetFileName(file);
-                string p = Path.Combine(folderPath, file_name);
-                if (!file_name.EndsWith(".wav")) continue;
-                var track = result.AddTrack(file_name.Replace(".wav", ""), p, trackType);
-                track.SetStream(true, false, false);
-            }
-
-            return result;
-        }
-       
-        /// <summary>
-        /// 将文件复制到Originals文件夹下
-        /// </summary>
-        /// <param name="file"></param>
-        /// <param name="language"></param>
-        public static void CopyFile(string file, string language)
-        {
-
-            if (!CommitCopy) return;
             try
             {
-                string final_path = Path.Combine(FilePath, file);
-                string destination = project_path + @"/Originals" + String.Format(@"/{0}/", language) + file;
-                Console.WriteLine(Path.GetDirectoryName(destination));
-                if (!Directory.Exists(Path.GetDirectoryName(destination))) Directory.CreateDirectory(Path.GetDirectoryName(destination));
-                File.Copy(final_path, destination, true);
+                client = new JsonClient();
+                await client.Connect(); // 尝试创建Wwise连接
+
+                Console.WriteLine("Connected successfully!");
+
+                client.Disconnected += () =>
+                {
+                    System.Console.WriteLine("Connection closed!"); // 丢失连接提示
+                };
+
+                return true;
             }
-            catch (IOException e)
+            catch (Wamp.ErrorException e)
+            {
+                Console.WriteLine($"Connection Failed! ======> {e.Message}");
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// 关闭连接
+        /// </summary>
+        /// <returns></returns>
+        public static async Task Close()
+        {
+            if (client == null || !client.IsConnected()) return;
+
+            try
+            {
+                await client.Close(); // 尝试断开连接
+            }
+            catch (Wamp.ErrorException e)
             {
                 Console.WriteLine(e.Message);
             }
         }
 
-        private static string file_path;
-        private static string project_path;
-        private static int schema_version = 97;
-
-        //private static  WwiseNodeWithName default_conversion_settings;
-        //private static WwiseNodeWithName master_audio_bus;
-
-        public static string FilePath { get => file_path; set => file_path = value; }
-        public static string ProjectPath { get => project_path; }
-
-        public static int SchemaVersion => schema_version;
-
-        
         /// <summary>
-        /// 设置是否执行复制
+        /// 尝试连接并检查连接状态
         /// </summary>
-        public static bool CommitCopy { get => commitCopy; set => commitCopy = value; }
-
-        private static bool commitCopy = false;
-
-        public static WwiseNodeWithName GetWwiseDefaultConversionSettings(WwiseParser externalParser)
+        /// <returns></returns>
+        private static bool TryConnectWaapi() 
         {
-            WwiseParser parser = new WwiseParser();
-            parser.Parse(@"Conversion Settings\Default Work Unit.wwu");
-            //Console.WriteLine(parser.Document.InnerXml);
-            wwiseObject wu = parser.GetWorkUnit();
-            Console.WriteLine(parser.Document.InnerXml);
-            wwiseObject unit = parser.GetUnitByName("Default Conversion Settings", "Conversion");
-            string id = unit.ID;
-            string workUnitId = wu.ID;
-            WwiseNodeWithName reference = new WwiseNodeWithName("Reference", "Conversion", externalParser);
-            reference.AddChildNode(new WwiseObjectRef("Default Conversion Settings", id, workUnitId, externalParser));
-            return reference;
+            var connected = Init();
+            connected.Wait();
+
+            return connected.Result;
         }
 
-        public static WwiseNodeWithName GetMasterAudioBus(WwiseParser externalParser)
+
+        /// <summary>
+        /// 从指定文件夹导入音频
+        /// </summary>
+        /// <param name="folder_path"></param>
+        /// <param name="language"></param>
+        /// <param name="subFolder"></param>
+        /// <param name="parent_path"></param>
+        /// <param name="work_unit"></param>
+        /// <param name="hierarchy"></param>
+        /// <returns></returns>
+        public static List<WwiseObject> ImportSoundFromFolder(string folder_path, string language = "SFX", string subFolder = "", string parent_path = "", string work_unit = "Default Work Unit", string hierarchy = "Actor-Mixer Hierarchy") // 从指定文件夹路径导入
         {
+            if (!TryConnectWaapi()) return null; // 没有成功连接时返回空的WwiseObject List
 
-            WwiseParser parser = new WwiseParser();
-            parser.Parse(@"Master-Mixer Hierarchy\Default Work Unit.wwu");
-            wwiseObject wu = parser.GetWorkUnit();
-            wwiseObject unit = parser.GetUnitByName("Master Audio Bus", "Bus");
-            string id = unit.ID;
-            string workUnitId = wu.ID;
-            WwiseNodeWithName reference = new WwiseNodeWithName("Reference", "OutputBus", externalParser);
-            reference.AddChildNode(new WwiseObjectRef("Master Audio Bus", id, workUnitId, externalParser));
+            try
+            {
+                List<WwiseObject> results = new List<WwiseObject>();
 
-            //master_audio_bus = reference;
+                string[] files = Directory.GetFiles(folder_path);
+                foreach (var f in files)
+                {
+                    if (!f.Contains(".wav")) continue;
 
-            return reference;
+                    var r = ImportSound(f, language, subFolder, parent_path, work_unit, hierarchy);
+                    results.Add(r);
+                }
+
+                return results;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Failed to import from folder! ======> {e.Message}");
+                return null;
+            }
+        }
+
+
+        /// <summary>
+        /// 从指定路径导入音频
+        /// </summary>
+        /// <param name="file_path"></param>
+        /// <param name="language"></param>
+        /// <param name="subFolder"></param>
+        /// <param name="parent_path"></param>
+        /// <param name="work_unit"></param>
+        /// <param name="hierarchy"></param>
+        /// <returns></returns>
+        public static WwiseObject ImportSound(string file_path, string language = "SFX", string subFolder = "", string parent_path = "", string work_unit = "Default Work Unit", string hierarchy = "Actor-Mixer Hierarchy") // 直接调用的版本
+        {
+            Task<WwiseObject> obj = WwiseUtility.ImportSoundAsync(file_path, language, subFolder, parent_path, work_unit, hierarchy);
+            obj.Wait();
+            return obj.Result;
+        }
+
+        /// <summary>
+        /// 从指定路径导入音频，后台进行
+        /// </summary>
+        /// <param name="file_path"></param>
+        /// <param name="language"></param>
+        /// <param name="subFolder"></param>
+        /// <param name="parent_path"></param>
+        /// <param name="work_unit"></param>
+        /// <param name="hierarchy"></param>
+        /// <returns></returns>
+        public static async Task<WwiseObject> ImportSoundAsync(string file_path, string language = "SFX", string subFolder = "", string parent_path = "", string work_unit = "Default Work Unit", string hierarchy = "Actor-Mixer Hierarchy") // Async版本
+        {
+            if (!file_path.EndsWith(".wav") || !TryConnectWaapi()) return new WwiseObject(null, null, null); // 目标不是文件或者没有成功连接时返回空的WwiseObject
+
+            string file_name = "";
+            try
+            {
+                file_name = Path.GetFileName(file_path).Replace(".wav", ""); // 尝试获取文件名
+            }
+            catch (IOException e)
+            {
+                Console.WriteLine(e.Message);
+                return new WwiseObject(null, null, null);
+            }
+
+            try
+            {
+                var import_q = new JObject // 导入配置
+                {
+                    new JProperty("importOperation", "useExisting"),
+                    
+                    new JProperty("default", new JObject
+                    {
+                        new JProperty("importLanguage", language),
+                        
+                    }),
+                    new JProperty("imports", new JArray
+                    {
+                        new JObject
+                        {
+                            new JProperty("audioFile", file_path),
+                            new JProperty("objectPath", $"\\{hierarchy}\\{work_unit}\\{parent_path}\\<Sound>{file_name}")
+                        }
+                    })
+                };
+                
+                if (!String.IsNullOrEmpty(subFolder))
+                {
+                    (import_q["default"] as JObject).Add(new JProperty("originalsSubFolder", subFolder));
+                }
+
+                var options = new JObject(new JProperty("return", new string[] { "name", "id", "type" })); // 设置返回参数
+
+                var result = await client.Call(ak.wwise.core.audio.import, import_q, options); // 执行导入
+
+                
+
+                try // 尝试返回物体数据
+                {
+                    string name = result["objects"].Last["name"].ToString();
+                    string id = result["objects"].Last["id"].ToString();
+                    string type = result["objects"].Last["type"].ToString();
+
+                    Console.WriteLine("File imported successfully!");
+
+                    return new WwiseObject(name, id, type);
+                }
+                catch
+                {
+                    Console.WriteLine("Failed to return WwiseObject!");
+                    return new WwiseObject(null, null, null);
+                }
+            }
+            catch (Wamp.ErrorException e)
+            {
+                Console.WriteLine($"Failed to import file : {file_path} ======> {e.Message}");
+                return new WwiseObject(null, null, null);
+            }
         }
         
     }
