@@ -1,12 +1,12 @@
 # Wwise Tools
 正在开发的Wwise工具，可以快速生成、编辑Wwise的Work Unit，达到批量添加的效果，提升工作效率。
 
-*作者John Loser*
+*作者 : John Loser*
 
 *.NETFramework,Version=v4.7.2*
 ___
 
-## 基础使用
+### 基础使用
 1. `WwiseUtility.Init();`首先初始化Wwise工程连接。
 2. `Task<WwiseObject> obj = WwiseUtility.ImportSound(@"音频文件路径");`导入指定音频文件。
 3. `obj.Wait();`等待导入完成。
