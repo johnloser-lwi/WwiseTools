@@ -14,6 +14,11 @@ namespace WwiseTools.Utils
     public class WwiseUtility
     {
         static JsonClient client;
+
+        /// <summary>
+        /// 连接初始化
+        /// </summary>
+        /// <returns></returns>
         public static async Task<bool> Init() // 初始化，返回连接状态
         {
             if (client != null) return client.IsConnected();
@@ -39,6 +44,10 @@ namespace WwiseTools.Utils
             }
         }
 
+        /// <summary>
+        /// 关闭连接
+        /// </summary>
+        /// <returns></returns>
         public static async Task Close()
         {
             if (client == null || !client.IsConnected()) return;
@@ -53,20 +62,86 @@ namespace WwiseTools.Utils
             }
         }
 
+        /// <summary>
+        /// 尝试连接并检查连接状态
+        /// </summary>
+        /// <returns></returns>
+        private static bool TryConnectWaapi() 
+        {
+            var connected = Init();
+            connected.Wait();
+
+            return connected.Result;
+        }
+
+
+        /// <summary>
+        /// 从指定文件夹导入音频
+        /// </summary>
+        /// <param name="folder_path"></param>
+        /// <param name="language"></param>
+        /// <param name="subFolder"></param>
+        /// <param name="parent_path"></param>
+        /// <param name="work_unit"></param>
+        /// <param name="hierarchy"></param>
+        /// <returns></returns>
+        public static List<WwiseObject> ImportSoundFromFolder(string folder_path, string language = "SFX", string subFolder = "", string parent_path = "", string work_unit = "Default Work Unit", string hierarchy = "Actor-Mixer Hierarchy") // 从指定文件夹路径导入
+        {
+            if (!TryConnectWaapi()) return null; // 没有成功连接时返回空的WwiseObject List
+
+            try
+            {
+                List<WwiseObject> results = new List<WwiseObject>();
+
+                string[] files = Directory.GetFiles(folder_path);
+                foreach (var f in files)
+                {
+                    if (!f.Contains(".wav")) continue;
+
+                    var r = ImportSound(f, language, subFolder, parent_path, work_unit, hierarchy);
+                    results.Add(r);
+                }
+
+                return results;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Failed to import from folder! ======> {e.Message}");
+                return null;
+            }
+        }
+
+
+        /// <summary>
+        /// 从指定路径导入音频
+        /// </summary>
+        /// <param name="file_path"></param>
+        /// <param name="language"></param>
+        /// <param name="subFolder"></param>
+        /// <param name="parent_path"></param>
+        /// <param name="work_unit"></param>
+        /// <param name="hierarchy"></param>
+        /// <returns></returns>
         public static WwiseObject ImportSound(string file_path, string language = "SFX", string subFolder = "", string parent_path = "", string work_unit = "Default Work Unit", string hierarchy = "Actor-Mixer Hierarchy") // 直接调用的版本
         {
-            Task<WwiseObject> obj = WwiseUtility.ImportSoundAsync(@"D:\\BGM\\Login\\denglu_bpm120_4_4_1.wav", "SFX", "UI", "<Folder>TEST");
+            Task<WwiseObject> obj = WwiseUtility.ImportSoundAsync(file_path, language, subFolder, parent_path, work_unit, hierarchy);
             obj.Wait();
             return obj.Result;
         }
 
-
+        /// <summary>
+        /// 从指定路径导入音频，后台进行
+        /// </summary>
+        /// <param name="file_path"></param>
+        /// <param name="language"></param>
+        /// <param name="subFolder"></param>
+        /// <param name="parent_path"></param>
+        /// <param name="work_unit"></param>
+        /// <param name="hierarchy"></param>
+        /// <returns></returns>
         public static async Task<WwiseObject> ImportSoundAsync(string file_path, string language = "SFX", string subFolder = "", string parent_path = "", string work_unit = "Default Work Unit", string hierarchy = "Actor-Mixer Hierarchy") // Async版本
         {
-            var connected = Init();
-            connected.Wait(); // 检查连接状态
-
-            if (!file_path.EndsWith(".wav") || !connected.Result) return new WwiseObject(null, null, null); // 目标不是文件或者没有成功连接时返回空的WwiseObject
+            if (!file_path.EndsWith(".wav") || !TryConnectWaapi()) return new WwiseObject(null, null, null); // 目标不是文件或者没有成功连接时返回空的WwiseObject
 
             string file_name = "";
             try
