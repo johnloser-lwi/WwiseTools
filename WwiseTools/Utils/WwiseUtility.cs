@@ -9,41 +9,51 @@ using System.Threading.Tasks;
 namespace WwiseTools.Utils
 {
     /// <summary>
-    /// 默认功能，负责初始化路径以及常用的转换等
+    /// 用于实现基础功能
     /// </summary>
     public class WwiseUtility
     {
         static JsonClient client;
-        public static async Task Init() 
+        public static async Task<bool> Init() // 初始化，返回连接状态
         {
-            if (client != null) return;
+            if (client != null) return client.IsConnected();
 
             try
             {
                 client = new JsonClient();
-                await client.Connect();
+                await client.Connect(); // 尝试创建Wwise连接
 
-                Console.WriteLine("Connection Completed!");
+                Console.WriteLine("Connected successfully!");
 
                 client.Disconnected += () =>
                 {
-                    System.Console.WriteLine("We lost connection!");
+                    System.Console.WriteLine("Connection closed!"); // 丢失连接提示
                 };
+
+                return true;
             }
-            catch
+            catch (Wamp.ErrorException e)
             {
-                Console.WriteLine("Connection Failed!");
+                Console.WriteLine($"Connection Failed! ======> {e.Message}");
+                return false;
             }
         }
 
         public static async Task Close()
         {
-            if (client == null) return;
+            if (client == null || !client.IsConnected()) return;
 
-            await client.Close();
+            try
+            {
+                await client.Close(); // 尝试断开连接
+            }
+            catch (Wamp.ErrorException e)
+            {
+                Console.WriteLine(e.Message);
+            }
         }
 
-        public static WwiseObject ImportSound(string file_path, string language = "SFX", string subFolder = "", string parent_path = "", string work_unit = "Default Work Unit", string hierarchy = "Actor-Mixer Hierarchy")
+        public static WwiseObject ImportSound(string file_path, string language = "SFX", string subFolder = "", string parent_path = "", string work_unit = "Default Work Unit", string hierarchy = "Actor-Mixer Hierarchy") // 直接调用的版本
         {
             Task<WwiseObject> obj = WwiseUtility.ImportSoundAsync(@"D:\\BGM\\Login\\denglu_bpm120_4_4_1.wav", "SFX", "UI", "<Folder>TEST");
             obj.Wait();
@@ -51,16 +61,17 @@ namespace WwiseTools.Utils
         }
 
 
-        public static async Task<WwiseObject> ImportSoundAsync(string file_path, string language = "SFX", string subFolder = "", string parent_path = "", string work_unit = "Default Work Unit", string hierarchy = "Actor-Mixer Hierarchy")
+        public static async Task<WwiseObject> ImportSoundAsync(string file_path, string language = "SFX", string subFolder = "", string parent_path = "", string work_unit = "Default Work Unit", string hierarchy = "Actor-Mixer Hierarchy") // Async版本
         {
-            Init().Wait();
+            var connected = Init();
+            connected.Wait(); // 检查连接状态
 
-            if (!file_path.EndsWith(".wav")) return new WwiseObject(null, null, null);
+            if (!file_path.EndsWith(".wav") || !connected.Result) return new WwiseObject(null, null, null); // 目标不是文件或者没有成功连接时返回空的WwiseObject
 
             string file_name = "";
             try
             {
-                file_name = Path.GetFileName(file_path).Replace(".wav", "");
+                file_name = Path.GetFileName(file_path).Replace(".wav", ""); // 尝试获取文件名
             }
             catch (IOException e)
             {
@@ -70,9 +81,7 @@ namespace WwiseTools.Utils
 
             try
             {
-                
-
-                var import_q = new JObject
+                var import_q = new JObject // 导入配置
                 {
                     new JProperty("importOperation", "useExisting"),
                     
@@ -96,16 +105,13 @@ namespace WwiseTools.Utils
                     (import_q["default"] as JObject).Add(new JProperty("originalsSubFolder", subFolder));
                 }
 
+                var options = new JObject(new JProperty("return", new string[] { "name", "id", "type" })); // 设置返回参数
 
-                var options = new JObject(
-                        new JProperty("return", new string[] { "name", "id", "type" }));
-
-                var result = await client.Call(
-                    ak.wwise.core.audio.import, import_q, options);
+                var result = await client.Call(ak.wwise.core.audio.import, import_q, options); // 执行导入
 
                 
 
-                try
+                try // 尝试返回物体数据
                 {
                     string name = result["objects"].Last["name"].ToString();
                     string id = result["objects"].Last["id"].ToString();
@@ -123,7 +129,7 @@ namespace WwiseTools.Utils
             }
             catch (Wamp.ErrorException e)
             {
-                Console.WriteLine($"Failed to import file : {file_path} =======>" + e.Message);
+                Console.WriteLine($"Failed to import file : {file_path} ======> {e.Message}");
                 return new WwiseObject(null, null, null);
             }
         }
