@@ -150,6 +150,68 @@ namespace WwiseTools.Utils
             }
         }
 
+
+        /// <summary>
+        /// 生成播放事件
+        /// </summary>
+        /// <param name="event_name"></param>
+        /// <param name="object_path"></param>
+        /// <param name="parent_path"></param>
+        /// <returns></returns>
+        public static WwiseObject CreatePlayEvent(string event_name, string object_path, string parent_path = @"\Events\Default Work Unit")
+        {
+            if (!TryConnectWaapi()) return null;
+            var evt = CreatePlayEventAsync(event_name, object_path, parent_path);
+            evt.Wait();
+            return evt.Result;
+        }
+
+
+        /// <summary>
+        /// 生成播放事件，后台运行
+        /// </summary>
+        /// <param name="event_name"></param>
+        /// <param name="object_path"></param>
+        /// <param name="parent_path"></param>
+        /// <returns></returns>
+        public static async Task<WwiseObject> CreatePlayEventAsync(string event_name, string object_path, string parent_path = @"\Events\Default Work Unit")
+        {
+            if (!TryConnectWaapi()) return null;
+
+            try
+            {
+                var result = await client.Call
+                    (
+                    ak.wwise.core.@object.create,
+                    new JObject
+                    {
+                        new JProperty("parent", parent_path),
+                        new JProperty("type", "Event"),
+                        new JProperty("name", event_name),
+                        new JProperty("onNameConflict", "merge"),
+                        new JProperty("children", new JArray
+                        {
+                            new JObject
+                            {
+                                new JProperty("name", ""),
+                                new JProperty("type", "Action"),
+                                new JProperty("@ActionType", 1),
+                                new JProperty("@Target", object_path)
+                            }
+                        })
+                    }
+                    );
+
+                Console.WriteLine("Event created successfully!");
+                return await getWwiseObjectByID(result["id"].ToString());
+            }
+            catch (Wamp.ErrorException e)
+            {
+                Console.WriteLine($"Failed to created play event! ======> {e.Message} ");
+                return null;
+            }
+        }
+
         /// <summary>
         /// 创建物体
         /// </summary>
@@ -157,7 +219,7 @@ namespace WwiseTools.Utils
         /// <param name="object_type"></param>
         /// <param name="parent_path"></param>
         /// <returns></returns>
-        public static WwiseObject CreateObject(string object_name, string object_type, string parent_path = @"\Actor-Mixer Hierarchy\Default Work Unit")
+        public static WwiseObject CreateObject(string object_name, WwiseObject.ObjectType object_type, string parent_path = @"\Actor-Mixer Hierarchy\Default Work Unit")
         {
             var obj = CreateObjectAsync(object_name, object_type, parent_path);
             obj.Wait();
@@ -172,7 +234,7 @@ namespace WwiseTools.Utils
         /// <param name="object_type"></param>
         /// <param name="parent_path"></param>
         /// <returns></returns>
-        public static async Task<WwiseObject> CreateObjectAsync(string object_name, string object_type, string parent_path = @"\Actor-Mixer Hierarchy\Default Work Unit")
+        public static async Task<WwiseObject> CreateObjectAsync(string object_name, WwiseObject.ObjectType object_type, string parent_path = @"\Actor-Mixer Hierarchy\Default Work Unit")
         {
             if (!TryConnectWaapi()) return null;
 
@@ -185,52 +247,56 @@ namespace WwiseTools.Utils
                     new JObject
                     {
                         new JProperty("name", object_name),
-                        new JProperty("type", object_type),
+                        new JProperty("type", object_type.ToString()),
                         new JProperty("parent", parent_path),
                         new JProperty("onNameConflict", "rename")
                     },
                     null
                     );
-
-                // ak.wwise.core.@object.get 指令
-                var query = new
-                {
-                    from = new
-                    {
-                        id = new string[] { result["id"].ToString() }
-                    }
-                };
-
-                // ak.wwise.core.@object.get 返回参数设置
-                var options = new
-                {
-
-                    @return = new string[] { "name", "id", "type", "path" }
-
-                };
-
-                JObject jresult = await client.Call(ak.wwise.core.@object.get, query, options);
-
-                try // 尝试返回物体数据
-                {
-                    string name = jresult["return"].Last["name"].ToString();
-                    string id = jresult["return"].Last["id"].ToString();
-                    string type = jresult["return"].Last["type"].ToString();
-                    string path = jresult["return"].Last["path"].ToString();
-
-                    Console.WriteLine("File imported successfully!");
-
-                    return new WwiseObject(name, id, type, path);
-                }
-                catch
-                {
-                    Console.WriteLine("Failed to return WwiseObject!");
-                    return null;
-                }
+                return await getWwiseObjectByID(result["id"].ToString());
             }
             catch (Wamp.ErrorException e)
             {
                 Console.WriteLine($"Object failed to create! ======> {e.Message}");
+                return null;
+            }
+        }
+
+        private static async Task<WwiseObject> getWwiseObjectByID(string target_id)
+        {
+            // ak.wwise.core.@object.get 指令
+            var query = new
+            {
+                from = new
+                {
+                    id = new string[] { target_id }
+                }
+            };
+
+            // ak.wwise.core.@object.get 返回参数设置
+            var options = new
+            {
+
+                @return = new string[] { "name", "id", "type", "path" }
+
+            };
+
+            JObject jresult = await client.Call(ak.wwise.core.@object.get, query, options);
+
+            try // 尝试返回物体数据
+            {
+                string name = jresult["return"].Last["name"].ToString();
+                string id = jresult["return"].Last["id"].ToString();
+                string type = jresult["return"].Last["type"].ToString();
+                string path = jresult["return"].Last["path"].ToString();
+
+                Console.WriteLine("File imported successfully!");
+
+                return new WwiseObject(name, id, type, path);
+            }
+            catch
+            {
+                Console.WriteLine("Failed to return WwiseObject!");
                 return null;
             }
         }
@@ -345,24 +411,9 @@ namespace WwiseTools.Utils
 
                 var result = await client.Call(ak.wwise.core.audio.import, import_q, options); // 执行导入
 
-                
 
-                try // 尝试返回物体数据
-                {
-                    string name = result["objects"].Last["name"].ToString();
-                    string id = result["objects"].Last["id"].ToString();
-                    string type = result["objects"].Last["type"].ToString();
-                    string path = result["objects"].Last["path"].ToString();
 
-                    Console.WriteLine("File imported successfully!");
-
-                    return new WwiseObject(name, id, type, path);
-                }
-                catch
-                {
-                    Console.WriteLine("Failed to return WwiseObject!");
-                    return null;
-                }
+                return await getWwiseObjectByID(result["objects"].Last["id"].ToString());
             }
             catch (Wamp.ErrorException e)
             {
