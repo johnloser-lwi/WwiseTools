@@ -74,6 +74,167 @@ namespace WwiseTools.Utils
             return connected.Result;
         }
 
+        /// <summary>
+        /// 将物体移动至指定父物体
+        /// </summary>
+        /// <param name="child"></param>
+        /// <param name="parent"></param>
+        public static void MoveToParent(WwiseObject child, WwiseObject parent)
+        {
+            if (!TryConnectWaapi()) return;
+
+            var move = MoveToParentAsync(child, parent);
+            move.Wait();
+        }
+
+        /// <summary>
+        /// 将物体移动至指定父物体，后台进行
+        /// </summary>
+        /// <param name="child"></param>
+        /// <param name="parent"></param>
+        /// <returns></returns>
+        public static async Task MoveToParentAsync(WwiseObject child, WwiseObject parent)
+        {
+            if (!TryConnectWaapi()) return;
+
+            try
+            {
+                // 移动物体
+                await client.Call(
+                    ak.wwise.core.@object.move,
+                    new JObject
+                    {
+                        new JProperty("object", child.ID),
+                        new JProperty("parent", parent.ID),
+                        new JProperty("onNameConflict", "rename")
+                    }
+                    );
+
+                // ak.wwise.core.@object.get 指令
+                var query = new
+                {
+                    from = new
+                    {
+                        id = new string[] { child.ID }
+                    }
+                };
+
+                // ak.wwise.core.@object.get 返回参数设置
+                var options = new
+                {
+
+                    @return = new string[] { "name", "id", "type", "path" }
+
+                };
+
+                // 获取子物体的新数据
+                JObject jresult = await client.Call(ak.wwise.core.@object.get, query, options);
+
+                try // 尝试更新子物体数据
+                {
+                    child.Name = jresult["return"].Last["name"].ToString();
+                    child.ID = jresult["return"].Last["id"].ToString();
+                    child.Type = jresult["return"].Last["type"].ToString();
+                    child.Path = jresult["return"].Last["path"].ToString();
+                }
+                catch
+                {
+                    Console.WriteLine("Failed to update WwiseObject!");
+                }
+
+                Console.WriteLine("Move completed!");
+            }
+            catch (Wamp.ErrorException e)
+            {
+                Console.WriteLine($"Move failed! ======> {e.Message}");
+            }
+        }
+
+        /// <summary>
+        /// 创建物体
+        /// </summary>
+        /// <param name="object_name"></param>
+        /// <param name="object_type"></param>
+        /// <param name="parent_path"></param>
+        /// <returns></returns>
+        public static WwiseObject CreateObject(string object_name, string object_type, string parent_path = @"\Actor-Mixer Hierarchy\Default Work Unit")
+        {
+            var obj = CreateObjectAsync(object_name, object_type, parent_path);
+            obj.Wait();
+            return obj.Result;
+        }
+
+
+        /// <summary>
+        /// 创建物体，后台进行
+        /// </summary>
+        /// <param name="object_name"></param>
+        /// <param name="object_type"></param>
+        /// <param name="parent_path"></param>
+        /// <returns></returns>
+        public static async Task<WwiseObject> CreateObjectAsync(string object_name, string object_type, string parent_path = @"\Actor-Mixer Hierarchy\Default Work Unit")
+        {
+            if (!TryConnectWaapi()) return null;
+
+            try
+            {
+                // 创建物体
+                var result = await client.Call
+                    (
+                    ak.wwise.core.@object.create,
+                    new JObject
+                    {
+                        new JProperty("name", object_name),
+                        new JProperty("type", object_type),
+                        new JProperty("parent", parent_path),
+                        new JProperty("onNameConflict", "rename")
+                    },
+                    null
+                    );
+
+                // ak.wwise.core.@object.get 指令
+                var query = new
+                {
+                    from = new
+                    {
+                        id = new string[] { result["id"].ToString() }
+                    }
+                };
+
+                // ak.wwise.core.@object.get 返回参数设置
+                var options = new
+                {
+
+                    @return = new string[] { "name", "id", "type", "path" }
+
+                };
+
+                JObject jresult = await client.Call(ak.wwise.core.@object.get, query, options);
+
+                try // 尝试返回物体数据
+                {
+                    string name = jresult["return"].Last["name"].ToString();
+                    string id = jresult["return"].Last["id"].ToString();
+                    string type = jresult["return"].Last["type"].ToString();
+                    string path = jresult["return"].Last["path"].ToString();
+
+                    Console.WriteLine("File imported successfully!");
+
+                    return new WwiseObject(name, id, type, path);
+                }
+                catch
+                {
+                    Console.WriteLine("Failed to return WwiseObject!");
+                    return null;
+                }
+            }
+            catch (Wamp.ErrorException e)
+            {
+                Console.WriteLine($"Object failed to create! ======> {e.Message}");
+                return null;
+            }
+        }
+
 
         /// <summary>
         /// 从指定文件夹导入音频
@@ -85,7 +246,7 @@ namespace WwiseTools.Utils
         /// <param name="work_unit"></param>
         /// <param name="hierarchy"></param>
         /// <returns></returns>
-        public static List<WwiseObject> ImportSoundFromFolder(string folder_path, string language = "SFX", string subFolder = "", string parent_path = "", string work_unit = "Default Work Unit", string hierarchy = "Actor-Mixer Hierarchy") // 从指定文件夹路径导入
+        public static List<WwiseObject> ImportSoundFromFolder(string folder_path, string language = "SFX", string subFolder = "", string parent_path = @"\Actor-Mixer Hierarchy\Default Work Unit") // 从指定文件夹路径导入
         {
             if (!TryConnectWaapi()) return null; // 没有成功连接时返回空的WwiseObject List
 
@@ -98,7 +259,7 @@ namespace WwiseTools.Utils
                 {
                     if (!f.Contains(".wav")) continue;
 
-                    var r = ImportSound(f, language, subFolder, parent_path, work_unit, hierarchy);
+                    var r = ImportSound(f, language, subFolder, parent_path);
                     results.Add(r);
                 }
 
@@ -122,9 +283,9 @@ namespace WwiseTools.Utils
         /// <param name="work_unit"></param>
         /// <param name="hierarchy"></param>
         /// <returns></returns>
-        public static WwiseObject ImportSound(string file_path, string language = "SFX", string subFolder = "", string parent_path = "", string work_unit = "Default Work Unit", string hierarchy = "Actor-Mixer Hierarchy") // 直接调用的版本
+        public static WwiseObject ImportSound(string file_path, string language = "SFX", string subFolder = "", string parent_path = @"\Actor-Mixer Hierarchy\Default Work Unit") // 直接调用的版本
         {
-            Task<WwiseObject> obj = WwiseUtility.ImportSoundAsync(file_path, language, subFolder, parent_path, work_unit, hierarchy);
+            Task<WwiseObject> obj = WwiseUtility.ImportSoundAsync(file_path, language, subFolder, parent_path);
             obj.Wait();
             return obj.Result;
         }
@@ -139,9 +300,9 @@ namespace WwiseTools.Utils
         /// <param name="work_unit"></param>
         /// <param name="hierarchy"></param>
         /// <returns></returns>
-        public static async Task<WwiseObject> ImportSoundAsync(string file_path, string language = "SFX", string subFolder = "", string parent_path = "", string work_unit = "Default Work Unit", string hierarchy = "Actor-Mixer Hierarchy") // Async版本
+        public static async Task<WwiseObject> ImportSoundAsync(string file_path, string language = "SFX", string subFolder = "", string parent_path = @"\Actor-Mixer Hierarchy\Default Work Unit") // Async版本
         {
-            if (!file_path.EndsWith(".wav") || !TryConnectWaapi()) return new WwiseObject(null, null, null); // 目标不是文件或者没有成功连接时返回空的WwiseObject
+            if (!file_path.EndsWith(".wav") || !TryConnectWaapi()) return null; // 目标不是文件或者没有成功连接时返回空的WwiseObject
 
             string file_name = "";
             try
@@ -151,7 +312,7 @@ namespace WwiseTools.Utils
             catch (IOException e)
             {
                 Console.WriteLine(e.Message);
-                return new WwiseObject(null, null, null);
+                return null;
             }
 
             try
@@ -170,7 +331,7 @@ namespace WwiseTools.Utils
                         new JObject
                         {
                             new JProperty("audioFile", file_path),
-                            new JProperty("objectPath", $"\\{hierarchy}\\{work_unit}\\{parent_path}\\<Sound>{file_name}")
+                            new JProperty("objectPath", $"{parent_path}\\<Sound>{file_name}")
                         }
                     })
                 };
@@ -180,7 +341,7 @@ namespace WwiseTools.Utils
                     (import_q["default"] as JObject).Add(new JProperty("originalsSubFolder", subFolder));
                 }
 
-                var options = new JObject(new JProperty("return", new string[] { "name", "id", "type" })); // 设置返回参数
+                var options = new JObject(new JProperty("return", new string[] { "name", "id", "type", "path" })); // 设置返回参数
 
                 var result = await client.Call(ak.wwise.core.audio.import, import_q, options); // 执行导入
 
@@ -191,21 +352,22 @@ namespace WwiseTools.Utils
                     string name = result["objects"].Last["name"].ToString();
                     string id = result["objects"].Last["id"].ToString();
                     string type = result["objects"].Last["type"].ToString();
+                    string path = result["objects"].Last["path"].ToString();
 
                     Console.WriteLine("File imported successfully!");
 
-                    return new WwiseObject(name, id, type);
+                    return new WwiseObject(name, id, type, path);
                 }
                 catch
                 {
                     Console.WriteLine("Failed to return WwiseObject!");
-                    return new WwiseObject(null, null, null);
+                    return null;
                 }
             }
             catch (Wamp.ErrorException e)
             {
                 Console.WriteLine($"Failed to import file : {file_path} ======> {e.Message}");
-                return new WwiseObject(null, null, null);
+                return null;
             }
         }
         

@@ -1,22 +1,24 @@
 ﻿using System;
 namespace WwiseTools.Utils
 {
-    public struct WwiseObject
+    public class WwiseObject
     {
-        string name;
-        string id;
-        string type;
+        public string Name { get; set; }
+        public string ID { get; set; }
+        public string Type { get; set; }
+        public string Path { get; set; }
 
-        public WwiseObject(string name, string id, string type)
+        public WwiseObject(string name, string id, string type, string path)
         {
-            this.name = name;
-            this.id = id;
-            this.type = type;
+            this.Name = name;
+            this.ID = id;
+            this.Type = type;
+            this.Path = path;
         }
 
         public override string ToString()
         {
-            return $"Name : {name}, ID : {id}, Type: {type}";
+            return $"Name : {Name}, ID : {ID}, Type: {Type}, Path: {Path}";
         }
     }
 }
