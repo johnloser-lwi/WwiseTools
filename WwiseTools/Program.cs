@@ -15,8 +15,11 @@ namespace WwiseTools
             var folder = WwiseUtility.CreateObject("TestFolder", WwiseObject.ObjectType.Folder, @"\Actor-Mixer Hierarchy\Default Work Unit");
             var rscontainer = WwiseUtility.CreateObject("TestRS", WwiseObject.ObjectType.RandomSequenceContainer, @"\Actor-Mixer Hierarchy\Default Work Unit");
             WwiseUtility.MoveToParent(rscontainer, folder);
-            Console.WriteLine(folder.ToString());
-            Console.WriteLine(rscontainer.ToString());
+
+            Console.WriteLine(rscontainer.Path);
+
+            WwiseUtility.CreatePlayEvent("TestEvent", rscontainer.Path);
+
             var obj = WwiseUtility.ImportSoundFromFolder(@"D:\\BGM\\Login", "SFX", "BGM", rscontainer.Path);
 
             WwiseUtility.Close().Wait();
