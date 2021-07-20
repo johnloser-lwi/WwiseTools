@@ -26,4 +26,8 @@ ___
 3. `WwiseUtility.MoveToParent(testSound, testFolder);`将"testSound"移动至"testFolder"下。
 
 运行程序后Wwise工程中将会有一个名为"TestFolder"的文件夹，其中包含一个名为"TestSound"的音频对象。
+
+### 生成事件
+延续上一个案例，我们可以将"testSound"放入一个播放事件。
+1. `WwiseUtility.CreatePlayEvent("TestEvent", testSound.Path);`生成一个名为"TestEvent"的事件播放"testSound",默认路径为`@"\Events\Default Work Unit"`
 ___
