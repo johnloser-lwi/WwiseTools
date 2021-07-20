@@ -39,7 +39,7 @@ namespace WwiseTools.Utils
             }
             catch (Wamp.ErrorException e)
             {
-                Console.WriteLine($"Connection Failed! ======> {e.Message}");
+                Console.WriteLine($"Failed to connect! ======> {e.Message}");
                 return false;
             }
         }
@@ -58,7 +58,7 @@ namespace WwiseTools.Utils
             }
             catch (Wamp.ErrorException e)
             {
-                Console.WriteLine(e.Message);
+                Console.WriteLine($"Error while closing! ======> {e.Message}");
             }
         }
 
@@ -81,7 +81,7 @@ namespace WwiseTools.Utils
         /// <param name="parent"></param>
         public static void MoveToParent(WwiseObject child, WwiseObject parent)
         {
-            if (!TryConnectWaapi()) return;
+            if (!TryConnectWaapi() || child == null || parent == null) return;
 
             var move = MoveToParentAsync(child, parent);
             move.Wait();
@@ -95,7 +95,7 @@ namespace WwiseTools.Utils
         /// <returns></returns>
         public static async Task MoveToParentAsync(WwiseObject child, WwiseObject parent)
         {
-            if (!TryConnectWaapi()) return;
+            if (!TryConnectWaapi() || child == null || parent == null) return;
 
             try
             {
@@ -146,7 +146,7 @@ namespace WwiseTools.Utils
             }
             catch (Wamp.ErrorException e)
             {
-                Console.WriteLine($"Move failed! ======> {e.Message}");
+                Console.WriteLine($"Failed to move {child.Name} to {parent.Name}! ======> {e.Message}");
             }
         }
 
@@ -207,7 +207,7 @@ namespace WwiseTools.Utils
             }
             catch (Wamp.ErrorException e)
             {
-                Console.WriteLine($"Failed to created play event! ======> {e.Message} ");
+                Console.WriteLine($"Failed to created play event : {event_name}! ======> {e.Message} ");
                 return null;
             }
         }
@@ -257,7 +257,7 @@ namespace WwiseTools.Utils
             }
             catch (Wamp.ErrorException e)
             {
-                Console.WriteLine($"Object failed to create! ======> {e.Message}");
+                Console.WriteLine($"Failed to create object : {object_name}! ======> {e.Message}");
                 return null;
             }
         }
@@ -296,7 +296,7 @@ namespace WwiseTools.Utils
             }
             catch
             {
-                Console.WriteLine("Failed to return WwiseObject!");
+                Console.WriteLine($"Failed to return WwiseObject from ID : {target_id}!");
                 return null;
             }
         }
@@ -333,7 +333,7 @@ namespace WwiseTools.Utils
             }
             catch (Exception e)
             {
-                Console.WriteLine($"Failed to import from folder! ======> {e.Message}");
+                Console.WriteLine($"Failed to import from folder : {folder_path}! ======> {e.Message}");
                 return null;
             }
         }
@@ -377,7 +377,7 @@ namespace WwiseTools.Utils
             }
             catch (IOException e)
             {
-                Console.WriteLine(e.Message);
+                Console.WriteLine($"Failed to get file name from { file_path } ======> { e.Message }");
                 return null;
             }
 
