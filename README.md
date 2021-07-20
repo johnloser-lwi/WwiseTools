@@ -21,8 +21,8 @@ ___
 运行程序后Wwise工程将会导入指定文件夹内的所有文件为Sound，默认路径为`@"\Actor-Mixer Hierarchy\Default Work Unit"`，控制台将输出所有添加物体的名称，ID，类型信息。
 
 ### 创建与移动物体
-1. `var testFolder = WwiseUtility.CreateObject("TestFolder", "Folder");`创建一个名称为"TestFolder"的文件夹，默认路径为`@"\Actor-Mixer Hierarchy\Default Work Unit"`。
-2. `var testSound = WwiseUtility.CreateObject("TestSound", "Sound");`创建一个名称为"TestSound"的音频对象，默认路径为`@"\Actor-Mixer Hierarchy\Default Work Unit"`。
+1. `var testFolder = WwiseUtility.CreateObject("TestFolder", WwiseObject.ObjectType.Folder);`创建一个名称为"TestFolder"的文件夹，默认路径为`@"\Actor-Mixer Hierarchy\Default Work Unit"`。
+2. `var testSound = WwiseUtility.CreateObject("TestSound", WwiseObject.ObjectType.Sound);`创建一个名称为"TestSound"的音频对象，默认路径为`@"\Actor-Mixer Hierarchy\Default Work Unit"`。
 3. `WwiseUtility.MoveToParent(testSound, testFolder);`将"testSound"移动至"testFolder"下。
 
 运行程序后Wwise工程中将会有一个名为"TestFolder"的文件夹，其中包含一个名为"TestSound"的音频对象。

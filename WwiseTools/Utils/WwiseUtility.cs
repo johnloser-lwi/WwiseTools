@@ -157,7 +157,7 @@ namespace WwiseTools.Utils
         /// <param name="object_type"></param>
         /// <param name="parent_path"></param>
         /// <returns></returns>
-        public static WwiseObject CreateObject(string object_name, string object_type, string parent_path = @"\Actor-Mixer Hierarchy\Default Work Unit")
+        public static WwiseObject CreateObject(string object_name, WwiseObject.ObjectType object_type, string parent_path = @"\Actor-Mixer Hierarchy\Default Work Unit")
         {
             var obj = CreateObjectAsync(object_name, object_type, parent_path);
             obj.Wait();
@@ -172,7 +172,7 @@ namespace WwiseTools.Utils
         /// <param name="object_type"></param>
         /// <param name="parent_path"></param>
         /// <returns></returns>
-        public static async Task<WwiseObject> CreateObjectAsync(string object_name, string object_type, string parent_path = @"\Actor-Mixer Hierarchy\Default Work Unit")
+        public static async Task<WwiseObject> CreateObjectAsync(string object_name, WwiseObject.ObjectType object_type, string parent_path = @"\Actor-Mixer Hierarchy\Default Work Unit")
         {
             if (!TryConnectWaapi()) return null;
 
@@ -185,7 +185,7 @@ namespace WwiseTools.Utils
                     new JObject
                     {
                         new JProperty("name", object_name),
-                        new JProperty("type", object_type),
+                        new JProperty("type", object_type.ToString()),
                         new JProperty("parent", parent_path),
                         new JProperty("onNameConflict", "rename")
                     },
