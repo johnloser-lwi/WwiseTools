@@ -5,6 +5,8 @@ using Newtonsoft.Json.Linq;
 
 using AK.Wwise.Waapi;
 using System.Threading.Tasks;
+using WwiseTools.Properties;
+using WwiseTools.Reference;
 
 namespace WwiseTools.Utils
 {
@@ -13,7 +15,7 @@ namespace WwiseTools.Utils
     /// </summary>
     public class WwiseUtility
     {
-        static JsonClient client;
+        public static JsonClient Client { get; set; }
 
         /// <summary>
         /// 连接初始化
@@ -21,16 +23,16 @@ namespace WwiseTools.Utils
         /// <returns></returns>
         public static async Task<bool> Init() // 初始化，返回连接状态
         {
-            if (client != null) return client.IsConnected();
+            if (Client != null) return Client.IsConnected();
 
             try
             {
-                client = new JsonClient();
-                await client.Connect(); // 尝试创建Wwise连接
+                Client = new JsonClient();
+                await Client.Connect(); // 尝试创建Wwise连接
 
                 Console.WriteLine("Connected successfully!");
 
-                client.Disconnected += () =>
+                Client.Disconnected += () =>
                 {
                     System.Console.WriteLine("Connection closed!"); // 丢失连接提示
                 };
@@ -50,11 +52,11 @@ namespace WwiseTools.Utils
         /// <returns></returns>
         public static async Task Close()
         {
-            if (client == null || !client.IsConnected()) return;
+            if (Client == null || !Client.IsConnected()) return;
 
             try
             {
-                await client.Close(); // 尝试断开连接
+                await Client.Close(); // 尝试断开连接
             }
             catch (Wamp.ErrorException e)
             {
@@ -72,6 +74,139 @@ namespace WwiseTools.Utils
             connected.Wait();
 
             return connected.Result;
+        }
+
+        /// <summary>
+        /// 设置物体的引用
+        /// </summary>
+        /// <param name="wwiseObject"></param>
+        /// <param name="wwiseReference"></param>
+        public static void SetObjectReference(WwiseObject wwiseObject, WwiseReference wwiseReference)
+        {
+            if (!TryConnectWaapi() || wwiseObject == null || wwiseReference == null) return;
+            var setRef = SetObjectReferenceAsync(wwiseObject, wwiseReference);
+            setRef.Wait();
+        }
+
+        /// <summary>
+        /// 设置物体的引用，后台运行
+        /// </summary>
+        /// <param name="wwiseObject"></param>
+        /// <param name="wwiseReference"></param>
+        /// <returns></returns>
+        public static async Task SetObjectReferenceAsync(WwiseObject wwiseObject, WwiseReference wwiseReference)
+        {
+            if (!TryConnectWaapi() || wwiseObject == null || wwiseReference == null) return;
+
+            try
+            {
+                await Client.Call(ak.wwise.core.@object.setReference,
+
+                    new JObject(
+
+                        new JProperty("object", wwiseObject.ID),
+
+                        new JProperty("reference", wwiseReference.Name),
+
+                        new JProperty("value", wwiseReference.Object.ID)),
+
+                    null);
+
+                Console.WriteLine("Reference set successfully!");
+            }
+            catch (Wamp.ErrorException e)
+            {
+                Console.WriteLine($"Failed to set reference \"{wwiseReference.Name}\" to object {wwiseObject.Name} ======> {e.Message}");
+            }
+        }
+
+        /// <summary>
+        /// 设置参数
+        /// </summary>
+        /// <param name="wwiseObject"></param>
+        /// <param name="wwiseProperty"></param>
+        public static void SetObjectProperty(WwiseObject wwiseObject, WwiseProperty wwiseProperty)
+        {
+            if (!TryConnectWaapi() || wwiseObject == null ||wwiseProperty == null) return;
+
+            var set_prop = SetObjectPropertyAsync(wwiseObject, wwiseProperty);
+            set_prop.Wait();
+        }
+
+        /// <summary>
+        /// 设置参数，后台运行
+        /// </summary>
+        /// <param name="wwiseObject"></param>
+        /// <param name="property"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static async Task SetObjectPropertyAsync(WwiseObject wwiseObject, WwiseProperty wwiseProperty)
+        {
+            if (!TryConnectWaapi() || wwiseObject == null || wwiseProperty == null) return;
+
+            try
+            {
+                await Client.Call(ak.wwise.core.@object.setProperty,
+
+                    new JObject(
+
+                        new JProperty("property", wwiseProperty.Name),
+
+                        new JProperty("object", wwiseObject.ID),
+
+                        new JProperty("value", wwiseProperty.Value)),
+
+                    null);
+
+                Console.WriteLine("Property changed successfully!");
+            }
+            catch (Wamp.ErrorException e)
+            {
+                Console.WriteLine($"Failed to set property \"{wwiseProperty.Name}\" of object {wwiseObject.Name} ======> {e.Message}");
+            }
+        }
+
+        /// <summary>
+        /// 修改名称
+        /// </summary>
+        /// <param name="rename_object"></param>
+        /// <param name="new_name"></param>
+        public static void ChangeObjectName(WwiseObject rename_object, string new_name)
+        {
+            if (!TryConnectWaapi() || rename_object == null || String.IsNullOrEmpty(new_name)) return;
+            var change_name = ChangeObjectNameAsync(rename_object, new_name);
+            change_name.Wait();
+        }
+
+        /// <summary>
+        /// 修改名称，后台运行
+        /// </summary>
+        /// <param name="rename_object"></param>
+        /// <param name="new_name"></param>
+        /// <returns></returns>
+        public static async Task ChangeObjectNameAsync(WwiseObject rename_object, string new_name)
+        {
+            if(!TryConnectWaapi() || rename_object == null || String.IsNullOrEmpty(new_name)) return;
+
+            try
+            {
+                await Client.Call(
+                    ak.wwise.core.@object.setName,
+                    new
+                    {
+                        @object = rename_object.ID,
+                        value = new_name,
+                    });
+
+                rename_object.Name = new_name;
+
+                Console.WriteLine("Renamed successfully!");
+            }
+
+            catch (AK.Wwise.Waapi.Wamp.ErrorException e)
+            {
+                System.Console.Write($"Failed to rename object : {rename_object.Name} ======> {e.Message}");
+            }
         }
 
         /// <summary>
@@ -100,7 +235,7 @@ namespace WwiseTools.Utils
             try
             {
                 // 移动物体
-                await client.Call(
+                await Client.Call(
                     ak.wwise.core.@object.move,
                     new JObject
                     {
@@ -123,19 +258,18 @@ namespace WwiseTools.Utils
                 var options = new
                 {
 
-                    @return = new string[] { "name", "id", "type", "path" }
+                    @return = new string[] { "name", "id", "type"}
 
                 };
 
                 // 获取子物体的新数据
-                JObject jresult = await client.Call(ak.wwise.core.@object.get, query, options);
+                JObject jresult = await Client.Call(ak.wwise.core.@object.get, query, options);
 
                 try // 尝试更新子物体数据
                 {
                     child.Name = jresult["return"].Last["name"].ToString();
                     child.ID = jresult["return"].Last["id"].ToString();
                     child.Type = jresult["return"].Last["type"].ToString();
-                    child.Path = jresult["return"].Last["path"].ToString();
                 }
                 catch
                 {
@@ -180,7 +314,7 @@ namespace WwiseTools.Utils
 
             try
             {
-                var result = await client.Call
+                var result = await Client.Call
                     (
                     ak.wwise.core.@object.create,
                     new JObject
@@ -203,7 +337,7 @@ namespace WwiseTools.Utils
                     );
 
                 Console.WriteLine("Event created successfully!");
-                return await getWwiseObjectByID(result["id"].ToString());
+                return await GetWwiseObjectByIDAsync(result["id"].ToString());
             }
             catch (Wamp.ErrorException e)
             {
@@ -241,7 +375,7 @@ namespace WwiseTools.Utils
             try
             {
                 // 创建物体
-                var result = await client.Call
+                var result = await Client.Call
                     (
                     ak.wwise.core.@object.create,
                     new JObject
@@ -253,7 +387,7 @@ namespace WwiseTools.Utils
                     },
                     null
                     );
-                return await getWwiseObjectByID(result["id"].ToString());
+                return await GetWwiseObjectByIDAsync(result["id"].ToString());
             }
             catch (Wamp.ErrorException e)
             {
@@ -262,44 +396,137 @@ namespace WwiseTools.Utils
             }
         }
 
-        private static async Task<WwiseObject> getWwiseObjectByID(string target_id)
+        /// <summary>
+        /// 通过ID搜索物体
+        /// </summary>
+        /// <param name="target_id"></param>
+        /// <returns></returns>
+        public static WwiseObject GetWwiseObjectByID(string target_id)
         {
-            // ak.wwise.core.@object.get 指令
-            var query = new
+            var get = GetWwiseObjectByIDAsync(target_id);
+            get.Wait();
+            return get.Result;
+        }
+
+        /// <summary>
+        /// 通过ID搜索物体，后台运行
+        /// </summary>
+        /// <param name="target_id"></param>
+        /// <returns></returns>
+        public static async Task<WwiseObject> GetWwiseObjectByIDAsync(string target_id)
+        {
+
+            try
             {
-                from = new
+                // ak.wwise.core.@object.get 指令
+                var query = new
                 {
-                    id = new string[] { target_id }
+                    from = new
+                    {
+                        id = new string[] { target_id }
+                    }
+                };
+
+                // ak.wwise.core.@object.get 返回参数设置
+                var options = new
+                {
+
+                    @return = new string[] { "name", "id", "type", "path" }
+
+                };
+
+                JObject jresult = await Client.Call(ak.wwise.core.@object.get, query, options);
+
+                try // 尝试返回物体数据
+                {
+                    string name = jresult["return"].Last["name"].ToString();
+                    string id = jresult["return"].Last["id"].ToString();
+                    string type = jresult["return"].Last["type"].ToString();
+                    string path = jresult["return"].Last["path"].ToString();
+
+                    Console.WriteLine("File imported successfully!");
+
+                    return new WwiseObject(name, id, type);
                 }
-            };
-
-            // ak.wwise.core.@object.get 返回参数设置
-            var options = new
-            {
-
-                @return = new string[] { "name", "id", "type", "path" }
-
-            };
-
-            JObject jresult = await client.Call(ak.wwise.core.@object.get, query, options);
-
-            try // 尝试返回物体数据
-            {
-                string name = jresult["return"].Last["name"].ToString();
-                string id = jresult["return"].Last["id"].ToString();
-                string type = jresult["return"].Last["type"].ToString();
-                string path = jresult["return"].Last["path"].ToString();
-
-                Console.WriteLine("File imported successfully!");
-
-                return new WwiseObject(name, id, type, path);
+                catch
+                {
+                    Console.WriteLine($"Failed to return WwiseObject from ID : {target_id}!");
+                    return null;
+                }
             }
-            catch
+            catch (Wamp.ErrorException e)
             {
-                Console.WriteLine($"Failed to return WwiseObject from ID : {target_id}!");
+                Console.WriteLine($"Failed to return WwiseObject from ID : {target_id}! ======> {e.Message}");
                 return null;
             }
+            
         }
+
+        /// <summary>
+        /// 通过名称搜索物体，格式必须为"type:name
+        /// </summary>
+        /// <param name="target_name"></param>
+        /// <returns></returns>
+        public static WwiseObject GetWwiseObjectByName(string target_name)
+        {
+            var get = GetWwiseObjectByNameAsync(target_name);
+            get.Wait();
+            return get.Result;
+        }
+
+        /// <summary>
+        /// 通过名称搜索物体，后台运行，格式必须为"type:name"
+        /// </summary>
+        /// <param name="target_name"></param>
+        /// <returns></returns>
+        public static async Task<WwiseObject> GetWwiseObjectByNameAsync(string target_name)
+        {
+            try
+            {
+                // ak.wwise.core.@object.get 指令
+                var query = new
+                {
+                    from = new
+                    {
+                        name = new string[] { target_name }
+                    }
+                };
+
+                // ak.wwise.core.@object.get 返回参数设置
+                var options = new
+                {
+
+                    @return = new string[] { "name", "id", "type", "path" }
+
+                };
+
+                JObject jresult = await Client.Call(ak.wwise.core.@object.get, query, options);
+
+                try // 尝试返回物体数据
+                {
+                    string name = jresult["return"].Last["name"].ToString();
+                    string id = jresult["return"].Last["id"].ToString();
+                    string type = jresult["return"].Last["type"].ToString();
+                    string path = jresult["return"].Last["path"].ToString();
+
+                    Console.WriteLine("File imported successfully!");
+
+                    return new WwiseObject(name, id, type);
+                }
+                catch
+                {
+                    Console.WriteLine($"Failed to return WwiseObject by name : {target_name}!");
+                    return null;
+                }
+            }
+            catch (Wamp.ErrorException e)
+            {
+                Console.WriteLine($"Failed to return WwiseObject by name : {target_name}! ======> {e.Message}");
+                return null;
+            }
+            
+        }
+        
 
 
         /// <summary>
@@ -409,11 +636,11 @@ namespace WwiseTools.Utils
 
                 var options = new JObject(new JProperty("return", new string[] { "name", "id", "type", "path" })); // 设置返回参数
 
-                var result = await client.Call(ak.wwise.core.audio.import, import_q, options); // 执行导入
+                var result = await Client.Call(ak.wwise.core.audio.import, import_q, options); // 执行导入
 
 
 
-                return await getWwiseObjectByID(result["objects"].Last["id"].ToString());
+                return await GetWwiseObjectByIDAsync(result["objects"].Last["id"].ToString());
             }
             catch (Wamp.ErrorException e)
             {
