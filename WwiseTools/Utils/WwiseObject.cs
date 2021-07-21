@@ -1,4 +1,10 @@
 ﻿using System;
+
+using Newtonsoft.Json.Linq;
+
+using AK.Wwise.Waapi;
+using System.Threading.Tasks;
+
 namespace WwiseTools.Utils
 {
     public class WwiseObject
@@ -8,14 +14,53 @@ namespace WwiseTools.Utils
         public string Name { get; set; }
         public string ID { get; set; }
         public string Type { get; set; }
-        public string Path { get; set; }
+        public string Path { get
+            {
+                var get_path = getPath();
+                get_path.Wait();
+                return get_path.Result;
+            }
+        }
 
-        public WwiseObject(string name, string id, string type, string path)
+        private async Task<string> getPath()
+        {
+            // ak.wwise.core.@object.get 指令
+            var query = new
+            {
+                from = new
+                {
+                    id = new string[] { ID }
+                }
+            };
+
+            // ak.wwise.core.@object.get 返回参数设置
+            var options = new
+            {
+
+                @return = new string[] {"path" }
+
+            };
+
+            JObject jresult = await WwiseUtility.Client.Call(ak.wwise.core.@object.get, query, options);
+
+            try // 尝试返回物体数据
+            {
+                string path = jresult["return"].Last["path"].ToString();
+
+                return path;
+            }
+            catch
+            {
+                Console.WriteLine($"Get path of object : {Name}!");
+                return null;
+            }
+        }
+
+        public WwiseObject(string name, string id, string type)
         {
             this.Name = name;
             this.ID = id;
             this.Type = type;
-            this.Path = path;
         }
 
         public override string ToString()
