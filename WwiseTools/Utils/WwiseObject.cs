@@ -24,36 +24,45 @@ namespace WwiseTools.Utils
 
         private async Task<string> getPath()
         {
-            // ak.wwise.core.@object.get 指令
-            var query = new
+            try
             {
-                from = new
+                // ak.wwise.core.@object.get 指令
+                var query = new
                 {
-                    id = new string[] { ID }
+                    from = new
+                    {
+                        id = new string[] { ID }
+                    }
+                };
+
+                // ak.wwise.core.@object.get 返回参数设置
+                var options = new
+                {
+
+                    @return = new string[] { "path" }
+
+                };
+
+                JObject jresult = await WwiseUtility.Client.Call(ak.wwise.core.@object.get, query, options);
+
+                try // 尝试返回物体数据
+                {
+                    string path = jresult["return"].Last["path"].ToString();
+
+                    return path;
                 }
-            };
-
-            // ak.wwise.core.@object.get 返回参数设置
-            var options = new
-            {
-
-                @return = new string[] {"path" }
-
-            };
-
-            JObject jresult = await WwiseUtility.Client.Call(ak.wwise.core.@object.get, query, options);
-
-            try // 尝试返回物体数据
-            {
-                string path = jresult["return"].Last["path"].ToString();
-
-                return path;
+                catch
+                {
+                    Console.WriteLine($"Failed to path of object : {Name}!");
+                    return null;
+                }
             }
             catch
             {
-                Console.WriteLine($"Get path of object : {Name}!");
+                Console.WriteLine($"Failed to path of object : {Name}!");
                 return null;
             }
+            
         }
 
         public WwiseObject(string name, string id, string type)

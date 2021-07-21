@@ -76,6 +76,11 @@ namespace WwiseTools.Utils
             return connected.Result;
         }
 
+        /// <summary>
+        /// 设置物体的引用
+        /// </summary>
+        /// <param name="wwiseObject"></param>
+        /// <param name="wwiseReference"></param>
         public static void SetObjectReference(WwiseObject wwiseObject, WwiseReference wwiseReference)
         {
             if (!TryConnectWaapi() || wwiseObject == null || wwiseReference == null) return;
@@ -83,6 +88,12 @@ namespace WwiseTools.Utils
             setRef.Wait();
         }
 
+        /// <summary>
+        /// 设置物体的引用，后台运行
+        /// </summary>
+        /// <param name="wwiseObject"></param>
+        /// <param name="wwiseReference"></param>
+        /// <returns></returns>
         public static async Task SetObjectReferenceAsync(WwiseObject wwiseObject, WwiseReference wwiseReference)
         {
             if (!TryConnectWaapi() || wwiseObject == null || wwiseReference == null) return;
@@ -326,7 +337,7 @@ namespace WwiseTools.Utils
                     );
 
                 Console.WriteLine("Event created successfully!");
-                return await GetWwiseObjectByID(result["id"].ToString());
+                return await GetWwiseObjectByIDAsync(result["id"].ToString());
             }
             catch (Wamp.ErrorException e)
             {
@@ -376,7 +387,7 @@ namespace WwiseTools.Utils
                     },
                     null
                     );
-                return await GetWwiseObjectByID(result["id"].ToString());
+                return await GetWwiseObjectByIDAsync(result["id"].ToString());
             }
             catch (Wamp.ErrorException e)
             {
@@ -385,7 +396,24 @@ namespace WwiseTools.Utils
             }
         }
 
-        public static async Task<WwiseObject> GetWwiseObjectByID(string target_id)
+        /// <summary>
+        /// 通过ID搜索物体
+        /// </summary>
+        /// <param name="target_id"></param>
+        /// <returns></returns>
+        public static WwiseObject GetWwiseObjectByID(string target_id)
+        {
+            var get = GetWwiseObjectByIDAsync(target_id);
+            get.Wait();
+            return get.Result;
+        }
+
+        /// <summary>
+        /// 通过ID搜索物体，后台运行
+        /// </summary>
+        /// <param name="target_id"></param>
+        /// <returns></returns>
+        public static async Task<WwiseObject> GetWwiseObjectByIDAsync(string target_id)
         {
 
             try
@@ -434,8 +462,24 @@ namespace WwiseTools.Utils
             
         }
 
-        /*
-        public static async Task<WwiseObject> GetWwiseObjectByName(string target_name)
+        /// <summary>
+        /// 通过名称搜索物体，格式必须为"type:name
+        /// </summary>
+        /// <param name="target_name"></param>
+        /// <returns></returns>
+        public static WwiseObject GetWwiseObjectByName(string target_name)
+        {
+            var get = GetWwiseObjectByNameAsync(target_name);
+            get.Wait();
+            return get.Result;
+        }
+
+        /// <summary>
+        /// 通过名称搜索物体，后台运行，格式必须为"type:name"
+        /// </summary>
+        /// <param name="target_name"></param>
+        /// <returns></returns>
+        public static async Task<WwiseObject> GetWwiseObjectByNameAsync(string target_name)
         {
             try
             {
@@ -482,7 +526,7 @@ namespace WwiseTools.Utils
             }
             
         }
-        */
+        
 
 
         /// <summary>
@@ -596,7 +640,7 @@ namespace WwiseTools.Utils
 
 
 
-                return await GetWwiseObjectByID(result["objects"].Last["id"].ToString());
+                return await GetWwiseObjectByIDAsync(result["objects"].Last["id"].ToString());
             }
             catch (Wamp.ErrorException e)
             {

@@ -102,7 +102,6 @@
     <Compile Include="WwiseProperties\WwiseProperty.cs" />
     <Compile Include="Utils\WwiseUtility.cs" />
     <Compile Include="Utils\WwiseObject.cs" />
-    <Compile Include="WwiseProperties\WwiseSoundProperties.cs" />
     <Compile Include="WwiseReference\WwiseReference.cs" />
   </ItemGroup>
   <ItemGroup>
