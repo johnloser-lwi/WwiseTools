@@ -5,6 +5,8 @@ using Newtonsoft.Json.Linq;
 
 using AK.Wwise.Waapi;
 using System.Threading.Tasks;
+using WwiseTools.Properties;
+using WwiseTools.Reference;
 
 namespace WwiseTools.Utils
 {
@@ -74,17 +76,49 @@ namespace WwiseTools.Utils
             return connected.Result;
         }
 
+        public static void SetObjectReference(WwiseObject wwiseObject, WwiseReference wwiseReference)
+        {
+            if (!TryConnectWaapi() || wwiseObject == null || wwiseReference == null) return;
+            var setRef = SetObjectReferenceAsync(wwiseObject, wwiseReference);
+            setRef.Wait();
+        }
+
+        public static async Task SetObjectReferenceAsync(WwiseObject wwiseObject, WwiseReference wwiseReference)
+        {
+            if (!TryConnectWaapi() || wwiseObject == null || wwiseReference == null) return;
+
+            try
+            {
+                await Client.Call(ak.wwise.core.@object.setReference,
+
+                    new JObject(
+
+                        new JProperty("object", wwiseObject.ID),
+
+                        new JProperty("reference", wwiseReference.Name),
+
+                        new JProperty("value", wwiseReference.Object.ID)),
+
+                    null);
+
+                Console.WriteLine("Reference set successfully!");
+            }
+            catch (Wamp.ErrorException e)
+            {
+                Console.WriteLine($"Failed to set reference \"{wwiseReference.Name}\" to object {wwiseObject.Name} ======> {e.Message}");
+            }
+        }
 
         /// <summary>
         /// 设置参数
         /// </summary>
         /// <param name="wwiseObject"></param>
-        /// <param name="property"></param>
-        /// <param name="value"></param>
-        public static void SetObjectProperty(WwiseObject wwiseObject, string property, object value)
+        /// <param name="wwiseProperty"></param>
+        public static void SetObjectProperty(WwiseObject wwiseObject, WwiseProperty wwiseProperty)
         {
-            if (!TryConnectWaapi() || wwiseObject == null || String.IsNullOrEmpty(property) || value == null) return;
-            var set_prop = SetObjectPropertyAsync(wwiseObject, property, value);
+            if (!TryConnectWaapi() || wwiseObject == null ||wwiseProperty == null) return;
+
+            var set_prop = SetObjectPropertyAsync(wwiseObject, wwiseProperty);
             set_prop.Wait();
         }
 
@@ -95,9 +129,9 @@ namespace WwiseTools.Utils
         /// <param name="property"></param>
         /// <param name="value"></param>
         /// <returns></returns>
-        public static async Task SetObjectPropertyAsync(WwiseObject wwiseObject, string property, object value)
+        public static async Task SetObjectPropertyAsync(WwiseObject wwiseObject, WwiseProperty wwiseProperty)
         {
-            if (!TryConnectWaapi() || wwiseObject == null || String.IsNullOrEmpty(property) || value == null) return;
+            if (!TryConnectWaapi() || wwiseObject == null || wwiseProperty == null) return;
 
             try
             {
@@ -105,11 +139,11 @@ namespace WwiseTools.Utils
 
                     new JObject(
 
-                        new JProperty("property", property),
+                        new JProperty("property", wwiseProperty.Name),
 
                         new JProperty("object", wwiseObject.ID),
 
-                        new JProperty("value", value)),
+                        new JProperty("value", wwiseProperty.Value)),
 
                     null);
 
@@ -117,7 +151,7 @@ namespace WwiseTools.Utils
             }
             catch (Wamp.ErrorException e)
             {
-                Console.WriteLine($"Failed to set property \"{property}\" of object {wwiseObject.Name} ======> {e.Message}");
+                Console.WriteLine($"Failed to set property \"{wwiseProperty.Name}\" of object {wwiseObject.Name} ======> {e.Message}");
             }
         }
 
@@ -292,7 +326,7 @@ namespace WwiseTools.Utils
                     );
 
                 Console.WriteLine("Event created successfully!");
-                return await getWwiseObjectByID(result["id"].ToString());
+                return await GetWwiseObjectByID(result["id"].ToString());
             }
             catch (Wamp.ErrorException e)
             {
@@ -342,7 +376,7 @@ namespace WwiseTools.Utils
                     },
                     null
                     );
-                return await getWwiseObjectByID(result["id"].ToString());
+                return await GetWwiseObjectByID(result["id"].ToString());
             }
             catch (Wamp.ErrorException e)
             {
@@ -351,44 +385,104 @@ namespace WwiseTools.Utils
             }
         }
 
-        private static async Task<WwiseObject> getWwiseObjectByID(string target_id)
+        public static async Task<WwiseObject> GetWwiseObjectByID(string target_id)
         {
-            // ak.wwise.core.@object.get 指令
-            var query = new
+
+            try
             {
-                from = new
+                // ak.wwise.core.@object.get 指令
+                var query = new
                 {
-                    id = new string[] { target_id }
+                    from = new
+                    {
+                        id = new string[] { target_id }
+                    }
+                };
+
+                // ak.wwise.core.@object.get 返回参数设置
+                var options = new
+                {
+
+                    @return = new string[] { "name", "id", "type", "path" }
+
+                };
+
+                JObject jresult = await Client.Call(ak.wwise.core.@object.get, query, options);
+
+                try // 尝试返回物体数据
+                {
+                    string name = jresult["return"].Last["name"].ToString();
+                    string id = jresult["return"].Last["id"].ToString();
+                    string type = jresult["return"].Last["type"].ToString();
+                    string path = jresult["return"].Last["path"].ToString();
+
+                    Console.WriteLine("File imported successfully!");
+
+                    return new WwiseObject(name, id, type);
                 }
-            };
-
-            // ak.wwise.core.@object.get 返回参数设置
-            var options = new
-            {
-
-                @return = new string[] { "name", "id", "type", "path" }
-
-            };
-
-            JObject jresult = await Client.Call(ak.wwise.core.@object.get, query, options);
-
-            try // 尝试返回物体数据
-            {
-                string name = jresult["return"].Last["name"].ToString();
-                string id = jresult["return"].Last["id"].ToString();
-                string type = jresult["return"].Last["type"].ToString();
-                string path = jresult["return"].Last["path"].ToString();
-
-                Console.WriteLine("File imported successfully!");
-
-                return new WwiseObject(name, id, type);
+                catch
+                {
+                    Console.WriteLine($"Failed to return WwiseObject from ID : {target_id}!");
+                    return null;
+                }
             }
-            catch
+            catch (Wamp.ErrorException e)
             {
-                Console.WriteLine($"Failed to return WwiseObject from ID : {target_id}!");
+                Console.WriteLine($"Failed to return WwiseObject from ID : {target_id}! ======> {e.Message}");
                 return null;
             }
+            
         }
+
+        /*
+        public static async Task<WwiseObject> GetWwiseObjectByName(string target_name)
+        {
+            try
+            {
+                // ak.wwise.core.@object.get 指令
+                var query = new
+                {
+                    from = new
+                    {
+                        name = new string[] { target_name }
+                    }
+                };
+
+                // ak.wwise.core.@object.get 返回参数设置
+                var options = new
+                {
+
+                    @return = new string[] { "name", "id", "type", "path" }
+
+                };
+
+                JObject jresult = await Client.Call(ak.wwise.core.@object.get, query, options);
+
+                try // 尝试返回物体数据
+                {
+                    string name = jresult["return"].Last["name"].ToString();
+                    string id = jresult["return"].Last["id"].ToString();
+                    string type = jresult["return"].Last["type"].ToString();
+                    string path = jresult["return"].Last["path"].ToString();
+
+                    Console.WriteLine("File imported successfully!");
+
+                    return new WwiseObject(name, id, type);
+                }
+                catch
+                {
+                    Console.WriteLine($"Failed to return WwiseObject by name : {target_name}!");
+                    return null;
+                }
+            }
+            catch (Wamp.ErrorException e)
+            {
+                Console.WriteLine($"Failed to return WwiseObject by name : {target_name}! ======> {e.Message}");
+                return null;
+            }
+            
+        }
+        */
 
 
         /// <summary>
@@ -502,7 +596,7 @@ namespace WwiseTools.Utils
 
 
 
-                return await getWwiseObjectByID(result["objects"].Last["id"].ToString());
+                return await GetWwiseObjectByID(result["objects"].Last["id"].ToString());
             }
             catch (Wamp.ErrorException e)
             {

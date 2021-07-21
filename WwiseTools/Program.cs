@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using WwiseTools.Utils;
 using System.IO;
+using WwiseTools.Properties;
 
 namespace WwiseTools
 {
@@ -15,9 +16,15 @@ namespace WwiseTools
             var folder = WwiseUtility.CreateObject("TestFolder", WwiseObject.ObjectType.Folder, @"\Actor-Mixer Hierarchy\Default Work Unit");
             var rscontainer = WwiseUtility.CreateObject("TestRS", WwiseObject.ObjectType.RandomSequenceContainer, @"\Actor-Mixer Hierarchy\Default Work Unit");
 
-            WwiseUtility.SetObjectProperty(rscontainer, "Volume", -9);
+            var att = WwiseUtility.GetWwiseObjectByID("{8C2E78FC-4DC6-4643-A7E5-001309D94932}");
+            att.Wait();
+            WwiseObject attenuation = att.Result;
+
+            WwiseUtility.SetObjectReference(rscontainer, new Reference.WwiseReference("Attenuation", attenuation));
 
             WwiseUtility.MoveToParent(rscontainer, folder);
+
+            WwiseUtility.SetObjectProperty(rscontainer, WwiseSoundProperties.P_EnableAttenuation(false));
 
             WwiseUtility.ChangeObjectName(folder, "NewFolderName");
             
