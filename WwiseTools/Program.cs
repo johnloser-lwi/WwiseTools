@@ -14,28 +14,14 @@ namespace WwiseTools
     {
         static void Main(string[] args)
         {
-            var folder = WwiseUtility.CreateObject("TestFolder", WwiseObject.ObjectType.Folder, @"\Actor-Mixer Hierarchy\Default Work Unit");
-            var rscontainer = WwiseUtility.CreateObject("TestRS", WwiseObject.ObjectType.RandomSequenceContainer, @"\Actor-Mixer Hierarchy\Default Work Unit");
+            //var folder = WwiseUtility.CreateObject("TestFolder", WwiseObject.ObjectType.Folder);
+            
+            var rscontainer = WwiseUtility.CreateObject("TestRS", WwiseObject.ObjectType.RandomSequenceContainer);
+            var sound = WwiseUtility.CreateObject("TestSound", WwiseObject.ObjectType.Sound, rscontainer.Path);
 
-            var attenuation = WwiseUtility.GetWwiseObjectByName("Attenuation:TestAttenuation");
+            WwiseUtility.SetObjectProperty(rscontainer, WwiseProperty.Prop_RandomOrSequence(WwiseProperty.Option_RandomOrSequence.Sequence));
 
-            WwiseUtility.SetObjectReference(rscontainer, WwiseReference.Ref_Attenuation(attenuation));
-
-            var conversion = WwiseUtility.GetWwiseObjectByName("Conversion:TestConversion");
-
-            WwiseUtility.SetObjectReference(rscontainer, WwiseReference.Ref_Conversion(conversion));
-
-            WwiseUtility.MoveToParent(rscontainer, folder);
-
-            WwiseUtility.SetObjectProperty(rscontainer, WwiseProperty.Prop_EnableAttenuation(true));
-
-            WwiseUtility.SetObjectProperty(rscontainer, WwiseProperty.Prop_3DPosition(WwiseProperty.Option_3DPosition.EmitterWithAutomation));
-
-            WwiseUtility.ChangeObjectName(folder, "NewFolderName");
-
-            Console.WriteLine(rscontainer.Path);
-
-            WwiseUtility.CreatePlayEvent("TestEvent", rscontainer.Path);
+            WwiseUtility.CreatePlayEvent("TestEvent", rscontainer);
 
             WwiseUtility.Close().Wait();
 

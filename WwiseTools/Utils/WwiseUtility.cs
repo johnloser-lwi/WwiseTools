@@ -36,7 +36,6 @@ namespace WwiseTools.Utils
                 {
                     System.Console.WriteLine("Connection closed!"); // 丢失连接提示
                 };
-
                 return true;
             }
             catch (Wamp.ErrorException e)
@@ -284,6 +283,21 @@ namespace WwiseTools.Utils
             }
         }
 
+        /// <summary>
+        /// 生成播放事件
+        /// </summary>
+        /// <param name="event_name"></param>
+        /// <param name="wwiseObject"></param>
+        /// <param name="parent_path"></param>
+        /// <returns></returns>
+        public static WwiseObject CreatePlayEvent(string event_name, WwiseObject wwiseObject, string parent_path = @"\Events\Default Work Unit")
+        {
+            if (!TryConnectWaapi()) return null;
+            var evt = CreatePlayEventAsync(event_name, wwiseObject.Path, parent_path);
+            evt.Wait();
+            return evt.Result;
+        }
+
 
         /// <summary>
         /// 生成播放事件
@@ -383,7 +397,7 @@ namespace WwiseTools.Utils
                         new JProperty("name", object_name),
                         new JProperty("type", object_type.ToString()),
                         new JProperty("parent", parent_path),
-                        new JProperty("onNameConflict", "rename")
+                        new JProperty("onNameConflict", "rename"),
                     },
                     null
                     );
