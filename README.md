@@ -10,24 +10,24 @@ ___
 ### 导入单个音频
 ```
 WwiseUtility.Init(); // 首先初始化Wwise工程连接(可以跳过)。
-var obj = WwiseUtility.ImportSound(@"音频文件路径"); // 导入指定音频文件，返回`WwiseObject`。
+var obj = WwiseUtility.ImportSound(@"音频文件路径"); // 导入指定音频文件，返回"WwiseObject"。
 Console.WriteLine(obj.ToString()); // 显示添加对象的信息。
 ```
 
-运行程序后Wwise工程将会导入指定文件为Sound，默认路径为`@"\Actor-Mixer Hierarchy\Default Work Unit"`，控制台将输出添加对象的名称，ID，类型信息。
+运行程序后Wwise工程将会导入指定文件为Sound，默认路径为"\Actor-Mixer Hierarchy\Default Work Unit"，控制台将输出添加对象的名称，ID，类型信息。
 
 ### 从文件夹批量导入音频
 ```
-var objects = WwiseUtility.ImportSoundFromFolder(@"文件夹路径"); // 导入指定文件夹内的音频，返回`List<WwiseObject>`。
+var objects = WwiseUtility.ImportSoundFromFolder(@"文件夹路径"); // 导入指定文件夹内的音频，返回"List<WwiseObject>"。
 foreach (var obj in objects) { Console.WriteLine(obj.ToString()); } // 显示所有对象信息。
 ```
 
-运行程序后Wwise工程将会导入指定文件夹内的所有文件为Sound，默认路径为`@"\Actor-Mixer Hierarchy\Default Work Unit"`，控制台将输出所有添加对象的名称，ID，类型信息。
+运行程序后Wwise工程将会导入指定文件夹内的所有文件为Sound，默认路径为"\Actor-Mixer Hierarchy\Default Work Unit"，控制台将输出所有添加对象的名称，ID，类型信息。
 
 ### 创建与移动对象
 ```
-var testFolder = WwiseUtility.CreateObject("TestFolder", WwiseObject.ObjectType.Folder); // 创建一个名称为"TestFolder"的文件夹，默认路径为`@"\Actor-Mixer Hierarchy\Default Work Unit"`。
-var testSound = new WwiseSound("TestSound"); // 创建一个名称为"TestSound"的音频对象，默认路径为`@"\Actor-Mixer Hierarchy\Default Work Unit"`。
+var testFolder = WwiseUtility.CreateObject("TestFolder", WwiseObject.ObjectType.Folder); // 创建一个名称为"TestFolder"的文件夹，默认路径为"\Actor-Mixer Hierarchy\Default Work Unit"。
+var testSound = new WwiseSound("TestSound"); // 创建一个名称为"TestSound"的音频对象，默认路径为"\Actor-Mixer Hierarchy\Default Work Unit"。
 WwiseUtility.MoveToParent(testSound, testFolder); // 将"testSound"移动至"testFolder"下。
 ```
 
@@ -36,7 +36,7 @@ WwiseUtility.MoveToParent(testSound, testFolder); // 将"testSound"移动至"tes
 ### 生成事件
 延续上一个案例，我们可以将"testSound"放入一个播放事件。
 ```
-WwiseUtility.CreatePlayEvent("TestEvent", testSound.Path); // 生成一个名为"TestEvent"的事件播放"testSound"，默认路径为`@"\Events\Default Work Unit"
+WwiseUtility.CreatePlayEvent("TestEvent", testSound.Path); // 生成一个名为"TestEvent"的事件播放"testSound"，默认路径为"\Events\Default Work Unit"
 ```
 
 运行程序后Wwise工程中将会有一个名为"TestEvent"的事件，其中的"Play Action"包含一个名为"TestSound"的引用。
