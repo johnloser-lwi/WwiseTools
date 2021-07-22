@@ -29,9 +29,51 @@ namespace WwiseTools.Properties
             return new WwiseProperty("3DSpatialization", (int)mode);
         }
 
-        public static WwiseProperty Prop_EnableAttenuation(bool enable)
+        public enum Option_BelowThresholdBehavior { ContinueToPlay = 0, KillVoice = 1, SendToVirtualVoice = 2, KillIfFiniteElseVirtual = 3 }
+
+        public static WwiseProperty Prop_BelowThresholdBehavior(Option_BelowThresholdBehavior behavior)
         {
-            return new WwiseProperty("EnableAttenuation", enable);
+            return new WwiseProperty("BelowThresholdBehavior", (int)behavior);
+        }
+
+        public static WwiseProperty Prop_BypassEffect(bool bypass)
+        {
+            return new WwiseProperty("BypassEffect", bypass);
+        }
+
+        public static WwiseProperty Prop_BypassEffect0(bool bypass)
+        {
+            return new WwiseProperty("BypassEffect0", bypass);
+        }
+
+        public static WwiseProperty Prop_BypassEffect1(bool bypass)
+        {
+            return new WwiseProperty("BypassEffect1", bypass);
+        }
+
+        public static WwiseProperty Prop_BypassEffect2(bool bypass)
+        {
+            return new WwiseProperty("BypassEffect2", bypass);
+        }
+
+        public static WwiseProperty Prop_BypassEffect3(bool bypass)
+        {
+            return new WwiseProperty("BypassEffect3", bypass);
+        }
+
+        public static WwiseProperty Prop_CenterPercentage(uint value)
+        {
+            return new WwiseProperty("CenterPercentage", valueLimiter(value, 0, 100));
+        }
+
+        public static WwiseProperty Prop_Color(uint value)
+        {
+            return new WwiseProperty("Color", valueLimiter(value, 0, 26));
+        }
+
+        public static WwiseProperty Prop_EnableAttenuation(bool bypass)
+        {
+            return new WwiseProperty("EnableAttenuation", bypass);
         }
 
         public static WwiseProperty Prop_EnableDiffraction(bool enable)
@@ -49,14 +91,20 @@ namespace WwiseTools.Properties
             return new WwiseProperty("EnableMidiNoteTracking", enable);
         }
 
-        public static WwiseProperty Prop_GameAuxSendHPF(int value)
+        public static WwiseProperty Prop_GameAuxSendHPF(uint value)
         {
-            return new WwiseProperty("GameAuxSendHPF", value);
+            return new WwiseProperty("GameAuxSendHPF", valueLimiter(value, 0, 100));
         }
 
         public static WwiseProperty Prop_GameAuxSendLPF(int value)
         {
-            return new WwiseProperty("GameAuxSendLPF", value);
+            return new WwiseProperty("GameAuxSendLPF", valueLimiter(value, 0, 100));
+        }
+
+        public enum Option_GlobalOrPerObject { GameObject = 0, Global = 1 }
+        public static WwiseProperty Prop_GlobalOrPerObject(Option_GlobalOrPerObject option)
+        {
+            return new WwiseProperty("GlobalOrPerObject", (int)option);
         }
 
         public static WwiseProperty Prop_GameAuxSendVolume(float value)
@@ -223,6 +271,12 @@ namespace WwiseTools.Properties
             return new WwiseProperty("MidiVelocityOffset", valueLimiter(value, -127, 127));
         }
 
+        public enum Option_NormalOrShuffle { Shuffle = 0, Standard = 1 }
+        public static WwiseProperty Prop_NormalOrShuffle(Option_NormalOrShuffle option)
+        {
+            return new WwiseProperty("NormalOrShuffle", (int)option);
+        }
+
         public static WwiseProperty Prop_OutputBusHighpass(uint value)
         {
             return new WwiseProperty("OutputBusHighpass", valueLimiter(value, 0, 100));
@@ -328,6 +382,49 @@ namespace WwiseTools.Properties
             return new WwiseProperty("Pitch", valueLimiter(value, -2400, 2400));
         }
 
+        public enum Option_PlayMechanismInfiniteOrNumberOfLoops { NumberOfLoop = 0, Infinite = 1 }
+        public static WwiseProperty Prop_PlayMechanismInfiniteOrNumberOfLoops(Option_PlayMechanismInfiniteOrNumberOfLoops option)
+        {
+            return new WwiseProperty("PlayMechanismInfiniteOrNumberOfLoops", (int)option);
+        }
+
+        public static WwiseProperty Prop_PlayMechanismLoop(bool loop)
+        {
+            return new WwiseProperty("PlayMechanismLoop", loop);
+        }
+
+        public static WwiseProperty Prop_PlayMechanismLoopCount(uint numberOfLoop)
+        {
+            return new WwiseProperty("PlayMechanismLoopCount", valueLimiter(numberOfLoop, 1, 32767));
+        }
+
+        public static WwiseProperty Prop_PlayMechanismResetPlaylistEachPlay(bool reset)
+        {
+            return new WwiseProperty("PlayMechanismResetPlaylistEachPlay", reset);
+        }
+
+        public static WwiseProperty Prop_PlayMechanismSpecialTransitions(bool transitions)
+        {
+            return new WwiseProperty("PlayMechanismSpecialTransitions", transitions);
+        }
+
+        public enum Option_PlayMechanismSpecialTransitionsType { Xfade_Amp = 0, Delay = 1, SampleAccurate = 2, TriggerRate = 3, Xfade_Power = 4 }
+        public static WwiseProperty Prop_PlayMechanismSpecialTransitionsType(Option_PlayMechanismSpecialTransitionsType type)
+        {
+            return new WwiseProperty("PlayMechanismSpecialTransitionsType", (int)type);
+        }
+
+        public static WwiseProperty Prop_PlayMechanismSpecialTransitionsValue(float value)
+        {
+            return new WwiseProperty("PlayMechanismSpecialTransitionsValue", valueLimiter(value, 0, 3600));
+        }
+
+        public enum Option_PlayMechanismStepOrContinuous { Continous = 0, Step = 1 }
+        public static WwiseProperty Prop_PlayMechanismStepOrContinuous(Option_PlayMechanismStepOrContinuous option)
+        {
+            return new WwiseProperty("PlayMechanismStepOrContinuous", (int)option);
+        }
+
         public static WwiseProperty Prop_PreFetchLength(uint value)
         {
             return new WwiseProperty("PreFetchLength", valueLimiter(value, 0, 10000));
@@ -346,6 +443,22 @@ namespace WwiseTools.Properties
         public static WwiseProperty Prop_PriorityDistanceOffset(int value)
         {
             return new WwiseProperty("PriorityDistanceOffset", valueLimiter(value, -100, 100));
+        }
+
+        public static WwiseProperty Prop_RandomAvoidRepeating(bool limitRepetition)
+        {
+            return new WwiseProperty("RandomAvoidRepeating", limitRepetition);
+        }
+
+        public static WwiseProperty Prop_RandomAvoidRepeatingCount(uint value)
+        {
+            return new WwiseProperty("RandomAvoidRepeatingCount", valueLimiter(value, 1, 999));
+        }
+
+        public enum Option_RandomOrSequence { Sequence = 0, Random = 1 }
+        public static WwiseProperty Prop_RandomOrSequence(Option_RandomOrSequence option)
+        {
+            return new WwiseProperty("RandomOrSequence", (int)option);
         }
 
         public static WwiseProperty Prop_ReflectionsVolume(float value)
@@ -371,6 +484,12 @@ namespace WwiseTools.Properties
         public static WwiseProperty Prop_RenderEffect3(bool render)
         {
             return new WwiseProperty("RenderEffect3", render);
+        }
+
+        public enum Option_RestartBeginningOrBackward { PlayInReverseOrder = 0, Restart = 1 }
+        public static WwiseProperty Prop_RestartBeginningOrBackward(Option_RestartBeginningOrBackward option)
+        {
+            return new WwiseProperty("RestartBeginningOrBackward", option);
         }
 
 
