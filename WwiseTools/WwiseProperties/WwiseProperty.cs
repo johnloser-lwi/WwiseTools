@@ -17,7 +17,7 @@ namespace WwiseTools.Properties
             Value = value;
         }
 
-        public enum Option_3DPosition { Emmiter = 0, EmitterWithAutomation = 1, ListenerWithAutomation = 2 }
+        public enum Option_3DPosition { Emitter = 0, EmitterWithAutomation = 1, ListenerWithAutomation = 2 }
         public static WwiseProperty Prop_3DPosition(Option_3DPosition mode)
         {
             return new WwiseProperty("3DPosition", (int)mode);
@@ -96,7 +96,7 @@ namespace WwiseTools.Properties
             return new WwiseProperty("GameAuxSendHPF", valueLimiter(value, 0, 100));
         }
 
-        public static WwiseProperty Prop_GameAuxSendLPF(int value)
+        public static WwiseProperty Prop_GameAuxSendLPF(uint value)
         {
             return new WwiseProperty("GameAuxSendLPF", valueLimiter(value, 0, 100));
         }
@@ -127,7 +127,7 @@ namespace WwiseTools.Properties
             return new WwiseProperty("HdrEnvelopeSensitivity", valueLimiter(value, 0, 100));
         }
 
-        public static WwiseProperty Prop_Highpass(int value)
+        public static WwiseProperty Prop_Highpass(uint value)
         {
             return new WwiseProperty("Highpass", valueLimiter(value, 0, 100));
         }
@@ -287,7 +287,7 @@ namespace WwiseTools.Properties
             return new WwiseProperty("OutputBusLowpass", valueLimiter(value, 0, 100));
         }
 
-        public static WwiseProperty Prop_OutputBusVolume(uint value)
+        public static WwiseProperty Prop_OutputBusVolume(float value)
         {
             return new WwiseProperty("OutputBusVolume", valueLimiter(value, -200, 200));
         }

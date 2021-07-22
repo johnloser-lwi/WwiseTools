@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WwiseTools.Objects;
 using WwiseTools.Utils;
 
 namespace WwiseTools.Reference
@@ -20,6 +21,8 @@ namespace WwiseTools.Reference
 
         public static WwiseReference Ref_Attenuation(WwiseObject wwiseObject)
         {
+            if (wwiseObject == null) return null;
+
             if (wwiseObject.Type != WwiseObject.ObjectType.Attenuation.ToString())
             {
                 return null;
@@ -29,6 +32,7 @@ namespace WwiseTools.Reference
 
         public static WwiseReference Ref_Conversion(WwiseObject wwiseObject)
         {
+            if (wwiseObject == null) return null;
             if (wwiseObject.Type != WwiseObject.ObjectType.Conversion.ToString())
             {
                 return null;
@@ -38,6 +42,7 @@ namespace WwiseTools.Reference
 
         public static WwiseReference Ref_Effect0(WwiseObject wwiseObject)
         {
+            if (wwiseObject == null) return null;
             if (wwiseObject.Type != "Effect")
             {
                 return null;
@@ -47,6 +52,7 @@ namespace WwiseTools.Reference
 
         public static WwiseReference Ref_Effect1(WwiseObject wwiseObject)
         {
+            if (wwiseObject == null) return null;
             if (wwiseObject.Type != "Effect")
             {
                 return null;
@@ -56,6 +62,7 @@ namespace WwiseTools.Reference
 
         public static WwiseReference Ref_Effect2(WwiseObject wwiseObject)
         {
+            if (wwiseObject == null) return null;
             if (wwiseObject.Type != "Effect")
             {
                 return null;
@@ -65,6 +72,7 @@ namespace WwiseTools.Reference
 
         public static WwiseReference Ref_Effect3(WwiseObject wwiseObject)
         {
+            if (wwiseObject == null) return null;
             if (wwiseObject.Type != "Effect")
             {
                 return null;
@@ -74,7 +82,8 @@ namespace WwiseTools.Reference
 
         public static WwiseReference Ref_OutputBus(WwiseObject wwiseObject)
         {
-            if (wwiseObject.Type != "OutputBus")
+            if (wwiseObject == null) return null;
+            if (wwiseObject.Type != "Bus")
             {
                 return null;
             }
@@ -82,15 +91,17 @@ namespace WwiseTools.Reference
         }
         public static WwiseReference Ref_ReflectionsAuxSend(WwiseObject wwiseObject)
         {
+            if (wwiseObject == null) return null;
             if (wwiseObject.Type != "AuxBus")
             {
                 return null;
             }
-            return new WwiseReference("OutputBus", wwiseObject);
+            return new WwiseReference("ReflectionsAuxSend", wwiseObject);
         }
 
         public static WwiseReference Ref_UserAuxSend0(WwiseObject wwiseObject)
         {
+            if (wwiseObject == null) return null;
             if (wwiseObject.Type != "AuxBus")
             {
                 return null;
@@ -100,6 +111,7 @@ namespace WwiseTools.Reference
 
         public static WwiseReference Ref_UserAuxSend1(WwiseObject wwiseObject)
         {
+            if (wwiseObject == null) return null;
             if (wwiseObject.Type != "AuxBus")
             {
                 return null;
@@ -109,6 +121,7 @@ namespace WwiseTools.Reference
 
         public static WwiseReference Ref_UserAuxSend2(WwiseObject wwiseObject)
         {
+            if (wwiseObject == null) return null;
             if (wwiseObject.Type != "AuxBus")
             {
                 return null;
@@ -118,6 +131,7 @@ namespace WwiseTools.Reference
 
         public static WwiseReference Ref_UserAuxSend3(WwiseObject wwiseObject)
         {
+            if (wwiseObject == null) return null;
             if (wwiseObject.Type != "AuxBus")
             {
                 return null;

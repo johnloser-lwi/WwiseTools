@@ -7,6 +7,7 @@ using AK.Wwise.Waapi;
 using System.Threading.Tasks;
 using WwiseTools.Properties;
 using WwiseTools.Reference;
+using WwiseTools.Objects;
 
 namespace WwiseTools.Utils
 {

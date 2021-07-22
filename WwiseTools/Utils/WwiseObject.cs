@@ -4,8 +4,9 @@ using Newtonsoft.Json.Linq;
 
 using AK.Wwise.Waapi;
 using System.Threading.Tasks;
+using WwiseTools.Utils;
 
-namespace WwiseTools.Utils
+namespace WwiseTools.Objects
 {
     public class WwiseObject
     {
