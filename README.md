@@ -85,7 +85,7 @@ var testReference = new WwiseReference(attenuation); // 创建一个引用对象
 WwiseUtility.SetObjectProperty(randomContainer, testProperty); // 为"randomContainer设置属性"testProperty""。
 WwiseUtility.SetObjectReference(randomContainer, testReference); // 为"randomContainer"添加引用"testReference"。
 ```
-运行程序后，将会实现与上一个案例相同的效果，淡然我们也可以设置其他的属性与引用，可以在[Wwise Objects Reference](https://www.audiokinetic.com/zh/library/edge/?source=SDK&id=wobjects_index.html)中找到更多的属性、应用参数说明。
+运行程序后，将会实现与上一个案例相同的效果，当然我们也可以设置其他的属性与引用，可以在[Wwise Objects Reference](https://www.audiokinetic.com/zh/library/edge/?source=SDK&id=wobjects_index.html)中找到更多的属性、应用参数说明。
 ___
 
 # 作者简介
