@@ -47,13 +47,13 @@ ___
 ## 设置属性以及引用
 ### 设置衰减(Attenuation)引用
 ```csharp
-var rscontainer = new RandomContainer("TestRandomContainer"); // 创建一个名为"TestRandomContainer"的RandomContainer，保存在"rscontainer"中。
+var randomContainer = new RandomContainer("TestRandomContainer"); // 创建一个名为"TestRandomContainer"的RandomContainer，保存在"randomContainer"中。
 
-/* 设置"rscontainer"的"Attenuation"引用为"TestAttenuation"，
+/* 设置"randomContainer"的"Attenuation"引用为"TestAttenuation"，
 该函数会自动启用"Attenuation"选项，
 如果无法找到"TestAttenuation"将会在"\Attenuations\Default Work Unit"下创建"TestAttenuation"。
 */
-rscontainer.SetAttenuation("TestAttenuation"); 
+randomContainer.SetAttenuation("TestAttenuation"); 
 ```
 
 运行程序后Wwise工程中将会有一个名为"TestRandomContainer"的RandomContainer，"Positioning"菜单中的"Attenuation"参数被勾选，引用设置为"TestAttenuation"。
@@ -66,13 +66,26 @@ rscontainer.SetAttenuation("TestAttenuation");
  该案例中的"type"为"Attenuation"，"name"为"TestAttenuation"。
  */
 var attenuation = WwiseUtility.GetWwiseObjectByName("Attenuation:TestAttenuation"); 
-WwiseUtility.SetObjectProperty(rscontainer, WwiseProperty.Prop_EnableAttenuation(true)); // 启用"Attenuation"。
-WwiseUtility.SetObjectReference(rscontainer, WwiseReference.Ref_Attenuation(attenuation)); // 为"rscontainer"添加引用"attenuation"。
+WwiseUtility.SetObjectProperty(randomContainer, WwiseProperty.Prop_EnableAttenuation(true)); // 启用"Attenuation"。
+WwiseUtility.SetObjectReference(randomContainer, WwiseReference.Ref_Attenuation(attenuation)); // 为"randomContainer"添加引用"attenuation"。
 ```
 
 运行程序后，将会实现与上一个案例相同的效果。
-<br />
-*可以在[Wwise Objects Reference](https://www.audiokinetic.com/zh/library/edge/?source=SDK&id=wobjects_index.html)中找到更多的属性、应用参数说明。*
+
+### 自定义属性以及引用内容
+虽然目前的"WwiseProperty"和"WwiseReference"类已经包含了大部分属性、引用的静态创建函数，有的时候我们仍然会需要手动设置属性、应用的内容。
+```csharp
+var randomContainer = new RandomContainer("TestRandomContainer"); // 创建一个名为"TestRandomContainer"的RandomContainer。
+
+var testProperty = new WwiseProperty("EnableAttenuation", true); // 创建一个属性对象，属性名称为"EnableAttenuation"，值为"true"。
+
+var attenuation = WwiseUtility.GetWwiseObjectByName("Attenuation:TestAttenuation"); // 从Wwise工程中获取名为"TestAttenuation"的"Attenuation"
+var testReference = new WwiseReference(attenuation); // 创建一个引用对象，引用"attenuation"
+
+WwiseUtility.SetObjectProperty(randomContainer, testProperty); // 为"randomContainer设置属性"testProperty""。
+WwiseUtility.SetObjectReference(randomContainer, testReference); // 为"randomContainer"添加引用"testReference"。
+```
+运行程序后，将会实现与上一个案例相同的效果，淡然我们也可以设置其他的属性与引用，可以在[Wwise Objects Reference](https://www.audiokinetic.com/zh/library/edge/?source=SDK&id=wobjects_index.html)中找到更多的属性、应用参数说明。
 ___
 
 # 作者简介
