@@ -23,8 +23,19 @@ namespace WwiseTools.Objects
             Name = tempObj.Name;
         }
 
-        internal WwiseSound(string name, string id, string type) : base(name, id, type)
+        /// <summary>
+        /// 创建一个Wwise Sound对象，设置包含的音频文件信息
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="file_path"></param>
+        /// <param name="language"></param>
+        /// <param name="sub_folder"></param>
+        /// <param name="parent_path"></param>
+        public WwiseSound(string name, string file_path, string language = "SFX", string sub_folder = "", string parent_path = @"\Actor-Mixer Hierachy\Default Work Unit") : base(name, "", "Sound")
         {
+            var tempObj = WwiseUtility.ImportSound(file_path, language, sub_folder, parent_path);
+            ID = tempObj.ID;
+            Name = tempObj.Name;
         }
 
         /// <summary>

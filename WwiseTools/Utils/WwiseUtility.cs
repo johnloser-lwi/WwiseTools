@@ -586,14 +586,14 @@ namespace WwiseTools.Utils
         /// </summary>
         /// <param name="file_path"></param>
         /// <param name="language"></param>
-        /// <param name="subFolder"></param>
+        /// <param name="sub_folder"></param>
         /// <param name="parent_path"></param>
         /// <param name="work_unit"></param>
         /// <param name="hierarchy"></param>
         /// <returns></returns>
-        public static WwiseObject ImportSound(string file_path, string language = "SFX", string subFolder = "", string parent_path = @"\Actor-Mixer Hierarchy\Default Work Unit") // 直接调用的版本
+        public static WwiseObject ImportSound(string file_path, string language = "SFX", string sub_folder = "", string parent_path = @"\Actor-Mixer Hierarchy\Default Work Unit") // 直接调用的版本
         {
-            Task<WwiseObject> obj = WwiseUtility.ImportSoundAsync(file_path, language, subFolder, parent_path);
+            Task<WwiseObject> obj = WwiseUtility.ImportSoundAsync(file_path, language, sub_folder, parent_path);
             obj.Wait();
             return obj.Result;
         }
