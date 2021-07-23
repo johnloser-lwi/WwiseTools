@@ -10,7 +10,7 @@ ___
 
 ## 使用说明
 ### 导入单个音频
-```
+```csharp
 WwiseUtility.Init(); // 首先初始化Wwise工程连接(可以跳过)。
 var obj = WwiseUtility.ImportSound(@"音频文件路径"); // 导入指定音频文件，返回"WwiseObject"。
 Console.WriteLine(obj.ToString()); // 显示添加对象的信息。
@@ -19,7 +19,7 @@ Console.WriteLine(obj.ToString()); // 显示添加对象的信息。
 运行程序后Wwise工程将会导入指定文件为Sound，默认路径为"\Actor-Mixer Hierarchy\Default Work Unit"，控制台将输出添加对象的名称，ID，类型信息。
 
 ### 从文件夹批量导入音频
-```
+```csharp
 var objects = WwiseUtility.ImportSoundFromFolder(@"文件夹路径"); // 导入指定文件夹内的音频，返回"List<WwiseObject>"。
 foreach (var obj in objects) { Console.WriteLine(obj.ToString()); } // 显示所有对象信息。
 ```
@@ -27,7 +27,7 @@ foreach (var obj in objects) { Console.WriteLine(obj.ToString()); } // 显示所
 运行程序后Wwise工程将会导入指定文件夹内的所有文件为Sound，默认路径为"\Actor-Mixer Hierarchy\Default Work Unit"，控制台将输出所有添加对象的名称，ID，类型信息。
 
 ### 创建与移动对象
-```
+```csharp
 var testFolder = new WwiseFolder("TestFolder"); // 创建一个名称为"TestFolder"的文件夹，默认路径为"\Actor-Mixer Hierarchy\Default Work Unit"。
 var testSound = new WwiseSound("TestSound"); // 创建一个名称为"TestSound"的音频对象，默认路径为"\Actor-Mixer Hierarchy\Default Work Unit"。
 testFolder.AddChild(testSound); // 将"testSound"移动至"testFolder"下。
@@ -37,7 +37,7 @@ testFolder.AddChild(testSound); // 将"testSound"移动至"testFolder"下。
 
 ### 生成事件
 延续上一个案例，我们可以为"testSound"创建一个播放事件。
-```
+```csharp
 testSound.CreatePlayEvent("TestEvent"); // 生成一个名为"TestEvent"的事件播放"testSound"，默认路径为"\Events\Default Work Unit"
 ```
 
@@ -46,7 +46,7 @@ ___
 
 ## 设置属性以及引用
 ### 设置衰减(Attenuation)引用
-```
+```csharp
 var rscontainer = new RandomContainer("TestRandomContainer"); // 创建一个名为"TestRandomContainer"的RandomContainer，保存在"rscontainer"中。
 
 /* 设置"rscontainer"的"Attenuation"引用为"TestAttenuation"，
@@ -60,7 +60,7 @@ rscontainer.SetAttenuation("TestAttenuation");
 
 ### 手动设置属性以及引用
 除了"RandomContainer"自带的"SetAttenuation"函数，我们还可以手动设置属性以及引用来实现相同的功能，同时拥有更大的灵活性。我们可以在Wwise的ShareSet/Attenuations/Default Work Unit中添加一个名为"TestAttenuation"的Attenuation，然后通过"WwiseUtility.SetObjectProperty"和"WwiseUtility.SetObjectReference"函数来设置属性以及引用。
-```
+```csharp
 /*
  通过名称获取我们创建的Attenuation，存于"attenuation"中，此处名称必须为"type:name"的格式，
  该案例中的"type"为"Attenuation"，"name"为"TestAttenuation"。
