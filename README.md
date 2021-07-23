@@ -4,9 +4,11 @@
 *作者 : [杨惟勤 (AKA John Loser)](https://losersworldindustries.com/john-yang)*
 
 *.NETFramework,Version=v4.5.2*
+
+**该项目仍处于开发初期，不少现有的功能将来都有被推翻或者有更优的解决方案的可能，请谨慎使用于实际项目中!**
 ___
 
-## 基础使用
+## 使用说明
 ### 导入单个音频
 ```
 WwiseUtility.Init(); // 首先初始化Wwise工程连接(可以跳过)。
@@ -26,40 +28,51 @@ foreach (var obj in objects) { Console.WriteLine(obj.ToString()); } // 显示所
 
 ### 创建与移动对象
 ```
-var testFolder = WwiseUtility.CreateObject("TestFolder", WwiseObject.ObjectType.Folder); // 创建一个名称为"TestFolder"的文件夹，默认路径为"\Actor-Mixer Hierarchy\Default Work Unit"。
+var testFolder = new WwiseFolder("TestFolder"); // 创建一个名称为"TestFolder"的文件夹，默认路径为"\Actor-Mixer Hierarchy\Default Work Unit"。
 var testSound = new WwiseSound("TestSound"); // 创建一个名称为"TestSound"的音频对象，默认路径为"\Actor-Mixer Hierarchy\Default Work Unit"。
-WwiseUtility.MoveToParent(testSound, testFolder); // 将"testSound"移动至"testFolder"下。
+testFolder.AddChild(testSound); // 将"testSound"移动至"testFolder"下。
 ```
 
 运行程序后Wwise工程中将会有一个名为"TestFolder"的文件夹，其中包含一个名为"TestSound"的音频对象。
 
 ### 生成事件
-延续上一个案例，我们可以将"testSound"放入一个播放事件。
+延续上一个案例，我们可以为"testSound"创建一个播放事件。
 ```
-WwiseUtility.CreatePlayEvent("TestEvent", testSound.Path); // 生成一个名为"TestEvent"的事件播放"testSound"，默认路径为"\Events\Default Work Unit"
+testSound.CreatePlayEvent("TestEvent"); // 生成一个名为"TestEvent"的事件播放"testSound"，默认路径为"\Events\Default Work Unit"
 ```
 
 运行程序后Wwise工程中将会有一个名为"TestEvent"的事件，其中的"Play Action"包含一个名为"TestSound"的引用。
 ___
 
 ## 设置属性以及引用
-### 设置属性
+### 设置衰减(Attenuation)引用
 ```
-var rscontainer = WwiseUtility.CreateObject("TestRS", WwiseObject.ObjectType.RandomSequenceContainer, @"\Actor-Mixer Hierarchy\Default Work Unit"); // 创建一个名为"TestRS"的RandomSequenceContainer，保存在"rscontainer"中。
-WwiseUtility.SetObjectProperty(rscontainer, WwiseProperty.Prop_EnableAttenuation(true)); // 设置"rscontainer"的"Enable_Attenuation"参数为"true"。
+var rscontainer = new RandomContainer("TestRandomContainer"); // 创建一个名为"TestRandomContainer"的RandomContainer，保存在"rscontainer"中。
+
+/* 设置"rscontainer"的"Attenuation"引用为"TestAttenuation"，
+该函数会自动启用"Attenuation"选项，
+如果无法找到"TestAttenuation"将会在"\Attenuations\Default Work Unit"下创建"TestAttenuation"。
+*/
+rscontainer.SetAttenuation("TestAttenuation"); 
 ```
 
-运行程序后Wwise工程中将会有一个名为"TestRS"的RandomSequenceContainer，它的"Positioning"菜单中的"Attenuation"参数被勾选。
+运行程序后Wwise工程中将会有一个名为"TestRandomContainer"的RandomContainer，"Positioning"菜单中的"Attenuation"参数被勾选，引用设置为"TestAttenuation"。
 
-### 设置引用
-延续上一个案例，我们可以为"rscontainer"添加一个Attenuation的引用。我们可以在Wwise的ShareSet/Attenuations/Default Work Unit中添加一个名为"TestAttenuation"的Attenuation。
-
+### 手动设置属性以及引用
+除了"RandomContainer"自带的"SetAttenuation"函数，我们还可以手动设置属性以及引用来实现相同的功能，同时拥有更大的灵活性。我们可以在Wwise的ShareSet/Attenuations/Default Work Unit中添加一个名为"TestAttenuation"的Attenuation，然后通过"WwiseUtility.SetObjectProperty"和"WwiseUtility.SetObjectReference"函数来设置属性以及引用。
 ```
-var attenuation = WwiseUtility.GetWwiseObjectByName("Attenuation:TestAttenuation"); // 通过名称获取我们创建的Attenuation，存于"attenuation"中，此处名称必须为"type:name"的格式，该案例中的"type"为"Attenuation"，"name"为"TestAttenuation"。
+/*
+ 通过名称获取我们创建的Attenuation，存于"attenuation"中，此处名称必须为"type:name"的格式，
+ 该案例中的"type"为"Attenuation"，"name"为"TestAttenuation"。
+ */
+var attenuation = WwiseUtility.GetWwiseObjectByName("Attenuation:TestAttenuation"); 
+WwiseUtility.SetObjectProperty(rscontainer, WwiseProperty.Prop_EnableAttenuation(true)); // 启用"Attenuation"。
 WwiseUtility.SetObjectReference(rscontainer, WwiseReference.Ref_Attenuation(attenuation)); // 为"rscontainer"添加引用"attenuation"。
 ```
 
-运行程序后，Wwise的除了勾选了"Attenuation"参数，引用也设置为刚才设置的"TestAttenuation"。
+运行程序后，将会实现与上一个案例相同的效果。
+<br />
+*可以在[Wwise Objects Reference](https://www.audiokinetic.com/zh/library/edge/?source=SDK&id=wobjects_index.html)中找到更多的属性、应用参数说明。*
 ___
 
 # 作者简介

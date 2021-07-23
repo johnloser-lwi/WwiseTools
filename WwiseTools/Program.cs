@@ -15,20 +15,10 @@ namespace WwiseTools
     {
         static void Main(string[] args)
         {
-            //var folder = WwiseUtility.CreateObject("TestFolder", WwiseObject.ObjectType.Folder);
-
-            WwiseSound sound = new WwiseSound("TestSound");
-            sound.SetAuxilaryBus0("TestAux", -9, 5, 5);
-            sound.SetOutputBus("TestBus", -9, 10, 10);
-            sound.SetEarlyReflections("TestReflectionBus", -9);
-            sound.SetPitch(-15);
-            sound.SetVolume(-10);
-            sound.SetFilter(10, 10);
-            sound.SetStream(true, true, true);
-            sound.SetInitialDelay(0.5f);
-            sound.SetLoop(true, false, 5);
-            sound.SetConversion("TestConversion");
-
+            WwiseFolder testFolder = new WwiseFolder("TestFolder");
+            WwiseSequenceContainer testRandom = new WwiseSequenceContainer("TestRandom");
+            testRandom.SetScope(WwiseProperty.Option_GlobalOrPerObject.GameObject);
+            testRandom.SetAttenuation("TestAttenuation");
             Console.ReadLine();
         }
     }
