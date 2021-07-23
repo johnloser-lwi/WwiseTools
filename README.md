@@ -47,7 +47,7 @@ ___
 ## 设置属性以及引用
 ### 设置衰减(Attenuation)引用
 ```csharp
-var randomContainer = new RandomContainer("TestRandomContainer"); // 创建一个名为"TestRandomContainer"的RandomContainer，保存在"randomContainer"中。
+var randomContainer = new WwiseRandomContainer("TestRandomContainer"); // 创建一个名为"TestRandomContainer"的RandomContainer，保存在"randomContainer"中。
 
 /* 设置"randomContainer"的"Attenuation"引用为"TestAttenuation"，
 该函数会自动启用"Attenuation"选项，
@@ -75,7 +75,7 @@ WwiseUtility.SetObjectReference(randomContainer, WwiseReference.Ref_Attenuation(
 ### 自定义属性以及引用内容
 虽然目前的"WwiseProperty"和"WwiseReference"类已经包含了大部分属性、引用的静态创建函数，有的时候我们仍然会需要手动设置属性、应用的内容。
 ```csharp
-var randomContainer = new RandomContainer("TestRandomContainer"); // 创建一个名为"TestRandomContainer"的RandomContainer。
+var randomContainer = new WwiseRandomContainer("TestRandomContainer"); // 创建一个名为"TestRandomContainer"的RandomContainer。
 
 var testProperty = new WwiseProperty("EnableAttenuation", true); // 创建一个属性对象，属性名称为"EnableAttenuation"，值为"true"。
 
