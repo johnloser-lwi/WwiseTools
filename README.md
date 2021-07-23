@@ -49,7 +49,8 @@ ___
 ```csharp
 var randomContainer = new WwiseRandomContainer("TestRandomContainer"); // 创建一个名为"TestRandomContainer"的RandomContainer，保存在"randomContainer"中。
 
-/* 设置"randomContainer"的"Attenuation"引用为"TestAttenuation"，
+/* 
+设置"randomContainer"的"Attenuation"引用为"TestAttenuation"，
 该函数会自动启用"Attenuation"选项，
 如果无法找到"TestAttenuation"将会在"\Attenuations\Default Work Unit"下创建"TestAttenuation"。
 */
