@@ -430,6 +430,7 @@ namespace WwiseTools.Utils
         /// <returns></returns>
         public static async Task<WwiseObject> GetWwiseObjectByIDAsync(string target_id)
         {
+            if (!TryConnectWaapi() || String.IsNullOrWhiteSpace(target_id)) return null; 
 
             try
             {
@@ -450,16 +451,14 @@ namespace WwiseTools.Utils
 
                 };
 
-                JObject jresult = await Client.Call(ak.wwise.core.@object.get, query, options);
-
                 try // 尝试返回物体数据
                 {
+                    JObject jresult = await Client.Call(ak.wwise.core.@object.get, query, options);
                     string name = jresult["return"].Last["name"].ToString();
                     string id = jresult["return"].Last["id"].ToString();
                     string type = jresult["return"].Last["type"].ToString();
-                    string path = jresult["return"].Last["path"].ToString();
 
-                    Console.WriteLine("File imported successfully!");
+                    Console.WriteLine("WwiseObject successfully fetched!");
 
                     return new WwiseObject(name, id, type);
                 }
@@ -478,24 +477,71 @@ namespace WwiseTools.Utils
         }
 
         /// <summary>
-        /// 通过名称搜索物体，格式必须为"type:name
+        /// 通过名称与类型检索对象
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public static List<WwiseObject> GetWwiseObjectsByNameAndType(string name, string type)
+        {
+            List<WwiseObject> temp = GetWwiseObjectsOfType(type);
+            List<WwiseObject> result = new List<WwiseObject>();
+            foreach (var obj in temp)
+            {
+                if (obj.Name == name)
+                {
+                    result.Add(obj);
+                }
+            }
+
+            return result;
+
+        }
+
+
+        /// <summary>
+        /// 通过类型与父对象路径检索对象
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="parent_path"></param>
+        /// <returns></returns>
+        public static List<WwiseObject> GetWwiseObjectsByTypeAndParent(string type, string parent_path)
+        {
+            List<WwiseObject> temp = GetWwiseObjectsOfType(type);
+            List<WwiseObject> result = new List<WwiseObject>();
+            foreach (var obj in temp)
+            {
+                if (obj.Path.Contains(parent_path))
+                {
+                    result.Add(obj);
+                }
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// 通过名称搜索唯一命名对象，格式必须为"type:name
         /// </summary>
         /// <param name="target_name"></param>
         /// <returns></returns>
         public static WwiseObject GetWwiseObjectByName(string target_name)
         {
+
             var get = GetWwiseObjectByNameAsync(target_name);
             get.Wait();
             return get.Result;
         }
 
         /// <summary>
-        /// 通过名称搜索物体，后台运行，格式必须为"type:name"
+        /// 通过名称搜索唯一命名对象，后台运行，格式必须为"type:name"
         /// </summary>
         /// <param name="target_name"></param>
         /// <returns></returns>
         public static async Task<WwiseObject> GetWwiseObjectByNameAsync(string target_name)
         {
+            if (!TryConnectWaapi() || String.IsNullOrWhiteSpace(target_name)) return null;
+
             try
             {
                 // ak.wwise.core.@object.get 指令
@@ -515,22 +561,24 @@ namespace WwiseTools.Utils
 
                 };
 
-                JObject jresult = await Client.Call(ak.wwise.core.@object.get, query, options);
+                
 
                 try // 尝试返回物体数据
                 {
+
+                    JObject jresult = await Client.Call(ak.wwise.core.@object.get, query, options);
+
                     string name = jresult["return"].Last["name"].ToString();
                     string id = jresult["return"].Last["id"].ToString();
                     string type = jresult["return"].Last["type"].ToString();
-                    string path = jresult["return"].Last["path"].ToString();
 
-                    Console.WriteLine("File imported successfully!");
+                    Console.WriteLine("WwiseObject successfully fetched!");
 
                     return new WwiseObject(name, id, type);
                 }
-                catch
+                catch (Wamp.ErrorException e)
                 {
-                    Console.WriteLine($"Failed to return WwiseObject by name : {target_name}!");
+                    Console.WriteLine($"Failed to return WwiseObject by name : {target_name}! ======> {e.Message}");
                     return null;
                 }
             }
@@ -540,6 +588,74 @@ namespace WwiseTools.Utils
                 return null;
             }
             
+        }
+
+        public static List<WwiseObject> GetWwiseObjectsOfType(string target_type)
+        {
+
+            var get = GetWwiseObjectsOfTypeAsync(target_type);
+            get.Wait();
+            return get.Result;
+        }
+
+
+        public static async Task<List<WwiseObject>> GetWwiseObjectsOfTypeAsync(string target_type)
+        {
+            if (!TryConnectWaapi() || String.IsNullOrWhiteSpace(target_type)) return null;
+
+            try
+            {
+                // ak.wwise.core.@object.get 指令
+                var query = new
+                {
+                    from = new
+                    {
+                        ofType = new string[] { target_type }
+                    }
+                };
+
+                // ak.wwise.core.@object.get 返回参数设置
+                var options = new
+                {
+
+                    @return = new string[] { "name", "id", "type", "path" }
+
+                };
+
+
+
+                try // 尝试返回物体数据
+                {
+                    JObject jresult = await Client.Call(ak.wwise.core.@object.get, query, options);
+
+                    List<WwiseObject> obj_list = new List<WwiseObject>();
+
+                    foreach (var obj in jresult["return"])
+                    {
+                        string name = obj["name"].ToString();
+                        string id = obj["id"].ToString();
+                        string type = obj["type"].ToString();
+
+                        obj_list.Add(new WwiseObject(name, id, type));
+                    }
+
+                    
+
+                    Console.WriteLine("WwiseObject list successfully fetched!");
+
+                    return obj_list;
+                }
+                catch (Wamp.ErrorException e)
+                {
+                    Console.WriteLine($"Failed to return WwiseObject list of type : {target_type}! ======> {e.Message}");
+                    return null;
+                }
+            }
+            catch (Wamp.ErrorException e)
+            {
+                Console.WriteLine($"Failed to return WwiseObject list of type : {target_type}! ======> {e.Message}");
+                return null;
+            }
         }
         
 

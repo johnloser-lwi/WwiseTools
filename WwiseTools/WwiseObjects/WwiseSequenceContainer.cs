@@ -10,12 +10,20 @@ namespace WwiseTools.Objects
 {
     public class WwiseSequenceContainer : WwiseRandomSequenceContainer
     {
-        public WwiseSequenceContainer(string name, string parent_path = @"\Actor-Mixer Hierarchy\Default Work Unit") : base(name, "", "WwiseSequenceContainer")
+        public WwiseSequenceContainer(string name, string parent_path = @"\Actor-Mixer Hierarchy\Default Work Unit") : base(name, "", WwiseObject.ObjectType.RandomSequenceContainer.ToString())
         {
             var tempObj = WwiseUtility.CreateObject(name, ObjectType.RandomSequenceContainer, parent_path);
             ID = tempObj.ID;
             Name = tempObj.Name;
             WwiseUtility.SetObjectProperty(this, WwiseProperty.Prop_RandomOrSequence(WwiseProperty.Option_RandomOrSequence.Sequence));
+        }
+
+        public WwiseSequenceContainer(WwiseObject @object) : base("", "", "")
+        {
+            if (@object == null) return;
+            ID = @object.ID;
+            Name = @object.Name;
+            Type = @object.Type;
         }
 
         /// <summary>

@@ -504,6 +504,12 @@ namespace WwiseTools.Properties
             return new WwiseProperty("SpeakerPanning3DSpatializationMix", valueLimiter(value, 0, 100));
         }
 
+        public enum Option_SwitchBehavior { Step = 0, Continuous = 1 }
+        public static WwiseProperty Prop_SwitchBehavior(Option_SwitchBehavior behavior)
+        {
+            return new WwiseProperty("SwitchBehavior", (int)behavior);
+        }
+
         public static WwiseProperty Prop_UseGameAuxSends(bool use)
         {
             return new WwiseProperty("UseGameAuxSends", use);

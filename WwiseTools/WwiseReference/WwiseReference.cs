@@ -138,5 +138,25 @@ namespace WwiseTools.Reference
             }
             return new WwiseReference("UserAuxSend3", wwiseObject);
         }
+
+        public static WwiseReference Ref_SwitchGroupOrStateGroup(WwiseObject wwiseObject)
+        {
+            if (wwiseObject == null) return null;
+            if (wwiseObject.Type != "SwitchGroup" && wwiseObject.Type != "StateGroup")
+            {
+                return null;
+            }
+            return new WwiseReference("SwitchGroupOrStateGroup", wwiseObject);
+        }
+
+        public static WwiseReference Ref_DefaultSwitchOrState(WwiseObject wwiseObject)
+        {
+            if (wwiseObject == null) return null;
+            if (wwiseObject.Type != "Switch" && wwiseObject.Type != "State")
+            {
+                return null;
+            }
+            return new WwiseReference("DefaultSwitchOrState", wwiseObject);
+        }
     }
 }

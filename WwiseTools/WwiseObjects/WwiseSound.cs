@@ -38,6 +38,14 @@ namespace WwiseTools.Objects
             Name = tempObj.Name;
         }
 
+        public WwiseSound(WwiseObject @object) : base("", "", "")
+        {
+            if (@object == null) return;
+            ID = @object.ID;
+            Name = @object.Name;
+            Type = @object.Type;
+        }
+
         /// <summary>
         /// 设置播放延迟
         /// </summary>

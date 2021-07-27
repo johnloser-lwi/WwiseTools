@@ -16,6 +16,14 @@ namespace WwiseTools.Objects
             Name = tempObj.Name;
         }
 
+        public WwiseFolder(WwiseObject @object) : base("", "", "")
+        {
+            if (@object == null) return;
+            ID = @object.ID;
+            Name = @object.Name;
+            Type = @object.Type;
+        }
+
         /// <summary>
         /// 添加子对象
         /// </summary>

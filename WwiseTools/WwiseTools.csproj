@@ -106,6 +106,8 @@
     <Compile Include="WwiseObjects\WwiseRandomSequenceContainer.cs" />
     <Compile Include="WwiseObjects\WwiseSequenceContainer.cs" />
     <Compile Include="WwiseObjects\WwiseSound.cs" />
+    <Compile Include="WwiseObjects\WwiseSwitchContainer.cs" />
+    <Compile Include="WwiseObjects\WwiseSwitchGroup.cs" />
     <Compile Include="WwiseProperties\WwiseProperty.cs" />
     <Compile Include="Utils\WwiseUtility.cs" />
     <Compile Include="Utils\WwiseObject.cs" />

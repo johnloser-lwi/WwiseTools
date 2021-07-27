@@ -24,6 +24,14 @@ namespace WwiseTools.Objects
             Name = tempObj.Name;
         }
 
+        public WwiseActorMixer(WwiseObject @object) : base("", "", "")
+        {
+            if (@object == null) return;
+            ID = @object.ID;
+            Name = @object.Name;
+            Type = @object.Type;
+        }
+
         internal WwiseActorMixer(string name, string id, string type) : base(name, id, type)
         { 
         }

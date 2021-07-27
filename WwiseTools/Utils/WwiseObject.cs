@@ -73,6 +73,35 @@ namespace WwiseTools.Objects
             this.Type = type;
         }
 
+        public string GetPropertyAndReferenceNames()
+        {
+            var tmp = GetPropertyAndReferenceNamesAsync();
+            tmp.Wait();
+            return tmp.Result;
+        }
+
+        public async Task<string> GetPropertyAndReferenceNamesAsync()
+        {
+            try
+            {
+                // 创建物体
+                var result = await WwiseUtility.Client.Call
+                    (
+                    ak.wwise.core.@object.getPropertyAndReferenceNames,
+                    new JObject
+                    {
+                        new JProperty("object", ID)
+                    }
+                    );
+                return result.ToString();
+            }
+            catch (Wamp.ErrorException e)
+            {
+                Console.WriteLine($"Failed to get property and reference names from {Name}! ======> {e.Message}");
+                return null;
+            }
+        }
+
         public override string ToString()
         {
             return $"Name : {Name}, ID : {ID}, Type: {Type}, Path: {Path}";

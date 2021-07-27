@@ -10,7 +10,7 @@ namespace WwiseTools.Objects
 {
     public class WwiseRandomSequenceContainer : WwiseContainer
     {
-        public WwiseRandomSequenceContainer(string name, WwiseProperty.Option_RandomOrSequence option, string parent_path = @"\Actor-Mixer Hierarchy\Default Work Unit") : base(name, "", "RandomSequenceContainer")
+        public WwiseRandomSequenceContainer(string name, WwiseProperty.Option_RandomOrSequence option, string parent_path = @"\Actor-Mixer Hierarchy\Default Work Unit") : base(name, "", WwiseObject.ObjectType.RandomSequenceContainer.ToString())
         {
             var tempObj = WwiseUtility.CreateObject(name, ObjectType.RandomSequenceContainer, parent_path);
             ID = tempObj.ID;
@@ -22,7 +22,14 @@ namespace WwiseTools.Objects
         { 
         }
 
-        
+        public WwiseRandomSequenceContainer(WwiseObject @object) : base("", "", "")
+        {
+            if (@object == null) return;
+            ID = @object.ID;
+            Name = @object.Name;
+            Type = @object.Type;
+        }
+
 
         /// <summary>
         /// 设置序列的范围为全局或者对象
