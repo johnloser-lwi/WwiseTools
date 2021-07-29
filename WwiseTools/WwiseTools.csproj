@@ -102,6 +102,7 @@
     <Compile Include="WwiseObjects\WwiseActorMixer.cs" />
     <Compile Include="WwiseObjects\WwiseContainer.cs" />
     <Compile Include="WwiseObjects\WwiseFolder.cs" />
+    <Compile Include="WwiseObjects\WwiseMusicTrack.cs" />
     <Compile Include="WwiseObjects\WwiseRandomContainer.cs" />
     <Compile Include="WwiseObjects\WwiseRandomSequenceContainer.cs" />
     <Compile Include="WwiseObjects\WwiseSequenceContainer.cs" />

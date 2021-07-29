@@ -13,7 +13,7 @@ namespace WwiseTools.Objects
     public class WwiseActorMixer : WwiseObject
     {
         /// <summary>
-        /// 创建一个Wwise Sound对象
+        /// 创建一个Wwise Actor-Mixer对象
         /// </summary>
         /// <param name="name"></param>
         /// <param name="parent_path"></param>

@@ -10,6 +10,11 @@ namespace WwiseTools.Objects
 {
     public class WwiseRandomContainer : WwiseRandomSequenceContainer
     {
+        /// <summary>
+        /// 创建一个随机容器
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="parent_path"></param>
         public WwiseRandomContainer(string name, string parent_path = @"\Actor-Mixer Hierarchy\Default Work Unit") : base(name, "", WwiseObject.ObjectType.RandomSequenceContainer.ToString())
         {
             var tempObj = WwiseUtility.CreateObject(name, ObjectType.RandomSequenceContainer, parent_path);

@@ -7,8 +7,13 @@ using WwiseTools.Utils;
 
 namespace WwiseTools.Objects
 {
-    class WwiseFolder : WwiseObject
+    public class WwiseFolder : WwiseObject
     {
+        /// <summary>
+        /// 创建一个虚拟文件夹
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="parent_path"></param>
         public WwiseFolder(string name, string parent_path = @"\Actor-Mixer Hierarchy\Default Work Unit") : base(name, "", "Folder")
         {
             var tempObj = WwiseUtility.CreateObject(name, ObjectType.Folder, parent_path);

@@ -16,9 +16,7 @@ namespace WwiseTools
         static void Main(string[] args)
         {
 
-            WwiseSwitchContainer switchContainer = new WwiseSwitchContainer(WwiseUtility.GetWwiseObjectsByTypeAndParent("SwitchContainer", @"\Actor-Mixer Hierarchy\Default Work Unit").Where(obj => obj.Name == "TestSwitchContainer").First());
-
-            Console.WriteLine(switchContainer.GetAssignments());
+            WwiseMusicTrack track = new WwiseMusicTrack("Test", @"D:\BGM\Login\denglu_bpm120_4_4_1.wav", "LoginBGM");
 
             WwiseUtility.Close().Wait();
 

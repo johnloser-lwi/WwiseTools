@@ -198,6 +198,11 @@ namespace WwiseTools.Properties
             return new WwiseProperty("ListenerRelativeRouting", isListenerRelativeRouting);
         }
 
+        public static WwiseProperty Prop_LookAheadTime(uint time)
+        {
+            return new WwiseProperty("LookAheadTime", valueLimiter(time, 0, 10000));
+        }
+
         public static WwiseProperty Prop_LoopCount(uint value)
         {
             return new WwiseProperty("LoopCount", valueLimiter(value, 1, 32767));
@@ -258,6 +263,19 @@ namespace WwiseTools.Properties
         {
             return new WwiseProperty("MidiTransposition", valueLimiter(value, -127, 127));
         }
+
+        public enum Option_MidiTempoSource { Hierarchy = 0, File = 1 }
+        public static WwiseProperty Prop_MidiTempoSource(Option_MidiTempoSource source)
+        {
+            return new WwiseProperty("MidiTempoSource", (int)source);
+        }
+
+        public enum Option_MusicTrackType { Normal = 0, RandomStep = 1, SequenceStep = 2, Switch = 3 }
+        public static WwiseProperty Prop_MusicTrackType(Option_MusicTrackType type)
+        {
+            return new WwiseProperty("MusicTrackType", (int)type);
+        }
+
         public static WwiseProperty Prop_MidiVelocityFilterMax(uint value)
         {
             return new WwiseProperty("MidiVelocityFilterMax", valueLimiter(value, 0, 127));

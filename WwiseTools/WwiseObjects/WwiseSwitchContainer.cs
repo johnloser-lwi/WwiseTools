@@ -13,6 +13,11 @@ namespace WwiseTools.Objects
 {
     class WwiseSwitchContainer : WwiseContainer
     {
+        /// <summary>
+        /// 创建一个转变容器
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="parent_path"></param>
         public WwiseSwitchContainer(string name, string parent_path = @"\Actor-Mixer Hierarchy\Default Work Unit") : base(name, "", WwiseObject.ObjectType.SwitchContainer.ToString())
         {
             var tempObj = WwiseUtility.CreateObject(name, ObjectType.SwitchContainer, parent_path);
