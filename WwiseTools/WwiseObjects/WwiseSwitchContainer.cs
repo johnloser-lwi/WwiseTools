@@ -146,6 +146,10 @@ namespace WwiseTools.Objects
             }
         }
 
+        /// <summary>
+        /// 获取分配信息
+        /// </summary>
+        /// <returns></returns>
         public JObject GetAssignments()
         {
             var temp = GetAssignmentsAsync();
@@ -153,11 +157,15 @@ namespace WwiseTools.Objects
             return temp.Result;
         }
 
+        /// <summary>
+        /// 获取分配信息，后台运行
+        /// </summary>
+        /// <returns></returns>
         public async Task<JObject> GetAssignmentsAsync()
         {
             try
             {
-                // 创建物体
+                // 获取信息
                 var result = await WwiseUtility.Client.Call
                     (
                     ak.wwise.core.switchContainer.getAssignments,
