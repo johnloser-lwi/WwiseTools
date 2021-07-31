@@ -34,6 +34,7 @@ namespace WwiseTools.Objects
         public WwiseSound(string name, string file_path, string language = "SFX", string sub_folder = "", string parent_path = @"\Actor-Mixer Hierachy\Default Work Unit") : base(name, "", "Sound")
         {
             var tempObj = WwiseUtility.ImportSound(file_path, language, sub_folder, parent_path);
+            WwiseUtility.ChangeObjectName(tempObj, name);
             ID = tempObj.ID;
             Name = tempObj.Name;
         }

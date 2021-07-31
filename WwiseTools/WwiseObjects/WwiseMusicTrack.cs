@@ -16,16 +16,11 @@ namespace WwiseTools.Objects
         /// </summary>
         /// <param name="name"></param>
         /// <param name="parent_path"></param>
-        public WwiseMusicTrack(string name, string parent_path = @"\Interactive Music Hierarchy\Default Work Unit\") : base(name, "", ObjectType.MusicTrack.ToString())
+        public WwiseMusicTrack(string name, WwiseMusicSegment parent) : base(name, "", ObjectType.MusicTrack.ToString())
         {
-            string path = @"\Interactive Music Hierarchy\Default Work Unit\";
-            if (parent_path == path)
-            {
-                var segment = WwiseUtility.CreateObject("New Music Segment", ObjectType.MusicSegment, path);
-                parent_path = segment.Path;
-            }
 
-            var tempObj = WwiseUtility.CreateObject(name, ObjectType.MusicTrack, parent_path);
+            var tempObj = WwiseUtility.CreateObject(name, ObjectType.MusicTrack, parent.Path);
+            WwiseUtility.ChangeObjectName(tempObj, name);
             ID = tempObj.ID;
             Name = tempObj.Name;
         }
@@ -36,17 +31,11 @@ namespace WwiseTools.Objects
         /// <param name="name"></param>
         /// <param name="file_path"></param>
         /// <param name="sub_folder"></param>
-        /// <param name="parent_path"></param>
-        public WwiseMusicTrack(string name, string file_path, string sub_folder = "", string parent_path = @"\Interactive Music Hierarchy\Default Work Unit") : base(name, "", ObjectType.MusicTrack.ToString())
+        /// <param name="parent"></param>
+        public WwiseMusicTrack(string name, string file_path, WwiseMusicSegment parent, string sub_folder = "") : base(name, "", ObjectType.MusicTrack.ToString())
         {
-            string path = @"\Interactive Music Hierarchy\Default Work Unit\";
-            if (parent_path == path)
-            {
-                var segment = WwiseUtility.CreateObject("New Music Segment", ObjectType.MusicSegment, path);
-                parent_path = segment.Path;
-            }
-
-            var tempObj = WwiseUtility.ImportSound(file_path, "SFX", sub_folder, parent_path);
+            var tempObj = WwiseUtility.ImportSound(file_path, "SFX", sub_folder, parent.Path);
+            WwiseUtility.ChangeObjectName(tempObj, name);
             ID = tempObj.ID;
             Name = tempObj.Name;
         }

@@ -158,7 +158,7 @@ namespace WwiseTools.Utils
 
                     null);
 
-                Console.WriteLine("Property changed successfully!");
+                Console.WriteLine($"Property {wwiseProperty.Name} changed successfully!");
             }
             catch (Wamp.ErrorException e)
             {
@@ -200,7 +200,7 @@ namespace WwiseTools.Utils
 
                 rename_object.Name = new_name;
 
-                Console.WriteLine("Renamed successfully!");
+                Console.WriteLine($"Object {rename_object.Name} successfully renamed to {new_name}!");
             }
 
             catch (AK.Wwise.Waapi.Wamp.ErrorException e)
@@ -276,7 +276,7 @@ namespace WwiseTools.Utils
                     Console.WriteLine("Failed to update WwiseObject!");
                 }
 
-                Console.WriteLine("Move completed!");
+                Console.WriteLine($"Moved {child.Name} to {parent.Path}!");
             }
             catch (Wamp.ErrorException e)
             {
@@ -351,7 +351,7 @@ namespace WwiseTools.Utils
                     }
                     );
 
-                Console.WriteLine("Event created successfully!");
+                Console.WriteLine($"Event {event_name} created successfully!");
                 return await GetWwiseObjectByIDAsync(result["id"].ToString());
             }
             catch (Wamp.ErrorException e)
@@ -402,6 +402,8 @@ namespace WwiseTools.Utils
                     },
                     null
                     );
+
+                Console.WriteLine($"Object {object_name} created successfully!");
                 return await GetWwiseObjectByIDAsync(result["id"].ToString());
             }
             catch (Wamp.ErrorException e)
@@ -458,7 +460,7 @@ namespace WwiseTools.Utils
                     string id = jresult["return"].Last["id"].ToString();
                     string type = jresult["return"].Last["type"].ToString();
 
-                    Console.WriteLine("WwiseObject successfully fetched!");
+                    Console.WriteLine($"WwiseObject {name} successfully fetched!");
 
                     return new WwiseObject(name, id, type);
                 }
@@ -572,7 +574,7 @@ namespace WwiseTools.Utils
                     string id = jresult["return"].Last["id"].ToString();
                     string type = jresult["return"].Last["type"].ToString();
 
-                    Console.WriteLine("WwiseObject successfully fetched!");
+                    Console.WriteLine($"WwiseObject {name} successfully fetched!");
 
                     return new WwiseObject(name, id, type);
                 }
@@ -641,7 +643,7 @@ namespace WwiseTools.Utils
 
                     
 
-                    Console.WriteLine("WwiseObject list successfully fetched!");
+                    Console.WriteLine($"WwiseObject list or type {target_type} successfully fetched!");
 
                     return obj_list;
                 }
@@ -686,7 +688,7 @@ namespace WwiseTools.Utils
                     var r = ImportSound(f, language, subFolder, parent_path);
                     results.Add(r);
                 }
-
+                Console.WriteLine($"File(s) in folder {folder_path} imported successfully!");
                 return results;
             }
             catch (Exception e)
@@ -769,7 +771,7 @@ namespace WwiseTools.Utils
 
                 var result = await Client.Call(ak.wwise.core.audio.import, import_q, options); // 执行导入
 
-
+                Console.WriteLine($"File {file_path} imported successfully!");
 
                 return await GetWwiseObjectByIDAsync(result["objects"].Last["id"].ToString());
             }

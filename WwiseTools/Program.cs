@@ -16,7 +16,13 @@ namespace WwiseTools
         static void Main(string[] args)
         {
 
-            WwiseMusicTrack track = new WwiseMusicTrack("Test", @"D:\BGM\Login\denglu_bpm120_4_4_1.wav", "LoginBGM");
+            WwiseMusicSegment seg = new WwiseMusicSegment("TestSegment");
+
+            WwiseMusicTrack track = new WwiseMusicTrack("TestTrack", @"D:\BGM\Login\denglu_bpm120_4_4_1.wav", seg, "LoginBGM");
+            WwiseMusicTrack track2 = new WwiseMusicTrack("track2", seg);
+
+
+            seg.SetTempoAndTimeSignature(132, WwiseProperty.Option_TimeSignatureLower._32, 4);
 
             WwiseUtility.Close().Wait();
 

@@ -522,6 +522,22 @@ namespace WwiseTools.Properties
             return new WwiseProperty("SpeakerPanning3DSpatializationMix", valueLimiter(value, 0, 100));
         }
 
+        public static WwiseProperty Prop_Tempo(float tempo)
+        {
+            return new WwiseProperty("Tempo", valueLimiter(tempo, 1, 400));         
+        }
+
+        public enum Option_TimeSignatureLower { _1 = 1, _2 = 2, _4 = 4, _8 = 8, _16 = 16, _32 = 32 }
+        public static WwiseProperty Prop_TimeSignatureLower(Option_TimeSignatureLower option)
+        {
+            return new WwiseProperty("TimeSignatureLower", (int)option);
+        }
+
+        public static WwiseProperty Prop_TimeSignatureUpper(uint signature)
+        {
+            return new WwiseProperty("TimeSignatureUpper", valueLimiter(signature, 1, 64));
+        }
+
         public enum Option_SwitchBehavior { Step = 0, Continuous = 1 }
         public static WwiseProperty Prop_SwitchBehavior(Option_SwitchBehavior behavior)
         {
