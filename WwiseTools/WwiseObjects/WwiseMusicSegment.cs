@@ -63,6 +63,30 @@ namespace WwiseTools.Objects
             WwiseUtility.SetObjectProperty(this, WwiseProperty.Prop_TimeSignatureUpper(time_signature_upper));
         }
 
+        /// <summary>
+        /// 设置Entry Cue位置
+        /// </summary>
+        /// <param name="timeMs"></param>
+        public void SetEntryCue(float timeMs)
+        {
+            var cues = WwiseUtility.GetWwiseObjectsOfType("MusicCue");
+            WwiseObject entryCue = null;
+            foreach (var cue in cues)
+            {
+                if (cue.Path.Contains(Path) && cue.Name == "Entry Cue")
+                {
+                    entryCue = cue;
+                    break;
+                }
+            }
+
+            if (entryCue != null) WwiseUtility.SetObjectProperty(entryCue, new WwiseProperty("TimeMs", timeMs));
+        }
+
+        /// <summary>
+        /// 设置Exit Cue位置
+        /// </summary>
+        /// <param name="timeMs"></param>
         public void SetExitCue(float timeMs)
         {
             var cues = WwiseUtility.GetWwiseObjectsOfType("MusicCue");
@@ -79,7 +103,23 @@ namespace WwiseTools.Objects
             if (exitCue != null) WwiseUtility.SetObjectProperty(exitCue, new WwiseProperty("TimeMs", timeMs));
         }
 
-        public async Task CreateCue(string name, float timeMs)
+        /// <summary>
+        /// 创建新的Cue
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="timeMs"></param>
+        public void CreateCue(string name, float timeMs)
+        {
+            CreateCueAsync(name, timeMs).Wait();
+        }
+
+        /// <summary>
+        /// 创建新的Cue，后台运行
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="timeMs"></param>
+        /// <returns></returns>
+        public async Task CreateCueAsync(string name, float timeMs)
         {
             try
             {

@@ -22,7 +22,7 @@ namespace WwiseTools
 
 
             seg.SetExitCue(75000);
-            var t = seg.CreateCue("Test", 100);
+            var t = seg.CreateCueAsync("Test", 100);
             t.Wait();
 
             seg.SetTempoAndTimeSignature(132, WwiseProperty.Option_TimeSignatureLower._32, 4);

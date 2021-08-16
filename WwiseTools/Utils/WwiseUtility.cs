@@ -76,6 +76,11 @@ namespace WwiseTools.Utils
             return connected.Result;
         }
 
+        /// <summary>
+        /// 获取属性、引用名称
+        /// </summary>
+        /// <param name="wwiseObject"></param>
+        /// <returns></returns>
         public static string GetPropertyAndReferenceNames(WwiseObject wwiseObject)
         {
             if (!TryConnectWaapi() || wwiseObject == null) return "";
@@ -85,6 +90,11 @@ namespace WwiseTools.Utils
             return get.Result;
         }
 
+        /// <summary>
+        /// 获取属性、引用名称，后台运行
+        /// </summary>
+        /// <param name="wwiseObject"></param>
+        /// <returns></returns>
         public static async Task<string> GetPropertyAndReferenceNamesAsync(WwiseObject wwiseObject)
         {
             //ak.wwise.core.object.getPropertyAndReferenceNames
@@ -628,6 +638,11 @@ namespace WwiseTools.Utils
             
         }
 
+        /// <summary>
+        /// 通过路径获取对象
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
         public static WwiseObject GetWwiseObjectByPath(string path)
         {
 
@@ -636,6 +651,11 @@ namespace WwiseTools.Utils
             return get.Result;
         }
 
+        /// <summary>
+        /// 通过路径获取对象，后台运行
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
         public static async Task<WwiseObject> GetWwiseObjectByPathAsync(string path)
         {
             if (!TryConnectWaapi() || String.IsNullOrWhiteSpace(path)) return null;
