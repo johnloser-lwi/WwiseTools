@@ -15,12 +15,12 @@ namespace WwiseTools.Objects
 {
     public class WwiseMusicTrack : WwiseActorMixer
     {
-        public float TrackLength { 
+        public float TrackLenghtMs { 
             get
             {
                 var length = GetTrackLength();
                 length.Wait();
-                return length.Result;
+                return length.Result * 1000;
             }
         }
 
@@ -36,6 +36,7 @@ namespace WwiseTools.Objects
             WwiseUtility.ChangeObjectName(tempObj, name);
             ID = tempObj.ID;
             Name = tempObj.Name;
+            parent.SetExitCue(TrackLenghtMs);
         }
 
         /// <summary>
@@ -51,6 +52,7 @@ namespace WwiseTools.Objects
             WwiseUtility.ChangeObjectName(tempObj, name);
             ID = tempObj.ID;
             Name = tempObj.Name;
+            parent.SetExitCue(TrackLenghtMs);
         }
 
         public WwiseMusicTrack(WwiseObject @object) : base("", "", "")

@@ -12,6 +12,9 @@ namespace WwiseTools.Objects
 {
     public class WwiseMusicSegment : WwiseActorMixer
     {
+        public float EntryCuePos { get; private set; }
+        public float ExitCuePos { get; private set; }
+
         /// <summary>
         /// 创建一个音乐片段
         /// </summary>
@@ -22,6 +25,9 @@ namespace WwiseTools.Objects
             var segment = WwiseUtility.CreateObject(name, ObjectType.MusicSegment, parent_path);
             ID = segment.ID;
             Name = segment.Name;
+
+            EntryCuePos = 0;
+            ExitCuePos = 0;
         }
 
         /// <summary>
@@ -39,7 +45,10 @@ namespace WwiseTools.Objects
             Name = name;
 
             var tempObj = WwiseUtility.ImportSound(file_path, "SFX", sub_folder, segment.Path);
-            
+
+            EntryCuePos = 0;
+            ExitCuePos = 0;
+
         }
         public WwiseMusicSegment(WwiseObject @object) : base("", "", "")
         {
@@ -47,6 +56,9 @@ namespace WwiseTools.Objects
             ID = @object.ID;
             Name = @object.Name;
             Type = @object.Type;
+
+            EntryCuePos = 0;
+            ExitCuePos = 0;
         }
 
 
@@ -80,16 +92,23 @@ namespace WwiseTools.Objects
                 }
             }
 
-            if (entryCue != null) WwiseUtility.SetObjectProperty(entryCue, new WwiseProperty("TimeMs", timeMs));
+            if (entryCue != null)
+            {
+                WwiseUtility.SetObjectProperty(entryCue, new WwiseProperty("TimeMs", timeMs));
+                EntryCuePos = timeMs;
+            }
         }
 
         /// <summary>
         /// 设置Exit Cue位置
         /// </summary>
         /// <param name="timeMs"></param>
-        public void SetExitCue(float timeMs)
+        /// <param name="ignore_smaller_value"></param>
+        public void SetExitCue(float timeMs, bool ignore_smaller_value = true)
         {
-            var cues = WwiseUtility.GetWwiseObjectsOfType("MusicCue");
+            if (ignore_smaller_value && timeMs <= ExitCuePos) return; // 如果新的位置参数小于当前位置，则无视该参数
+
+                var cues = WwiseUtility.GetWwiseObjectsOfType("MusicCue");
             WwiseObject exitCue = null;
             foreach (var cue in cues)
             {
@@ -100,7 +119,13 @@ namespace WwiseTools.Objects
                 }
             }
 
-            if (exitCue != null) WwiseUtility.SetObjectProperty(exitCue, new WwiseProperty("TimeMs", timeMs));
+            
+
+            if (exitCue != null)
+            {
+                WwiseUtility.SetObjectProperty(exitCue, new WwiseProperty("TimeMs", timeMs));
+                ExitCuePos = timeMs;
+            }
         }
 
         /// <summary>
