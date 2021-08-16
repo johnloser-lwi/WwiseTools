@@ -19,8 +19,11 @@ namespace WwiseTools
             WwiseMusicSegment seg = new WwiseMusicSegment("TestSegment");
 
             WwiseMusicTrack track = new WwiseMusicTrack("TestTrack", @"D:\BGM\Login\denglu_bpm120_4_4_1.wav", seg, "LoginBGM");
-            WwiseMusicTrack track2 = new WwiseMusicTrack("track2", seg);
 
+
+            seg.SetExitCue(75000);
+            var t = seg.CreateCue("Test", 100);
+            t.Wait();
 
             seg.SetTempoAndTimeSignature(132, WwiseProperty.Option_TimeSignatureLower._32, 4);
 

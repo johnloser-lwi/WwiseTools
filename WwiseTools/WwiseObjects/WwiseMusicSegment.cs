@@ -1,4 +1,6 @@
-﻿using System;
+﻿using AK.Wwise.Waapi;
+using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -61,6 +63,48 @@ namespace WwiseTools.Objects
             WwiseUtility.SetObjectProperty(this, WwiseProperty.Prop_TimeSignatureUpper(time_signature_upper));
         }
 
+        public void SetExitCue(float timeMs)
+        {
+            var cues = WwiseUtility.GetWwiseObjectsOfType("MusicCue");
+            WwiseObject exitCue = null;
+            foreach (var cue in cues)
+            {
+                if (cue.Path.Contains(Path) && cue.Name == "Exit Cue")
+                {
+                    exitCue = cue;
+                    break;
+                }
+            }
 
+            if (exitCue != null) WwiseUtility.SetObjectProperty(exitCue, new WwiseProperty("TimeMs", timeMs));
+        }
+
+        public async Task CreateCue(string name, float timeMs)
+        {
+            try
+            {
+                // 创建物体
+                var result = await WwiseUtility.Client.Call
+                    (
+                    ak.wwise.core.@object.create,
+                    new JObject
+                    {
+                        new JProperty("name", name),
+                        new JProperty("type", "MusicCue"),
+                        new JProperty("parent", Path),
+                        new JProperty("onNameConflict", "rename"),
+                        new JProperty("list", "Cues"),
+                        new JProperty("@TimeMs", timeMs),
+                        new JProperty("@CueType", 2)
+                    }
+                    );
+
+                Console.WriteLine($"Music Cue {name} created successfully!");
+            }
+            catch (Wamp.ErrorException e)
+            {
+                Console.WriteLine($"Failed to create Cue : {name}! ======> {e.Message}");
+            }
+        }
     }
 }

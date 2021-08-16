@@ -1,16 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.IO;
+using Newtonsoft.Json.Linq;
+
+using AK.Wwise.Waapi;
 using System.Threading.Tasks;
 using WwiseTools.Properties;
 using WwiseTools.Reference;
+using WwiseTools.Objects;
 using WwiseTools.Utils;
+
 
 namespace WwiseTools.Objects
 {
     public class WwiseMusicTrack : WwiseActorMixer
     {
+        public float TrackLength { 
+            get
+            {
+                var length = GetTrackLength();
+                length.Wait();
+                return length.Result;
+            }
+        }
+
         /// <summary>
         /// 创建一个音轨
         /// </summary>
@@ -46,6 +59,57 @@ namespace WwiseTools.Objects
             ID = @object.ID;
             Name = @object.Name;
             Type = @object.Type;
+        }
+
+
+        private async Task<float> GetTrackLength()
+        {
+            try
+            {
+                // ak.wwise.core.@object.get 指令
+                var query = new
+                {
+                    from = new
+                    {
+                        id = new string[] { ID }
+                    }
+                };
+
+                // ak.wwise.core.@object.get 返回参数设置
+                var options = new
+                {
+                    @return = new string[] { "audioSource:maxDurationSource" }
+                };
+
+
+
+                try // 尝试返回物体数据
+                {
+
+                    JObject jresult = await WwiseUtility.Client.Call(ak.wwise.core.@object.get, query, options);
+
+                    Console.WriteLine(jresult);
+                    
+                    if (jresult["return"].Last["audioSource:maxDurationSource"] == null) throw new Exception();
+
+                    float duration = float.Parse(jresult["return"].Last["audioSource:maxDurationSource"]["trimmedDuration"].ToString());
+
+                    Console.WriteLine($"Duration of WwiseObject {Name} is {duration}s");
+
+                    return duration;
+
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine($"Failed to return file path of Object : {Name}! ======> {e.Message}");
+                    return -1;
+                }
+            }
+            catch (Wamp.ErrorException e)
+            {
+                Console.WriteLine($"Failed to return file path of Object : {Name}! ======> {e.Message}");
+                return -1;
+            }
         }
 
         /// <summary>

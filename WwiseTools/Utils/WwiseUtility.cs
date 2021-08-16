@@ -76,6 +76,42 @@ namespace WwiseTools.Utils
             return connected.Result;
         }
 
+        public static string GetPropertyAndReferenceNames(WwiseObject wwiseObject)
+        {
+            if (!TryConnectWaapi() || wwiseObject == null) return "";
+
+            var get = GetPropertyAndReferenceNamesAsync(wwiseObject);
+            get.Wait();
+            return get.Result;
+        }
+
+        public static async Task<string> GetPropertyAndReferenceNamesAsync(WwiseObject wwiseObject)
+        {
+            //ak.wwise.core.object.getPropertyAndReferenceNames
+
+            if (!TryConnectWaapi() || wwiseObject == null) return "";
+
+            try
+            {
+                var result = await Client.Call(ak.wwise.core.@object.getPropertyAndReferenceNames,
+
+                    new JObject(
+
+                        new JProperty("object", wwiseObject.ID)),
+
+                    null);
+
+                return result.ToString();
+
+                Console.WriteLine("Property and References fetched successfully!");
+            }
+            catch (Wamp.ErrorException e)
+            {
+                Console.WriteLine($"Failed to fetch Property and References! ======> {e.Message}");
+                return "";
+            }
+        }
+
         /// <summary>
         /// 设置物体的引用
         /// </summary>
@@ -158,7 +194,7 @@ namespace WwiseTools.Utils
 
                     null);
 
-                Console.WriteLine($"Property {wwiseProperty.Name} changed successfully!");
+                Console.WriteLine($"Property {wwiseProperty.Name} successfully changed to {wwiseProperty.Value}!");
             }
             catch (Wamp.ErrorException e)
             {
@@ -590,6 +626,66 @@ namespace WwiseTools.Utils
                 return null;
             }
             
+        }
+
+        public static WwiseObject GetWwiseObjectByPath(string path)
+        {
+
+            var get = GetWwiseObjectByPathAsync(path);
+            get.Wait();
+            return get.Result;
+        }
+
+        public static async Task<WwiseObject> GetWwiseObjectByPathAsync(string path)
+        {
+            if (!TryConnectWaapi() || String.IsNullOrWhiteSpace(path)) return null;
+
+            try
+            {
+                // ak.wwise.core.@object.get 指令
+                var query = new
+                {
+                    from = new
+                    {
+                        path = new string[] { path }
+                    }
+                };
+
+                // ak.wwise.core.@object.get 返回参数设置
+                var options = new
+                {
+
+                    @return = new string[] { "name", "id", "type", "path" }
+
+                };
+
+
+
+                try // 尝试返回物体数据
+                {
+
+                    JObject jresult = await Client.Call(ak.wwise.core.@object.get, query, options);
+
+                    string name = jresult["return"].Last["name"].ToString();
+                    string id = jresult["return"].Last["id"].ToString();
+                    string type = jresult["return"].Last["type"].ToString();
+
+                    Console.WriteLine($"WwiseObject {name} successfully fetched!");
+
+                    return new WwiseObject(name, id, type);
+                }
+                catch (Wamp.ErrorException e)
+                {
+                    Console.WriteLine($"Failed to return WwiseObject by path : {path}! ======> {e.Message}");
+                    return null;
+                }
+            }
+            catch (Wamp.ErrorException e)
+            {
+                Console.WriteLine($"Failed to return WwiseObject by path : {path}! ======> {e.Message}");
+                return null;
+            }
+
         }
 
         public static List<WwiseObject> GetWwiseObjectsOfType(string target_type)
