@@ -31,16 +31,15 @@ namespace WwiseTools.Objects
             Type = @object.Type;
         }
 
-        /*
-        public WwiseMusicPlaylistItem AddPlaylistItem(WwiseMusicPlaylistItem.Option_PlaylistItemType type, WwiseMusicSegment segment = null)
+        
+        public WwiseMusicPlaylistItem AddPlaylistItem()//(WwiseMusicPlaylistItem.Option_PlaylistItemType type, WwiseMusicSegment segment = null)
         {
             var root_item = GetRootPlaylistItem();
 
-            if (root_item != null && segment != null)
+            if (root_item != null) // && segment != null)
             {
-                var item = WwiseUtility.CreatePlaylistItemAsync("", ObjectType.MusicPlaylistItem, segment.ID, root_item.ID);
-                item.Wait();
-                return new WwiseMusicPlaylistItem(item.Result);
+                var item = new WwiseMusicPlaylistItem(WwiseMusicPlaylistItem.Option_PlaylistItemType.Group, root_item.ID);
+                return item;
             }
 
             return null;
@@ -48,19 +47,59 @@ namespace WwiseTools.Objects
 
         public WwiseMusicPlaylistItem GetRootPlaylistItem()
         {
-            var roots = WwiseUtility.GetWwiseObjectsOfType("MusicPlaylistItem");
-            WwiseMusicPlaylistItem root_item = null;
-            foreach (var root in roots)
+
+            var root_item = GetRootPlaylistItemAsync();
+            root_item.Wait();
+
+
+            return root_item.Result;
+        }
+
+        public  async Task<WwiseMusicPlaylistItem> GetRootPlaylistItemAsync()
+        {
+            try
             {
-                if (root.Parent.Path == Path)
+                // ak.wwise.core.@object.get 指令
+                var query = new
                 {
-                    root_item = new WwiseMusicPlaylistItem(root);
-                    break;
+                    from = new
+                    {
+                        id = new string[] { ID }
+                    }
+                };
+
+                // ak.wwise.core.@object.get 返回参数设置
+                var options = new
+                {
+
+                    @return = new string[] { "musicPlaylistRoot" }
+
+                };
+
+                JObject jresult = await WwiseUtility.Client.Call(ak.wwise.core.@object.get, query, options);
+
+                try // 尝试返回物体数据
+                {
+
+                    if (jresult["return"].Last["musicPlaylistRoot"] == null) throw new Exception();
+                    string id = jresult["return"].Last["musicPlaylistRoot"]["id"].ToString();
+
+                    return new WwiseMusicPlaylistItem(WwiseUtility.GetWwiseObjectByID(id));
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine($"Failed to get PlaylistRoot of object : {Name}! =======> {e.Message}");
+                    return null;
                 }
             }
-            return root_item;
+            catch (Wamp.ErrorException e)
+            {
+                Console.WriteLine($"Failed to get PlaylistRoot of object : {Name}! =======> {e.Message}");
+                return null;
+            }
+
         }
-        */
-        
+
+
     }
 }

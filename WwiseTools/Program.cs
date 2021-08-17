@@ -15,20 +15,28 @@ namespace WwiseTools
     {
         static void Main(string[] args)
         {
+            /*
+            
+            */
+            try
+            {
+                Console.WriteLine("0");
+                WwiseMusicPlaylistContainer container = new WwiseMusicPlaylistContainer("testContainer");
 
-            Console.WriteLine("0");
-            WwiseMusicPlaylistContainer container = new WwiseMusicPlaylistContainer("testContainer");
+                WwiseMusicSegment seg = new WwiseMusicSegment("TestSegment", container.Path);
 
-            WwiseMusicSegment seg = new WwiseMusicSegment("TestSegment", container.Path);
+                WwiseMusicTrack track = new WwiseMusicTrack("TestTrack", @"D:\BGM\Login\denglu_bpm120_4_4_1.wav", seg, "LoginBGM");
+                Console.WriteLine("1");
+                container.AddPlaylistItem();
 
-            WwiseMusicTrack track = new WwiseMusicTrack("TestTrack", @"D:\BGM\Login\denglu_bpm120_4_4_1.wav", seg, "LoginBGM");
-            Console.WriteLine("1");
-            //container.AddPlaylistItem(WwiseMusicPlaylistItem.Option_PlaylistItemType.Group, null);
-            container.AddPlaylistItem(WwiseMusicPlaylistItem.Option_PlaylistItemType.Segment, seg);
+                Console.WriteLine("2");
+            }
+            catch
+            {
+                Console.WriteLine("Error running!");
+            }
 
-            Console.WriteLine("2");
-
-
+            Console.WriteLine("Closing ...");
             WwiseUtility.Close().Wait();
 
             Console.ReadLine();

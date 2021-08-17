@@ -62,15 +62,15 @@ namespace WwiseTools.Objects
 
                     return path;
                 }
-                catch
+                catch (Exception e)
                 {
-                    Console.WriteLine($"Failed to path of object : {Name}!");
+                    Console.WriteLine($"Failed to get path of object : {Name}! =======> {e.Message}");
                     return null;
                 }
             }
-            catch
+            catch (Wamp.ErrorException e)
             {
-                Console.WriteLine($"Failed to path of object : {Name}!");
+                Console.WriteLine($"Failed to get path of object : {Name}! =======> {e.Message}");
                 return null;
             }
             
@@ -113,20 +113,23 @@ namespace WwiseTools.Objects
 
                             return WwiseUtility.GetWwiseObjectByID(_id);
                         }
+
+                        throw new Exception();
+
                     }
                     string id = jresult["return"].Last["parent"]["id"].ToString();
 
                     return WwiseUtility.GetWwiseObjectByID(id);
                 }
-                catch
+                catch (Exception e)
                 {
-                    Console.WriteLine($"Failed to parent of object : {Name}!");
+                    Console.WriteLine($"Failed to get parent of object : {Name}! =======> {e.Message}");
                     return null;
                 }
             }
-            catch
+            catch (Wamp.ErrorException e)
             {
-                Console.WriteLine($"Failed to parent of object : {Name}!");
+                Console.WriteLine($"Failed to get sparent of object : {Name}! =======> {e.Message}");
                 return null;
             }
 

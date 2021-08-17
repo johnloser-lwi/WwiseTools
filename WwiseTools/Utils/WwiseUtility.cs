@@ -460,37 +460,6 @@ namespace WwiseTools.Utils
             }
         }
 
-        public static async Task<WwiseObject> CreatePlaylistItemAsync(string object_name, WwiseObject.ObjectType object_type, string id, string parent_path = @"\Actor-Mixer Hierarchy\Default Work Unit")
-        {
-            if (!TryConnectWaapi()) return null;
-
-            try
-            {
-                // 创建物体
-                var result = await Client.Call
-                    (
-                    ak.wwise.core.@object.create,
-                    new JObject
-                    {
-                        new JProperty("name", object_name),
-                        new JProperty("type", object_type.ToString()),
-                        new JProperty("parent", parent_path),
-                        new JProperty("onNameConflict", "rename"),
-                        new JProperty("@PlaylistItemType", 1)
-                    },
-                    null
-                    );
-
-                Console.WriteLine($"Object {object_name} created successfully!");
-                return await GetWwiseObjectByIDAsync(result["id"].ToString());
-            }
-            catch (Wamp.ErrorException e)
-            {
-                Console.WriteLine($"Failed to create object : {object_name}! ======> {e.Message}");
-                return null;
-            }
-        }
-
         /// <summary>
         /// 通过ID搜索物体
         /// </summary>
@@ -527,13 +496,14 @@ namespace WwiseTools.Utils
                 var options = new
                 {
 
-                    @return = new string[] { "name", "id", "type", "path" }
+                    @return = new string[] { "name", "id", "type", "path", "musicPlaylistRoot" }
 
                 };
 
                 try // 尝试返回物体数据
                 {
                     JObject jresult = await Client.Call(ak.wwise.core.@object.get, query, options);
+
                     string name = jresult["return"].Last["name"].ToString();
                     string id = jresult["return"].Last["id"].ToString();
                     string type = jresult["return"].Last["type"].ToString();
