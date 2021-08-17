@@ -157,7 +157,7 @@ namespace WwiseTools.Objects
                         new JProperty("name", name),
                         new JProperty("type", "MusicCue"),
                         new JProperty("parent", Path),
-                        new JProperty("onNameConflict", "rename"),
+                        new JProperty("onNameConflict", "replace"),
                         new JProperty("list", "Cues"),
                         new JProperty("@TimeMs", timeMs),
                         new JProperty("@CueType", 2)

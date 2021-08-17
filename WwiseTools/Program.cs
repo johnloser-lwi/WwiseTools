@@ -16,16 +16,20 @@ namespace WwiseTools
         static void Main(string[] args)
         {
 
-            WwiseMusicSegment seg = new WwiseMusicSegment("TestSegment");
+            /*
+            Console.WriteLine("0");
+            WwiseMusicPlaylistContainer container = new WwiseMusicPlaylistContainer("testContainer");
+
+            WwiseMusicSegment seg = new WwiseMusicSegment("TestSegment", container.Path);
 
             WwiseMusicTrack track = new WwiseMusicTrack("TestTrack", @"D:\BGM\Login\denglu_bpm120_4_4_1.wav", seg, "LoginBGM");
-
-
-            seg.SetExitCue(75000);
-            var t = seg.CreateCueAsync("Test", 100);
-            t.Wait();
-
-            seg.SetTempoAndTimeSignature(132, WwiseProperty.Option_TimeSignatureLower._32, 4);
+            */
+            //Console.WriteLine("1");
+            //container.AddPlaylistItem(WwiseMusicPlaylistItem.Option_PlaylistItemType.Group, null);
+            Console.WriteLine("2");
+            WwiseMusicPlaylistContainer container = new WwiseMusicPlaylistContainer("testContainer");
+            container.AddPlaylistItem(WwiseMusicPlaylistItem.Option_PlaylistItemType.Segment);
+            Console.WriteLine(WwiseUtility.GetPropertyAndReferenceNames(container));
 
             WwiseUtility.Close().Wait();
 

@@ -10,7 +10,7 @@ namespace WwiseTools.Objects
 {
     public class WwiseObject
     {
-        public enum ObjectType { AcousticTexture, Action, ActionException, ActorMixer, Attenuation, AudioDevice, AuxBux, BlendContainer, BlendTrack, Bus, ControlSurfaceBinding, ControlSurfaceBindingGroup, ControlSurfaceSession, Conversion, Curve, CustomState, DialogueEvent, Deffect, Event, ExternalSource, ExternalSourceFile, Folder, GameParameter, Language, Metadata, MidiParameter, MixingSession, Modifier, ModulatorEnvelope, ModulatorLfo, ModulatorTime, MultiSwitchEntry, MusicClip, MusicClipMidi, MusicCue, MusicEventCue, MusicFade, MusicPlaylistContainer, MusicPlaylistItem, MusicSegment, MusicStinger, MusicSwitchContainer, MusicTrack, MusicTrackSequence, MusicTransition, ObjectSettingAssoc, Panner, ParamControl, Path, Platform, PluginDataSource, Position, Project, Query, RandomSequenceContainer, SerchCriteria, Sound, SoundBank, SoundcasterSession, State, StateGroup, Switch, SwitchContainer, SwitchGroup, Trigger, UserProjectSettings, WorkUnit }
+        public enum ObjectType { AcousticTexture, Action, ActionException, ActorMixer, Attenuation, AudioDevice, AuxBux, BlendContainer, BlendTrack, Bus, ControlSurfaceBinding, ControlSurfaceBindingGroup, ControlSurfaceSession, Conversion, Curve, CustomState, DialogueEvent, Deffect, Event, ExternalSource, ExternalSourceFile, Folder, GameParameter, Language, Metadata, MidiParameter, MixingSession, Modifier, ModulatorEnvelope, ModulatorLfo, ModulatorTime, MultiSwitchEntry, MusicClip, MusicClipMidi, MusicCue, MusicEventCue, MusicFade, MusicPlaylistContainer, MusicPlaylistItem, MusicSegment, MusicStinger, MusicSwitchContainer, MusicTrack, MusicTrackSequence, MusicTransition, ObjectSettingAssoc, Panner, ParamControl, Path, Platform, PluginDataSource, Position, Project, Query, RandomSequenceContainer, SerchCriteria, Sound, SoundBank, SoundcasterSession, State, StateGroup, Switch, SwitchContainer, SwitchGroup, Trigger, UserProjectSettings, WorkUnit, SegmentRef }
 
         public string Name { get; set; }
         public string ID { get; set; }
@@ -20,6 +20,14 @@ namespace WwiseTools.Objects
                 var get_path = getPath();
                 get_path.Wait();
                 return get_path.Result;
+            }
+        }
+
+        public WwiseObject Parent { get
+            {
+                var get_parent = getParent();
+                get_parent.Wait();
+                return get_parent.Result;
             }
         }
 
@@ -48,6 +56,8 @@ namespace WwiseTools.Objects
 
                 try // 尝试返回物体数据
                 {
+
+                    if (jresult["return"].Last["path"] == null) throw new Exception();
                     string path = jresult["return"].Last["path"].ToString();
 
                     return path;
@@ -64,6 +74,62 @@ namespace WwiseTools.Objects
                 return null;
             }
             
+        }
+
+        private async Task<WwiseObject> getParent()
+        {
+            try
+            {
+                // ak.wwise.core.@object.get 指令
+                var query = new
+                {
+                    from = new
+                    {
+                        id = new string[] { ID }
+                    }
+                };
+
+                // ak.wwise.core.@object.get 返回参数设置
+                var options = new
+                {
+
+                    @return = new string[] { "parent", "owner" }
+
+                };
+
+                JObject jresult = await WwiseUtility.Client.Call(ak.wwise.core.@object.get, query, options);
+
+                try // 尝试返回物体数据
+                {
+                    if (jresult["return"].Last["parent"] == null)
+                    {
+                        if (jresult["return"].Last["owner"] == null)
+                        {
+                            throw new Exception();
+                        }
+                        else
+                        {
+                            string _id = jresult["return"].Last["owner"]["id"].ToString();
+
+                            return WwiseUtility.GetWwiseObjectByID(_id);
+                        }
+                    }
+                    string id = jresult["return"].Last["parent"]["id"].ToString();
+
+                    return WwiseUtility.GetWwiseObjectByID(id);
+                }
+                catch
+                {
+                    Console.WriteLine($"Failed to parent of object : {Name}!");
+                    return null;
+                }
+            }
+            catch
+            {
+                Console.WriteLine($"Failed to parent of object : {Name}!");
+                return null;
+            }
+
         }
 
         public WwiseObject(string name, string id, string type)

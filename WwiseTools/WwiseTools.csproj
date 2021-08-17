@@ -98,10 +98,11 @@
   <ItemGroup>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Utils\SoundInfo.cs" />
     <Compile Include="WwiseObjects\WwiseActorMixer.cs" />
     <Compile Include="WwiseObjects\WwiseContainer.cs" />
     <Compile Include="WwiseObjects\WwiseFolder.cs" />
+    <Compile Include="WwiseObjects\WwiseMusicPlaylistContainer.cs" />
+    <Compile Include="WwiseObjects\WwiseMusicPlaylistItem.cs" />
     <Compile Include="WwiseObjects\WwiseMusicSegment.cs" />
     <Compile Include="WwiseObjects\WwiseMusicTrack.cs" />
     <Compile Include="WwiseObjects\WwiseRandomContainer.cs" />

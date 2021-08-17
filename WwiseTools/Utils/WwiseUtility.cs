@@ -110,10 +110,10 @@ namespace WwiseTools.Utils
                         new JProperty("object", wwiseObject.ID)),
 
                     null);
-
+                Console.WriteLine("Property and References fetched successfully!");
                 return result.ToString();
 
-                Console.WriteLine("Property and References fetched successfully!");
+                
             }
             catch (Wamp.ErrorException e)
             {
@@ -177,6 +177,7 @@ namespace WwiseTools.Utils
 
             var set_prop = SetObjectPropertyAsync(wwiseObject, wwiseProperty);
             set_prop.Wait();
+
         }
 
         /// <summary>

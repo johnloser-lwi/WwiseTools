@@ -89,8 +89,6 @@ namespace WwiseTools.Objects
                 {
 
                     JObject jresult = await WwiseUtility.Client.Call(ak.wwise.core.@object.get, query, options);
-
-                    Console.WriteLine(jresult);
                     
                     if (jresult["return"].Last["audioSource:maxDurationSource"] == null) throw new Exception();
 
