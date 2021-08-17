@@ -32,14 +32,15 @@ namespace WwiseTools.Objects
         }
 
         /*
-        public WwiseMusicPlaylistItem AddPlaylistItem(WwiseMusicPlaylistItem.Option_PlaylistItemType type)
+        public WwiseMusicPlaylistItem AddPlaylistItem(WwiseMusicPlaylistItem.Option_PlaylistItemType type, WwiseMusicSegment segment = null)
         {
             var root_item = GetRootPlaylistItem();
 
-            if (root_item != null)
+            if (root_item != null && segment != null)
             {
-                var item = new WwiseMusicPlaylistItem(type, root_item.ID);
-                return item;
+                var item = WwiseUtility.CreatePlaylistItemAsync("", ObjectType.MusicPlaylistItem, segment.ID, root_item.ID);
+                item.Wait();
+                return new WwiseMusicPlaylistItem(item.Result);
             }
 
             return null;
@@ -60,5 +61,6 @@ namespace WwiseTools.Objects
             return root_item;
         }
         */
+        
     }
 }
