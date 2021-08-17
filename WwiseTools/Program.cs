@@ -26,9 +26,7 @@ namespace WwiseTools
             */
             //Console.WriteLine("1");
             //container.AddPlaylistItem(WwiseMusicPlaylistItem.Option_PlaylistItemType.Group, null);
-            Console.WriteLine("2");
             WwiseMusicPlaylistContainer container = new WwiseMusicPlaylistContainer("testContainer");
-            container.AddPlaylistItem(WwiseMusicPlaylistItem.Option_PlaylistItemType.Segment);
             Console.WriteLine(WwiseUtility.GetPropertyAndReferenceNames(container));
 
             WwiseUtility.Close().Wait();

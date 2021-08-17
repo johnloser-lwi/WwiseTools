@@ -11,9 +11,9 @@ namespace WwiseTools.Objects
 {
     class WwiseMusicPlaylistItem : WwiseObject
     {
-        public WwiseMusicPlaylistItem(Option_PlaylistItemType playlist_item_type, string parent = @"\Actor-Mixer Hierarchy\Default Work Unit") : base("", "", "MusicPlaylistItem")
+        public WwiseMusicPlaylistItem(Option_PlaylistItemType playlist_item_type, string parent_id) : base("", "", "MusicPlaylistItem")
         {
-            var tempObj = WwiseUtility.CreateObject("", ObjectType.MusicPlaylistItem, parent);
+            var tempObj = WwiseUtility.CreateObject("", ObjectType.MusicPlaylistItem, parent_id);
             ID = tempObj.ID;
             Name = tempObj.Name;
 

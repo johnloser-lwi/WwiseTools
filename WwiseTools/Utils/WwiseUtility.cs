@@ -445,7 +445,7 @@ namespace WwiseTools.Utils
                         new JProperty("name", object_name),
                         new JProperty("type", object_type.ToString()),
                         new JProperty("parent", parent_path),
-                        new JProperty("onNameConflict", "rename"),
+                        new JProperty("onNameConflict", "rename")
                     },
                     null
                     );
