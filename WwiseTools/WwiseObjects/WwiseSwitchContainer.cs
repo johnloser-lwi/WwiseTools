@@ -11,7 +11,7 @@ using WwiseTools.Utils;
 
 namespace WwiseTools.Objects
 {
-    class WwiseSwitchContainer : WwiseContainer
+    public class WwiseSwitchContainer : WwiseContainer
     {
         /// <summary>
         /// 创建一个转变容器

@@ -9,7 +9,7 @@ using WwiseTools.Utils;
 
 namespace WwiseTools.Objects
 {
-    class WwiseMusicPlaylistItem : WwiseObject
+    public class WwiseMusicPlaylistItem : WwiseObject
     {
         public Option_PlaylistItemType PlaylistItemType { get; private set; }
 

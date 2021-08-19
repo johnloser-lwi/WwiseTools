@@ -10,7 +10,7 @@ using WwiseTools.Utils;
 
 namespace WwiseTools.Objects
 {
-    class WwiseMusicPlaylistContainer : WwiseContainer
+    public class WwiseMusicPlaylistContainer : WwiseContainer
     {
         /// <summary>
         /// 创建一个音乐片段
