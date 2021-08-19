@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
 using WwiseTools.Utils;
 
 namespace WwiseTools.Objects
@@ -31,14 +32,30 @@ namespace WwiseTools.Objects
             Type = @object.Type;
         }
 
-        
-        public WwiseMusicPlaylistItem AddPlaylistItem()//(WwiseMusicPlaylistItem.Option_PlaylistItemType type, WwiseMusicSegment segment = null)
+
+        public WwiseMusicPlaylistItem AddPlaylistItemGroup()
         {
             var root_item = GetRootPlaylistItem();
 
             if (root_item != null) // && segment != null)
             {
                 var item = new WwiseMusicPlaylistItem(WwiseMusicPlaylistItem.Option_PlaylistItemType.Group, root_item.ID);
+                return item;
+            }
+
+            return null;
+        }
+
+        public WwiseMusicPlaylistItem AddPlaylistItemSegment(WwiseMusicSegment segment)
+        {
+            var root_item = GetRootPlaylistItem();
+
+            if (root_item != null) // && segment != null)
+            {
+                var item = new WwiseMusicPlaylistItem(segment, root_item.ID);
+
+                WwiseUtility.ReloadWwiseProject();
+
                 return item;
             }
 

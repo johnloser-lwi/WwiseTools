@@ -900,6 +900,157 @@ namespace WwiseTools.Utils
             }
         }
 
+        public static string GetWorkUnitFilePath(WwiseObject @object)
+        {
+            var get = GetWorkUnitFilePathAsync(@object);
+            get.Wait();
+            return get.Result;
+        }
+
+        public static async Task<string> GetWorkUnitFilePathAsync(WwiseObject @object)
+        {
+            if (!TryConnectWaapi() || @object == null) return null;
+
+            try
+            {
+                // ak.wwise.core.@object.get 指令
+                var query = new
+                {
+                    from = new
+                    {
+                        id = new string[] { @object.ID }
+                    }
+                };
+
+                // ak.wwise.core.@object.get 返回参数设置
+                var options = new
+                {
+
+                    @return = new string[] { "filePath" }
+
+                };
+
+
+
+                try // 尝试返回物体数据
+                {
+                    JObject jresult = await Client.Call(ak.wwise.core.@object.get, query, options);
+
+                    string file_path = "";
+                    foreach (var obj in jresult["return"])
+                    {
+                        file_path = obj["filePath"].ToString();
+                    }
+
+                    Console.WriteLine($"Work Unit file path of object {@object.Name} successfully fetched!");
+
+                    return file_path;
+                }
+                catch (Wamp.ErrorException e)
+                {
+                    Console.WriteLine($"Failed to return Work Unit file path of object : {@object.Name}! ======> {e.Message}");
+                    return null;
+                }
+            }
+            catch (Wamp.ErrorException e)
+            {
+                Console.WriteLine($"Failed to return Work Unit file path of object : {@object.Name}! ======> {e.Message}");
+                return null;
+            }
+        }
+
+
+        public static void ReloadWwiseProject()
+        {
+            LoadWwiseProject(GetWwiseProjectPath(), true);
+        }
+
+        public static void LoadWwiseProject(string path, bool save_current = true)
+        {
+            LoadWwiseProjectAsync(path, save_current).Wait();
+        }
+
+        public static async Task LoadWwiseProjectAsync(string path, bool save_current = true)
+        {
+            if (!TryConnectWaapi()) return;
+
+            if (save_current) SaveWwiseProject();
+
+            var project_path = GetWwiseProjectPath();
+
+            try
+            {
+                //await Client.Call(ak.wwise.ui.project.close);
+                var query = new
+                {
+                    path = project_path
+                };
+                await Client.Call(ak.wwise.ui.project.open, query);
+
+                Console.WriteLine("Project loaded successfully!");
+            }
+            catch (Wamp.ErrorException e)
+            {
+                Console.WriteLine($"Failed to load project! =======> {e.Message}");
+            }
+        }
+
+        public static string GetWwiseProjectPath()
+        {
+            var get = GetWwiseProjectPathAsync();
+            get.Wait();
+            return get.Result;
+        }
+
+        public static async Task<string> GetWwiseProjectPathAsync()
+        {
+            if (!TryConnectWaapi()) return null;
+
+            try
+            {
+                // ak.wwise.core.@object.get 指令
+                var query = new
+                {
+                    waql = "\"\\\""
+                };
+
+                // ak.wwise.core.@object.get 返回参数设置
+                var options = new
+                {
+
+                    @return = new string[] { "filePath" }
+
+                };
+
+
+
+                try // 尝试返回物体数据
+                {
+                    JObject jresult = await Client.Call(ak.wwise.core.@object.get, query, options);
+
+                    string file_path = "";
+                    foreach (var obj in jresult["return"])
+                    {
+                        file_path = obj["filePath"].ToString();
+                    }
+
+                    Console.WriteLine($"Project path successfully fetched!");
+
+                    return file_path;
+                }
+                catch (Wamp.ErrorException e)
+                {
+                    Console.WriteLine($"Failed to return project path! ======> {e.Message}");
+                    return null;
+                }
+            }
+            catch (Wamp.ErrorException e)
+            {
+                Console.WriteLine($"Failed to return project path! ======> {e.Message}");
+                return null;
+            }
+        }
+
         public static void SaveWwiseProject()
         {
             SaveWwiseProjectAsync().Wait();

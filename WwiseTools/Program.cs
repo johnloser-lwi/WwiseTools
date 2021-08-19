@@ -15,9 +15,6 @@ namespace WwiseTools
     {
         static void Main(string[] args)
         {
-            /*
-            
-            */
             try
             {
                 Console.WriteLine("0");
@@ -27,10 +24,15 @@ namespace WwiseTools
 
                 WwiseMusicTrack track = new WwiseMusicTrack("TestTrack", @"D:\BGM\Login\denglu_bpm120_4_4_1.wav", seg, "LoginBGM");
                 Console.WriteLine("1");
-                container.AddPlaylistItem();
+                var subGroup = container.AddPlaylistItemGroup();
+                
+                subGroup.AddChildGroup().AddChildSegment(seg);
+                subGroup.AddChildGroup();
+
 
                 Console.WriteLine("2");
-                WwiseUtility.SaveWwiseProject();
+
+                WwiseUtility.ReloadWwiseProject();
             }
             catch
             {

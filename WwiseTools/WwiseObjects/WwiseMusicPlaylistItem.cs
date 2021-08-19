@@ -11,6 +11,8 @@ namespace WwiseTools.Objects
 {
     class WwiseMusicPlaylistItem : WwiseObject
     {
+        public Option_PlaylistItemType PlaylistItemType { get; private set; }
+
         public WwiseMusicPlaylistItem(Option_PlaylistItemType playlist_item_type, string parent_id) : base("", "", "MusicPlaylistItem")
         {
             var tempObj = WwiseUtility.CreateObject("", ObjectType.MusicPlaylistItem, parent_id);
@@ -18,6 +20,16 @@ namespace WwiseTools.Objects
             Name = tempObj.Name;
 
             SetPlaylistItemType(playlist_item_type);
+        }
+
+        public WwiseMusicPlaylistItem(WwiseMusicSegment segment, string parent_id) : base("", "", "MusicPlaylistItem")
+        {
+            var tempObj = WwiseUtility.CreateObject("", ObjectType.MusicPlaylistItem, parent_id);
+            ID = tempObj.ID;
+            Name = tempObj.Name;
+
+            SetPlaylistItemType(Option_PlaylistItemType.Segment);
+            SetSegmentRef(segment);
         }
 
         public WwiseMusicPlaylistItem(WwiseObject @object) : base("", "", "")
@@ -42,6 +54,7 @@ namespace WwiseTools.Objects
         public enum Option_PlaylistItemType { Group = 0, Segment = 1 }
         public void SetPlaylistItemType(Option_PlaylistItemType type)
         {
+            PlaylistItemType = type;
             WwiseUtility.SetObjectProperty(this, new WwiseProperty("PlaylistItemType", (int)type));
         }
 
@@ -56,12 +69,44 @@ namespace WwiseTools.Objects
 
         public void SetSegmentRef(WwiseMusicSegment segment)
         {
-            WwiseUtility.SetObjectReference(this, new WwiseReference("ObjectRef", segment));
+            WwiseUtility.SaveWwiseProject();
+            WwiseWorkUnitParser parser = new WwiseWorkUnitParser(WwiseUtility.GetWorkUnitFilePath(this));
+
+            var node = parser.XML.CreateElement("SegmentRef");
+            node.SetAttribute("Name", segment.Name);
+            node.SetAttribute("ID", segment.ID);
+
+            parser.AddToUnit(this, node);
+            parser.SaveFile();
         }
 
         public void SetWeight(float weight)
         {
             WwiseUtility.SetObjectProperty(this, new WwiseProperty("Weight", weight));
+        }
+
+        public WwiseMusicPlaylistItem AddChildGroup()
+        {
+            if (PlaylistItemType == Option_PlaylistItemType.Segment) return null;
+
+            var tempObj = WwiseUtility.CreateObject("", ObjectType.MusicPlaylistItem, ID);
+            var item = new WwiseMusicPlaylistItem(tempObj);
+            item.SetPlaylistItemType(Option_PlaylistItemType.Group);
+            return item;
+        }
+
+        public WwiseMusicPlaylistItem AddChildSegment(WwiseMusicSegment segment)
+        {
+            if (PlaylistItemType == Option_PlaylistItemType.Segment) return null;
+
+            var tempObj = WwiseUtility.CreateObject("", ObjectType.MusicPlaylistItem, ID);
+            var item = new WwiseMusicPlaylistItem(tempObj);
+            item.SetPlaylistItemType(Option_PlaylistItemType.Segment);
+            item.SetSegmentRef(segment);
+
+            WwiseUtility.ReloadWwiseProject();
+
+            return item;
         }
     }
 }
