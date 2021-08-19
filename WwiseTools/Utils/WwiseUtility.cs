@@ -899,6 +899,25 @@ namespace WwiseTools.Utils
                 return null;
             }
         }
+
+        public static void SaveWwiseProject()
+        {
+            SaveWwiseProjectAsync().Wait();
+        }
+
+        public static async Task SaveWwiseProjectAsync()
+        {
+            if (!TryConnectWaapi()) return;
+            try
+            {
+                await Client.Call(ak.wwise.core.project.save);
+                Console.WriteLine("Project saved successfully!");
+            }
+            catch (Wamp.ErrorException e)
+            {
+                Console.WriteLine($"Failed to save project! =======> {e.Message}");
+            }
+        }
         
     }
 }

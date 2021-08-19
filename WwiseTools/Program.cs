@@ -30,6 +30,7 @@ namespace WwiseTools
                 container.AddPlaylistItem();
 
                 Console.WriteLine("2");
+                WwiseUtility.SaveWwiseProject();
             }
             catch
             {
