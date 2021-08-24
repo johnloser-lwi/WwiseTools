@@ -312,18 +312,26 @@ namespace WwiseTools.Utils
                 // 获取子物体的新数据
                 JObject jresult = await Client.Call(ak.wwise.core.@object.get, query, options);
 
+                /*
                 try // 尝试更新子物体数据
                 {
                     child.Name = jresult["return"].Last["name"].ToString();
                     child.ID = jresult["return"].Last["id"].ToString();
                     child.Type = jresult["return"].Last["type"].ToString();
-                }
-                catch
-                {
-                    Console.WriteLine("Failed to update WwiseObject!");
-                }
 
-                Console.WriteLine($"Moved {child.Name} to {parent.Path}!");
+                    Console.WriteLine($"Moved {child.Name} to {parent.Path}!");
+                }
+                catch (Wamp.ErrorException e)
+                {
+                    Console.WriteLine($"Failed to update WwiseObject! ======> {e.Message}");
+                }
+                */
+
+                child.Name = jresult["return"].Last["name"].ToString();
+                child.ID = jresult["return"].Last["id"].ToString();
+                child.Type = jresult["return"].Last["type"].ToString();
+
+                Console.WriteLine($"Moved {child.Name} to {parent.Name}!");
             }
             catch (Wamp.ErrorException e)
             {

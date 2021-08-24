@@ -94,7 +94,6 @@ namespace WwiseTools.Objects
 
                 foreach (XmlElement container in containers)
                 {
-                    Console.WriteLine(container.Name);
                     if (container.GetAttribute("ID") == ID)
                     {
                         container.AppendChild(parser.XML.ImportNode(new_playlist, true));

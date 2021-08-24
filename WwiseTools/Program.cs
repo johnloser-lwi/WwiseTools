@@ -35,16 +35,21 @@ namespace WwiseTools
                 //WwiseMusicSwitchContainer container = new WwiseMusicSwitchContainer("Test");
                 //container.SetContinuePlay(false);
 
-                WwiseSequenceContainer container = new WwiseSequenceContainer(WwiseUtility.GetWwiseObjectByPath(@"\Actor-Mixer Hierarchy\Default Work Unit\Test"));
-                WwiseSound sound = new WwiseSound("TestSound2", container.Path);
+                WwiseSequenceContainer container = new WwiseSequenceContainer("Test");
+
+                WwiseSound sound = new WwiseSound("TestSound");
+                Console.WriteLine("Adding child");
+                container.AddChild(sound);
+
+                Console.WriteLine("Setting up playlist");
                 container.SetPlaylist(sound);
 
                 Console.WriteLine("Reloading...");
                 WwiseUtility.ReloadWwiseProject();
             }
-            catch
+            catch (Exception e)
             {
-                Console.WriteLine("Error running!");
+                Console.WriteLine($"Error running! ======> {e.Message}");
             }
 
             Console.WriteLine("Closing ...");

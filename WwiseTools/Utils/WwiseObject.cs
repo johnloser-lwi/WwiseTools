@@ -18,7 +18,7 @@ namespace WwiseTools.Objects
         public string Path { get
             {
                 var get_path = getPath();
-                get_path.Wait();
+                get_path.Wait(1000);
                 return get_path.Result;
             }
         }
@@ -26,7 +26,7 @@ namespace WwiseTools.Objects
         public WwiseObject Parent { get
             {
                 var get_parent = getParent();
-                get_parent.Wait();
+                get_parent.Wait(1000);
                 return get_parent.Result;
             }
         }
