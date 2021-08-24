@@ -630,6 +630,11 @@ namespace WwiseTools.Properties
             return new WwiseProperty("Weight", valueLimiter(value, 0.001f, 200f));
         }
 
+        public static WwiseProperty Prop_ContinuePlay(bool value)
+        {
+            return new WwiseProperty("ContinuePlay", value);
+        }
+
 
         private static float valueLimiter(float value, float min, float max)
         {

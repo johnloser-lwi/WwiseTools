@@ -17,7 +17,7 @@ namespace WwiseTools
         {
             try
             {
-                Console.WriteLine("0");
+                /*Console.WriteLine("0");
                 WwiseMusicPlaylistContainer container = new WwiseMusicPlaylistContainer("testContainer");
 
                 WwiseMusicSegment seg = new WwiseMusicSegment("TestSegment", container.Path);
@@ -30,8 +30,16 @@ namespace WwiseTools
                 subGroup.AddChildGroup();
 
 
-                Console.WriteLine("2");
+                Console.WriteLine("2");*/
 
+                //WwiseMusicSwitchContainer container = new WwiseMusicSwitchContainer("Test");
+                //container.SetContinuePlay(false);
+
+                WwiseSequenceContainer container = new WwiseSequenceContainer(WwiseUtility.GetWwiseObjectByPath(@"\Actor-Mixer Hierarchy\Default Work Unit\Test"));
+                WwiseSound sound = new WwiseSound("TestSound2", container.Path);
+                container.SetPlaylist(sound);
+
+                Console.WriteLine("Reloading...");
                 WwiseUtility.ReloadWwiseProject();
             }
             catch

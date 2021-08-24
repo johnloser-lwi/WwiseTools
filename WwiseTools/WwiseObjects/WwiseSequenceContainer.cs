@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Xml;
 using WwiseTools.Properties;
 using WwiseTools.Utils;
 
@@ -47,6 +44,70 @@ namespace WwiseTools.Objects
         public void SetAlwaysResetPlaylist(bool reset)
         {
             WwiseUtility.SetObjectProperty(this, WwiseProperty.Prop_PlayMechanismResetPlaylistEachPlay(reset));
+        }
+
+        public void SetPlaylist(WwiseObject item, bool at_front = false)
+        {
+            if (!item.Path.Contains(Path)) return;
+
+            WwiseUtility.SaveWwiseProject();
+            WwiseWorkUnitParser parser = new WwiseWorkUnitParser(WwiseUtility.GetWorkUnitFilePath(this));
+
+            var playlists = parser.XML.GetElementsByTagName("Playlist");
+
+            XmlElement playlist = null;
+
+            foreach (XmlElement list in playlists)
+            {
+                if (list.ParentNode.Attributes["ID"].Value.ToString() == ID)
+                {
+                    playlist = list;
+                    break;
+                }
+            }
+
+            if (playlist != null)
+            {
+                var node = parser.XML.CreateElement("ItemRef");
+                node.SetAttribute("Name", item.Name);
+                node.SetAttribute("ID", item.ID);
+
+                if (!at_front) playlist.AppendChild(parser.XML.ImportNode(node, true));
+                else playlist.InsertBefore(parser.XML.ImportNode(node, true), playlist.FirstChild);
+
+                //parser.AddToUnit(this, node);
+                parser.SaveFile();
+            }
+            else
+            {
+                var new_playlist = parser.XML.CreateElement("Playlist");
+
+                var node = parser.XML.CreateElement("ItemRef");
+                node.SetAttribute("Name", item.Name);
+                node.SetAttribute("ID", item.ID);
+
+                new_playlist.AppendChild(node);
+
+                var containers = parser.XML.GetElementsByTagName(Type);
+
+                
+
+                foreach (XmlElement container in containers)
+                {
+                    Console.WriteLine(container.Name);
+                    if (container.GetAttribute("ID") == ID)
+                    {
+                        container.AppendChild(parser.XML.ImportNode(new_playlist, true));
+
+                        parser.SaveFile();
+                        break;
+                    }
+                }
+
+            }
+
+            WwiseUtility.ReloadWwiseProject();
+            
         }
     }
 }

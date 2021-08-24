@@ -105,6 +105,7 @@
     <Compile Include="WwiseObjects\WwiseMusicPlaylistContainer.cs" />
     <Compile Include="WwiseObjects\WwiseMusicPlaylistItem.cs" />
     <Compile Include="WwiseObjects\WwiseMusicSegment.cs" />
+    <Compile Include="WwiseObjects\WwiseMusicSwitchContainer.cs" />
     <Compile Include="WwiseObjects\WwiseMusicTrack.cs" />
     <Compile Include="WwiseObjects\WwiseRandomContainer.cs" />
     <Compile Include="WwiseObjects\WwiseRandomSequenceContainer.cs" />
