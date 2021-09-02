@@ -8,7 +8,7 @@ using WwiseTools.Utils;
 
 namespace WwiseTools.Objects
 {
-    class WwiseMusicSwitchContainer : WwiseContainer
+    public class WwiseMusicSwitchContainer : WwiseContainer
     {
         public WwiseMusicSwitchContainer(string name, string parent_path = @"\Interactive Music Hierarchy\Default Work Unit\") : base(name, "", ObjectType.MusicPlaylistContainer.ToString())
         {
