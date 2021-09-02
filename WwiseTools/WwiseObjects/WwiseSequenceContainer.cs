@@ -46,6 +46,11 @@ namespace WwiseTools.Objects
             WwiseUtility.SetObjectProperty(this, WwiseProperty.Prop_PlayMechanismResetPlaylistEachPlay(reset));
         }
 
+        /// <summary>
+        /// 设置播放列表
+        /// </summary>
+        /// <param name="item"></param>
+        /// <param name="at_front"></param>
         public void SetPlaylist(WwiseObject item, bool at_front = false)
         {
             if (!item.Path.Contains(Path)) return;

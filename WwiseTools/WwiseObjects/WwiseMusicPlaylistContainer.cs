@@ -32,7 +32,10 @@ namespace WwiseTools.Objects
             Type = @object.Type;
         }
 
-
+        /// <summary>
+        /// 添加播放列表组
+        /// </summary>
+        /// <returns></returns>
         public WwiseMusicPlaylistItem AddPlaylistItemGroup()
         {
             var root_item = GetRootPlaylistItem();
@@ -46,6 +49,11 @@ namespace WwiseTools.Objects
             return null;
         }
 
+        /// <summary>
+        /// 添加播放列表片段
+        /// </summary>
+        /// <param name="segment"></param>
+        /// <returns></returns>
         public WwiseMusicPlaylistItem AddPlaylistItemSegment(WwiseMusicSegment segment)
         {
             var root_item = GetRootPlaylistItem();
@@ -62,6 +70,10 @@ namespace WwiseTools.Objects
             return null;
         }
 
+        /// <summary>
+        /// 获取播放列表根
+        /// </summary>
+        /// <returns></returns>
         public WwiseMusicPlaylistItem GetRootPlaylistItem()
         {
 
@@ -72,7 +84,11 @@ namespace WwiseTools.Objects
             return root_item.Result;
         }
 
-        public  async Task<WwiseMusicPlaylistItem> GetRootPlaylistItemAsync()
+        /// <summary>
+        /// 获取播放列表根，同步执行
+        /// </summary>
+        /// <returns></returns>
+        public async Task<WwiseMusicPlaylistItem> GetRootPlaylistItemAsync()
         {
             try
             {

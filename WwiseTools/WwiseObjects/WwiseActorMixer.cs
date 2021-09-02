@@ -264,6 +264,12 @@ namespace WwiseTools.Objects
             WwiseUtility.SetObjectProperty(this, WwiseProperty.Prop_SpeakerPanning(speaker_panning));
         }
 
+        /// <summary>
+        /// 设置播放限制
+        /// </summary>
+        /// <param name="ignore_parent"></param>
+        /// <param name="option"></param>
+        /// <param name="sound_instance_limit"></param>
         public void SetPlaybackLimit(bool ignore_parent = false, WwiseProperty.Option_IsGlobalLimit option = WwiseProperty.Option_IsGlobalLimit.PerGameObject, uint sound_instance_limit = 50)
         {
             WwiseUtility.SetObjectProperty(this, WwiseProperty.Prop_IgnoreParentMaxSoundInstance(ignore_parent));
@@ -272,6 +278,10 @@ namespace WwiseTools.Objects
             WwiseUtility.SetObjectProperty(this, WwiseProperty.Prop_IsGlobalLimit(option));
         }
 
+        /// <summary>
+        /// 设置播放限制表现
+        /// </summary>
+        /// <param name="behavior"></param>
         public void SetLimitReachedBehavior(WwiseProperty.Option_OverLimitBehavior behavior = WwiseProperty.Option_OverLimitBehavior.KillVoice)
         {
             WwiseUtility.SetObjectProperty(this, WwiseProperty.Prop_OverLimitBehavior(behavior));

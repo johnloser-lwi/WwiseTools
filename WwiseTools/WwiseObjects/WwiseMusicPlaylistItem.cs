@@ -40,6 +40,11 @@ namespace WwiseTools.Objects
             Type = @object.Type;
         }
 
+
+        /// <summary>
+        /// 设置循环数
+        /// </summary>
+        /// <param name="count"></param>
         public void SetLoopCount(int count = -1)
         {
             WwiseUtility.SetObjectProperty(this, new WwiseProperty("LoopCount", count));
@@ -58,6 +63,11 @@ namespace WwiseTools.Objects
             WwiseUtility.SetObjectProperty(this, new WwiseProperty("PlaylistItemType", (int)type));
         }
 
+        /// <summary>
+        /// 设置随机
+        /// </summary>
+        /// <param name="shuffle"></param>
+        /// <param name="avoid_repeat_count"></param>
         public void SetRandom(bool shuffle = true, uint avoid_repeat_count = 1)
         {
             int standard = 0;
@@ -67,6 +77,10 @@ namespace WwiseTools.Objects
             WwiseUtility.SetObjectProperty(this, new WwiseProperty("RandomAvoidRepeatingCount", avoid_repeat_count));
         }
 
+        /// <summary>
+        /// 设置片段引用
+        /// </summary>
+        /// <param name="segment"></param>
         public void SetSegmentRef(WwiseMusicSegment segment)
         {
             WwiseUtility.SaveWwiseProject();
@@ -80,11 +94,20 @@ namespace WwiseTools.Objects
             parser.SaveFile();
         }
 
+        /// <summary>
+        /// 设置权重
+        /// </summary>
+        /// <param name="weight"></param>
         public void SetWeight(float weight)
         {
             WwiseUtility.SetObjectProperty(this, new WwiseProperty("Weight", weight));
         }
 
+
+        /// <summary>
+        /// 增加组
+        /// </summary>
+        /// <returns></returns>
         public WwiseMusicPlaylistItem AddChildGroup()
         {
             if (PlaylistItemType == Option_PlaylistItemType.Segment) return null;
@@ -95,6 +118,11 @@ namespace WwiseTools.Objects
             return item;
         }
 
+        /// <summary>
+        /// 增加片段
+        /// </summary>
+        /// <param name="segment"></param>
+        /// <returns></returns>
         public WwiseMusicPlaylistItem AddChildSegment(WwiseMusicSegment segment)
         {
             if (PlaylistItemType == Option_PlaylistItemType.Segment) return null;

@@ -91,7 +91,7 @@ namespace WwiseTools.Utils
         }
 
         /// <summary>
-        /// 获取属性、引用名称，后台运行
+        /// 获取属性、引用名称，同步执行
         /// </summary>
         /// <param name="wwiseObject"></param>
         /// <returns></returns>
@@ -135,7 +135,7 @@ namespace WwiseTools.Utils
         }
 
         /// <summary>
-        /// 设置物体的引用，后台运行
+        /// 设置物体的引用，同步执行
         /// </summary>
         /// <param name="wwiseObject"></param>
         /// <param name="wwiseReference"></param>
@@ -181,7 +181,7 @@ namespace WwiseTools.Utils
         }
 
         /// <summary>
-        /// 设置参数，后台运行
+        /// 设置参数，同步执行
         /// </summary>
         /// <param name="wwiseObject"></param>
         /// <param name="property"></param>
@@ -226,7 +226,7 @@ namespace WwiseTools.Utils
         }
 
         /// <summary>
-        /// 修改名称，后台运行
+        /// 修改名称，同步执行
         /// </summary>
         /// <param name="rename_object"></param>
         /// <param name="new_name"></param>
@@ -372,7 +372,7 @@ namespace WwiseTools.Utils
 
 
         /// <summary>
-        /// 生成播放事件，后台运行
+        /// 生成播放事件，同步执行
         /// </summary>
         /// <param name="event_name"></param>
         /// <param name="object_path"></param>
@@ -481,7 +481,7 @@ namespace WwiseTools.Utils
         }
 
         /// <summary>
-        /// 通过ID搜索物体，后台运行
+        /// 通过ID搜索物体，同步执行
         /// </summary>
         /// <param name="target_id"></param>
         /// <returns></returns>
@@ -592,7 +592,7 @@ namespace WwiseTools.Utils
         }
 
         /// <summary>
-        /// 通过名称搜索唯一命名对象，后台运行，格式必须为"type:name"
+        /// 通过名称搜索唯一命名对象，同步执行，格式必须为"type:name"
         /// </summary>
         /// <param name="target_name"></param>
         /// <returns></returns>
@@ -662,7 +662,7 @@ namespace WwiseTools.Utils
         }
 
         /// <summary>
-        /// 通过路径获取对象，后台运行
+        /// 通过路径获取对象，同步执行
         /// </summary>
         /// <param name="path"></param>
         /// <returns></returns>
@@ -718,6 +718,11 @@ namespace WwiseTools.Utils
 
         }
 
+        /// <summary>
+        /// 获取指定类型的对象
+        /// </summary>
+        /// <param name="target_type"></param>
+        /// <returns></returns>
         public static List<WwiseObject> GetWwiseObjectsOfType(string target_type)
         {
 
@@ -726,7 +731,11 @@ namespace WwiseTools.Utils
             return get.Result;
         }
 
-
+        /// <summary>
+        /// 获取指定类型的对象，同步执行
+        /// </summary>
+        /// <param name="target_type"></param>
+        /// <returns></returns>
         public static async Task<List<WwiseObject>> GetWwiseObjectsOfTypeAsync(string target_type)
         {
             if (!TryConnectWaapi() || String.IsNullOrWhiteSpace(target_type)) return null;
@@ -908,6 +917,11 @@ namespace WwiseTools.Utils
             }
         }
 
+        /// <summary>
+        /// 获取工作单元文件路径
+        /// </summary>
+        /// <param name="object"></param>
+        /// <returns></returns>
         public static string GetWorkUnitFilePath(WwiseObject @object)
         {
             var get = GetWorkUnitFilePathAsync(@object);
@@ -915,6 +929,11 @@ namespace WwiseTools.Utils
             return get.Result;
         }
 
+        /// <summary>
+        /// 获取工作单元文件路径，同步执行
+        /// </summary>
+        /// <param name="object"></param>
+        /// <returns></returns>
         public static async Task<string> GetWorkUnitFilePathAsync(WwiseObject @object)
         {
             if (!TryConnectWaapi() || @object == null) return null;
@@ -967,17 +986,30 @@ namespace WwiseTools.Utils
             }
         }
 
-
+        /// <summary>
+        /// 重新加载当前工程
+        /// </summary>
         public static void ReloadWwiseProject()
         {
             LoadWwiseProject(GetWwiseProjectPath(), true);
         }
 
+        /// <summary>
+        /// 加载工程
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="save_current"></param>
         public static void LoadWwiseProject(string path, bool save_current = true)
         {
             LoadWwiseProjectAsync(path, save_current).Wait();
         }
 
+        /// <summary>
+        /// 加载工程，同步执行
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="save_current"></param>
+        /// <returns></returns>
         public static async Task LoadWwiseProjectAsync(string path, bool save_current = true)
         {
             if (!TryConnectWaapi()) return;
@@ -1003,6 +1035,10 @@ namespace WwiseTools.Utils
             }
         }
 
+        /// <summary>
+        /// 获取工程路径
+        /// </summary>
+        /// <returns></returns>
         public static string GetWwiseProjectPath()
         {
             var get = GetWwiseProjectPathAsync();
@@ -1010,6 +1046,10 @@ namespace WwiseTools.Utils
             return get.Result;
         }
 
+        /// <summary>
+        /// 获取工程路径，同步执行
+        /// </summary>
+        /// <returns></returns>
         public static async Task<string> GetWwiseProjectPathAsync()
         {
             if (!TryConnectWaapi()) return null;
@@ -1059,11 +1099,18 @@ namespace WwiseTools.Utils
             }
         }
 
+        /// <summary>
+        /// 保存工程
+        /// </summary>
         public static void SaveWwiseProject()
         {
             SaveWwiseProjectAsync().Wait();
         }
 
+        /// <summary>
+        /// 保存工程，同步执行
+        /// </summary>
+        /// <returns></returns>
         public static async Task SaveWwiseProjectAsync()
         {
             if (!TryConnectWaapi()) return;

@@ -25,6 +25,10 @@ namespace WwiseTools.Objects
             Type = @object.Type;
         }
 
+        /// <summary>
+        /// 设置继续播放
+        /// </summary>
+        /// <param name="value"></param>
         public void SetContinuePlay(bool value)
         {
             WwiseUtility.SetObjectProperty(this, WwiseProperty.Prop_ContinuePlay(value));

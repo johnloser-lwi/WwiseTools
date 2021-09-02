@@ -89,6 +89,47 @@ WwiseUtility.SetObjectProperty(randomContainer, testProperty); // 为"randomCont
 WwiseUtility.SetObjectReference(randomContainer, testReference); // 为"randomContainer"添加引用"testReference"。
 ```
 运行程序后，将会实现与上一个案例相同的效果，当然我们也可以设置其他的属性与引用，可以在[Wwise Objects Reference](https://www.audiokinetic.com/zh/library/edge/?source=SDK&id=wobjects_index.html)中找到更多的属性、应用参数说明。
+
+### 直接修改wwu文件
+目前有一部分功能不能直接再waapi中实现，如设置"Sequence Container"中的"Playlist"，这时我们就需要一定方案来直接修改wwu文件。wwu文件为XML文件，在当前版本中我们可以使用"WwiseWorkUnitParser"来读取并设置参数，我们以设置"Sequence Container"的"Playlist"为例（该功能已经写入"WwiseSequenceContainer"的"SetPlaylist"函数）。
+```csharp
+WwiseSequenceContainer container = new WwiseSequenceContainer("TestContainer"); // 创建一个Sequence Container
+WwiseSound sound = new WwiseSound("TestSound", container.Path); // 创建一个空音频
+
+WwiseUtility.SaveWwiseProject(); // 保存工程
+WwiseWorkUnitParser parser = new WwiseWorkUnitParser(WwiseUtility.GetWorkUnitFilePath(container)); // 创建WwiseWorkUnitParser，并获取container的WorkUnit文件
+
+var playlists = parser.XML.GetElementsByTagName("Playlist"); // 获取所有Playlist节点
+
+XmlElement playlist = null;
+
+// 获取ID与container相同的Playlist节点（目标节点）
+foreach (XmlElement list in playlists)
+{
+    if (list.ParentNode.Attributes["ID"].Value.ToString() == container.ID)
+    {
+        playlist = list;
+        break;
+    }
+}
+
+if (playlist != null)
+{
+    // 创建ItemRef节点
+    var node = parser.XML.CreateElement("ItemRef"); 
+    node.SetAttribute("Name", sound.Name);
+    node.SetAttribute("ID", sound.ID);
+
+    playlist.AppendChild(parser.XML.ImportNode(node, true)); // 添加节点
+
+    parser.SaveFile(); // 保存文件
+}
+
+WwiseUtility.ReloadWwiseProject();// 为了使修改生效，避免错误，需要重新加载工程
+
+```
+运行程序后，工程中将会有一个名为"TestContainer"的"SequenceContainer"，其中包含一个名为"TestSound"的空音频，"TestContainer"的Playlist中回包含"TestSound"。
+
 ___
 
 # 作者简介

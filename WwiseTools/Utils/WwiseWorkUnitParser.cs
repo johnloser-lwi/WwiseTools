@@ -21,12 +21,21 @@ namespace WwiseTools.Utils
             Parse(file_path);
         }
 
+        /// <summary>
+        /// 解析文件
+        /// </summary>
+        /// <param name="file_path"></param>
         public void Parse(string file_path)
         {
             filePath = file_path;
             XML.Load(file_path);
         }
 
+        /// <summary>
+        /// 增加xml node至指定对象
+        /// </summary>
+        /// <param name="object"></param>
+        /// <param name="node"></param>
         public void AddToUnit(WwiseObject @object, XmlNode node)
         {
             XmlNodeList list = XML.GetElementsByTagName(@object.Type);
@@ -39,6 +48,9 @@ namespace WwiseTools.Utils
             }
         }
 
+        /// <summary>
+        /// 保存文件
+        /// </summary>
         public void SaveFile()
         {
             XML.Save(filePath);

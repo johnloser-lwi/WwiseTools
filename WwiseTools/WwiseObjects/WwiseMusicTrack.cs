@@ -63,7 +63,10 @@ namespace WwiseTools.Objects
             Type = @object.Type;
         }
 
-
+        /// <summary>
+        /// 获取轨道长度，同步执行
+        /// </summary>
+        /// <returns></returns>
         private async Task<float> GetTrackLength()
         {
             try
