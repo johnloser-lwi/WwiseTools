@@ -794,6 +794,71 @@ namespace WwiseTools.Utils
                 return null;
             }
         }
+
+
+        public static List<WwiseObject> GetWwiseObjectsBySelection()
+        {
+            var get = GetWwiseObjectsBySelectionAsync();
+            get.Wait();
+            return get.Result;
+        }
+        public static async Task<List<WwiseObject>> GetWwiseObjectsBySelectionAsync()
+        {
+            if (!TryConnectWaapi()) return null;
+            try
+            {
+                // ak.wwise.core.@object.get 指令
+                /*var query = new
+                {
+                    from = new
+                    {
+                        ofType = new string[] { target_type }
+                    }
+                };*/
+
+                // ak.wwise.core.@object.get 返回参数设置
+                var options = new
+                {
+
+                    @return = new string[] { "name", "id", "type", "path" }
+
+                };
+
+
+
+                try // 尝试返回物体数据
+                {
+                    JObject jresult = await Client.Call(ak.wwise.ui.getSelectedObjects, null, options);
+
+                    List<WwiseObject> obj_list = new List<WwiseObject>();
+
+                    foreach (var obj in jresult["objects"])
+                    {
+                        string name = obj["name"].ToString();
+                        string id = obj["id"].ToString();
+                        string type = obj["type"].ToString();
+
+                        obj_list.Add(new WwiseObject(name, id, type));
+                    }
+
+
+
+                    Console.WriteLine($"Selected WwiseObject list successfully fetched!");
+
+                    return obj_list;
+                }
+                catch (Wamp.ErrorException e)
+                {
+                    Console.WriteLine($"Failed to return Selected WwiseObject list! ======> {e.Message}");
+                    return null;
+                }
+            }
+            catch (Wamp.ErrorException e)
+            {
+                Console.WriteLine($"Failed to return Selected WwiseObject list! ======> {e.Message}");
+                return null;
+            }
+        }
         
 
 
