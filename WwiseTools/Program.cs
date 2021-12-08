@@ -15,47 +15,45 @@ namespace WwiseTools
     {
         static void Main(string[] args)
         {
+            
+
+            Console.WriteLine("Closing ...");
+            WwiseUtility.Close().Wait();
+        }
+
+        static void Adjust2D3DVolume()
+        {
+            Console.WriteLine("Set Volume:");
+            var volume = Console.ReadLine();
+
             try
             {
-                /*Console.WriteLine("0");
-                WwiseMusicPlaylistContainer container = new WwiseMusicPlaylistContainer("testContainer");
+                var newVolume = float.Parse(volume);
 
-                WwiseMusicSegment seg = new WwiseMusicSegment("TestSegment", container.Path);
-
-                WwiseMusicTrack track = new WwiseMusicTrack("TestTrack", @"D:\BGM\Login\denglu_bpm120_4_4_1.wav", seg, "LoginBGM");
-                Console.WriteLine("1");
-                var subGroup = container.AddPlaylistItemGroup();
-                
-                subGroup.AddChildGroup().AddChildSegment(seg);
-                subGroup.AddChildGroup();
-
-
-                Console.WriteLine("2");*/
-
-                //WwiseMusicSwitchContainer container = new WwiseMusicSwitchContainer("Test");
-                //container.SetContinuePlay(false);
-
-                WwiseSequenceContainer container = new WwiseSequenceContainer("Test");
-
-                WwiseSound sound = new WwiseSound("TestSound");
-                Console.WriteLine("Adding child");
-                container.AddChild(sound);
-
-                Console.WriteLine("Setting up playlist");
-                container.SetPlaylist(sound);
-
-                Console.WriteLine("Reloading...");
-                WwiseUtility.ReloadWwiseProject();
+                var li = WwiseUtility.GetWwiseObjectsBySelection();
+                if (li != null)
+                {
+                    foreach (var wo in li)
+                    {
+                        if (wo == null) continue;
+                        (new WwiseActorMixer(wo)).SetVolume(newVolume);
+                        string counterPartName = wo.Path;
+                        if (counterPartName.Contains("Character 2D"))
+                        {
+                            counterPartName = counterPartName.Replace("Character 2D", "Character 3D");
+                        }
+                        else if (counterPartName.Contains("Character 3D"))
+                        {
+                            counterPartName = counterPartName.Replace("Character 3D", "Character 2D");
+                        }
+                        (new WwiseActorMixer(WwiseUtility.GetWwiseObjectByPath(counterPartName))).SetVolume(newVolume);
+                    }
+                }
             }
             catch (Exception e)
             {
                 Console.WriteLine($"Error running! ======> {e.Message}");
             }
-
-            Console.WriteLine("Closing ...");
-            WwiseUtility.Close().Wait();
-
-            Console.ReadLine();
         }
     }
 }
