@@ -17,6 +17,11 @@ namespace WwiseTools.Properties
             Value = value;
         }
 
+        public WwiseProperty(string name)
+        {
+            Name = name;
+        }
+
         public enum Option_3DPosition { Emitter = 0, EmitterWithAutomation = 1, ListenerWithAutomation = 2 }
         public static WwiseProperty Prop_3DPosition(Option_3DPosition mode)
         {

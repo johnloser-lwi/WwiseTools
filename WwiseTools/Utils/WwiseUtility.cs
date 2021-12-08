@@ -534,6 +534,65 @@ namespace WwiseTools.Utils
             
         }
 
+
+        public static JToken GetWwiseObjectProperty(string target_id, string wwise_property)
+        {
+            var get = GetWwiseObjectPropertyAsync(target_id, wwise_property);
+            get.Wait();
+            return get.Result;
+        }
+
+
+        public static async Task<JToken> GetWwiseObjectPropertyAsync(string target_id, string wwise_property)
+        {
+            if (!TryConnectWaapi() || String.IsNullOrWhiteSpace(target_id)) return null;
+
+            try
+            {
+                // ak.wwise.core.@object.get 指令
+                var query = new
+                {
+                    from = new
+                    {
+                        id = new string[] { target_id }
+                    }
+                };
+
+                // ak.wwise.core.@object.get 返回参数设置
+                var options = new
+                {
+
+                    @return = new string[] { "@"+wwise_property }
+
+                };
+
+                try // 尝试返回物体数据
+                {
+                    JObject jresult = await Client.Call(ak.wwise.core.@object.get, query, options);
+
+                    
+
+                    Console.WriteLine($"WwiseProperty {wwise_property} successfully fetched!");
+
+                    return jresult["return"].Last["@" + wwise_property];
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine($"Failed to return WwiseObject Property : {target_id}! ======> {e.Message}");
+                    return null;
+                }
+            }
+            catch (Wamp.ErrorException e)
+            {
+                Console.WriteLine($"Failed to return WwiseObject Property : {target_id}! ======> {e.Message}");
+                return null;
+            }
+
+        }
+
+
+
+
         /// <summary>
         /// 通过名称与类型检索对象
         /// </summary>

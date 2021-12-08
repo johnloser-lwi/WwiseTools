@@ -15,7 +15,13 @@ namespace WwiseTools
     {
         static void Main(string[] args)
         {
-            
+
+            var obj = WwiseUtility.GetWwiseObjectsBySelection()[0];
+            var bus = WwiseUtility.GetWwiseObjectProperty(obj.ID, "Volume");
+
+            Console.WriteLine(bus);
+
+            Console.ReadLine();
 
             Console.WriteLine("Closing ...");
             WwiseUtility.Close().Wait();
