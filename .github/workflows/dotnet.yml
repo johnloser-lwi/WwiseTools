@@ -12,7 +12,7 @@ jobs:
     runs-on: windows-latest
  
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@master
       name: Checkout Code
      
     - name: Setup MSBuild Path
@@ -24,7 +24,7 @@ jobs:
     - name: Restore NuGet Packages
       run: nuget restore WwiseTools.sln
  
-    - name: Build and Publish Web App
+    - name: Build and Publish
       run: msbuild WwiseTools.sln /p:Configuration=Release /p:DeployOnBuild=true /p:PublishProfile=FolderProfile
  
     - name: Upload Artifact
