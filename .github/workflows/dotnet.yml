@@ -4,11 +4,11 @@ on:
   push:
     branches: [ master ]
     paths-ignore:
-      - '.github/workflows'
+      - '.github/workflows/**'
   pull_request:
     branches: [ master ]
     paths-ignore:
-      - '.github/workflows'
+      - '.github/workflows/**'
 
 jobs:
   build:
