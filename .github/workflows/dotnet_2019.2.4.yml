@@ -3,11 +3,11 @@ name: Build 2019.2.4
 on:
   push:
     branches: [ Wwise_2019.2.4 ]
-    paths-ignore:
+    paths:
       - 'WwiseTools/**'
   pull_request:
     branches: [ Wwise_2019.2.4 ]
-    paths-ignore:
+    paths:
       - 'WwiseTools/**'
 
 jobs:
