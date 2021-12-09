@@ -34,4 +34,5 @@ jobs:
     - name: Upload Artifact
       uses: actions/upload-artifact@v2.3.0
       with:
-        path: D:\a\WwiseTools\WwiseTools\WwiseTools\bin\Debug\
+        name: wwise_tools
+        path: D:\a\WwiseTools\WwiseTools\WwiseTools\bin\Debug\*.dll
