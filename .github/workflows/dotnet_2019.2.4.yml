@@ -1,4 +1,4 @@
-name: .NET
+name: Build 2019.2.4
 
 on:
   push:
