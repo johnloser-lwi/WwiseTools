@@ -15,131 +15,17 @@ namespace WwiseTools.Objects
         public string Name { get; set; }
         public string ID { get; set; }
         public string Type { get; set; }
-        public string Path { get
-            {
-                var get_path = getPath();
-                get_path.Wait(1000);
-                return get_path.Result;
-            }
-        }
+        public string Path { get { return WwiseUtility.GetWwiseObjectPath(ID); } }
 
-        public WwiseObject Parent { get
-            {
-                var get_parent = getParent();
-                get_parent.Wait(1000);
-                return get_parent.Result;
-            }
-        }
-
-        private async Task<string> getPath()
-        {
-            try
-            {
-                // ak.wwise.core.@object.get 指令
-                var query = new
-                {
-                    from = new
-                    {
-                        id = new string[] { ID }
-                    }
-                };
-
-                // ak.wwise.core.@object.get 返回参数设置
-                var options = new
-                {
-
-                    @return = new string[] { "path" }
-
-                };
-
-                JObject jresult = await WwiseUtility.Client.Call(ak.wwise.core.@object.get, query, options);
-
-                try // 尝试返回物体数据
-                {
-
-                    if (jresult["return"].Last["path"] == null) throw new Exception();
-                    string path = jresult["return"].Last["path"].ToString();
-
-                    return path;
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine($"Failed to get path of object : {Name}! =======> {e.Message}");
-                    return null;
-                }
-            }
-            catch (Wamp.ErrorException e)
-            {
-                Console.WriteLine($"Failed to get path of object : {Name}! =======> {e.Message}");
-                return null;
-            }
-            
-        }
-
-        private async Task<WwiseObject> getParent()
-        {
-            try
-            {
-                // ak.wwise.core.@object.get 指令
-                var query = new
-                {
-                    from = new
-                    {
-                        id = new string[] { ID }
-                    }
-                };
-
-                // ak.wwise.core.@object.get 返回参数设置
-                var options = new
-                {
-
-                    @return = new string[] { "parent", "owner" }
-
-                };
-
-                JObject jresult = await WwiseUtility.Client.Call(ak.wwise.core.@object.get, query, options);
-
-                try // 尝试返回物体数据
-                {
-                    if (jresult["return"].Last["parent"] == null)
-                    {
-                        if (jresult["return"].Last["owner"] == null)
-                        {
-                            throw new Exception();
-                        }
-                        else
-                        {
-                            string _id = jresult["return"].Last["owner"]["id"].ToString();
-
-                            return WwiseUtility.GetWwiseObjectByID(_id);
-                        }
-
-                        throw new Exception();
-
-                    }
-                    string id = jresult["return"].Last["parent"]["id"].ToString();
-
-                    return WwiseUtility.GetWwiseObjectByID(id);
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine($"Failed to get parent of object : {Name}! =======> {e.Message}");
-                    return null;
-                }
-            }
-            catch (Wamp.ErrorException e)
-            {
-                Console.WriteLine($"Failed to get sparent of object : {Name}! =======> {e.Message}");
-                return null;
-            }
-
-        }
+        public WwiseObject Parent { get { return WwiseUtility.GetWwiseObjectByPath(Path.Replace(Name, "")); } }
 
         public WwiseObject(string name, string id, string type)
         {
             this.Name = name;
             this.ID = id;
             this.Type = type;
+            //this.Path = WwiseUtility.GetWwiseObjectPath(id);
+           // this.Parent = WwiseUtility.GetWwiseObjectByPath(this.Path.Replace(Name, ""));
         }
 
         public string GetPropertyAndReferenceNames()
