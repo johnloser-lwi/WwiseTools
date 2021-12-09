@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
 using WwiseTools.Utils;
 
 namespace WwiseTools.Objects
@@ -37,6 +38,28 @@ namespace WwiseTools.Objects
         {
             if (wwiseObject == null) return;
             WwiseUtility.MoveToParent(wwiseObject, this);
+        }
+
+        public List<WwiseObject> GetChildren()
+        {
+            List<WwiseObject> result = new List<WwiseObject>();
+
+            WwiseWorkUnitParser parser = new WwiseWorkUnitParser(WwiseUtility.GetWorkUnitFilePath(this));
+            var folders = parser.XML.GetElementsByTagName("Folder");
+            foreach (XmlElement folder in folders)
+            {
+                if (folder.GetAttribute("ID") == ID)
+                {
+                    var children = (folder.GetElementsByTagName("ChildrenList")[0] as XmlElement).ChildNodes;
+                    foreach (XmlElement child in children)
+                    {
+                        result.Add(WwiseUtility.GetWwiseObjectByID(child.GetAttribute("ID")));
+                    }
+                    break;
+                }
+            }
+
+            return result;
         }
     }
 }

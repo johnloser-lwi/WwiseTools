@@ -235,6 +235,7 @@ namespace WwiseTools.Utils
         {
             if(!TryConnectWaapi() || rename_object == null || String.IsNullOrEmpty(new_name)) return;
 
+            string old_name = rename_object.Name;
             try
             {
                 await Client.Call(
@@ -247,12 +248,12 @@ namespace WwiseTools.Utils
 
                 rename_object.Name = new_name;
 
-                Console.WriteLine($"Object {rename_object.Name} successfully renamed to {new_name}!");
+                Console.WriteLine($"Object {old_name} successfully renamed to {new_name}!");
             }
 
             catch (AK.Wwise.Waapi.Wamp.ErrorException e)
             {
-                System.Console.Write($"Failed to rename object : {rename_object.Name} ======> {e.Message}");
+                System.Console.Write($"Failed to rename object : {old_name} ======> {e.Message}");
             }
         }
 
@@ -453,7 +454,7 @@ namespace WwiseTools.Utils
                         new JProperty("name", object_name),
                         new JProperty("type", object_type.ToString()),
                         new JProperty("parent", parent_path),
-                        new JProperty("onNameConflict", "rename")
+                        new JProperty("onNameConflict", "fail")
                     },
                     null
                     );
@@ -465,6 +466,39 @@ namespace WwiseTools.Utils
             {
                 Console.WriteLine($"Failed to create object : {object_name}! ======> {e.Message}");
                 return null;
+            }
+        }
+
+        public static void DeleteObject(string path)
+        {
+            var obj = DeleteObjectAsync(path);
+            obj.Wait();
+        }
+
+        public static async Task DeleteObjectAsync(string path)
+        {
+            if (!TryConnectWaapi()) return;
+
+            try
+            {
+                // 创建物体
+                var result = await Client.Call
+                    (
+                    ak.wwise.core.@object.delete,
+                    new JObject
+                    {
+                        new JProperty("object", path)
+                    },
+                    null
+                    );
+
+                Console.WriteLine($"Object {path} deleted successfully!");
+                return;
+            }
+            catch (Wamp.ErrorException e)
+            {
+                Console.WriteLine($"Failed to delete object : {path}! ======> {e.Message}");
+                return;
             }
         }
 
@@ -591,6 +625,57 @@ namespace WwiseTools.Utils
         }
 
 
+        public static string GetWwiseObjectPath(string ID)
+        {
+            var r = GetWwiseObjectPathAsync(ID);
+            r.Wait();
+            return r.Result;
+        }
+
+        public static async Task<string> GetWwiseObjectPathAsync(string ID)
+        {
+            try
+            {
+                // ak.wwise.core.@object.get 指令
+                var query = new
+                {
+                    from = new
+                    {
+                        id = new string[] { ID }
+                    }
+                };
+
+                // ak.wwise.core.@object.get 返回参数设置
+                var options = new
+                {
+
+                    @return = new string[] { "path" }
+
+                };
+
+
+
+                try // 尝试返回物体数据
+                {
+                    JObject jresult = await WwiseUtility.Client.Call(ak.wwise.core.@object.get, query, options);
+                    if (jresult["return"].Last["path"] == null) throw new Exception();
+                    string path = jresult["return"].Last["path"].ToString();
+
+                    return path;
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine($"Failed to get path of object : {ID}! =======> {e.Message}");
+                    return null;
+                }
+            }
+            catch (Wamp.ErrorException e)
+            {
+                Console.WriteLine($"Failed to get path of object : {ID}! =======> {e.Message}");
+                return null;
+            }
+
+        }
 
 
         /// <summary>
@@ -918,7 +1003,7 @@ namespace WwiseTools.Utils
                 return null;
             }
         }
-        
+
 
 
         /// <summary>
