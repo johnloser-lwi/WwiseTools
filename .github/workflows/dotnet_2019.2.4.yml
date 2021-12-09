@@ -4,11 +4,11 @@ on:
   push:
     branches: [ Wwise_2019.2.4 ]
     paths-ignore:
-      - '.github/workflows/**'
+      - 'WwiseTools/**'
   pull_request:
     branches: [ Wwise_2019.2.4 ]
     paths-ignore:
-      - '.github/workflows/**'
+      - 'WwiseTools/**'
 
 jobs:
   build:
