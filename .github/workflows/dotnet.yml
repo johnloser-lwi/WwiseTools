@@ -29,9 +29,9 @@ jobs:
       run: nuget restore WwiseTools.sln
  
     - name: Build and Publish
-      run: msbuild WwiseTools.sln /p:Configuration=Release /p:DeployOnBuild=true /p:PublishProfile=FolderProfile
+      run: msbuild WwiseTools.sln
  
     - name: Upload Artifact
       uses: actions/upload-artifact@v2.3.0
       with:
-        path: bin\Release\Publish
+        path: bin\Debug
