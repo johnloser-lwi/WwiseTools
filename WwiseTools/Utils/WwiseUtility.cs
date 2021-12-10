@@ -68,7 +68,7 @@ namespace WwiseTools.Utils
         /// 尝试连接并检查连接状态
         /// </summary>
         /// <returns></returns>
-        private static bool TryConnectWaapi() 
+        public static bool TryConnectWaapi() 
         {
             var connected = Init();
             connected.Wait();
@@ -501,6 +501,8 @@ namespace WwiseTools.Utils
                 return;
             }
         }
+
+
 
         /// <summary>
         /// 通过ID搜索物体
