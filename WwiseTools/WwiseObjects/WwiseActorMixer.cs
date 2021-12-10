@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
 using WwiseTools.Objects;
 using WwiseTools.Properties;
 using WwiseTools.Reference;
@@ -285,6 +286,29 @@ namespace WwiseTools.Objects
         public void SetLimitReachedBehavior(WwiseProperty.Option_OverLimitBehavior behavior = WwiseProperty.Option_OverLimitBehavior.KillVoice)
         {
             WwiseUtility.SetObjectProperty(this, WwiseProperty.Prop_OverLimitBehavior(behavior));
+        }
+
+
+        public List<WwiseObject> GetChildren()
+        {
+            List<WwiseObject> result = new List<WwiseObject>();
+
+            WwiseWorkUnitParser parser = new WwiseWorkUnitParser(WwiseUtility.GetWorkUnitFilePath(this));
+            var actor_mixer = parser.XML.GetElementsByTagName(Type);
+            foreach (XmlElement folder in actor_mixer)
+            {
+                if (folder.GetAttribute("ID") == ID)
+                {
+                    var children = (folder.GetElementsByTagName("ChildrenList")[0] as XmlElement).ChildNodes;
+                    foreach (XmlElement child in children)
+                    {
+                        result.Add(WwiseUtility.GetWwiseObjectByID(child.GetAttribute("ID")));
+                    }
+                    break;
+                }
+            }
+
+            return result;
         }
     }
 }
