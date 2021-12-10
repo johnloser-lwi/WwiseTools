@@ -1,4 +1,6 @@
-﻿using System;
+﻿using AK.Wwise.Waapi;
+using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -80,6 +82,61 @@ namespace WwiseTools.Objects
             WwiseUtility.SetObjectProperty(this, WwiseProperty.Prop_IsStreamingEnabled(stream));
             WwiseUtility.SetObjectProperty(this, WwiseProperty.Prop_IsNonCachable(non_cachable));
             WwiseUtility.SetObjectProperty(this, WwiseProperty.Prop_IsZeroLantency(zero_latency));
+        }
+
+        public string[] GetWavSourceFilePath()
+        {
+            var r = GetWavFilePathAsync();
+            r.Wait();
+            List<string> paths = new List<string>();
+            foreach (var result in r.Result["return"].Last)
+            {
+                paths.Add(result.Last.ToString());
+            }
+            return paths.ToArray();
+        }
+
+        public  async Task<JObject> GetWavFilePathAsync()
+        {
+            if (!WwiseUtility.TryConnectWaapi()) return null;
+
+            try
+            {
+                // ak.wwise.core.@object.get 指令
+                var query = new
+                {
+                    from = new
+                    {
+                        id = new string[] { ID }
+                    }
+                };
+
+                // ak.wwise.core.@object.get 返回参数设置
+                var options = new
+                {
+
+                    @return = new string[] { "sound:originalWavFilePath" }
+
+                };
+
+                try // 尝试返回物体数据
+                {
+                    JObject jresult = await WwiseUtility.Client.Call(ak.wwise.core.@object.get, query, options);
+
+                    return jresult;
+                }
+                catch
+                {
+                    Console.WriteLine($"Failed to return WaveFilePath from ID : {ID}!");
+                    return null;
+                }
+            }
+            catch (Wamp.ErrorException e)
+            {
+                Console.WriteLine($"Failed to return WaveFilePath from ID : {ID}! ======> {e.Message}");
+                return null;
+            }
+
         }
 
     }

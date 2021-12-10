@@ -36,6 +36,13 @@ namespace WwiseTools.Objects
             Type = @object.Type;
         }
 
+        public WwiseProperty.Option_RandomOrSequence GetPlayType()
+        {
+            var result = WwiseUtility.GetWwiseObjectProperty(ID, "RandomOrSequence").ToString();
+
+            return (WwiseProperty.Option_RandomOrSequence)int.Parse(result);
+        }
+
 
         /// <summary>
         /// 设置序列的范围为全局或者对象
