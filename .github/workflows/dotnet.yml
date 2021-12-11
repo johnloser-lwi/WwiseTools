@@ -1,6 +1,8 @@
 name: Build Master
 
-on:
+on: 
+  workflow_dispatch:
+  
   push:
     branches: [ master ]
     paths:
