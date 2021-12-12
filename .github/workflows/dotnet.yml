@@ -9,7 +9,7 @@ on:
       - 'WwiseTools/**'
   pull_request:
     branches: [ master ]
-    paths-ignore:
+    paths:
       - 'WwiseTools/**'
 
 jobs:
