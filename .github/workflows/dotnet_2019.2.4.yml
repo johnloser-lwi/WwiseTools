@@ -1,6 +1,7 @@
 name: Build 2019.2.4
 
 on:
+  workflow_dispatch:
   push:
     branches: [ Wwise_2019.2.4 ]
     paths:
