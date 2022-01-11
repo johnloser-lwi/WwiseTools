@@ -76,6 +76,11 @@ namespace WwiseTools.Utils
             return connected.Result;
         }
 
+        public static string NewGUID()
+        {
+            return $"{{{Guid.NewGuid().ToString().ToUpper()}}}";
+        }
+
         /// <summary>
         /// 获取属性、引用名称
         /// </summary>
