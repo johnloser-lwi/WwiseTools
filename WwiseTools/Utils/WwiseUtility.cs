@@ -76,6 +76,11 @@ namespace WwiseTools.Utils
             return connected.Result;
         }
 
+        public static string NewGUID()
+        {
+            return $"{{{Guid.NewGuid().ToString().ToUpper()}}}";
+        }
+
         /// <summary>
         /// 获取属性、引用名称
         /// </summary>
@@ -1255,6 +1260,73 @@ namespace WwiseTools.Utils
             var get = GetWwiseProjectPathAsync();
             get.Wait();
             return get.Result;
+        }
+        
+        /// <summary>
+        /// 获取工程名称
+        /// </summary>
+        /// <returns></returns>
+        public static string GetWwiseProjectName()
+        {
+            var get = GetWwiseProjectNameAsync();
+            get.Wait();
+            return get.Result;
+        }
+
+        /// <summary>
+        /// 获取工程名称，同步执行
+        /// </summary>
+        /// <returns></returns>
+        public static async Task<string> GetWwiseProjectNameAsync()
+        {
+            if (!TryConnectWaapi()) return null;
+
+            try
+            {
+                // ak.wwise.core.@object.get 指令
+                var query = new
+                {
+                    from = new
+                    {
+                        ofType = new string[] { "Project" }
+                    }
+                };
+
+                // ak.wwise.core.@object.get 返回参数设置
+                var options = new
+                {
+
+                    @return = new string[] { "name" }
+
+                };
+
+
+
+                try // 尝试返回物体数据
+                {
+                    JObject jresult = await Client.Call(ak.wwise.core.@object.get, query, options);
+
+                    string name = "";
+                    foreach (var obj in jresult["return"])
+                    {
+                        name = obj["name"].ToString();
+                    }
+
+                    Console.WriteLine($"Project name successfully fetched!");
+
+                    return name;
+                }
+                catch (Wamp.ErrorException e)
+                {
+                    Console.WriteLine($"Failed to return project name! ======> {e.Message}");
+                    return null;
+                }
+            }
+            catch (Wamp.ErrorException e)
+            {
+                Console.WriteLine($"Failed to return project name! ======> {e.Message}");
+                return null;
+            }
         }
 
         /// <summary>

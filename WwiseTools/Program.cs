@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using WwiseTools.Utils;
 using System.IO;
+using System.Xml;
 using WwiseTools.Properties;
 using WwiseTools.Reference;
 using WwiseTools.Objects;
@@ -13,53 +14,275 @@ namespace WwiseTools
 {
     class Program
     {
+
+        
+
+        [STAThread]
         static void Main(string[] args)
         {
-
-            var obj = WwiseUtility.GetWwiseObjectsBySelection()[0];
-            var bus = WwiseUtility.GetWwiseObjectProperty(obj.ID, "Volume");
-
-            Console.WriteLine(bus);
-
-            Console.ReadLine();
-
-            Console.WriteLine("Closing ...");
+            CopyRTPC();
             WwiseUtility.Close().Wait();
+            
+            Console.WriteLine("Operation completed! Press Enter to exit ...");
+            Console.ReadLine();
         }
 
-        static void Adjust2D3DVolume()
+
+        static void CopyRTPC()
         {
-            Console.WriteLine("Set Volume:");
-            var volume = Console.ReadLine();
+            WwiseUtility.Init().Wait();
+            
+            string[] rtpcProperties = new[] {"EnableAttenuation", "Highpass", "Lowpass", "Volume", "Priority" };
+            string[] interestActorMixer = new[] {"Attack", "Explosion", "Motion", "Pre-Explosion"};
 
-            try
+            Console.WriteLine("Available RTPC properties: ");
+            string rtpcs = "";
+            foreach (var rtpcProperty in rtpcProperties)
             {
-                var newVolume = float.Parse(volume);
+                rtpcs += rtpcProperty + " ";
+            }
+            Console.WriteLine(rtpcs);
+            string newProp = Console.ReadLine();
+            if (!string.IsNullOrEmpty(newProp))
+            {
+                rtpcProperties = newProp.Split(' ');
+            }
+            
+            Console.WriteLine("Available ActorMixers: ");
+            string mixers = "";
+            foreach (var mixer in interestActorMixer)
+            {
+                mixers += mixer + " ";
 
-                var li = WwiseUtility.GetWwiseObjectsBySelection();
-                if (li != null)
+            }
+            Console.WriteLine(mixers);
+            string newMixer = Console.ReadLine();
+            if (!string.IsNullOrEmpty(newMixer))
+            {
+                interestActorMixer = newMixer.Split(' ');
+            }
+
+            var targetProperties = new Dictionary<string, XmlElement>();
+
+            var obj = WwiseUtility.GetWwiseObjectsBySelection()[0];
+            
+            Console.WriteLine("Parsing RTPC settings ...");
+           
+            {
+                var wu = WwiseUtility.GetWorkUnitFilePath(obj);
+                WwiseWorkUnitParser parser = new WwiseWorkUnitParser(wu);
+                var actorMixers = parser.XML.GetElementsByTagName("ActorMixer");
+                foreach (XmlElement actorMixer in actorMixers)
                 {
-                    foreach (var wo in li)
+                    if (!interestActorMixer.Contains(actorMixer.GetAttribute("Name"))) continue;
+                    
+                    //Console.WriteLine(actorMixer.GetAttribute("Name"));
+                    
+                    var properties = actorMixer.GetElementsByTagName("Property");
+                    foreach (XmlElement property in properties)
                     {
-                        if (wo == null) continue;
-                        (new WwiseActorMixer(wo)).SetVolume(newVolume);
-                        string counterPartName = wo.Path;
-                        if (counterPartName.Contains("Character 2D"))
+                        if (rtpcProperties.Contains(property.GetAttribute("Name")))
                         {
-                            counterPartName = counterPartName.Replace("Character 2D", "Character 3D");
+                            var list = property.GetElementsByTagName("RTPCList");
+                            
+                            if (list.Count > 0)
+                            {
+                                targetProperties.Add(actorMixer.GetAttribute("Name") + property.GetAttribute("Name"), list[0] as XmlElement);
+                                //Console.WriteLine(property.GetAttribute("Name"));
+                                //Console.WriteLine(list[0].InnerXml);
+                            }
+                                
                         }
-                        else if (counterPartName.Contains("Character 3D"))
-                        {
-                            counterPartName = counterPartName.Replace("Character 3D", "Character 2D");
-                        }
-                        (new WwiseActorMixer(WwiseUtility.GetWwiseObjectByPath(counterPartName))).SetVolume(newVolume);
                     }
                 }
             }
-            catch (Exception e)
+
+            Console.WriteLine("Please select targets and press Enter ...");
+            Console.ReadLine();
+            
+            Console.WriteLine("Copying RTPC Settings ...");
+            var targets = WwiseUtility.GetWwiseObjectsBySelection();
+            foreach (var target in targets)
             {
-                Console.WriteLine($"Error running! ======> {e.Message}");
+                var wu = WwiseUtility.GetWorkUnitFilePath(target);
+                WwiseWorkUnitParser parser = new WwiseWorkUnitParser(wu);
+                var actorMixers = parser.XML.GetElementsByTagName("ActorMixer");
+                foreach (XmlElement actorMixer in actorMixers)
+                {
+                    if (!interestActorMixer.Contains(actorMixer.GetAttribute("Name"))) continue;
+                    
+                    //Console.WriteLine(actorMixer.GetAttribute("Name"));
+                    
+                    var properties = actorMixer.GetElementsByTagName("Property");
+                    for (int i = 0; i < properties.Count; i++)
+                    {
+                        XmlElement property = properties[i] as XmlElement;;
+                        if (rtpcProperties.Contains(property.GetAttribute("Name")))
+                        {
+                            var list = property.GetElementsByTagName("RTPCList");
+                            
+                            
+                            if (list.Count > 0)
+                            {
+                                var newNode = property.InsertAfter(parser.XML.ImportNode(
+                                    targetProperties[actorMixer.GetAttribute("Name") + property.GetAttribute("Name")],
+                                    true), list[0]);
+                                
+                                SetNewGUIDRecursively(newNode as XmlElement);
+
+                                property.RemoveChild(list[0]);
+                            }
+                                
+                        }
+                    }
+                    
+                    
+                }
+                
+                parser.SaveFile();
             }
+
+        }
+
+        static void SetNewGUIDRecursively(XmlElement node)
+        {
+            foreach (XmlElement child in node.GetElementsByTagName("RTPC"))
+            {
+                child.SetAttribute("ID", WwiseUtility.NewGUID());
+                child.SetAttribute("ShortID", Math.Abs(child.GetHashCode()).ToString());
+                foreach (XmlElement curve in child.GetElementsByTagName("Curve"))
+                {
+                    curve.SetAttribute("ID", WwiseUtility.NewGUID());
+                }
+            }
+        }
+
+        static void MoveToWorkUnit()
+        {
+            var obj = WwiseUtility.GetWwiseObjectsBySelection();
+
+            foreach (var wo in obj)
+            {
+                string name = wo.Name;
+                //Console.WriteLine(wo.Path);
+                var wu = WwiseUtility.CreateObject(wo.Name + "_", WwiseObject.ObjectType.WorkUnit, wo.Parent.Path);
+
+                WwiseUtility.MoveToParent(wo, wu);
+
+                WwiseUtility.SaveWwiseProject();
+            }
+
+            WwiseUtility.Close().Wait();
+        }
+
+
+        static void MoveOutOfFolder()
+        {
+            WwiseUtility.SaveWwiseProject();
+            var obj = WwiseUtility.GetWwiseObjectsBySelection();
+
+            foreach (var wo in obj)
+            {
+                if (wo.Type == WwiseObject.ObjectType.Folder.ToString())
+                {
+                    //Console.WriteLine(wo.Path);
+                    var children = new WwiseFolder(wo).GetChildren();
+                    foreach (var child in children)
+                    {
+                        WwiseUtility.MoveToParent(child, wo.Parent);
+                    }
+                    WwiseUtility.DeleteObject(wo.Path);
+                    WwiseUtility.SaveWwiseProject();
+                }
+            }
+
+            WwiseUtility.Close().Wait();
+        }
+
+        static void ChangeFolderToActorMixer()
+        {
+            WwiseUtility.SaveWwiseProject();
+
+            var obj = WwiseUtility.GetWwiseObjectsBySelection();
+
+            foreach (var wo in obj)
+            {
+                if (wo.Type == WwiseObject.ObjectType.Folder.ToString())
+                {
+                    //if (wo.Parent.Type == WwiseObject.ObjectType.Folder.ToString()) continue;
+                    //Console.WriteLine(wo.Path);
+                    var am = WwiseUtility.CreateObject(wo.Name + "_", WwiseObject.ObjectType.ActorMixer, wo.Parent.Path);
+                    var children = new WwiseFolder(wo).GetChildren();
+                    foreach (var child in children)
+                    {
+                        WwiseUtility.MoveToParent(child, am);
+                    }
+                    WwiseUtility.DeleteObject(wo.Path);
+                    WwiseUtility.ChangeObjectName(am, am.Name.Substring(0, am.Name.Length - 1));
+
+                    WwiseUtility.SaveWwiseProject();
+                }
+            }
+
+            WwiseUtility.Close().Wait();
+        }
+
+
+        static void AddPrefix()
+        {
+            WwiseUtility.SaveWwiseProject();
+
+            var obj = WwiseUtility.GetWwiseObjectsBySelection();
+
+            Console.WriteLine("Enter Prefix:\n");
+
+            string prefix = Console.ReadLine();
+
+            foreach (var wo in obj)
+            {
+                WwiseUtility.ChangeObjectName(wo, prefix + wo.Name);
+            }
+
+            WwiseUtility.Close().Wait();
+        }
+
+        static void ChangeFolderToWorkUnit()
+        {
+            WwiseUtility.SaveWwiseProject();
+
+            var obj = WwiseUtility.GetWwiseObjectsBySelection();
+
+            foreach (var wo in obj)
+            {
+                if (wo.Type == WwiseObject.ObjectType.Folder.ToString())
+                {
+                    string project_path = WwiseUtility.GetWwiseProjectPath();
+                    string wo_path = wo.Path;
+                    string wwu_path = project_path.Replace($"{WwiseUtility.GetWwiseProjectName()}.wproj", "") + wo_path.Split(new char[] { '\\', '\\'})[1] + "\\" + wo.Name + ".wwu";
+                    if (File.Exists(wwu_path))
+                    {
+                        Console.WriteLine($"\n" +
+                            $"File {wwu_path} already exists! Please remove or rename it first!\nPress \'Enter\' to continue ...");
+                        Console.ReadLine();
+                        continue;
+                    }
+                    string origin_name = wo.Name;
+                    WwiseUtility.ChangeObjectName(wo, wo.Name+"_");
+                    //if (wo.Parent.Type == WwiseObject.ObjectType.Folder.ToString()) continue;
+                    //Console.WriteLine(wo.Path);
+                    var wu = WwiseUtility.CreateObject(origin_name, WwiseObject.ObjectType.WorkUnit, wo.Parent.Path);
+                    var children = new WwiseFolder(wo).GetChildren();
+                    foreach (var child in children)
+                    {
+                        WwiseUtility.MoveToParent(child, wu);
+                    }
+                    WwiseUtility.DeleteObject(wo.Path);
+
+                    WwiseUtility.SaveWwiseProject();
+                }
+            }
+
+            WwiseUtility.Close().Wait();
         }
     }
 }
