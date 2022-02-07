@@ -186,6 +186,22 @@ namespace WwiseTools.Objects
             WwiseUtility.SetObjectProperty(this, WwiseProperty.Prop_OutputBusHighpass(high_pass));
             WwiseUtility.SetObjectReference(this, WwiseReference.Ref_OutputBus(WwiseUtility.GetWwiseObjectByName($"Bus:{bus_name}")));
         }
+        
+        /// <summary>
+        /// 设置输出总线
+        /// </summary>
+        /// <param name="bus_name"></param>
+        /// <param name="volume"></param>
+        /// <param name="low_pass"></param>
+        /// <param name="high_pass"></param>
+        public void SetOutputBus(WwiseObject bus, float volume = 0, uint low_pass = 0, uint high_pass = 0)
+        {
+            WwiseUtility.SetObjectProperty(this, WwiseProperty.Prop_OverrideOutput(true));
+            WwiseUtility.SetObjectProperty(this, WwiseProperty.Prop_OutputBusVolume(volume));
+            WwiseUtility.SetObjectProperty(this, WwiseProperty.Prop_OutputBusLowpass(low_pass));
+            WwiseUtility.SetObjectProperty(this, WwiseProperty.Prop_OutputBusHighpass(high_pass));
+            WwiseUtility.SetObjectReference(this, WwiseReference.Ref_OutputBus(bus));
+        }
 
         /// <summary>
         /// 设置转码预制
