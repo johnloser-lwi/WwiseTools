@@ -24,10 +24,11 @@ namespace WwiseTools.Utils
         /// <returns></returns>
         public static async Task<bool> Init() // 初始化，返回连接状态
         {
-            if (Client != null) return Client.IsConnected();
+            if (Client != null && Client.IsConnected()) return true;
 
             try
             {
+                
                 Client = new JsonClient();
                 await Client.Connect(); // 尝试创建Wwise连接
 
@@ -35,6 +36,7 @@ namespace WwiseTools.Utils
 
                 Client.Disconnected += () =>
                 {
+                    Client = null;
                     System.Console.WriteLine("Connection closed!"); // 丢失连接提示
                 };
                 return true;
@@ -73,7 +75,7 @@ namespace WwiseTools.Utils
             var connected = Init();
             connected.Wait();
 
-            return connected.Result;
+            return connected.Result && Client.IsConnected();
         }
 
         public static string NewGUID()
