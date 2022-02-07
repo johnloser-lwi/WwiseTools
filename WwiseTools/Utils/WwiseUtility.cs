@@ -76,6 +76,11 @@ namespace WwiseTools.Utils
             return connected.Result;
         }
 
+        public static string NewGUID()
+        {
+            return $"{{{Guid.NewGuid().ToString().ToUpper()}}}";
+        }
+
         /// <summary>
         /// 获取属性、引用名称
         /// </summary>
@@ -262,6 +267,91 @@ namespace WwiseTools.Utils
         /// </summary>
         /// <param name="child"></param>
         /// <param name="parent"></param>
+        public static WwiseObject CopyToParent(WwiseObject child, WwiseObject parent)
+        {
+            if (!TryConnectWaapi() || child == null || parent == null) return null;
+
+            var copy = CopyToParentAsync(child, parent);
+            copy.Wait();
+            return copy.Result;
+        }
+
+        /// <summary>
+        /// 将物体移动至指定父物体，后台进行
+        /// </summary>
+        /// <param name="child"></param>
+        /// <param name="parent"></param>
+        /// <returns></returns>
+        public static async Task<WwiseObject> CopyToParentAsync(WwiseObject child, WwiseObject parent)
+        {
+            if (!TryConnectWaapi() || child == null || parent == null) return null;
+
+            try
+            {
+                // 移动物体
+                await Client.Call(
+                    ak.wwise.core.@object.copy,
+                    new JObject
+                    {
+                        new JProperty("object", child.ID),
+                        new JProperty("parent", parent.ID),
+                        new JProperty("onNameConflict", "rename")
+                    }
+                    );
+
+                // ak.wwise.core.@object.get 指令
+                var query = new
+                {
+                    from = new
+                    {
+                        id = new string[] { child.ID }
+                    }
+                };
+
+                // ak.wwise.core.@object.get 返回参数设置
+                var options = new
+                {
+
+                    @return = new string[] { "name", "id", "type"}
+
+                };
+
+                // 获取子物体的新数据
+                JObject jresult = await Client.Call(ak.wwise.core.@object.get, query, options);
+
+                /*
+                try // 尝试更新子物体数据
+                {
+                    child.Name = jresult["return"].Last["name"].ToString();
+                    child.ID = jresult["return"].Last["id"].ToString();
+                    child.Type = jresult["return"].Last["type"].ToString();
+
+                    Console.WriteLine($"Moved {child.Name} to {parent.Path}!");
+                }
+                catch (Wamp.ErrorException e)
+                {
+                    Console.WriteLine($"Failed to update WwiseObject! ======> {e.Message}");
+                }
+                */
+
+                Console.WriteLine($"Copied {child.Name} to {parent.Name}!");
+
+                return GetWwiseObjectByID(jresult["return"].Last["id"].ToString());
+            }
+            catch (Wamp.ErrorException e)
+            {
+                Console.WriteLine($"Failed to copy {child.Name} to {parent.Name}! ======> {e.Message}");
+            }
+
+            return null;
+        }
+        
+        
+        /// <summary>
+        /// 将物体复制至指定父物体
+        /// </summary>
+        /// <param name="child"></param>
+        /// <param name="parent"></param>
         public static void MoveToParent(WwiseObject child, WwiseObject parent)
         {
             if (!TryConnectWaapi() || child == null || parent == null) return;
@@ -271,7 +361,7 @@ namespace WwiseTools.Utils
         }
 
         /// <summary>
-        /// 将物体移动至指定父物体，后台进行
+        /// 将物体复制至指定父物体，后台进行
         /// </summary>
         /// <param name="child"></param>
         /// <param name="parent"></param>
@@ -1255,6 +1345,73 @@ namespace WwiseTools.Utils
             var get = GetWwiseProjectPathAsync();
             get.Wait();
             return get.Result;
+        }
+        
+        /// <summary>
+        /// 获取工程名称
+        /// </summary>
+        /// <returns></returns>
+        public static string GetWwiseProjectName()
+        {
+            var get = GetWwiseProjectNameAsync();
+            get.Wait();
+            return get.Result;
+        }
+
+        /// <summary>
+        /// 获取工程名称，同步执行
+        /// </summary>
+        /// <returns></returns>
+        public static async Task<string> GetWwiseProjectNameAsync()
+        {
+            if (!TryConnectWaapi()) return null;
+
+            try
+            {
+                // ak.wwise.core.@object.get 指令
+                var query = new
+                {
+                    from = new
+                    {
+                        ofType = new string[] { "Project" }
+                    }
+                };
+
+                // ak.wwise.core.@object.get 返回参数设置
+                var options = new
+                {
+
+                    @return = new string[] { "name" }
+
+                };
+
+
+
+                try // 尝试返回物体数据
+                {
+                    JObject jresult = await Client.Call(ak.wwise.core.@object.get, query, options);
+
+                    string name = "";
+                    foreach (var obj in jresult["return"])
+                    {
+                        name = obj["name"].ToString();
+                    }
+
+                    Console.WriteLine($"Project name successfully fetched!");
+
+                    return name;
+                }
+                catch (Wamp.ErrorException e)
+                {
+                    Console.WriteLine($"Failed to return project name! ======> {e.Message}");
+                    return null;
+                }
+            }
+            catch (Wamp.ErrorException e)
+            {
+                Console.WriteLine($"Failed to return project name! ======> {e.Message}");
+                return null;
+            }
         }
 
         /// <summary>
