@@ -269,13 +269,12 @@ namespace WwiseTools.Utils
         /// </summary>
         /// <param name="child"></param>
         /// <param name="parent"></param>
-        public static WwiseObject CopyToParent(WwiseObject child, WwiseObject parent)
+        public static void CopyToParent(WwiseObject child, WwiseObject parent)
         {
-            if (!TryConnectWaapi() || child == null || parent == null) return null;
+            if (!TryConnectWaapi() || child == null || parent == null) return;
 
             var copy = CopyToParentAsync(child, parent);
             copy.Wait();
-            return copy.Result;
         }
 
         /// <summary>
@@ -284,9 +283,9 @@ namespace WwiseTools.Utils
         /// <param name="child"></param>
         /// <param name="parent"></param>
         /// <returns></returns>
-        public static async Task<WwiseObject> CopyToParentAsync(WwiseObject child, WwiseObject parent)
+        public static async Task CopyToParentAsync(WwiseObject child, WwiseObject parent)
         {
-            if (!TryConnectWaapi() || child == null || parent == null) return null;
+            if (!TryConnectWaapi() || child == null || parent == null) return;
 
             try
             {
@@ -338,14 +337,14 @@ namespace WwiseTools.Utils
 
                 Console.WriteLine($"Copied {child.Name} to {parent.Name}!");
 
-                return GetWwiseObjectByID(jresult["return"].Last["id"].ToString());
+                //return GetWwiseObjectByID(jresult["return"].Last["id"].ToString());
             }
             catch (Wamp.ErrorException e)
             {
                 Console.WriteLine($"Failed to copy {child.Name} to {parent.Name}! ======> {e.Message}");
             }
 
-            return null;
+            //return null;
         }
         
         
