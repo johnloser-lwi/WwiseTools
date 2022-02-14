@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using Newtonsoft.Json.Linq;
 
 using AK.Wwise.Waapi;
@@ -1098,6 +1100,59 @@ namespace WwiseTools.Utils
         }
 
 
+        public static List<string> GetLanguages()
+        {
+            var result = GetLanguagesAsync();
+            result.Wait();
+            return result.Result;
+        }
+        
+        public static async Task<List<string>> GetLanguagesAsync()
+        {
+            if (!TryConnectWaapi()) return null;
+
+            List<string> resultList = new List<string>();
+            
+            try // 尝试返回物体数据
+            {
+                var query = new
+                {
+                    from = new
+                    {
+                        ofType = new string[]
+                        {
+                            "Language"
+                        }
+                    }
+                };
+
+                var options = new
+                {
+
+                    @return = new string[] { "name", "id" }
+
+                };
+
+                var result = await Client.Call(ak.wwise.core.@object.get, query, options);
+
+                foreach (var r in result["return"])
+                {
+                    string name = r["name"].ToString();
+                    var ignoreList = new string[] {"Mixed", "SFX", "External", "SoundSeed Grain"};
+                    if (!ignoreList.Contains(name))
+                        resultList.Add(name);
+                }
+
+                Console.WriteLine($"Language list fetched successfully!");
+                
+            }
+            catch (Wamp.ErrorException e)
+            {
+                Console.WriteLine($"Failed to return language list! ======> {e.Message}");
+            }
+
+            return resultList;
+        }
 
         /// <summary>
         /// 从指定文件夹导入音频
@@ -1146,9 +1201,9 @@ namespace WwiseTools.Utils
         /// <param name="work_unit"></param>
         /// <param name="hierarchy"></param>
         /// <returns></returns>
-        public static WwiseObject ImportSound(string file_path, string language = "SFX", string sub_folder = "", string parent_path = @"\Actor-Mixer Hierarchy\Default Work Unit") // 直接调用的版本
+        public static WwiseObject ImportSound(string file_path, string language = "SFX", string sub_folder = "", string parent_path = @"\Actor-Mixer Hierarchy\Default Work Unit", string sound_name = "") // 直接调用的版本
         {
-            Task<WwiseObject> obj = WwiseUtility.ImportSoundAsync(file_path, language, sub_folder, parent_path);
+            Task<WwiseObject> obj = WwiseUtility.ImportSoundAsync(file_path, language, sub_folder, parent_path, sound_name);
             obj.Wait();
             return obj.Result;
         }
@@ -1163,19 +1218,28 @@ namespace WwiseTools.Utils
         /// <param name="work_unit"></param>
         /// <param name="hierarchy"></param>
         /// <returns></returns>
-        public static async Task<WwiseObject> ImportSoundAsync(string file_path, string language = "SFX", string subFolder = "", string parent_path = @"\Actor-Mixer Hierarchy\Default Work Unit") // Async版本
+        public static async Task<WwiseObject> ImportSoundAsync(string file_path, string language = "SFX", string subFolder = "", string parent_path = @"\Actor-Mixer Hierarchy\Default Work Unit", string sound_name = "") // Async版本
         {
             if (!file_path.EndsWith(".wav") || !TryConnectWaapi()) return null; // 目标不是文件或者没有成功连接时返回空的WwiseObject
-
+            
+            
+            
             string file_name = "";
-            try
+            if (!string.IsNullOrEmpty(sound_name))
             {
-                file_name = Path.GetFileName(file_path).Replace(".wav", ""); // 尝试获取文件名
+                file_name = sound_name;
             }
-            catch (IOException e)
+            else
             {
-                Console.WriteLine($"Failed to get file name from { file_path } ======> { e.Message }");
-                return null;
+                try
+                {
+                    file_name = Path.GetFileName(file_path).Replace(".wav", ""); // 尝试获取文件名
+                }
+                catch (IOException e)
+                {
+                    Console.WriteLine($"Failed to get file name from { file_path } ======> { e.Message }");
+                    return null;
+                }
             }
 
             try
@@ -1293,7 +1357,10 @@ namespace WwiseTools.Utils
         /// </summary>
         public static void ReloadWwiseProject()
         {
+            
             LoadWwiseProject(GetWwiseProjectPath(), true);
+            Client = null;
+            Init().Wait();
         }
 
         /// <summary>
