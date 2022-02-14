@@ -20,6 +20,15 @@ namespace WwiseTools.Utils
     {
         public static JsonClient Client { get; set; }
 
+        public enum GlobalImportSettings
+        {
+            useExisting,
+            replaceExisting,
+            createNew
+        }
+
+        public static GlobalImportSettings ImportSettings = GlobalImportSettings.useExisting;
+
         /// <summary>
         /// 连接初始化
         /// </summary>
@@ -1246,7 +1255,7 @@ namespace WwiseTools.Utils
             {
                 var import_q = new JObject // 导入配置
                 {
-                    new JProperty("importOperation", "useExisting"),
+                    new JProperty("importOperation", ImportSettings.ToString()),
                     
                     new JProperty("default", new JObject
                     {
@@ -1272,6 +1281,8 @@ namespace WwiseTools.Utils
 
                 var result = await Client.Call(ak.wwise.core.audio.import, import_q, options); // 执行导入
 
+                if (result == null || result["objects"] == null || result["objects"].Last == null || result["objects"].Last["id"] == null) return null;
+                
                 Console.WriteLine($"File {file_path} imported successfully!");
 
                 return await GetWwiseObjectByIDAsync(result["objects"].Last["id"].ToString());
