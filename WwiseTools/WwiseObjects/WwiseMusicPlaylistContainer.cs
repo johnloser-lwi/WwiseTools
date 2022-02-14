@@ -62,7 +62,7 @@ namespace WwiseTools.Objects
             {
                 var item = new WwiseMusicPlaylistItem(segment, root_item.ID);
 
-                WwiseUtility.ReloadWwiseProject();
+                //WwiseUtility.ReloadWwiseProject();
 
                 return item;
             }
