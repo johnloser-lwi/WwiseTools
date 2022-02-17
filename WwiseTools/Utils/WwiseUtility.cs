@@ -520,6 +520,42 @@ namespace WwiseTools.Utils
             }
         }
 
+        public static void AddEventToBank(WwiseObject soundBank, string eventID)
+        {
+            var r = AddEventToBankAsync(soundBank, eventID);
+            r.Wait();
+        }
+
+        public static async Task AddEventToBankAsync(WwiseObject soundBank, string eventID)
+        {
+            if (!TryConnectWaapi()) return;
+
+            try
+            {
+                await Client.Call
+                (
+                    ak.wwise.core.soundbank.setInclusions,
+                    new JObject
+                    {
+                        new JProperty("soundbank", soundBank.ID),
+                        new JProperty("operation", "add"),
+                        new JProperty("inclusions", new JArray
+                        {
+                            new JObject
+                            {
+                                new JProperty("object", eventID),
+                                new JProperty("filter", new JArray("events", "structures", "media"))
+                            }
+                        })
+                    }
+                );
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Failed to Add Event to Bank ======> {e.Message}");
+            }
+        }
+
         /// <summary>
         /// 创建物体
         /// </summary>
