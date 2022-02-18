@@ -453,7 +453,7 @@ namespace WwiseTools.Utils
         public static WwiseObject CreatePlayEvent(string event_name, WwiseObject wwiseObject, string parent_path = @"\Events\Default Work Unit")
         {
             if (!TryConnectWaapi()) return null;
-            var evt = CreatePlayEventAsync(event_name, wwiseObject.Path, parent_path);
+            var evt = AddEventActionAsync(event_name, wwiseObject.Path, parent_path);
             evt.Wait();
             return evt.Result;
         }
@@ -469,7 +469,16 @@ namespace WwiseTools.Utils
         public static WwiseObject CreatePlayEvent(string event_name, string object_path, string parent_path = @"\Events\Default Work Unit")
         {
             if (!TryConnectWaapi()) return null;
-            var evt = CreatePlayEventAsync(event_name, object_path, parent_path);
+            var evt = AddEventActionAsync(event_name, object_path, parent_path);
+            evt.Wait();
+            return evt.Result;
+        }
+
+        public static WwiseObject AddEventAction(string event_name, string object_path,
+            string parent_path = @"\Events\Default Work Unit", int action_type = 1)
+        {
+            if (!TryConnectWaapi()) return null;
+            var evt = AddEventActionAsync(event_name, object_path, parent_path, action_type);
             evt.Wait();
             return evt.Result;
         }
@@ -482,7 +491,7 @@ namespace WwiseTools.Utils
         /// <param name="object_path"></param>
         /// <param name="parent_path"></param>
         /// <returns></returns>
-        public static async Task<WwiseObject> CreatePlayEventAsync(string event_name, string object_path, string parent_path = @"\Events\Default Work Unit")
+        public static async Task<WwiseObject> AddEventActionAsync(string event_name, string object_path, string parent_path = @"\Events\Default Work Unit", int action_type = 1)
         {
             if (!TryConnectWaapi()) return null;
 
@@ -501,9 +510,9 @@ namespace WwiseTools.Utils
                         {
                             new JObject
                             {
-                                new JProperty("name", ""),
+                                new JProperty("name", object_path),
                                 new JProperty("type", "Action"),
-                                new JProperty("@ActionType", 1),
+                                new JProperty("@ActionType", action_type),
                                 new JProperty("@Target", object_path)
                             }
                         })
