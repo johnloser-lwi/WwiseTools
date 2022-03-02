@@ -17,7 +17,7 @@ namespace WwiseTools.Objects
         public string Type { get; set; }
         public string Path { get { return WwiseUtility.GetWwiseObjectPath(ID); } }
 
-        public WwiseObject Parent { get { return WwiseUtility.GetWwiseObjectByPath(Path.Replace(Name, "")); } }
+        public WwiseObject Parent { get { return WwiseUtility.GetWwiseObjectByPath(Path.TrimEnd(Name.ToCharArray())); } }
 
         public WwiseObject(string name, string id, string type)
         {
