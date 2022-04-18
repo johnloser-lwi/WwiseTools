@@ -315,6 +315,7 @@ namespace WwiseTools.Objects
             {
                 if (folder.GetAttribute("ID") == ID)
                 {
+                    if (folder.GetElementsByTagName("ChildrenList")[0] == null) break;
                     var children = (folder.GetElementsByTagName("ChildrenList")[0] as XmlElement).ChildNodes;
                     foreach (XmlElement child in children)
                     {

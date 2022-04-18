@@ -21,9 +21,9 @@ namespace WwiseTools.Reference
 
         public static WwiseReference Ref_Attenuation(WwiseObject wwiseObject)
         {
-            if (wwiseObject == null) return null;
+            //if (wwiseObject == null) return null;
 
-            if (wwiseObject.Type != WwiseObject.ObjectType.Attenuation.ToString())
+            if (wwiseObject != null && wwiseObject.Type != WwiseObject.ObjectType.Attenuation.ToString())
             {
                 return null;
             }
@@ -101,8 +101,8 @@ namespace WwiseTools.Reference
 
         public static WwiseReference Ref_UserAuxSend0(WwiseObject wwiseObject)
         {
-            if (wwiseObject == null) return null;
-            if (wwiseObject.Type != "AuxBus")
+            //if (wwiseObject == null) return null;
+            if (wwiseObject != null && wwiseObject.Type != "AuxBus")
             {
                 return null;
             }
@@ -111,8 +111,8 @@ namespace WwiseTools.Reference
 
         public static WwiseReference Ref_UserAuxSend1(WwiseObject wwiseObject)
         {
-            if (wwiseObject == null) return null;
-            if (wwiseObject.Type != "AuxBus")
+            //if (wwiseObject == null) return null;
+            if (wwiseObject != null && wwiseObject.Type != "AuxBus")
             {
                 return null;
             }
@@ -121,8 +121,8 @@ namespace WwiseTools.Reference
 
         public static WwiseReference Ref_UserAuxSend2(WwiseObject wwiseObject)
         {
-            if (wwiseObject == null) return null;
-            if (wwiseObject.Type != "AuxBus")
+            //if (wwiseObject == null) return null;
+            if (wwiseObject != null && wwiseObject.Type != "AuxBus")
             {
                 return null;
             }
@@ -131,8 +131,8 @@ namespace WwiseTools.Reference
 
         public static WwiseReference Ref_UserAuxSend3(WwiseObject wwiseObject)
         {
-            if (wwiseObject == null) return null;
-            if (wwiseObject.Type != "AuxBus")
+            //if (wwiseObject == null) return null;
+            if (wwiseObject != null && wwiseObject.Type != "AuxBus")
             {
                 return null;
             }
