@@ -441,6 +441,38 @@ namespace WwiseTools.Utils
                 Console.WriteLine($"Failed to move {child.Name} to {parent.Name}! ======> {e.Message}");
             }
         }
+        
+        public static void SetNote(WwiseObject target, string note)
+        {
+            if (!TryConnectWaapi() || target== null) return;
+
+            var set = SetNoteAsync(target, note);
+            set.Wait();
+        }
+        
+         public static async Task SetNoteAsync(WwiseObject target, string note)
+        {
+            if (!TryConnectWaapi() || target == null) return;
+
+            try
+            {
+                // 移动物体
+                await Client.Call(
+                    ak.wwise.core.@object.setNotes,
+                    new JObject
+                    {
+                        new JProperty("object", target.ID),
+                        new JProperty("value", note)
+                    }
+                    );
+                
+                Console.WriteLine($"Successfully set {target.Name} note to \"{note}\"!");
+            }
+            catch (Wamp.ErrorException e)
+            {
+                Console.WriteLine($"Failed to set note for {target.Name}! ======> {e.Message}");
+            }
+        }
 
         /// <summary>
         /// 生成播放事件
