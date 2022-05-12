@@ -14,17 +14,19 @@ namespace WwiseTools
 {
     class Program
     {
-
-        
-
-        [STAThread]
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
-            CopyRTPC();
-            WwiseUtility.Close().Wait();
+            var selection = await WwiseUtility.GetWwiseObjectsBySelectionAsync();
+
+            foreach (var wwiseObject in selection)
+            {
+                Console.WriteLine(wwiseObject.Name);
+            }
+            
+            
+            await WwiseUtility.Close();
             
             Console.WriteLine("Operation completed! Press Enter to exit ...");
-            Console.ReadLine();
         }
 
 
