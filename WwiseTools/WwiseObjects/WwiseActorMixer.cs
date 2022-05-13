@@ -327,5 +327,28 @@ namespace WwiseTools.Objects
 
             return result;
         }
+        
+        public async Task<List<WwiseObject>> GetChildrenAsync()
+        {
+            List<WwiseObject> result = new List<WwiseObject>();
+
+            WwiseWorkUnitParser parser = new WwiseWorkUnitParser(await WwiseUtility.GetWorkUnitFilePathAsync(this));
+            var actor_mixer = parser.XML.GetElementsByTagName(Type);
+            foreach (XmlElement folder in actor_mixer)
+            {
+                if (folder.GetAttribute("ID") == ID)
+                {
+                    if (folder.GetElementsByTagName("ChildrenList")[0] == null) break;
+                    var children = (folder.GetElementsByTagName("ChildrenList")[0] as XmlElement).ChildNodes;
+                    foreach (XmlElement child in children)
+                    {
+                        result.Add(await WwiseUtility.GetWwiseObjectByIDAsync(child.GetAttribute("ID")));
+                    }
+                    break;
+                }
+            }
+
+            return result;
+        }
     }
 }
