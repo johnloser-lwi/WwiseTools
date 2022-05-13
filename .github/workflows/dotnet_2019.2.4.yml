@@ -31,13 +31,13 @@ jobs:
         ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
      
     - name: Restore NuGet Packages
-      run: nuget restore WwiseTools.sln /p:Configuration=Release /p:Platform=x64
+      run: nuget restore WwiseTools.sln
  
     - name: Build and Publish
-      run: msbuild WwiseTools.sln
+      run: msbuild WwiseTools.sln /p:Configuration=Release /p:Platform=x64
  
     - name: Upload Artifact
       uses: actions/upload-artifact@v2.3.0
       with:
         name: wwise_tools
-        path: D:\a\WwiseTools\WwiseTools\WwiseTools\bin\Debug\*.dll
+        path: D:\a\WwiseTools\WwiseTools\WwiseTools\bin\x64\Release\*.dll
