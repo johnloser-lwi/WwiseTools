@@ -35,7 +35,7 @@ jobs:
       run: nuget restore WwiseTools.sln
  
     - name: Build and Publish
-      run: msbuild WwiseTools.sln /property:Configuration=Release|x64
+      run: msbuild WwiseTools.sln /p:Configuration=Release /p:Platform=x64
  
     - name: Upload Artifact
       uses: actions/upload-artifact@v2.3.0
