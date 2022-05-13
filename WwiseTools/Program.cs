@@ -24,9 +24,7 @@ namespace WwiseTools
             }
             
             
-            await WwiseUtility.Close();
-            
-            Console.WriteLine("Operation completed! Press Enter to exit ...");
+            await WwiseUtility.DisconnectAsync();
         }
 
 
