@@ -134,7 +134,7 @@ namespace WwiseTools.Objects
 
         private  async Task<JObject> GetWavFilePathAsync()
         {
-            if (!WwiseUtility.TryConnectWaapi()) return null;
+            if (!await WwiseUtility.TryConnectWaapiAsync()) return null;
 
             try
             {

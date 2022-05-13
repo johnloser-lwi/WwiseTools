@@ -68,11 +68,17 @@ namespace WwiseTools.Objects
         /// 设置循环数
         /// </summary>
         /// <param name="count"></param>
+        [Obsolete("use async version instead")]
         public void SetLoopCount(int count = -1)
         {
             WwiseUtility.SetObjectProperty(this, new WwiseProperty("LoopCount", count));
         }
 
+        public async Task SetLoopCountAsync(int count = -1)
+        {
+            await WwiseUtility.SetObjectPropertyAsync(this, new WwiseProperty("LoopCount", count));
+        }
+        
         public enum Option_PlayMode { SequenceContinuous = 0, SequenceStep = 1, RandomContinuous = 2, RandomStep = 3 }
         [Obsolete("use async version instead")]
         public void SetPlayMode(Option_PlayMode play_mode)
