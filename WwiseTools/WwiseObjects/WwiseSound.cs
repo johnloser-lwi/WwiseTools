@@ -18,6 +18,7 @@ namespace WwiseTools.Objects
         /// </summary>
         /// <param name="name"></param>
         /// <param name="parent_path"></param>
+        [Obsolete("use WwiseUtility.CreateObjectAsync instead")]
         public WwiseSound(string name, string parent_path =@"\Actor-Mixer Hierarchy\Default Work Unit") : base(name, "", "Sound")
         {
             var tempObj = WwiseUtility.CreateObject(name, ObjectType.Sound, parent_path);
@@ -33,6 +34,7 @@ namespace WwiseTools.Objects
         /// <param name="language"></param>
         /// <param name="sub_folder"></param>
         /// <param name="parent_path"></param>
+        [Obsolete("Use WwiseUtility.ImportSoundAsync instead")]
         public WwiseSound(string name, string file_path, string language = "SFX", string sub_folder = "", string parent_path = @"\Actor-Mixer Hierachy\Default Work Unit") : base(name, "", "Sound")
         {
             var tempObj = WwiseUtility.ImportSound(file_path, language, sub_folder, parent_path);
@@ -53,9 +55,15 @@ namespace WwiseTools.Objects
         /// 设置播放延迟
         /// </summary>
         /// <param name="delay"></param>
+        [Obsolete("use async version instead")]
         public void SetInitialDelay(float delay)
         {
             WwiseUtility.SetObjectProperty(this, WwiseProperty.Prop_InitialDelay(delay));
+        }
+
+        public async Task SetInitialDelayAsync(float delay)
+        {
+            await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_InitialDelay(delay));
         }
 
         /// <summary>
@@ -64,11 +72,19 @@ namespace WwiseTools.Objects
         /// <param name="loop"></param>
         /// <param name="infinite"></param>
         /// <param name="numOfLoop"></param>
+        [Obsolete("use async version instead")]
         public void SetLoop(bool loop, bool infinite = true , uint numOfLoop = 2)
         {
             WwiseUtility.SetObjectProperty(this, WwiseProperty.Prop_IsLoopingEnabled(loop));
             WwiseUtility.SetObjectProperty(this, WwiseProperty.Prop_IsLoopingInfinite(infinite));
             WwiseUtility.SetObjectProperty(this, WwiseProperty.Prop_LoopCount(numOfLoop));
+        }
+        
+        public async Task SetLoopAsync(bool loop, bool infinite = true , uint numOfLoop = 2)
+        {
+            await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_IsLoopingEnabled(loop));
+            await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_IsLoopingInfinite(infinite));
+            await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_LoopCount(numOfLoop));
         }
         
         /// <summary>
@@ -77,6 +93,7 @@ namespace WwiseTools.Objects
         /// <param name="stream"></param>
         /// <param name="non_cachable"></param>
         /// <param name="zero_latency"></param>
+        [Obsolete("use async version instead")]
         public void SetStream(bool stream, bool non_cachable, bool zero_latency)
         {
             WwiseUtility.SetObjectProperty(this, WwiseProperty.Prop_IsStreamingEnabled(stream));
@@ -84,6 +101,14 @@ namespace WwiseTools.Objects
             WwiseUtility.SetObjectProperty(this, WwiseProperty.Prop_IsZeroLantency(zero_latency));
         }
 
+        public async Task SetStreamAsync(bool stream, bool non_cachable, bool zero_latency)
+        {
+            await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_IsStreamingEnabled(stream));
+            await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_IsNonCachable(non_cachable));
+            await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_IsZeroLantency(zero_latency));
+        }
+
+        [Obsolete("use async version instead")]
         public string[] GetWavSourceFilePath()
         {
             var r = GetWavFilePathAsync();
@@ -96,7 +121,18 @@ namespace WwiseTools.Objects
             return paths.ToArray();
         }
 
-        public  async Task<JObject> GetWavFilePathAsync()
+        public async Task<string[]> GetWavSourceFilePathAsync()
+        {
+            var r = await GetWavFilePathAsync();
+            List<string> paths = new List<string>();
+            foreach (var result in r["return"].Last)
+            {
+                paths.Add(result.Last.ToString());
+            }
+            return paths.ToArray();
+        }
+
+        private  async Task<JObject> GetWavFilePathAsync()
         {
             if (!WwiseUtility.TryConnectWaapi()) return null;
 

@@ -16,6 +16,7 @@ namespace WwiseTools.Objects
         /// <param name="name"></param>
         /// <param name="option"></param>
         /// <param name="parent_path"></param>
+        [Obsolete("use WwiseUtility.CreateObjectAsync instead")]
         public WwiseRandomSequenceContainer(string name, WwiseProperty.Option_RandomOrSequence option, string parent_path = @"\Actor-Mixer Hierarchy\Default Work Unit") : base(name, "", WwiseObject.ObjectType.RandomSequenceContainer.ToString())
         {
             var tempObj = WwiseUtility.CreateObject(name, ObjectType.RandomSequenceContainer, parent_path);
@@ -36,9 +37,17 @@ namespace WwiseTools.Objects
             Type = @object.Type;
         }
 
+        [Obsolete("use async version instead")]
         public WwiseProperty.Option_RandomOrSequence GetPlayType()
         {
             var result = WwiseUtility.GetWwiseObjectProperty(ID, "RandomOrSequence").ToString();
+
+            return (WwiseProperty.Option_RandomOrSequence)int.Parse(result);
+        }
+
+        public async Task< WwiseProperty.Option_RandomOrSequence> GetPlayTypeAsync()
+        {
+            var result = (await WwiseUtility.GetWwiseObjectPropertyAsync(ID, "RandomOrSequence")).ToString();
 
             return (WwiseProperty.Option_RandomOrSequence)int.Parse(result);
         }
@@ -48,18 +57,30 @@ namespace WwiseTools.Objects
         /// 设置序列的范围为全局或者对象
         /// </summary>
         /// <param name="option"></param>
+        [Obsolete("use async version instead")]
         public void SetScope(WwiseProperty.Option_GlobalOrPerObject option = WwiseProperty.Option_GlobalOrPerObject.Global)
         {
             WwiseUtility.SetObjectProperty(this, WwiseProperty.Prop_GlobalOrPerObject(option));
+        }
+
+        public async Task SetScopeAsync(WwiseProperty.Option_GlobalOrPerObject option = WwiseProperty.Option_GlobalOrPerObject.Global)
+        {
+            await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_GlobalOrPerObject(option));
         }
 
         /// <summary>
         /// 设置播放模式连续或者步进
         /// </summary>
         /// <param name="mode"></param>
+        [Obsolete("use async version instead")]
         public void SetPlayMode(WwiseProperty.Option_PlayMechanismStepOrContinuous mode)
         {
             WwiseUtility.SetObjectProperty(this, WwiseProperty.Prop_PlayMechanismStepOrContinuous(mode));
+        }
+
+        public async Task SetPlayModeAsync(WwiseProperty.Option_PlayMechanismStepOrContinuous mode)
+        {
+            await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_PlayMechanismStepOrContinuous(mode));
         }
 
         /// <summary>
@@ -68,11 +89,20 @@ namespace WwiseTools.Objects
         /// <param name="loop"></param>
         /// <param name="loop_count"></param>
         /// <param name="mode"></param>
+        [Obsolete("use async version instead")]
         public void SetLoop(bool loop, uint loop_count, WwiseProperty.Option_PlayMechanismInfiniteOrNumberOfLoops mode)
         {
             WwiseUtility.SetObjectProperty(this, WwiseProperty.Prop_PlayMechanismLoop(loop));
             WwiseUtility.SetObjectProperty(this, WwiseProperty.Prop_PlayMechanismInfiniteOrNumberOfLoops(mode));
             WwiseUtility.SetObjectProperty(this, WwiseProperty.Prop_PlayMechanismLoopCount(loop_count));
+
+        }
+
+        public async Task SetLoopAsync(bool loop, uint loop_count, WwiseProperty.Option_PlayMechanismInfiniteOrNumberOfLoops mode)
+        {
+            await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_PlayMechanismLoop(loop));
+            await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_PlayMechanismInfiniteOrNumberOfLoops(mode));
+            await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_PlayMechanismLoopCount(loop_count));
 
         }
 
@@ -82,11 +112,19 @@ namespace WwiseTools.Objects
         /// <param name="transitions"></param>
         /// <param name="type"></param>
         /// <param name="duration"></param>
+        [Obsolete("use async version instead")]
         public void SetTransitions(bool transitions, WwiseProperty.Option_PlayMechanismSpecialTransitionsType type, float duration)
         {
             WwiseUtility.SetObjectProperty(this, WwiseProperty.Prop_PlayMechanismSpecialTransitions(transitions));
             WwiseUtility.SetObjectProperty(this, WwiseProperty.Prop_PlayMechanismSpecialTransitionsType(type));
             WwiseUtility.SetObjectProperty(this, WwiseProperty.Prop_PlayMechanismSpecialTransitionsValue(duration));
+        }
+
+        public async Task SetTransitionsAsync(bool transitions, WwiseProperty.Option_PlayMechanismSpecialTransitionsType type, float duration)
+        {
+            await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_PlayMechanismSpecialTransitions(transitions));
+            await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_PlayMechanismSpecialTransitionsType(type));
+            await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_PlayMechanismSpecialTransitionsValue(duration));
         }
     }
 }

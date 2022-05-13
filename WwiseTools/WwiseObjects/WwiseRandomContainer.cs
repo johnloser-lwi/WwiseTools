@@ -15,6 +15,7 @@ namespace WwiseTools.Objects
         /// </summary>
         /// <param name="name"></param>
         /// <param name="parent_path"></param>
+        [Obsolete("use WwiseUtility.CreateObjectAsync instead")]
         public WwiseRandomContainer(string name, string parent_path = @"\Actor-Mixer Hierarchy\Default Work Unit") : base(name, "", WwiseObject.ObjectType.RandomSequenceContainer.ToString())
         {
             var tempObj = WwiseUtility.CreateObject(name, ObjectType.RandomSequenceContainer, parent_path);
@@ -36,9 +37,15 @@ namespace WwiseTools.Objects
         /// 设置随机模式
         /// </summary>
         /// <param name="option"></param>
+        [Obsolete("use async version instead")]
         public void SetRandomMode(WwiseProperty.Option_NormalOrShuffle option)
         {
             WwiseUtility.SetObjectProperty(this, WwiseProperty.Prop_NormalOrShuffle(option));
+        }
+
+        public async  Task SetRandomModeAsync(WwiseProperty.Option_NormalOrShuffle option)
+        {
+            await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_NormalOrShuffle(option));
         }
     }
 }
