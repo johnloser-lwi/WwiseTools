@@ -30,6 +30,7 @@ namespace WwiseTools
         }
 
 
+        /*
         static void CopyRTPC()
         {
             WwiseUtility.Init().Wait();
@@ -285,6 +286,6 @@ namespace WwiseTools
             }
 
             WwiseUtility.Close().Wait();
-        }
+        }*/
     }
 }
