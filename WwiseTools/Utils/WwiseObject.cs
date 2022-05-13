@@ -79,7 +79,7 @@ namespace WwiseTools.Objects
 
         public override string ToString()
         {
-            return $"Name : {Name}, ID : {ID}, Type: {Type}, Path: {Path}";
+            return $"Name : {Name}, ID : {ID}, Type: {Type}";
         }
     }
 }
