@@ -1527,10 +1527,10 @@ namespace WwiseTools.Utils
         
         public static async Task ReloadWwiseProjectAsync()
         {
-            
             await LoadWwiseProjectAsync(await GetWwiseProjectPathAsync(), true);
+            await DisconnectAsync();
             Client = null;
-            Init().Wait();
+            await ConnectAsync();
         }
 
         /// <summary>
