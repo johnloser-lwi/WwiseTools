@@ -20,6 +20,7 @@ namespace WwiseTools.Objects
         /// </summary>
         /// <param name="name"></param>
         /// <param name="parent_path"></param>
+        [Obsolete("use WwiseUtility.CreateObjectAsync instead")]
         public WwiseMusicSegment(string name, string parent_path = @"\Interactive Music Hierarchy\Default Work Unit\") : base(name, "", ObjectType.MusicSegment.ToString())
         {
             var segment = WwiseUtility.CreateObject(name, ObjectType.MusicSegment, parent_path);
@@ -37,19 +38,32 @@ namespace WwiseTools.Objects
         /// <param name="file_path"></param>
         /// <param name="sub_folder"></param>
         /// <param name="parent_path"></param>
+        [Obsolete("use CreateMusicSegmentAsync instead")]
         public WwiseMusicSegment(string name, string file_path, string sub_folder = "", string parent_path = @"\Interactive Music Hierarchy\Default Work Unit") : base(name, "", ObjectType.MusicSegment.ToString())
         {
             var segment = WwiseUtility.CreateObject(name, ObjectType.MusicSegment, parent_path);
-            parent_path = segment.Path;
+            parent_path = System.IO.Path.Combine(parent_path, name);
             ID = segment.ID;
             Name = name;
 
-            var tempObj = WwiseUtility.ImportSound(file_path, "SFX", sub_folder, segment.Path);
+            var tempObj = WwiseUtility.ImportSound(file_path, "SFX", sub_folder, parent_path);
 
             EntryCuePos = 0;
             ExitCuePos = 0;
 
         }
+
+        public static async Task<WwiseMusicSegment> CreateMusicSegmentAsync(string name, string file_path,
+            string sub_folder = "", string parent_path = @"\Interactive Music Hierarchy\Default Work Unit")
+        {
+            var segment = await WwiseUtility.CreateObjectAsync(name, ObjectType.MusicSegment, parent_path);
+            parent_path = System.IO.Path.Combine(parent_path, name);
+            await WwiseUtility.ImportSoundAsync(file_path, "SFX", sub_folder, parent_path);
+
+            return new WwiseMusicSegment(segment) {EntryCuePos = 0, ExitCuePos = 0};
+        }
+        
+        
         public WwiseMusicSegment(WwiseObject @object) : base("", "", "")
         {
             if (@object == null) return;
@@ -68,6 +82,7 @@ namespace WwiseTools.Objects
         /// <param name="tempo"></param>
         /// <param name="time_signature_lower"></param>
         /// <param name="time_signature_upper"></param>
+        [Obsolete("use async version instead")]
         public void SetTempoAndTimeSignature(float tempo, WwiseProperty.Option_TimeSignatureLower time_signature_lower, uint time_signature_upper)
         {
             WwiseUtility.SetObjectProperty(this, WwiseProperty.Prop_Tempo(tempo));
@@ -75,10 +90,18 @@ namespace WwiseTools.Objects
             WwiseUtility.SetObjectProperty(this, WwiseProperty.Prop_TimeSignatureUpper(time_signature_upper));
         }
 
+        public async Task SetTempoAndTimeSignatureAsync(float tempo, WwiseProperty.Option_TimeSignatureLower time_signature_lower, uint time_signature_upper)
+        {
+            await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_Tempo(tempo));
+            await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_TimeSignatureLower(time_signature_lower));
+            await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_TimeSignatureUpper(time_signature_upper));
+        }
+
         /// <summary>
         /// 设置Entry Cue位置
         /// </summary>
         /// <param name="timeMs"></param>
+        [Obsolete("Use async version instead")]
         public void SetEntryCue(float timeMs)
         {
             var cues = WwiseUtility.GetWwiseObjectsOfType("MusicCue");
@@ -98,12 +121,33 @@ namespace WwiseTools.Objects
                 EntryCuePos = timeMs;
             }
         }
+        
+        public async Task SetEntryCueAsync(float timeMs)
+        {
+            var cues = await WwiseUtility.GetWwiseObjectsOfTypeAsync("MusicCue");
+            WwiseObject entryCue = null;
+            foreach (var cue in cues)
+            {
+                if ((await cue.GetPathAsync()).Contains(await GetPathAsync()) && cue.Name == "Entry Cue")
+                {
+                    entryCue = cue;
+                    break;
+                }
+            }
+
+            if (entryCue != null)
+            {
+                await WwiseUtility.SetObjectPropertyAsync(entryCue, new WwiseProperty("TimeMs", timeMs));
+                EntryCuePos = timeMs;
+            }
+        }
 
         /// <summary>
         /// 设置Exit Cue位置
         /// </summary>
         /// <param name="timeMs"></param>
         /// <param name="ignore_smaller_value"></param>
+        [Obsolete("Use async version instead")]
         public void SetExitCue(float timeMs, bool ignore_smaller_value = true)
         {
             if (ignore_smaller_value && timeMs <= ExitCuePos) return; // 如果新的位置参数小于当前位置，则无视该参数
@@ -127,12 +171,37 @@ namespace WwiseTools.Objects
                 ExitCuePos = timeMs;
             }
         }
+        
+        public async Task SetExitCueAsync(float timeMs, bool ignore_smaller_value = true)
+        {
+            if (ignore_smaller_value && timeMs <= ExitCuePos) return; // 如果新的位置参数小于当前位置，则无视该参数
+
+            var cues = await WwiseUtility.GetWwiseObjectsOfTypeAsync("MusicCue");
+            WwiseObject exitCue = null;
+            foreach (var cue in cues)
+            {
+                if ((await cue.GetPathAsync()).Contains(await GetPathAsync()) && cue.Name == "Exit Cue")
+                {
+                    exitCue = cue;
+                    break;
+                }
+            }
+
+            
+
+            if (exitCue != null)
+            {
+                WwiseUtility.SetObjectPropertyAsync(exitCue, new WwiseProperty("TimeMs", timeMs));
+                ExitCuePos = timeMs;
+            }
+        }
 
         /// <summary>
         /// 创建新的Cue
         /// </summary>
         /// <param name="name"></param>
         /// <param name="timeMs"></param>
+        [Obsolete("Use async version instead")]
         public void CreateCue(string name, float timeMs)
         {
             CreateCueAsync(name, timeMs).Wait();
@@ -156,7 +225,7 @@ namespace WwiseTools.Objects
                     {
                         new JProperty("name", name),
                         new JProperty("type", "MusicCue"),
-                        new JProperty("parent", Path),
+                        new JProperty("parent", await GetPathAsync()),
                         new JProperty("onNameConflict", "replace"),
                         new JProperty("list", "Cues"),
                         new JProperty("@TimeMs", timeMs),

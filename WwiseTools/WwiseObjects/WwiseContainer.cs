@@ -18,9 +18,15 @@ namespace WwiseTools.Objects
         /// 设置播放延迟
         /// </summary>
         /// <param name="delay"></param>
+        [Obsolete("use async version instead")]
         public void SetInitialDelay(float delay)
         {
             WwiseUtility.SetObjectProperty(this, WwiseProperty.Prop_InitialDelay(delay));
+        }
+
+        public async Task SetInitialDelayAsync(float delay)
+        {
+            await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_InitialDelay(delay));
         }
 
 
@@ -28,10 +34,17 @@ namespace WwiseTools.Objects
         /// 添加子对象
         /// </summary>
         /// <param name="wwiseObject"></param>
+        [Obsolete("use async version instead")]
         public void AddChild(WwiseObject wwiseObject)
         {
             if (wwiseObject == null) return;
             WwiseUtility.MoveToParent(wwiseObject, this);
+        }
+        
+        public async Task AddChildAsync(WwiseObject wwiseObject)
+        {
+            if (wwiseObject == null) return;
+            await WwiseUtility.MoveToParentAsync(wwiseObject, this);
         }
     }
 }

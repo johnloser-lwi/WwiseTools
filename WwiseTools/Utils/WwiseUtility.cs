@@ -81,6 +81,7 @@ namespace WwiseTools.Utils
         /// 尝试连接并检查连接状态
         /// </summary>
         /// <returns></returns>
+        [Obsolete("Use async version instead")]
         public static bool TryConnectWaapi() 
         {
             var connected = Init();
@@ -106,6 +107,7 @@ namespace WwiseTools.Utils
         /// </summary>
         /// <param name="wwiseObject"></param>
         /// <returns></returns>
+        [Obsolete("Use async version instead")]
         public static string GetPropertyAndReferenceNames(WwiseObject wwiseObject)
         {
             if (!TryConnectWaapi() || wwiseObject == null) return "";
@@ -116,7 +118,7 @@ namespace WwiseTools.Utils
         }
 
         /// <summary>
-        /// 获取属性、引用名称，同步执行
+        /// 获取属性、引用名称，异步执行
         /// </summary>
         /// <param name="wwiseObject"></param>
         /// <returns></returns>
@@ -152,6 +154,7 @@ namespace WwiseTools.Utils
         /// </summary>
         /// <param name="wwiseObject"></param>
         /// <param name="wwiseReference"></param>
+        [Obsolete("Use async version instead")]
         public static void SetObjectReference(WwiseObject wwiseObject, WwiseReference wwiseReference)
         {
             if (!TryConnectWaapi() || wwiseObject == null || wwiseReference == null) return;
@@ -160,7 +163,7 @@ namespace WwiseTools.Utils
         }
 
         /// <summary>
-        /// 设置物体的引用，同步执行
+        /// 设置物体的引用，异步执行
         /// </summary>
         /// <param name="wwiseObject"></param>
         /// <param name="wwiseReference"></param>
@@ -196,6 +199,7 @@ namespace WwiseTools.Utils
         /// </summary>
         /// <param name="wwiseObject"></param>
         /// <param name="wwiseProperty"></param>
+        [Obsolete("Use async version instead")]
         public static void SetObjectProperty(WwiseObject wwiseObject, WwiseProperty wwiseProperty)
         {
             if (!TryConnectWaapi() || wwiseObject == null ||wwiseProperty == null) return;
@@ -206,7 +210,7 @@ namespace WwiseTools.Utils
         }
 
         /// <summary>
-        /// 设置参数，同步执行
+        /// 设置参数，异步执行
         /// </summary>
         /// <param name="wwiseObject"></param>
         /// <param name="property"></param>
@@ -243,6 +247,7 @@ namespace WwiseTools.Utils
         /// </summary>
         /// <param name="rename_object"></param>
         /// <param name="new_name"></param>
+        [Obsolete("Use async version instead")]
         public static void ChangeObjectName(WwiseObject rename_object, string new_name)
         {
             if (!TryConnectWaapi() || rename_object == null || String.IsNullOrEmpty(new_name)) return;
@@ -251,7 +256,7 @@ namespace WwiseTools.Utils
         }
 
         /// <summary>
-        /// 修改名称，同步执行
+        /// 修改名称，异步执行
         /// </summary>
         /// <param name="rename_object"></param>
         /// <param name="new_name"></param>
@@ -287,6 +292,7 @@ namespace WwiseTools.Utils
         /// </summary>
         /// <param name="child"></param>
         /// <param name="parent"></param>
+        [Obsolete("Use async version instead")]
         public static void CopyToParent(WwiseObject child, WwiseObject parent)
         {
             if (!TryConnectWaapi() || child == null || parent == null) return;
@@ -371,6 +377,7 @@ namespace WwiseTools.Utils
         /// </summary>
         /// <param name="child"></param>
         /// <param name="parent"></param>
+        [Obsolete("Use async version instead")]
         public static void MoveToParent(WwiseObject child, WwiseObject parent)
         {
             if (!TryConnectWaapi() || child == null || parent == null) return;
@@ -449,6 +456,7 @@ namespace WwiseTools.Utils
             }
         }
         
+        [Obsolete("Use async version instead")]
         public static void SetNote(WwiseObject target, string note)
         {
             if (!TryConnectWaapi() || target== null) return;
@@ -488,10 +496,11 @@ namespace WwiseTools.Utils
         /// <param name="wwiseObject"></param>
         /// <param name="parent_path"></param>
         /// <returns></returns>
-        public static WwiseObject CreatePlayEvent(string event_name, WwiseObject wwiseObject, string parent_path = @"\Events\Default Work Unit")
+        [Obsolete("Use async version instead")]
+        public static WwiseObject CreatePlayEvent(string event_name, string object_path, string parent_path = @"\Events\Default Work Unit")
         {
             if (!TryConnectWaapi()) return null;
-            var evt = AddEventActionAsync(event_name, wwiseObject.Path, parent_path);
+            var evt = AddEventActionAsync(event_name, object_path, parent_path);
             evt.Wait();
             return evt.Result;
         }
@@ -504,14 +513,13 @@ namespace WwiseTools.Utils
         /// <param name="object_path"></param>
         /// <param name="parent_path"></param>
         /// <returns></returns>
-        public static WwiseObject CreatePlayEvent(string event_name, string object_path, string parent_path = @"\Events\Default Work Unit")
+        public static async Task<WwiseObject> CreatePlayEventAsync(string event_name, string object_path, string parent_path = @"\Events\Default Work Unit")
         {
-            if (!TryConnectWaapi()) return null;
-            var evt = AddEventActionAsync(event_name, object_path, parent_path);
-            evt.Wait();
-            return evt.Result;
+            if (!await TryConnectWaapiAsync()) return null;
+            return await AddEventActionAsync(event_name, object_path, parent_path);
         }
 
+        [Obsolete("Use async version instead")]
         public static WwiseObject AddEventAction(string event_name, string object_path,
             string parent_path = @"\Events\Default Work Unit", int action_type = 1)
         {
@@ -523,7 +531,7 @@ namespace WwiseTools.Utils
 
 
         /// <summary>
-        /// 生成播放事件，同步执行
+        /// 生成播放事件，异步执行
         /// </summary>
         /// <param name="event_name"></param>
         /// <param name="object_path"></param>
@@ -567,6 +575,7 @@ namespace WwiseTools.Utils
             }
         }
 
+        [Obsolete("Use async version instead")]
         public static void AddEventToBank(WwiseObject soundBank, string eventID)
         {
             var r = AddEventToBankAsync(soundBank, eventID);
@@ -610,6 +619,7 @@ namespace WwiseTools.Utils
         /// <param name="object_type"></param>
         /// <param name="parent_path"></param>
         /// <returns></returns>
+        [Obsolete("Use async version instead")]
         public static WwiseObject CreateObject(string object_name, WwiseObject.ObjectType object_type, string parent_path = @"\Actor-Mixer Hierarchy\Default Work Unit")
         {
             var obj = CreateObjectAsync(object_name, object_type, parent_path);
@@ -655,6 +665,7 @@ namespace WwiseTools.Utils
             }
         }
 
+        [Obsolete("Use async version instead")]
         public static void DeleteObject(string path)
         {
             var obj = DeleteObjectAsync(path);
@@ -695,6 +706,7 @@ namespace WwiseTools.Utils
         /// </summary>
         /// <param name="target_id"></param>
         /// <returns></returns>
+        [Obsolete("Use async version instead")]
         public static WwiseObject GetWwiseObjectByID(string target_id)
         {
             var get = GetWwiseObjectByIDAsync(target_id);
@@ -703,7 +715,7 @@ namespace WwiseTools.Utils
         }
 
         /// <summary>
-        /// 通过ID搜索物体，同步执行
+        /// 通过ID搜索物体，异步执行
         /// </summary>
         /// <param name="target_id"></param>
         /// <returns></returns>
@@ -757,6 +769,7 @@ namespace WwiseTools.Utils
         }
 
 
+        [Obsolete("Use async version instead")]
         public static JToken GetWwiseObjectProperty(string target_id, string wwise_property)
         {
             var get = GetWwiseObjectPropertyAsync(target_id, wwise_property);
@@ -813,6 +826,7 @@ namespace WwiseTools.Utils
         }
 
 
+        [Obsolete("Use async version instead")]
         public static string GetWwiseObjectPath(string ID)
         {
             var r = GetWwiseObjectPathAsync(ID);
@@ -872,6 +886,7 @@ namespace WwiseTools.Utils
         /// <param name="name"></param>
         /// <param name="type"></param>
         /// <returns></returns>
+        [Obsolete]
         public static List<WwiseObject> GetWwiseObjectsByNameAndType(string name, string type)
         {
             List<WwiseObject> temp = GetWwiseObjectsOfType(type);
@@ -895,6 +910,7 @@ namespace WwiseTools.Utils
         /// <param name="type"></param>
         /// <param name="parent_path"></param>
         /// <returns></returns>
+        [Obsolete]
         public static List<WwiseObject> GetWwiseObjectsByTypeAndParent(string type, string parent_path)
         {
             List<WwiseObject> temp = GetWwiseObjectsOfType(type);
@@ -915,6 +931,7 @@ namespace WwiseTools.Utils
         /// </summary>
         /// <param name="target_name"></param>
         /// <returns></returns>
+        [Obsolete("Use async version instead")]
         public static WwiseObject GetWwiseObjectByName(string target_name)
         {
 
@@ -924,7 +941,7 @@ namespace WwiseTools.Utils
         }
 
         /// <summary>
-        /// 通过名称搜索唯一命名对象，同步执行，格式必须为"type:name"
+        /// 通过名称搜索唯一命名对象，异步执行，格式必须为"type:name"
         /// </summary>
         /// <param name="target_name"></param>
         /// <returns></returns>
@@ -985,6 +1002,7 @@ namespace WwiseTools.Utils
         /// </summary>
         /// <param name="path"></param>
         /// <returns></returns>
+        [Obsolete("Use async version instead")]
         public static WwiseObject GetWwiseObjectByPath(string path)
         {
 
@@ -994,7 +1012,7 @@ namespace WwiseTools.Utils
         }
 
         /// <summary>
-        /// 通过路径获取对象，同步执行
+        /// 通过路径获取对象，异步执行
         /// </summary>
         /// <param name="path"></param>
         /// <returns></returns>
@@ -1055,6 +1073,7 @@ namespace WwiseTools.Utils
         /// </summary>
         /// <param name="target_type"></param>
         /// <returns></returns>
+        [Obsolete("Use async version instead")]
         public static List<WwiseObject> GetWwiseObjectsOfType(string target_type)
         {
 
@@ -1064,7 +1083,7 @@ namespace WwiseTools.Utils
         }
 
         /// <summary>
-        /// 获取指定类型的对象，同步执行
+        /// 获取指定类型的对象，异步执行
         /// </summary>
         /// <param name="target_type"></param>
         /// <returns></returns>
@@ -1128,6 +1147,7 @@ namespace WwiseTools.Utils
         }
 
 
+        [Obsolete("Use async version instead")]
         public static List<WwiseObject> GetWwiseObjectsBySelection()
         {
             var get = GetWwiseObjectsBySelectionAsync();
@@ -1193,6 +1213,7 @@ namespace WwiseTools.Utils
         }
 
 
+        [Obsolete("Use async version instead")]
         public static List<string> GetLanguages()
         {
             var result = GetLanguagesAsync();
@@ -1257,6 +1278,7 @@ namespace WwiseTools.Utils
         /// <param name="work_unit"></param>
         /// <param name="hierarchy"></param>
         /// <returns></returns>
+        [Obsolete]
         public static List<WwiseObject> ImportSoundFromFolder(string folder_path, string language = "SFX", string subFolder = "", string parent_path = @"\Actor-Mixer Hierarchy\Default Work Unit") // 从指定文件夹路径导入
         {
             if (!TryConnectWaapi()) return null; // 没有成功连接时返回空的WwiseObject List
@@ -1294,6 +1316,7 @@ namespace WwiseTools.Utils
         /// <param name="work_unit"></param>
         /// <param name="hierarchy"></param>
         /// <returns></returns>
+        [Obsolete("Use async version instead")]
         public static WwiseObject ImportSound(string file_path, string language = "SFX", string sub_folder = "", string parent_path = @"\Actor-Mixer Hierarchy\Default Work Unit", string sound_name = "") // 直接调用的版本
         {
             Task<WwiseObject> obj = WwiseUtility.ImportSoundAsync(file_path, language, sub_folder, parent_path, sound_name);
@@ -1383,6 +1406,7 @@ namespace WwiseTools.Utils
         /// </summary>
         /// <param name="object"></param>
         /// <returns></returns>
+        [Obsolete("Use async version instead")]
         public static string GetWorkUnitFilePath(WwiseObject @object)
         {
             var get = GetWorkUnitFilePathAsync(@object);
@@ -1391,7 +1415,7 @@ namespace WwiseTools.Utils
         }
 
         /// <summary>
-        /// 获取工作单元文件路径，同步执行
+        /// 获取工作单元文件路径，异步执行
         /// </summary>
         /// <param name="object"></param>
         /// <returns></returns>
@@ -1450,10 +1474,19 @@ namespace WwiseTools.Utils
         /// <summary>
         /// 重新加载当前工程
         /// </summary>
+        [Obsolete("Use async version instead")]
         public static void ReloadWwiseProject()
         {
             
             LoadWwiseProject(GetWwiseProjectPath(), true);
+            Client = null;
+            Init().Wait();
+        }
+        
+        public static async Task ReloadWwiseProjectAsync()
+        {
+            
+            await LoadWwiseProjectAsync(await GetWwiseProjectPathAsync(), true);
             Client = null;
             Init().Wait();
         }
@@ -1463,13 +1496,14 @@ namespace WwiseTools.Utils
         /// </summary>
         /// <param name="path"></param>
         /// <param name="save_current"></param>
+        [Obsolete("Use async version instead")]
         public static void LoadWwiseProject(string path, bool save_current = true)
         {
             LoadWwiseProjectAsync(path, save_current).Wait();
         }
 
         /// <summary>
-        /// 加载工程，同步执行
+        /// 加载工程，异步执行
         /// </summary>
         /// <param name="path"></param>
         /// <param name="save_current"></param>
@@ -1478,9 +1512,9 @@ namespace WwiseTools.Utils
         {
             if (!await TryConnectWaapiAsync()) return;
 
-            if (save_current) SaveWwiseProject();
+            if (save_current) await SaveWwiseProjectAsync();
 
-            var project_path = GetWwiseProjectPath();
+            var project_path = await GetWwiseProjectPathAsync();
 
             try
             {
@@ -1503,6 +1537,7 @@ namespace WwiseTools.Utils
         /// 获取工程路径
         /// </summary>
         /// <returns></returns>
+        [Obsolete("Use async version instead")]
         public static string GetWwiseProjectName()
         {
             var get = GetWwiseProjectNameAsync();
@@ -1511,7 +1546,7 @@ namespace WwiseTools.Utils
         }
 
         /// <summary>
-        /// 获取工程路径，同步执行
+        /// 获取工程路径，异步执行
         /// </summary>
         /// <returns></returns>
         public static async Task<string> GetWwiseProjectNameAsync()
@@ -1570,6 +1605,7 @@ namespace WwiseTools.Utils
         /// 获取工程路径
         /// </summary>
         /// <returns></returns>
+        [Obsolete("Use async version instead")]
         public static string GetWwiseProjectPath()
         {
             var get = GetWwiseProjectPathAsync();
@@ -1578,7 +1614,7 @@ namespace WwiseTools.Utils
         }
 
         /// <summary>
-        /// 获取工程路径，同步执行
+        /// 获取工程路径，异步执行
         /// </summary>
         /// <returns></returns>
         public static async Task<string> GetWwiseProjectPathAsync()
@@ -1636,13 +1672,14 @@ namespace WwiseTools.Utils
         /// <summary>
         /// 保存工程
         /// </summary>
+        [Obsolete("Use async version instead")]
         public static void SaveWwiseProject()
         {
             SaveWwiseProjectAsync().Wait();
         }
 
         /// <summary>
-        /// 保存工程，同步执行
+        /// 保存工程，异步执行
         /// </summary>
         /// <returns></returns>
         public static async Task SaveWwiseProjectAsync()

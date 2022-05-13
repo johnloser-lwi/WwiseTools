@@ -18,6 +18,7 @@ namespace WwiseTools.Objects
         /// </summary>
         /// <param name="name"></param>
         /// <param name="parent_path"></param>
+        [Obsolete("use WwiseUtility.CreateObjectAsync instead")]
         public WwiseActorMixer(string name, string parent_path = @"\Actor-Mixer Hierarchy\Default Work Unit") : base(name, "", "ActorMixer")
         {
             var tempObj = WwiseUtility.CreateObject(name, ObjectType.Sound, parent_path);
@@ -43,6 +44,7 @@ namespace WwiseTools.Objects
         /// <param name="name"></param>
         /// <param name="parent_path"></param>
         /// <returns></returns>
+        [Obsolete("Use WwiseUtiliy.CreatPlayEventAsync instead")]
         public WwiseObject CreatePlayEvent(string name = "", string parent_path = @"\Events\Default Work Unit")
         {
             if (String.IsNullOrEmpty(name)) name = Name;
@@ -54,18 +56,30 @@ namespace WwiseTools.Objects
         /// 设置音量
         /// </summary>
         /// <param name="value"></param>
+        [Obsolete("use async version instead")]
         public void SetVolume(float value)
         {
             WwiseUtility.SetObjectProperty(this, WwiseProperty.Prop_Volume(value));
+        }
+        
+        public async Task SetVolumeAsync(float value)
+        {
+            await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_Volume(value));
         }
 
         /// <summary>
         /// 设置音高
         /// </summary>
         /// <param name="value"></param>
+        [Obsolete("use async version instead")]
         public void SetPitch(int value)
         {
             WwiseUtility.SetObjectProperty(this, WwiseProperty.Prop_Pitch(value));
+        }
+        
+        public async Task SetPitchAsync(int value)
+        {
+            await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_Pitch(value));
         }
 
         /// <summary>
@@ -73,10 +87,17 @@ namespace WwiseTools.Objects
         /// </summary>
         /// <param name="high_pass"></param>
         /// <param name="low_pass"></param>
+        [Obsolete("use async version instead")]
         public void SetFilter(uint high_pass, uint low_pass)
         {
             WwiseUtility.SetObjectProperty(this, WwiseProperty.Prop_Lowpass(low_pass));
             WwiseUtility.SetObjectProperty(this, WwiseProperty.Prop_Highpass(high_pass));
+        }
+        
+        public async Task SetFilterAsync(uint high_pass, uint low_pass)
+        {
+            await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_Lowpass(low_pass));
+            await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_Highpass(high_pass));
         }
 
         /// <summary>
@@ -86,6 +107,7 @@ namespace WwiseTools.Objects
         /// <param name="volume"></param>
         /// <param name="low_pass"></param>
         /// <param name="high_pass"></param>
+        [Obsolete("use async version instead")]
         public void SetGameAuxSend(string bus_name, float volume = 0, uint low_pass = 0, uint high_pass = 0)
         {
             WwiseUtility.SetObjectProperty(this, WwiseProperty.Prop_OverrideGameAuxSends(true));
@@ -93,6 +115,15 @@ namespace WwiseTools.Objects
             WwiseUtility.SetObjectProperty(this, WwiseProperty.Prop_GameAuxSendVolume(volume));
             WwiseUtility.SetObjectProperty(this, WwiseProperty.Prop_GameAuxSendLPF(low_pass));
             WwiseUtility.SetObjectProperty(this, WwiseProperty.Prop_GameAuxSendHPF(high_pass));
+        }
+        
+        public async Task SetGameAuxSendAsync(string bus_name, float volume = 0, uint low_pass = 0, uint high_pass = 0)
+        {
+            await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_OverrideGameAuxSends(true));
+            await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_UseGameAuxSends(true));
+            await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_GameAuxSendVolume(volume));
+            await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_GameAuxSendLPF(low_pass));
+            await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_GameAuxSendHPF(high_pass));
         }
 
         /// <summary>
@@ -102,6 +133,7 @@ namespace WwiseTools.Objects
         /// <param name="volume"></param>
         /// <param name="low_pass"></param>
         /// <param name="high_pass"></param>
+        [Obsolete("use async version instead")]
         public void SetAuxilaryBus0(string bus_name, float volume = 0, uint low_pass = 0, uint high_pass = 0)
         {
             WwiseUtility.SetObjectProperty(this, WwiseProperty.Prop_OverrideUserAuxSends(true));
@@ -111,6 +143,15 @@ namespace WwiseTools.Objects
             WwiseUtility.SetObjectReference(this, WwiseReference.Ref_UserAuxSend0(WwiseUtility.GetWwiseObjectByName($"AuxBus:{bus_name}")));
         }
 
+        public async Task SetAuxilaryBus0Async(string bus_name, float volume = 0, uint low_pass = 0, uint high_pass = 0)
+        {
+            await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_OverrideUserAuxSends(true));
+            await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_UserAuxSendVolume0(volume));
+            await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_UserAuxSendLPF0(low_pass));
+            await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_UserAuxSendHPF0(high_pass));
+            await WwiseUtility.SetObjectReferenceAsync(this, WwiseReference.Ref_UserAuxSend0(await WwiseUtility.GetWwiseObjectByNameAsync($"AuxBus:{bus_name}")));
+        }
+
         /// <summary>
         /// 设置用户Aux发送1
         /// </summary>
@@ -118,6 +159,7 @@ namespace WwiseTools.Objects
         /// <param name="volume"></param>
         /// <param name="low_pass"></param>
         /// <param name="high_pass"></param>
+        [Obsolete("use async version instead")]
         public void SetAuxilaryBus1(string bus_name, float volume = 0, uint low_pass = 0, uint high_pass = 0)
         {
             WwiseUtility.SetObjectProperty(this, WwiseProperty.Prop_OverrideUserAuxSends(true));
@@ -125,6 +167,14 @@ namespace WwiseTools.Objects
             WwiseUtility.SetObjectProperty(this, WwiseProperty.Prop_UserAuxSendLPF1(low_pass));
             WwiseUtility.SetObjectProperty(this, WwiseProperty.Prop_UserAuxSendHPF1(high_pass));
             WwiseUtility.SetObjectReference(this, WwiseReference.Ref_UserAuxSend1(WwiseUtility.GetWwiseObjectByName($"AuxBus:{bus_name}")));
+        }
+        public async Task SetAuxilaryBus1Async(string bus_name, float volume = 0, uint low_pass = 0, uint high_pass = 0)
+        {
+            await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_OverrideUserAuxSends(true));
+            await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_UserAuxSendVolume1(volume));
+            await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_UserAuxSendLPF1(low_pass));
+            await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_UserAuxSendHPF1(high_pass));
+            await WwiseUtility.SetObjectReferenceAsync(this, WwiseReference.Ref_UserAuxSend1(await WwiseUtility.GetWwiseObjectByNameAsync($"AuxBus:{bus_name}")));
         }
 
         /// <summary>
@@ -134,6 +184,7 @@ namespace WwiseTools.Objects
         /// <param name="volume"></param>
         /// <param name="low_pass"></param>
         /// <param name="high_pass"></param>
+        [Obsolete("use async version instead")]
         public void SetAuxilaryBus2(string bus_name, float volume = 0, uint low_pass = 0, uint high_pass = 0)
         {
             WwiseUtility.SetObjectProperty(this, WwiseProperty.Prop_OverrideUserAuxSends(true));
@@ -143,6 +194,15 @@ namespace WwiseTools.Objects
             WwiseUtility.SetObjectReference(this, WwiseReference.Ref_UserAuxSend2(WwiseUtility.GetWwiseObjectByName($"AuxBus:{bus_name}")));
         }
 
+        public async Task SetAuxilaryBus2Async(string bus_name, float volume = 0, uint low_pass = 0, uint high_pass = 0)
+        {
+            await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_OverrideUserAuxSends(true));
+            await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_UserAuxSendVolume2(volume));
+            await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_UserAuxSendLPF2(low_pass));
+            await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_UserAuxSendHPF2(high_pass));
+            await WwiseUtility.SetObjectReferenceAsync(this, WwiseReference.Ref_UserAuxSend2(await WwiseUtility.GetWwiseObjectByNameAsync($"AuxBus:{bus_name}")));
+        }
+
         /// <summary>
         /// 设置用户Aux发送3
         /// </summary>
@@ -150,6 +210,7 @@ namespace WwiseTools.Objects
         /// <param name="volume"></param>
         /// <param name="low_pass"></param>
         /// <param name="high_pass"></param>
+        [Obsolete("use async version instead")]
         public void SetAuxilaryBus3(string bus_name, float volume = 0, uint low_pass = 0, uint high_pass = 0)
         {
             WwiseUtility.SetObjectProperty(this, WwiseProperty.Prop_OverrideUserAuxSends(true));
@@ -159,16 +220,33 @@ namespace WwiseTools.Objects
             WwiseUtility.SetObjectReference(this, WwiseReference.Ref_UserAuxSend3(WwiseUtility.GetWwiseObjectByName($"AuxBus:{bus_name}")));
         }
 
+        public async Task SetAuxilaryBus3Async(string bus_name, float volume = 0, uint low_pass = 0, uint high_pass = 0)
+        {
+            await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_OverrideUserAuxSends(true));
+            await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_UserAuxSendVolume3(volume));
+            await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_UserAuxSendLPF3(low_pass));
+            await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_UserAuxSendHPF3(high_pass));
+            await WwiseUtility.SetObjectReferenceAsync(this, WwiseReference.Ref_UserAuxSend3(await WwiseUtility.GetWwiseObjectByNameAsync($"AuxBus:{bus_name}")));
+        }
+
         /// <summary>
         /// 设置反射发送
         /// </summary>
         /// <param name="bus_name"></param>
         /// <param name="volume"></param>
+        [Obsolete("use async version instead")]
         public void SetEarlyReflections(string bus_name, float volume = 0)
         {
             WwiseUtility.SetObjectProperty(this, WwiseProperty.Prop_OverrideEarlyReflections(true));
             WwiseUtility.SetObjectProperty(this, WwiseProperty.Prop_ReflectionsVolume(volume));
             WwiseUtility.SetObjectReference(this, WwiseReference.Ref_ReflectionsAuxSend(WwiseUtility.GetWwiseObjectByName($"AuxBus:{bus_name}")));
+        }
+
+        public async Task SetEarlyReflectionsAsync(string bus_name, float volume = 0)
+        {
+            await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_OverrideEarlyReflections(true));
+            await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_ReflectionsVolume(volume));
+            await WwiseUtility.SetObjectReferenceAsync(this, WwiseReference.Ref_ReflectionsAuxSend(await WwiseUtility.GetWwiseObjectByNameAsync($"AuxBus:{bus_name}")));
         }
 
         /// <summary>
@@ -178,6 +256,7 @@ namespace WwiseTools.Objects
         /// <param name="volume"></param>
         /// <param name="low_pass"></param>
         /// <param name="high_pass"></param>
+        [Obsolete("use async version instead")]
         public void SetOutputBus(string bus_name, float volume = 0, uint low_pass = 0, uint high_pass = 0)
         {
             WwiseUtility.SetObjectProperty(this, WwiseProperty.Prop_OverrideOutput(true));
@@ -187,6 +266,15 @@ namespace WwiseTools.Objects
             WwiseUtility.SetObjectReference(this, WwiseReference.Ref_OutputBus(WwiseUtility.GetWwiseObjectByName($"Bus:{bus_name}")));
         }
         
+        public async Task SetOutputBusAsync(string bus_name, float volume = 0, uint low_pass = 0, uint high_pass = 0)
+        {
+            await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_OverrideOutput(true));
+            await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_OutputBusVolume(volume));
+            await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_OutputBusLowpass(low_pass));
+            await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_OutputBusHighpass(high_pass));
+            await WwiseUtility.SetObjectReferenceAsync(this, WwiseReference.Ref_OutputBus(await WwiseUtility.GetWwiseObjectByNameAsync($"Bus:{bus_name}")));
+        }
+        
         /// <summary>
         /// 设置输出总线
         /// </summary>
@@ -194,6 +282,7 @@ namespace WwiseTools.Objects
         /// <param name="volume"></param>
         /// <param name="low_pass"></param>
         /// <param name="high_pass"></param>
+        [Obsolete("use async version instead")]
         public void SetOutputBus(WwiseObject bus, float volume = 0, uint low_pass = 0, uint high_pass = 0)
         {
             WwiseUtility.SetObjectProperty(this, WwiseProperty.Prop_OverrideOutput(true));
@@ -203,20 +292,37 @@ namespace WwiseTools.Objects
             WwiseUtility.SetObjectReference(this, WwiseReference.Ref_OutputBus(bus));
         }
 
+        public async Task SetOutputBusAsync(WwiseObject bus, float volume = 0, uint low_pass = 0, uint high_pass = 0)
+        {
+            await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_OverrideOutput(true));
+            await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_OutputBusVolume(volume));
+            await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_OutputBusLowpass(low_pass));
+            await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_OutputBusHighpass(high_pass));
+            await WwiseUtility.SetObjectReferenceAsync(this, WwiseReference.Ref_OutputBus(bus));
+        }
+
         /// <summary>
         /// 设置转码预制
         /// </summary>
         /// <param name="conversion_name"></param>
+        [Obsolete("use async version instead")]
         public void SetConversion(string conversion_name)
         {
             WwiseUtility.SetObjectProperty(this, WwiseProperty.Prop_OverrideConversion(true));
             WwiseUtility.SetObjectReference(this, WwiseReference.Ref_Conversion(WwiseUtility.GetWwiseObjectByName($"Conversion:{conversion_name}")));
         }
 
+        public async Task SetConversionAsync(string conversion_name)
+        {
+            await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_OverrideConversion(true));
+            await WwiseUtility.SetObjectReferenceAsync(this, WwiseReference.Ref_Conversion(await WwiseUtility.GetWwiseObjectByNameAsync($"Conversion:{conversion_name}")));
+        }
+
         /// <summary>
         /// 设置3D位置
         /// </summary>
         /// <param name="_3d_position"></param>
+        [Obsolete("use async version instead")]
         private void Set3DPosition(WwiseProperty.Option_3DPosition _3d_position)
         {
             WwiseUtility.SetObjectProperty(this, WwiseProperty.Prop_OverridePositioning(true));
@@ -224,10 +330,18 @@ namespace WwiseTools.Objects
             WwiseUtility.SetObjectProperty(this, WwiseProperty.Prop_3DPosition(_3d_position));
         }
 
+        private async Task Set3DPositionAsync(WwiseProperty.Option_3DPosition _3d_position)
+        {
+            await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_OverridePositioning(true));
+            await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_ListenerRelativeRouting(true));
+            await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_3DPosition(_3d_position));
+        }
+
         /// <summary>
         /// 设置衰减
         /// </summary>
         /// <param name="attenuation_name"></param>
+        [Obsolete("use async version instead")]
         public void SetAttenuation(string attenuation_name)
         {
             var att = WwiseUtility.GetWwiseObjectByName($"Attenuation:{attenuation_name}");
@@ -246,11 +360,30 @@ namespace WwiseTools.Objects
             }
         }
 
+        public async Task SetAttenuationAsync(string attenuation_name)
+        {
+            var att = await WwiseUtility.GetWwiseObjectByNameAsync($"Attenuation:{attenuation_name}");
+            if (att == null)
+            {
+                att = await WwiseUtility.CreateObjectAsync(attenuation_name, ObjectType.Attenuation, @"\Attenuations\Default Work Unit");
+            }
+            if (att == null) return;
+            await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_OverridePositioning(true));
+            await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_ListenerRelativeRouting(true));
+            if (!String.IsNullOrEmpty(attenuation_name))
+            {
+                await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_EnableAttenuation(true));
+                await WwiseUtility.SetObjectReferenceAsync(this, WwiseReference.Ref_Attenuation(
+                    att));
+            }
+        }
+
         /// <summary>
         /// 设置空间音频
         /// </summary>
         /// <param name="spatialization"></param>
         /// <param name="speaker_panning_spacialization_mix"></param>
+        [Obsolete("use async version instead")]
         public void SetSpatialization(WwiseProperty.Option_3DSpatialization spatialization, uint speaker_panning_spacialization_mix)
         {
             WwiseUtility.SetObjectProperty(this, WwiseProperty.Prop_OverridePositioning(true));
@@ -261,24 +394,46 @@ namespace WwiseTools.Objects
             WwiseUtility.SetObjectProperty(this, WwiseProperty.Prop_SpeakerPanning_3DSpatializationMix(speaker_panning_spacialization_mix));
         }
 
+        public async Task SetSpatializationAsync(WwiseProperty.Option_3DSpatialization spatialization, uint speaker_panning_spacialization_mix)
+        {
+            await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_OverridePositioning(true));
+            await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_ListenerRelativeRouting(true));
+            await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_3DSpatialization(spatialization));
+            await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_SpeakerPanning_3DSpatializationMix(speaker_panning_spacialization_mix));
+        }
+
         /// <summary>
         /// 设置位置中心
         /// </summary>
         /// <param name="center"></param>
+        [Obsolete("use async version instead")]
         public void SetPostitioningCenter(uint center)
         {
             WwiseUtility.SetObjectProperty(this, WwiseProperty.Prop_OverridePositioning(true));
             WwiseUtility.SetObjectProperty(this, WwiseProperty.Prop_CenterPercentage(center));
         }
 
+        public async Task SetPostitioningCenterAsync(uint center)
+        {
+            await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_OverridePositioning(true));
+            await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_CenterPercentage(center));
+        }
+
         /// <summary>
         /// 设置音响方向模式
         /// </summary>
         /// <param name="speaker_panning"></param>
+        [Obsolete("use async version instead")]
         public void SetSpeakerPanningMode(WwiseProperty.Option_SpeakerPanning speaker_panning)
         {
             WwiseUtility.SetObjectProperty(this, WwiseProperty.Prop_OverridePositioning(true));
             WwiseUtility.SetObjectProperty(this, WwiseProperty.Prop_SpeakerPanning(speaker_panning));
+        }
+
+        public async Task SetSpeakerPanningModeAsync(WwiseProperty.Option_SpeakerPanning speaker_panning)
+        {
+            await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_OverridePositioning(true));
+            await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_SpeakerPanning(speaker_panning));
         }
 
         /// <summary>
@@ -287,6 +442,7 @@ namespace WwiseTools.Objects
         /// <param name="ignore_parent"></param>
         /// <param name="option"></param>
         /// <param name="sound_instance_limit"></param>
+        [Obsolete("use async version instead")]
         public void SetPlaybackLimit(bool ignore_parent = false, WwiseProperty.Option_IsGlobalLimit option = WwiseProperty.Option_IsGlobalLimit.PerGameObject, uint sound_instance_limit = 50)
         {
             WwiseUtility.SetObjectProperty(this, WwiseProperty.Prop_IgnoreParentMaxSoundInstance(ignore_parent));
@@ -295,16 +451,31 @@ namespace WwiseTools.Objects
             WwiseUtility.SetObjectProperty(this, WwiseProperty.Prop_IsGlobalLimit(option));
         }
 
+        public async Task SetPlaybackLimitAsync(bool ignore_parent = false, WwiseProperty.Option_IsGlobalLimit option = WwiseProperty.Option_IsGlobalLimit.PerGameObject, uint sound_instance_limit = 50)
+        {
+            await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_IgnoreParentMaxSoundInstance(ignore_parent));
+            await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_UseMaxSoundPerInstance(true));
+            await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_MaxSoundPerInstance(sound_instance_limit));
+            await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_IsGlobalLimit(option));
+        }
+
         /// <summary>
         /// 设置播放限制表现
         /// </summary>
         /// <param name="behavior"></param>
+        [Obsolete("use async version instead")]
         public void SetLimitReachedBehavior(WwiseProperty.Option_OverLimitBehavior behavior = WwiseProperty.Option_OverLimitBehavior.KillVoice)
         {
             WwiseUtility.SetObjectProperty(this, WwiseProperty.Prop_OverLimitBehavior(behavior));
         }
 
+        public async Task SetLimitReachedBehaviorAsync(WwiseProperty.Option_OverLimitBehavior behavior = WwiseProperty.Option_OverLimitBehavior.KillVoice)
+        {
+            await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_OverLimitBehavior(behavior));
+        }
 
+
+        [Obsolete("use async version instead")]
         public List<WwiseObject> GetChildren()
         {
             List<WwiseObject> result = new List<WwiseObject>();

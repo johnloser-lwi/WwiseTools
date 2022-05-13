@@ -17,6 +17,7 @@ namespace WwiseTools.Objects
         /// </summary>
         /// <param name="name"></param>
         /// <param name="parent_path"></param>
+        [Obsolete("use WwiseUtility.CreateObjectAsync instead")]
         public WwiseMusicPlaylistContainer(string name, string parent_path = @"\Interactive Music Hierarchy\Default Work Unit\") : base(name, "", ObjectType.MusicPlaylistContainer.ToString())
         {
             var playlist = WwiseUtility.CreateObject(name, ObjectType.MusicPlaylistContainer, parent_path);
@@ -36,6 +37,7 @@ namespace WwiseTools.Objects
         /// 添加播放列表组
         /// </summary>
         /// <returns></returns>
+        [Obsolete("use async version instead")]
         public WwiseMusicPlaylistItem AddPlaylistItemGroup()
         {
             var root_item = GetRootPlaylistItem();
@@ -49,11 +51,26 @@ namespace WwiseTools.Objects
             return null;
         }
 
+        public async Task<WwiseMusicPlaylistItem> AddPlaylistItemGroupAsync()
+        {
+            var root_item = await GetRootPlaylistItemAsync();
+
+            if (root_item != null) // && segment != null)
+            {
+                var item = await 
+                    WwiseMusicPlaylistItem.CreateWwiseMusicPlaylistItem(WwiseMusicPlaylistItem.Option_PlaylistItemType.Group, root_item.ID);
+                return item;
+            }
+
+            return null;
+        }
+
         /// <summary>
         /// 添加播放列表片段
         /// </summary>
         /// <param name="segment"></param>
         /// <returns></returns>
+        [Obsolete("use async version instead")]
         public WwiseMusicPlaylistItem AddPlaylistItemSegment(WwiseMusicSegment segment)
         {
             var root_item = GetRootPlaylistItem();
@@ -70,10 +87,27 @@ namespace WwiseTools.Objects
             return null;
         }
 
+        public async Task<WwiseMusicPlaylistItem> AddPlaylistItemSegmentAsync(WwiseMusicSegment segment)
+        {
+            var root_item = await GetRootPlaylistItemAsync();
+
+            if (root_item != null) // && segment != null)
+            {
+                var item = await WwiseMusicPlaylistItem.CreateWwiseMusicPlaylistItem(segment, root_item.ID);
+
+                //WwiseUtility.ReloadWwiseProject();
+
+                return item;
+            }
+
+            return null;
+        }
+
         /// <summary>
         /// 获取播放列表根
         /// </summary>
         /// <returns></returns>
+        [Obsolete("use async version instead")]
         public WwiseMusicPlaylistItem GetRootPlaylistItem()
         {
 
@@ -117,7 +151,7 @@ namespace WwiseTools.Objects
                     if (jresult["return"].Last["musicPlaylistRoot"] == null) throw new Exception();
                     string id = jresult["return"].Last["musicPlaylistRoot"]["id"].ToString();
 
-                    return new WwiseMusicPlaylistItem(WwiseUtility.GetWwiseObjectByID(id));
+                    return new WwiseMusicPlaylistItem(await WwiseUtility.GetWwiseObjectByIDAsync(id));
                 }
                 catch (Exception e)
                 {

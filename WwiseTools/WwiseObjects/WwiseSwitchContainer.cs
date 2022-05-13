@@ -18,6 +18,7 @@ namespace WwiseTools.Objects
         /// </summary>
         /// <param name="name"></param>
         /// <param name="parent_path"></param>
+        [Obsolete("use WwiseUtility.CreateObjectAsync instead")]
         public WwiseSwitchContainer(string name, string parent_path = @"\Actor-Mixer Hierarchy\Default Work Unit") : base(name, "", WwiseObject.ObjectType.SwitchContainer.ToString())
         {
             var tempObj = WwiseUtility.CreateObject(name, ObjectType.SwitchContainer, parent_path);
@@ -38,27 +39,46 @@ namespace WwiseTools.Objects
         /// 设置播放模式
         /// </summary>
         /// <param name="behavior"></param>
+        [Obsolete("use async version instead")]
         public void SetPlayMode(WwiseProperty.Option_SwitchBehavior behavior)
         {
             WwiseUtility.SetObjectProperty(this, WwiseProperty.Prop_SwitchBehavior(behavior));
+        }
+
+        public async Task SetPlayModeAsync(WwiseProperty.Option_SwitchBehavior behavior)
+        {
+            await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_SwitchBehavior(behavior));
         }
 
         /// <summary>
         /// 设置Switch Group 或者 State Group 引用
         /// </summary>
         /// <param name="group"></param>
+        [Obsolete("use async version instead")]
         public void SetSwitchGroupOrStateGroup(WwiseReference group)
         {
             WwiseUtility.SetObjectReference(this, group);
+        }
+
+        public async Task SetSwitchGroupOrStateGroupAsync(WwiseReference group)
+        {
+            await WwiseUtility.SetObjectReferenceAsync(this, group);
         }
 
         /// <summary>
         /// 设置默认的Switch或者State
         /// </summary>
         /// <param name="switch_or_state"></param>
+        
+        [Obsolete("use async version instead")]
         public void SetDefaultSwitchOrState(WwiseReference switch_or_state)
         {
             WwiseUtility.SetObjectReference(this, switch_or_state);
+        }
+
+        public async Task SetDefaultSwitchOrStateAsync(WwiseReference switch_or_state)
+        {
+            await WwiseUtility.SetObjectReferenceAsync(this, switch_or_state);
         }
 
         /// <summary>
@@ -66,6 +86,7 @@ namespace WwiseTools.Objects
         /// </summary>
         /// <param name="child"></param>
         /// <param name="state_or_switch"></param>
+        [Obsolete("use async version instead")]
         public void AssignChildToStateOrSwitch(WwiseObject child, WwiseObject state_or_switch)
         {
             var temp = AssignChildToStateOrSwitchAsync(child, state_or_switch);

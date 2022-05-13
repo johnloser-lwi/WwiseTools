@@ -15,6 +15,7 @@ namespace WwiseTools.Objects
         /// </summary>
         /// <param name="name"></param>
         /// <param name="parent_path"></param>
+        [Obsolete("use WwiseUtility.CreateObjectAsync instead")]
         public WwiseFolder(string name, string parent_path = @"\Actor-Mixer Hierarchy\Default Work Unit") : base(name, "", "Folder")
         {
             var tempObj = WwiseUtility.CreateObject(name, ObjectType.Folder, parent_path);
@@ -34,12 +35,20 @@ namespace WwiseTools.Objects
         /// 添加子对象
         /// </summary>
         /// <param name="wwiseObject"></param>
+        [Obsolete("use async version instead")]
         public void AddChild(WwiseObject wwiseObject)
         {
             if (wwiseObject == null) return;
             WwiseUtility.MoveToParent(wwiseObject, this);
         }
 
+        public async Task AddChildAsync(WwiseObject wwiseObject)
+        {
+            if (wwiseObject == null) return;
+            await WwiseUtility.MoveToParentAsync(wwiseObject, this);
+        }
+
+        [Obsolete("use async version instead")]
         public List<WwiseObject> GetChildren()
         {
             List<WwiseObject> result = new List<WwiseObject>();
@@ -54,6 +63,28 @@ namespace WwiseTools.Objects
                     foreach (XmlElement child in children)
                     {
                         result.Add(WwiseUtility.GetWwiseObjectByID(child.GetAttribute("ID")));
+                    }
+                    break;
+                }
+            }
+
+            return result;
+        }
+
+        public async Task<List<WwiseObject>> GetChildrenAsync()
+        {
+            List<WwiseObject> result = new List<WwiseObject>();
+
+            WwiseWorkUnitParser parser = new WwiseWorkUnitParser(await WwiseUtility.GetWorkUnitFilePathAsync(this));
+            var folders = parser.XML.GetElementsByTagName("Folder");
+            foreach (XmlElement folder in folders)
+            {
+                if (folder.GetAttribute("ID") == ID)
+                {
+                    var children = (folder.GetElementsByTagName("ChildrenList")[0] as XmlElement).ChildNodes;
+                    foreach (XmlElement child in children)
+                    {
+                        result.Add(await WwiseUtility.GetWwiseObjectByIDAsync(child.GetAttribute("ID")));
                     }
                     break;
                 }

@@ -15,9 +15,23 @@ namespace WwiseTools.Objects
         public string Name { get; set; }
         public string ID { get; set; }
         public string Type { get; set; }
+        
+        [Obsolete("Use GetPathAsync instead")]
         public string Path { get { return WwiseUtility.GetWwiseObjectPath(ID); } }
 
+        [Obsolete("Use GetParentAsync() instead")]
         public WwiseObject Parent { get { return WwiseUtility.GetWwiseObjectByPath(Path.TrimEnd(Name.ToCharArray())); } }
+
+        public async Task<WwiseObject> GetParentAsync()
+        {
+            string path = await GetPathAsync();
+            return await WwiseUtility.GetWwiseObjectByPathAsync(System.IO.Path.GetDirectoryName(path));
+        }
+        
+        public async Task<string> GetPathAsync()
+        {
+            return await WwiseUtility.GetWwiseObjectPathAsync(ID);
+        }
 
         public WwiseObject(string name, string id, string type)
         {

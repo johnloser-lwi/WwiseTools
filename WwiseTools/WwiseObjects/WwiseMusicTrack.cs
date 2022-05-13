@@ -15,10 +15,11 @@ namespace WwiseTools.Objects
 {
     public class WwiseMusicTrack : WwiseActorMixer
     {
+        [Obsolete("use GetTrackLengthAsync() instead")]
         public float TrackLenghtMs { 
             get
             {
-                var length = GetTrackLength();
+                var length = GetTrackLengthAsync();
                 length.Wait();
                 return length.Result * 1000;
             }
@@ -29,6 +30,7 @@ namespace WwiseTools.Objects
         /// </summary>
         /// <param name="name"></param>
         /// <param name="parent_path"></param>
+        [Obsolete("use CreateWwiseMusicTrackAsync() instead")]
         public WwiseMusicTrack(string name, WwiseMusicSegment parent) : base(name, "", ObjectType.MusicTrack.ToString())
         {
 
@@ -39,6 +41,14 @@ namespace WwiseTools.Objects
             parent.SetExitCue(TrackLenghtMs);
         }
 
+        public static async Task<WwiseMusicTrack> CreateWwiseMusicTrackAsync(string name, WwiseMusicSegment parent)
+        {
+            var tempObj = await WwiseUtility.CreateObjectAsync(name, ObjectType.MusicTrack, await parent.GetPathAsync());
+            var musicTrack = new WwiseMusicTrack(tempObj);
+            parent.SetExitCueAsync(await musicTrack.GetTrackLengthAsync());
+            return musicTrack;
+        }
+
         /// <summary>
         /// 创建一个音轨，配置导入选项
         /// </summary>
@@ -46,6 +56,7 @@ namespace WwiseTools.Objects
         /// <param name="file_path"></param>
         /// <param name="sub_folder"></param>
         /// <param name="parent"></param>
+        [Obsolete("use CreateWwiseMusicTrackAsync() instead")]
         public WwiseMusicTrack(string name, string file_path, WwiseMusicSegment parent, string sub_folder = "") : base(name, "", ObjectType.MusicTrack.ToString())
         {
             var tempObj = WwiseUtility.ImportSound(file_path, "SFX", sub_folder, parent.Path);
@@ -67,7 +78,7 @@ namespace WwiseTools.Objects
         /// 获取轨道长度，同步执行
         /// </summary>
         /// <returns></returns>
-        private async Task<float> GetTrackLength()
+        public async Task<float> GetTrackLengthAsync()
         {
             try
             {
@@ -121,6 +132,7 @@ namespace WwiseTools.Objects
         /// <param name="stream"></param>
         /// <param name="non_cachable"></param>
         /// <param name="zero_latency"></param>
+        [Obsolete("Use async version instead")]
         public void SetStream(bool stream, bool non_cachable, bool zero_latency, uint look_ahead_time = 100, uint prefetch_length = 100)
         {
             WwiseUtility.SetObjectProperty(this, WwiseProperty.Prop_IsStreamingEnabled(stream));
@@ -131,32 +143,61 @@ namespace WwiseTools.Objects
             WwiseUtility.SetObjectProperty(this, WwiseProperty.Prop_PreFetchLength(prefetch_length));
 
         }
+        
+        public async Task SetStreamAsync(bool stream, bool non_cachable, bool zero_latency, uint look_ahead_time = 100, uint prefetch_length = 100)
+        {
+            await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_IsStreamingEnabled(stream));
+            await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_IsNonCachable(non_cachable));
+            await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_IsZeroLantency(zero_latency));
+            
+            await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_LookAheadTime(look_ahead_time));
+            await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_PreFetchLength(prefetch_length));
+
+        }
 
         /// <summary>
         /// 设置音轨类型
         /// </summary>
         /// <param name="type"></param>
+        [Obsolete("Use async version instead")]
         public void SetTrackType(WwiseProperty.Option_MusicTrackType type)
         {
             WwiseUtility.SetObjectProperty(this, WwiseProperty.Prop_MusicTrackType(type));
+        }
+        
+        public async Task SetTrackTypeAsync(WwiseProperty.Option_MusicTrackType type)
+        {
+            await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_MusicTrackType(type));
         }
 
         /// <summary>
         /// 设置Switch Group 或者 State Group 引用
         /// </summary>
         /// <param name="group"></param>
+        [Obsolete("Use async version instead")]
         public void SetSwitchGroupOrStateGroup(WwiseReference group)
         {
             WwiseUtility.SetObjectReference(this, group);
+        }
+        
+        public async Task SetSwitchGroupOrStateGroupAsync(WwiseReference group)
+        {
+            await WwiseUtility.SetObjectReferenceAsync(this, group);
         }
 
         /// <summary>
         /// 设置默认的Switch或者State
         /// </summary>
         /// <param name="switch_or_state"></param>
+        [Obsolete("Use async version instead")]
         public void SetDefaultSwitchOrState(WwiseReference switch_or_state)
         {
             WwiseUtility.SetObjectReference(this, switch_or_state);
+        }
+        
+        public async Task SetDefaultSwitchOrStateAsync(WwiseReference switch_or_state)
+        {
+            await WwiseUtility.SetObjectReferenceAsync(this, switch_or_state);
         }
     }
 }
