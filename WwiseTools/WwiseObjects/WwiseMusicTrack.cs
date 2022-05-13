@@ -45,7 +45,7 @@ namespace WwiseTools.Objects
         {
             var tempObj = await WwiseUtility.CreateObjectAsync(name, ObjectType.MusicTrack, await parent.GetPathAsync());
             var musicTrack = new WwiseMusicTrack(tempObj);
-            parent.SetExitCueAsync(await musicTrack.GetTrackLengthAsync());
+            await parent.SetExitCueAsync(await musicTrack.GetTrackLengthAsync());
             return musicTrack;
         }
 

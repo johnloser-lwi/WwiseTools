@@ -133,7 +133,7 @@ namespace WwiseTools.Objects
         {
             if (!(await item.GetPathAsync()).Contains(await GetPathAsync())) return;
 
-            WwiseUtility.SaveWwiseProjectAsync();
+            await WwiseUtility.SaveWwiseProjectAsync();
             WwiseWorkUnitParser parser = new WwiseWorkUnitParser(await WwiseUtility.GetWorkUnitFilePathAsync((this)));
 
             var playlists = parser.XML.GetElementsByTagName("Playlist");
@@ -188,7 +188,7 @@ namespace WwiseTools.Objects
 
             }
 
-            WwiseUtility.ReloadWwiseProjectAsync();
+            await WwiseUtility.ReloadWwiseProjectAsync();
             
         }
     }

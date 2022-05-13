@@ -191,7 +191,7 @@ namespace WwiseTools.Objects
 
             if (exitCue != null)
             {
-                WwiseUtility.SetObjectPropertyAsync(exitCue, new WwiseProperty("TimeMs", timeMs));
+                await WwiseUtility.SetObjectPropertyAsync(exitCue, new WwiseProperty("TimeMs", timeMs));
                 ExitCuePos = timeMs;
             }
         }

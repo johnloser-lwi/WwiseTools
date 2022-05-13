@@ -52,7 +52,7 @@ namespace WwiseTools.Objects
             List<WwiseObject> result = new List<WwiseObject>();
             foreach (var obj in temp)
             {
-                if (obj.Path.Contains(await GetPathAsync()))
+                if ((await obj.GetPathAsync()).Contains(await GetPathAsync()))
                 {
                     result.Add(obj);
                 }
