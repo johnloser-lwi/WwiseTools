@@ -1,4 +1,4 @@
-name: Build Wwise 2019.2.4
+name: Build Master
 
 on: 
   workflow_dispatch:
