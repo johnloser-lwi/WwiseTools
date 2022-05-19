@@ -103,7 +103,7 @@ namespace WwiseTools.Objects
         {
             if (child == null || state_or_switch == null) return;
 
-            foreach (var assignment in GetAssignments()["return"])
+            foreach (var assignment in (await GetAssignmentsAsync())["return"])
             {
                 if (assignment["stateOrSwitch"].ToString() == state_or_switch.ID && assignment["child"].ToString() == child.ID)
                 {
@@ -137,6 +137,7 @@ namespace WwiseTools.Objects
         /// </summary>
         /// <param name="child"></param>
         /// <param name="state_or_switch"></param>
+        [Obsolete("Use async version instead")]
         public void RemoveAssignedChildFromStateOrSwitch(WwiseObject child, WwiseObject state_or_switch)
         {
             var temp = RemoveAssignedChildFromStateOrSwitchAsync(child, state_or_switch);
@@ -176,6 +177,7 @@ namespace WwiseTools.Objects
         /// 获取分配信息
         /// </summary>
         /// <returns></returns>
+        [Obsolete("Use async version instead")]
         public JObject GetAssignments()
         {
             var temp = GetAssignmentsAsync();
