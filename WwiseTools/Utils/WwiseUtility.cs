@@ -33,7 +33,34 @@ namespace WwiseTools.Utils
         /// 连接初始化
         /// </summary>
         /// <returns></returns>
+        [Obsolete("Use WwiseUtility.ConnectAsync() instead")]
         public static async Task<bool> Init() // 初始化，返回连接状态
+        {
+            if (Client != null && Client.IsConnected()) return true;
+
+            try
+            {
+                
+                Client = new JsonClient();
+                await Client.Connect(); // 尝试创建Wwise连接
+
+                Console.WriteLine("Connected successfully!");
+
+                Client.Disconnected += () =>
+                {
+                    Client = null;
+                    System.Console.WriteLine("Connection closed!"); // 丢失连接提示
+                };
+                return true;
+            }
+            catch (Wamp.ErrorException e)
+            {
+                Console.WriteLine($"Failed to connect! ======> {e.Message}");
+                return false;
+            }
+        }
+        
+        public static async Task<bool> ConnectAsync() // 初始化，返回连接状态
         {
             if (Client != null && Client.IsConnected()) return true;
 
@@ -63,7 +90,22 @@ namespace WwiseTools.Utils
         /// 关闭连接
         /// </summary>
         /// <returns></returns>
+        [Obsolete("Use WwiseUtility.DisconnectAsync() instead")]
         public static async Task Close()
+        {
+            if (Client == null || !Client.IsConnected()) return;
+
+            try
+            {
+                await Client.Close(); // 尝试断开连接
+            }
+            catch (Wamp.ErrorException e)
+            {
+                Console.WriteLine($"Error while closing! ======> {e.Message}");
+            }
+        }
+
+        public static async Task DisconnectAsync()
         {
             if (Client == null || !Client.IsConnected()) return;
 
@@ -92,7 +134,7 @@ namespace WwiseTools.Utils
         
         public static async Task<bool> TryConnectWaapiAsync() 
         {
-            var connected = await Init();
+            var connected = await ConnectAsync();
 
             return connected && Client.IsConnected();
         }
@@ -1485,10 +1527,10 @@ namespace WwiseTools.Utils
         
         public static async Task ReloadWwiseProjectAsync()
         {
-            
             await LoadWwiseProjectAsync(await GetWwiseProjectPathAsync(), true);
+            await DisconnectAsync();
             Client = null;
-            Init().Wait();
+            await ConnectAsync();
         }
 
         /// <summary>
