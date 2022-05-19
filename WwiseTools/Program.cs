@@ -25,6 +25,12 @@ namespace WwiseTools
             
             
             await WwiseUtility.DisconnectAsync();
+<<<<<<< HEAD
+=======
+
+            Console.WriteLine("Press Any Key to Exit ...");
+            Console.ReadLine();
+>>>>>>> master
         }
 
 
