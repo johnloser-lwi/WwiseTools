@@ -1711,6 +1711,39 @@ namespace WwiseTools.Utils
             }
         }
 
+
+        /// <summary>
+        /// 支持command访问：https://www.audiokinetic.com/library/2019.2.14_7616/?source=SDK&id=globalcommandsids.html
+        /// </summary>
+        /// <param name="command"></param>
+        /// <returns></returns>
+        public static async Task ExecuteUICommand(string command, string[] objectIDs = null)
+        {
+            try
+            {
+                if (objectIDs != null)
+                {
+                    var query = new
+                    {
+                        command = command,
+                        objects = objectIDs
+                    };
+
+                    await Client.Call(ak.wwise.ui.commands.execute, query);
+                }
+                else
+                {
+                    var query = new { command = command };
+                    await Client.Call(ak.wwise.ui.commands.execute, query);
+                }
+                
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Failed to execute command {command}! ======> {e.Message}");
+            }
+        }
+
         /// <summary>
         /// 保存工程
         /// </summary>
