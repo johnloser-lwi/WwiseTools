@@ -16,6 +16,8 @@ namespace WwiseTools
     {
         static async Task Main(string[] args)
         {
+            if (!await WwiseUtility.TryConnectWaapiAsync()) return;
+            
             var selection = await WwiseUtility.GetWwiseObjectsBySelectionAsync();
 
             foreach (var wwiseObject in selection)
