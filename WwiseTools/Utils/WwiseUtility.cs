@@ -20,6 +20,8 @@ namespace WwiseTools.Utils
     {
         public static JsonClient Client { get; set; }
 
+        public static WwiseInfo ConnectionInfo { get; private set; }
+
         public enum GlobalImportSettings
         {
             useExisting,
@@ -80,8 +82,11 @@ namespace WwiseTools.Utils
                 Client.Disconnected += () =>
                 {
                     Client = null;
-                    System.Console.WriteLine("Connection closed!"); // 丢失连接提示
+                    ConnectionInfo = null;
+                    System.Console.WriteLine("Connection closed unexpectedly!"); // 丢失连接提示
                 };
+
+                ConnectionInfo = await GetWwiseInfoAsync();
                 return true;
             }
             catch (Wamp.ErrorException e)
@@ -117,6 +122,8 @@ namespace WwiseTools.Utils
             try
             {
                 await Client.Close(); // 尝试断开连接
+                Client = null;
+                ConnectionInfo = null;
             }
             catch (Wamp.ErrorException e)
             {
@@ -1714,6 +1721,39 @@ namespace WwiseTools.Utils
                 Console.WriteLine($"Failed to return project path! ======> {e.Message}");
                 return null;
             }
+        }
+
+        public static async Task<WwiseInfo> GetWwiseInfoAsync()
+        {
+            if (!await TryConnectWaapiAsync()) return null;
+
+            try
+            {
+                JObject result = await Client.Call(ak.wwise.core.getInfo, null, null);
+                int.TryParse(result["version"]["major"].ToString(), out int major);
+                int.TryParse(result["version"]["minor"].ToString(), out int minor);
+                int.TryParse(result["version"]["build"].ToString(), out int build);
+                int.TryParse(result["version"]["year"].ToString(), out int year);
+                int.TryParse(result["apiVersion"].ToString(), out int apiVersion);
+                string sessionId = result["sessionId"].ToString();
+                int.TryParse(result["processId"].ToString(), out int processId);
+
+                WwiseInfo wwiseInfo = new WwiseInfo()
+                {
+                    Version = new WwiseVersion(year, major, minor, build),
+                    APIVersion = apiVersion,
+                    SessionID = sessionId,
+                    ProcessID = processId
+                };
+
+                return wwiseInfo;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Failed to get Wwise info! ======> {e.Message}");
+            }
+
+            return null;
         }
 
 
