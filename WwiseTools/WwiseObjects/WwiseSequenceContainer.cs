@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Xml;
 using WwiseTools.Properties;
@@ -129,66 +130,47 @@ namespace WwiseTools.Objects
             
         }
         
-        public async Task SetPlaylistAsync(WwiseObject item, bool at_front = false)
+        public async Task SetPlaylistAsync(List<WwiseObject> items, bool auto_reload = false)
         {
-            if (!(await item.GetPathAsync()).Contains(await GetPathAsync())) return;
+            foreach (var item in items)
+            {
+                if (!(await item.GetPathAsync()).Contains(await GetPathAsync())) return;
+            }
+            
 
             await WwiseUtility.SaveWwiseProjectAsync();
             WwiseWorkUnitParser parser = new WwiseWorkUnitParser(await WwiseUtility.GetWorkUnitFilePathAsync((this)));
 
-            var playlists = parser.XML.GetElementsByTagName("Playlist");
+            var xpath = "//*[@ID='" + ID + "']/Playlist";
+            var playlistNode = parser.XML.SelectSingleNode(xpath);
 
-            XmlElement playlist = null;
 
-            foreach (XmlElement list in playlists)
+            var containerNode = parser.XML.SelectSingleNode("//*[@ID='" + ID + "']");
+
+            if (playlistNode != null)
             {
-                if (list.ParentNode.Attributes["ID"].Value.ToString() == ID)
-                {
-                    playlist = list;
-                    break;
-                }
-            }
 
-            if (playlist != null)
-            {
-                var node = parser.XML.CreateElement("ItemRef");
-                node.SetAttribute("Name", item.Name);
-                node.SetAttribute("ID", item.ID);
-
-                if (!at_front) playlist.AppendChild(parser.XML.ImportNode(node, true));
-                else playlist.InsertBefore(parser.XML.ImportNode(node, true), playlist.FirstChild);
-
-                //parser.AddToUnit(this, node);
+                containerNode.RemoveChild(playlistNode);
                 parser.SaveFile();
             }
-            else
-            {
-                var new_playlist = parser.XML.CreateElement("Playlist");
+            
+            
+            var new_playlist = parser.XML.CreateElement("Playlist");
 
+
+            foreach (var item in items)
+            {
                 var node = parser.XML.CreateElement("ItemRef");
                 node.SetAttribute("Name", item.Name);
                 node.SetAttribute("ID", item.ID);
-
                 new_playlist.AppendChild(node);
-
-                var containers = parser.XML.GetElementsByTagName(Type);
-
-                
-
-                foreach (XmlElement container in containers)
-                {
-                    if (container.GetAttribute("ID") == ID)
-                    {
-                        container.AppendChild(parser.XML.ImportNode(new_playlist, true));
-
-                        parser.SaveFile();
-                        break;
-                    }
-                }
-
             }
 
-            await WwiseUtility.ReloadWwiseProjectAsync();
+            containerNode.AppendChild(parser.XML.ImportNode(new_playlist, true));
+
+            parser.SaveFile();
+
+            if (auto_reload) await WwiseUtility.ReloadWwiseProjectAsync();
             
         }
     }

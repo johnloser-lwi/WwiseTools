@@ -73,21 +73,17 @@ namespace WwiseTools.Objects
 
         public async Task<List<WwiseObject>> GetChildrenAsync()
         {
+            await WwiseUtility.SaveWwiseProjectAsync();
+
             List<WwiseObject> result = new List<WwiseObject>();
 
             WwiseWorkUnitParser parser = new WwiseWorkUnitParser(await WwiseUtility.GetWorkUnitFilePathAsync(this));
-            var folders = parser.XML.GetElementsByTagName("Folder");
-            foreach (XmlElement folder in folders)
+            var xpath = $"//*[@ID='{ID}']/ChildrenList";
+            var children_list = parser.XML.SelectSingleNode(xpath);
+            var children = children_list.ChildNodes;
+            foreach (XmlElement child in children)
             {
-                if (folder.GetAttribute("ID") == ID)
-                {
-                    var children = (folder.GetElementsByTagName("ChildrenList")[0] as XmlElement).ChildNodes;
-                    foreach (XmlElement child in children)
-                    {
-                        result.Add(await WwiseUtility.GetWwiseObjectByIDAsync(child.GetAttribute("ID")));
-                    }
-                    break;
-                }
+                result.Add(await WwiseUtility.GetWwiseObjectByIDAsync(child.GetAttribute("ID")));
             }
 
             return result;
