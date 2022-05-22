@@ -87,6 +87,7 @@ namespace WwiseTools.Utils
                 };
 
                 ConnectionInfo = await GetWwiseInfoAsync();
+                Console.WriteLine(ConnectionInfo);
                 return true;
             }
             catch (Wamp.ErrorException e)
