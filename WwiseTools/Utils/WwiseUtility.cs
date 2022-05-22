@@ -60,7 +60,7 @@ namespace WwiseTools.Utils
             }
         }
         
-        public static async Task<bool> ConnectAsync() // 初始化，返回连接状态
+        public static async Task<bool> ConnectAsync(int wampPort = 8080) // 初始化，返回连接状态
         {
             if (Client != null && Client.IsConnected()) return true;
 
@@ -68,7 +68,7 @@ namespace WwiseTools.Utils
             {
                 
                 Client = new JsonClient();
-                await Client.Connect(); // 尝试创建Wwise连接
+                await Client.Connect($"ws://localhost:{wampPort}/waapi"); // 尝试创建Wwise连接
 
                 Console.WriteLine("Connected successfully!");
 
@@ -132,9 +132,9 @@ namespace WwiseTools.Utils
             return connected.Result && Client.IsConnected();
         }
         
-        public static async Task<bool> TryConnectWaapiAsync() 
+        public static async Task<bool> TryConnectWaapiAsync(int wampPort = 8080) 
         {
-            var connected = await ConnectAsync();
+            var connected = await ConnectAsync(wampPort);
 
             return connected && Client.IsConnected();
         }
