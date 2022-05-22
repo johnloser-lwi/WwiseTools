@@ -98,32 +98,34 @@ static async Task Main(string[] args)
     
     await WwiseUtility.SaveWwiseProjectAsync(); // 保存工程
     WwiseWorkUnitParser parser = new WwiseWorkUnitParser(await WwiseUtility.GetWorkUnitFilePathAsync(container)); // 创建WwiseWorkUnitParser，并获取container的WorkUnit文件
-    
-    var playlists = parser.XML.GetElementsByTagName("Playlist"); // 获取所有Playlist节点
-    
-    XmlElement playlist = null;
-    
-    // 获取ID与container相同的Playlist节点（目标节点）
-    foreach (XmlElement list in playlists)
+
+    // 获取container的Playlist节点
+    var xpath = "//*[@ID='" + container.ID + "']/Playlist";
+    var playlistNode = parser.XML.SelectSingleNode(xpath);
+
+
+    // 获取对应container的xml节点
+    var containerNode = parser.XML.SelectSingleNode("//*[@ID='" + container.ID + "']");
+
+    // 清空现有Playlist
+    if (playlistNode != null)
     {
-        if (list.ParentNode.Attributes["ID"].Value.ToString() == container.ID)
-        {
-            playlist = list;
-            break;
-        }
+        containerNode.RemoveChild(playlistNode);
+        parser.SaveFile();
     }
     
-    if (playlist != null)
-    {
-        // 创建ItemRef节点
-        var node = parser.XML.CreateElement("ItemRef"); 
-        node.SetAttribute("Name", sound.Name);
-        node.SetAttribute("ID", sound.ID);
     
-        playlist.AppendChild(parser.XML.ImportNode(node, true)); // 添加节点
-    
-        parser.SaveFile(); // 保存文件
-    }
+    var new_playlist = parser.XML.CreateElement("Playlist");
+
+
+    var node = parser.XML.CreateElement("ItemRef");
+    node.SetAttribute("Name", sound.Name);
+    node.SetAttribute("ID", sound.ID);
+    new_playlist.AppendChild(node);
+
+    containerNode.AppendChild(parser.XML.ImportNode(new_playlist, true));
+
+    parser.SaveFile();
     
     await WwiseUtility.ReloadWwiseProjectAsync();// 为了使修改生效，避免错误，需要重新加载工程
     
