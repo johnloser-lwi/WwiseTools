@@ -59,6 +59,11 @@ namespace WwiseTools.Utils
                 return false;
             }
         }
+
+        public static bool IsConnected()
+        {
+            return Client != null && Client.IsConnected();
+        }
         
         public static async Task<bool> ConnectAsync(int wampPort = 8080) // 初始化，返回连接状态
         {
@@ -1719,6 +1724,8 @@ namespace WwiseTools.Utils
         /// <returns></returns>
         public static async Task ExecuteUICommand(string command, string[] objectIDs = null)
         {
+            if (!await TryConnectWaapiAsync()) return;
+
             try
             {
                 if (objectIDs != null)
@@ -1741,6 +1748,31 @@ namespace WwiseTools.Utils
             catch (Exception e)
             {
                 Console.WriteLine($"Failed to execute command {command}! ======> {e.Message}");
+            }
+        }
+
+        public static async Task GenerateSelectedSoundBanksAllPlatformAsync(string[] soundBanks)
+        {
+            if (!await TryConnectWaapiAsync()) return;
+            
+            try
+            {
+                var query = new
+                {
+                    soundbanks = new List<object>(),
+                    writeToDisk = true
+                };
+
+                foreach (var soundbank in soundBanks)
+                {
+                    query.soundbanks.Add(new { name = soundbank });
+                }
+
+                await Client.Call(ak.wwise.core.soundbank.generate, query);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Failed to generate sound bank! ======> {e.Message}");
             }
         }
 
