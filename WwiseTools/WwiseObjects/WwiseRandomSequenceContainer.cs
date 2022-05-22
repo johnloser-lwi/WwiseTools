@@ -25,6 +25,26 @@ namespace WwiseTools.Objects
             WwiseUtility.SetObjectProperty(this, WwiseProperty.Prop_RandomOrSequence(option));
         }
 
+        public static async Task<WwiseRandomSequenceContainer> CreateWwiseRandomSequenceContainer(string name, WwiseProperty.Option_RandomOrSequence option, string parent_path = @"\Actor-Mixer Hierarchy\Default Work Unit")
+        {
+            var tempObj = await WwiseUtility.CreateObjectAsync(name, ObjectType.RandomSequenceContainer, parent_path);
+            await WwiseUtility.SetObjectPropertyAsync(tempObj, WwiseProperty.Prop_RandomOrSequence(option));
+
+            return new WwiseRandomSequenceContainer(tempObj);
+        }
+
+        public static async Task<WwiseRandomContainer> CreateWwiseRandomContainer(string name, string parent_path = @"\Actor-Mixer Hierarchy\Default Work Unit")
+        {
+            var tempObj = await CreateWwiseRandomSequenceContainer(name, WwiseProperty.Option_RandomOrSequence.Random, parent_path);
+            return new WwiseRandomContainer(tempObj);
+        }
+
+        public static async Task<WwiseSequenceContainer> CreateWwiseSequenceContainer(string name, string parent_path = @"\Actor-Mixer Hierarchy\Default Work Unit")
+        {
+            var tempObj = await CreateWwiseRandomSequenceContainer(name, WwiseProperty.Option_RandomOrSequence.Sequence, parent_path);
+            return new WwiseSequenceContainer(tempObj);
+        }
+
         internal WwiseRandomSequenceContainer(string name, string id, string type) : base(name, id, type)
         { 
         }
