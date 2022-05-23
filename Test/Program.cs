@@ -15,10 +15,20 @@ namespace Test
     {
         static async Task Main(string[] args)
         {
-            await WaqlTest();
+            if (await WwiseUtility.TryConnectWaapiAsync())
+            {
+                await ParserTestAsync();
+            }
+            else
+            {
+                Console.WriteLine("Waapi Connection Failed!");
+            }
+
+            await WwiseUtility.DisconnectAsync();
+            Console.ReadLine();
         }
 
-        static async Task WaqlTest()
+        static async Task WaqlTestAsync()
         {
             await WwiseUtility.ConnectAsync();
             Waql query = new Waql("where type = \"Sound\"");
@@ -39,7 +49,7 @@ namespace Test
                 }
             }
 
-            Console.ReadLine();
+            
         }
 
         static async Task ParserTestAsync()
@@ -67,10 +77,6 @@ namespace Test
             {
                 Console.WriteLine(sound.ID);
             }
-
-            await WwiseUtility.DisconnectAsync();
-
-            Console.ReadLine();
         }
     }
 }

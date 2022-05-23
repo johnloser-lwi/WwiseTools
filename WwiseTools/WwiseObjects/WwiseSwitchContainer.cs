@@ -101,7 +101,14 @@ namespace WwiseTools.Objects
         /// <returns></returns>
         public async Task AssignChildToStateOrSwitchAsync(WwiseObject child, WwiseObject state_or_switch)
         {
+            if (!await WwiseUtility.TryConnectWaapiAsync() ||
+                !WwiseUtility.Function.Contains("ak.wwise.core.switchContainer.addAssignment", 
+                    out string func)) return;
+
+
             if (child == null || state_or_switch == null) return;
+
+
 
             foreach (var assignment in (await GetAssignmentsAsync())["return"])
             {
@@ -117,7 +124,7 @@ namespace WwiseTools.Objects
                 // 创建物体
                 var result = await WwiseUtility.Client.Call
                     (
-                    ak.wwise.core.switchContainer.addAssignment,
+                    func,
                     new JObject
                     {
                         new JProperty("child", child.ID),
@@ -151,6 +158,11 @@ namespace WwiseTools.Objects
         /// <param name="state_or_switch"></param>
         public async Task RemoveAssignedChildFromStateOrSwitchAsync(WwiseObject child, WwiseObject state_or_switch)
         {
+            if (!await WwiseUtility.TryConnectWaapiAsync() ||
+                !WwiseUtility.Function.Contains("ak.wwise.core.switchContainer.removeAssignment", 
+                    out string func)) return;
+
+
             if (child == null || state_or_switch == null) return;
 
             try
@@ -158,7 +170,7 @@ namespace WwiseTools.Objects
                 // 创建物体
                 var result = await WwiseUtility.Client.Call
                     (
-                    ak.wwise.core.switchContainer.removeAssignment,
+                    func,
                     new JObject
                     {
                         new JProperty("child", child.ID),
@@ -191,12 +203,16 @@ namespace WwiseTools.Objects
         /// <returns></returns>
         public async Task<JObject> GetAssignmentsAsync()
         {
+            if (!await WwiseUtility.TryConnectWaapiAsync() ||
+                !WwiseUtility.Function.Contains("ak.wwise.core.switchContainer.getAssignments", out string func)) return null;
+
+
             try
             {
                 // 获取信息
                 var result = await WwiseUtility.Client.Call
                     (
-                    ak.wwise.core.switchContainer.getAssignments,
+                    func,
                     new JObject
                     {
                         new JProperty("id", ID),

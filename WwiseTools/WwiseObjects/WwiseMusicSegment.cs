@@ -215,12 +215,15 @@ namespace WwiseTools.Objects
         /// <returns></returns>
         public async Task CreateCueAsync(string name, float timeMs)
         {
+            if (!await WwiseUtility.TryConnectWaapiAsync() ||
+                !WwiseUtility.Function.Contains("ak.wwise.core.object.create", out string func)) return;
+
             try
             {
                 // 创建物体
                 var result = await WwiseUtility.Client.Call
                     (
-                    ak.wwise.core.@object.create,
+                        func,
                     new JObject
                     {
                         new JProperty("name", name),

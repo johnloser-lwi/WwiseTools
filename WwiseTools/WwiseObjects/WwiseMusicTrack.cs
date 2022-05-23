@@ -80,6 +80,10 @@ namespace WwiseTools.Objects
         /// <returns></returns>
         public async Task<float> GetTrackLengthAsync()
         {
+            if (!await WwiseUtility.TryConnectWaapiAsync() ||
+                !WwiseUtility.Function.Contains("ak.wwise.core.object.get", out string func)) return 0;
+
+
             try
             {
                 // ak.wwise.core.@object.get 指令
@@ -102,7 +106,7 @@ namespace WwiseTools.Objects
                 try // 尝试返回物体数据
                 {
 
-                    JObject jresult = await WwiseUtility.Client.Call(ak.wwise.core.@object.get, query, options);
+                    JObject jresult = await WwiseUtility.Client.Call(func, query, options);
                     
                     if (jresult["return"].Last["audioSource:maxDurationSource"] == null) throw new Exception();
 

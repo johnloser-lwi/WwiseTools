@@ -44,7 +44,7 @@ namespace WwiseTools.Utils
                 {
                     @return = new string[] { "name", "id", "type" }
                 };
-                var jresult = await WwiseUtility.Client.Call(ak.wwise.core.@object.get, query, option);
+                var jresult = await WwiseUtility.Client.Call("ak.wwise.core.object.get", query, option);
                 foreach (var obj in jresult["return"])
                 {
                     string name = obj["name"].ToString();
