@@ -1,8 +1,5 @@
 ﻿using System;
-using System.CodeDom;
 using System.Collections.Generic;
-using System.ComponentModel.Design;
-using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,28 +7,11 @@ using System.Xml;
 using WwiseTools.Objects;
 using WwiseTools.Utils;
 
-namespace Test
+namespace Examples
 {
-    internal class Program
+    internal class ExampleFunctions
     {
-        static async Task Main(string[] args)
-        {
-            WaapiLog.AddCustomLogger(CustomLogger);
-
-            if (await WwiseUtility.TryConnectWaapiAsync())
-            {
-                await ParserTestAsync();
-            }
-            else
-            {
-                Console.WriteLine("Waapi Connection Failed!");
-            }
-
-            await WwiseUtility.DisconnectAsync();
-            Console.ReadLine();
-        }
-
-        static void CustomLogger(object message, bool firstLog)
+        public static void CustomLogger(object message, bool firstLog)
         {
             string msg = DateTime.Now.ToString() + " => " + message.ToString();
 
@@ -46,7 +26,8 @@ namespace Test
             }
         }
 
-        static async Task WaqlTestAsync()
+
+        public static async Task WaqlTestAsync()
         {
             await WwiseUtility.ConnectAsync();
             Waql query = new Waql("where type = \"Sound\"");
@@ -67,10 +48,10 @@ namespace Test
                 }
             }
 
-            
+
         }
 
-        static async Task ParserTestAsync()
+        public static async Task ParserTestAsync()
         {
             var selection = await WwiseUtility.GetWwiseObjectsBySelectionAsync();
 
