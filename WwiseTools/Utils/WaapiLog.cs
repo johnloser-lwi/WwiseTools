@@ -22,13 +22,9 @@ namespace WwiseTools.Utils
 
 
         public bool firstLog = true;
-        public WaapiLog()
+        private WaapiLog()
         {
-            if (instance == null)
-            {
-                instance = this;
-                Logger = (msg,firstLog) => Console.WriteLine(msg);
-            }
+            Logger = (msg, _) => Console.WriteLine(msg);
         }
 
         public static void Log(object message)
