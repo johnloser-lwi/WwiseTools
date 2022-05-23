@@ -80,8 +80,7 @@ namespace WwiseTools.Objects
         /// <returns></returns>
         public async Task<float> GetTrackLengthAsync()
         {
-            if (!await WwiseUtility.TryConnectWaapiAsync() ||
-                !WwiseUtility.Function.Contains("ak.wwise.core.object.get", out string func)) return 0;
+            if (!await WwiseUtility.TryConnectWaapiAsync()) return 0;
 
 
             try
@@ -105,6 +104,7 @@ namespace WwiseTools.Objects
 
                 try // 尝试返回物体数据
                 {
+                    var func = WaapiFunction.CoreObjectGet;
 
                     JObject jresult = await WwiseUtility.Client.Call(func, query, options);
                     

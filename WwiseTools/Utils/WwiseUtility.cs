@@ -185,12 +185,11 @@ namespace WwiseTools.Utils
         {
             //ak.wwise.core.object.getPropertyAndReferenceNames
 
-            if (!await TryConnectWaapiAsync() || wwiseObject == null ||
-                !Function.Contains("ak.wwise.core.object.getPropertyAndReferenceNames", 
-                    out string func)) return "";
+            if (!await TryConnectWaapiAsync() || wwiseObject == null) return "";
 
             try
             {
+                var func = Function.Verify("ak.wwise.core.object.getPropertyAndReferenceNames");
                 var result = await Client.Call(func,
 
                     new JObject(
@@ -231,11 +230,11 @@ namespace WwiseTools.Utils
         /// <returns></returns>
         public static async Task SetObjectReferenceAsync(WwiseObject wwiseObject, WwiseReference wwiseReference)
         {
-            if (!await TryConnectWaapiAsync() || wwiseObject == null || wwiseReference == null ||
-                !Function.Contains("ak.wwise.core.object.setReference", out string func)) return;
+            if (!await TryConnectWaapiAsync() || wwiseObject == null || wwiseReference == null) return;
 
             try
             {
+                var func = Function.Verify("ak.wwise.core.object.setReference");
                 await Client.Call(func,
 
                     new JObject(
@@ -280,11 +279,11 @@ namespace WwiseTools.Utils
         /// <returns></returns>
         public static async Task SetObjectPropertyAsync(WwiseObject wwiseObject, WwiseProperty wwiseProperty)
         {
-            if (!await TryConnectWaapiAsync() || wwiseObject == null || wwiseProperty == null ||
-                !Function.Contains("ak.wwise.core.object.setProperty", out string func)) return;
+            if (!await TryConnectWaapiAsync() || wwiseObject == null || wwiseProperty == null) return;
 
             try
             {
+                var func = Function.Verify("ak.wwise.core.object.setProperty");
                 await Client.Call(func,
 
                     new JObject(
@@ -326,14 +325,14 @@ namespace WwiseTools.Utils
         /// <returns></returns>
         public static async Task ChangeObjectNameAsync(WwiseObject rename_object, string new_name)
         {
-            if(!await TryConnectWaapiAsync() || rename_object == null || String.IsNullOrEmpty(new_name) ||
-               !Function.Contains("ak.wwise.core.object.setName", out string func)) return;
+            if(!await TryConnectWaapiAsync() || rename_object == null || String.IsNullOrEmpty(new_name)) return;
 
             string old_name = rename_object.Name;
             try
             {
-                await Client.Call(
-                    func,
+                var func = Function.Verify("ak.wwise.core.object.setName");
+                await Client.Call(func
+                    ,
                     new
                     {
                         @object = rename_object.ID,
@@ -373,14 +372,14 @@ namespace WwiseTools.Utils
         /// <returns></returns>
         public static async Task CopyToParentAsync(WwiseObject child, WwiseObject parent)
         {
-            if (!await TryConnectWaapiAsync() || child == null || parent == null ||
-                !Function.Contains("ak.wwise.core.object.copy", out string func)) return;
+            if (!await TryConnectWaapiAsync() || child == null || parent == null) return;
 
             try
             {
+                var func = Function.Verify("ak.wwise.core.object.copy");
                 // 移动物体
-                await Client.Call(
-                    func,
+                await Client.Call(func
+                    ,
                     new JObject
                     {
                         new JProperty("object", child.ID),
@@ -406,6 +405,7 @@ namespace WwiseTools.Utils
 
                 };
 
+                func = WaapiFunction.CoreObjectGet;
                 // 获取子物体的新数据
                 JObject jresult = await Client.Call(func, query, options);
 
@@ -459,14 +459,13 @@ namespace WwiseTools.Utils
         /// <returns></returns>
         public static async Task MoveToParentAsync(WwiseObject child, WwiseObject parent)
         {
-            if (!await TryConnectWaapiAsync() || child == null || parent == null ||
-                !Function.Contains("ak.wwise.core.object.move", out string func)) return;
+            if (!await TryConnectWaapiAsync() || child == null || parent == null) return;
 
             try
             {
+                var func = Function.Verify("ak.wwise.core.object.move");
                 // 移动物体
-                await Client.Call(
-                    func,
+                await Client.Call(func,
                     new JObject
                     {
                         new JProperty("object", child.ID),
@@ -492,6 +491,7 @@ namespace WwiseTools.Utils
 
                 };
 
+                func = WaapiFunction.CoreObjectGet;
                 // 获取子物体的新数据
                 JObject jresult = await Client.Call(func, query, options);
 
@@ -533,14 +533,13 @@ namespace WwiseTools.Utils
         
          public static async Task SetNoteAsync(WwiseObject target, string note)
         {
-            if (!await TryConnectWaapiAsync() || target == null ||
-                !Function.Contains("ak.wwise.core.object.setNotes", out string func)) return;
+            if (!await TryConnectWaapiAsync() || target == null) return;
 
             try
             {
+                var func = Function.Verify("ak.wwise.core.object.setNotes");
                 // 移动物体
-                await Client.Call(
-                    func,
+                await Client.Call(func,
                     new JObject
                     {
                         new JProperty("object", target.ID),
@@ -606,14 +605,14 @@ namespace WwiseTools.Utils
         /// <returns></returns>
         public static async Task<WwiseObject> AddEventActionAsync(string event_name, string object_path, string parent_path = @"\Events\Default Work Unit", int action_type = 1)
         {
-            if (!await TryConnectWaapiAsync() ||
-                !Function.Contains("ak.wwise.core.object.create", out string func)) return null;
+            if (!await TryConnectWaapiAsync()) return null;
 
             try
             {
+                var func = Function.Verify("ak.wwise.core.object.create");
                 var result = await Client.Call
                     (
-                    func,
+                        func,
                     new JObject
                     {
                         new JProperty("parent", parent_path),
@@ -652,11 +651,12 @@ namespace WwiseTools.Utils
 
         public static async Task AddEventToBankAsync(WwiseObject soundBank, string eventID)
         {
-            if (!await TryConnectWaapiAsync() ||
-                !Function.Contains("ak.wwise.core.soundbank.setInclusions", out string func)) return;
+            if (!await TryConnectWaapiAsync()) return;
 
             try
             {
+
+                var func = Function.Verify("ak.wwise.core.soundbank.setInclusions");
                 await Client.Call
                 (
                     func,
@@ -706,11 +706,12 @@ namespace WwiseTools.Utils
         /// <returns></returns>
         public static async Task<WwiseObject> CreateObjectAsync(string object_name, WwiseObject.ObjectType object_type, string parent_path = @"\Actor-Mixer Hierarchy\Default Work Unit")
         {
-            if (!await TryConnectWaapiAsync() ||
-                !Function.Contains("ak.wwise.core.object.create", out string func)) return null;
+            if (!await TryConnectWaapiAsync()) return null;
 
             try
             {
+                var func = Function.Verify("ak.wwise.core.object.create");
+
                 // 创建物体
                 var result = await Client.Call
                     (
@@ -744,11 +745,12 @@ namespace WwiseTools.Utils
 
         public static async Task DeleteObjectAsync(string path)
         {
-            if (!await TryConnectWaapiAsync() ||
-                !Function.Contains("ak.wwise.core.object.delete", out string func)) return;
+            if (!await TryConnectWaapiAsync()) return;
 
             try
             {
+                var func = Function.Verify("ak.wwise.core.object.delete");
+
                 // 创建物体
                 var result = await Client.Call
                     (
@@ -792,11 +794,12 @@ namespace WwiseTools.Utils
         /// <returns></returns>
         public static async Task<WwiseObject> GetWwiseObjectByIDAsync(string target_id)
         {
-            if (!await TryConnectWaapiAsync() || String.IsNullOrWhiteSpace(target_id) ||
-                !Function.Contains("ak.wwise.core.object.get", out string func)) return null; 
+            if (!await TryConnectWaapiAsync() || String.IsNullOrWhiteSpace(target_id)) return null; 
 
             try
             {
+                var func = WaapiFunction.CoreObjectGet;
+
                 // ak.wwise.core.@object.get 指令
                 var query = new
                 {
@@ -852,11 +855,12 @@ namespace WwiseTools.Utils
 
         public static async Task<JToken> GetWwiseObjectPropertyAsync(string target_id, string wwise_property)
         {
-            if (!await TryConnectWaapiAsync() || String.IsNullOrWhiteSpace(target_id) ||
-                !Function.Contains("ak.wwise.core.object.get", out string func)) return null;
+            if (!await TryConnectWaapiAsync() || String.IsNullOrWhiteSpace(target_id)) return null;
 
             try
             {
+                var func = WaapiFunction.CoreObjectGet;
+
                 // ak.wwise.core.@object.get 指令
                 var query = new
                 {
@@ -909,11 +913,12 @@ namespace WwiseTools.Utils
 
         public static async Task<string> GetWwiseObjectPathAsync(string ID)
         {
-            if (!await TryConnectWaapiAsync() ||
-                !Function.Contains("ak.wwise.core.object.get", out string func)) return null;
+            if (!await TryConnectWaapiAsync()) return null;
 
             try
             {
+                var func = WaapiFunction.CoreObjectGet;
+
                 // ak.wwise.core.@object.get 指令
                 var query = new
                 {
@@ -1023,11 +1028,12 @@ namespace WwiseTools.Utils
         /// <returns></returns>
         public static async Task<WwiseObject> GetWwiseObjectByNameAsync(string target_name)
         {
-            if (!await TryConnectWaapiAsync() || String.IsNullOrWhiteSpace(target_name) ||
-                !Function.Contains("ak.wwise.core.object.get", out string func)) return null;
+            if (!await TryConnectWaapiAsync() || String.IsNullOrWhiteSpace(target_name)) return null;
 
             try
             {
+                var func = WaapiFunction.CoreObjectGet;
+
                 // ak.wwise.core.@object.get 指令
                 var query = new
                 {
@@ -1095,11 +1101,12 @@ namespace WwiseTools.Utils
         /// <returns></returns>
         public static async Task<WwiseObject> GetWwiseObjectByPathAsync(string path)
         {
-            if (!await TryConnectWaapiAsync() || String.IsNullOrWhiteSpace(path) ||
-                !Function.Contains("ak.wwise.core.object.get", out string func)) return null;
+            if (!await TryConnectWaapiAsync() || String.IsNullOrWhiteSpace(path)) return null;
 
             try
             {
+                var func = WaapiFunction.CoreObjectGet;
+
                 // ak.wwise.core.@object.get 指令
                 var query = new
                 {
@@ -1190,10 +1197,11 @@ namespace WwiseTools.Utils
                 }
             }
 
-            if (!Function.Contains("ak.wwise.core.object.get", out string func)) return null;
-
             try
             {
+
+                
+
                 // ak.wwise.core.@object.get 指令
                 var query = new
                 {
@@ -1215,6 +1223,8 @@ namespace WwiseTools.Utils
 
                 try // 尝试返回物体数据
                 {
+                    var func = WaapiFunction.CoreObjectGet;
+
                     JObject jresult = await Client.Call(func, query, options);
 
                     List<WwiseObject> obj_list = new List<WwiseObject>();
@@ -1257,8 +1267,7 @@ namespace WwiseTools.Utils
         }
         public static async Task<List<WwiseObject>> GetWwiseObjectsBySelectionAsync()
         {
-            if (!await TryConnectWaapiAsync() ||
-                !Function.Contains("ak.wwise.ui.getSelectedObjects", out string func)) return null;
+            if (!await TryConnectWaapiAsync()) return null;
             try
             {
                 // ak.wwise.core.@object.get 指令
@@ -1282,6 +1291,8 @@ namespace WwiseTools.Utils
 
                 try // 尝试返回物体数据
                 {
+                    var func = Function.Verify("ak.wwise.ui.getSelectedObjects");
+
                     JObject jresult = await Client.Call(func, null, options);
 
                     List<WwiseObject> obj_list = new List<WwiseObject>();
@@ -1325,8 +1336,7 @@ namespace WwiseTools.Utils
         
         public static async Task<List<string>> GetLanguagesAsync()
         {
-            if (!await TryConnectWaapiAsync() ||
-                !Function.Contains("ak.wwise.core.object.get", out string func)) return null;
+            if (!await TryConnectWaapiAsync()) return null;
 
             List<string> resultList = new List<string>();
             
@@ -1349,6 +1359,8 @@ namespace WwiseTools.Utils
                     @return = new string[] { "name", "id" }
 
                 };
+
+                var func = WaapiFunction.CoreObjectGet;
 
                 var result = await Client.Call(func, query, options);
 
@@ -1439,8 +1451,7 @@ namespace WwiseTools.Utils
         /// <returns></returns>
         public static async Task<WwiseObject> ImportSoundAsync(string file_path, string language = "SFX", string subFolder = "", string parent_path = @"\Actor-Mixer Hierarchy\Default Work Unit", string sound_name = "") // Async版本
         {
-            if (!file_path.EndsWith(".wav") || !await TryConnectWaapiAsync() ||
-                !Function.Contains("ak.wwise.core.audio.import", out string func)) return null; // 目标不是文件或者没有成功连接时返回空的WwiseObject
+            if (!file_path.EndsWith(".wav") || !await TryConnectWaapiAsync()) return null; // 目标不是文件或者没有成功连接时返回空的WwiseObject
             
             
             
@@ -1490,6 +1501,8 @@ namespace WwiseTools.Utils
 
                 var options = new JObject(new JProperty("return", new string[] { "name", "id", "type", "path" })); // 设置返回参数
 
+                var func = Function.Verify("ak.wwise.core.audio.import");
+
                 var result = await Client.Call(func, import_q, options); // 执行导入
 
                 if (result == null || result["objects"] == null || result["objects"].Last == null || result["objects"].Last["id"] == null) return null;
@@ -1525,8 +1538,7 @@ namespace WwiseTools.Utils
         /// <returns></returns>
         public static async Task<string> GetWorkUnitFilePathAsync(WwiseObject @object)
         {
-            if (!await TryConnectWaapiAsync() || @object == null ||
-                !Function.Contains("ak.wwise.core.object.get", out string func)) return null;
+            if (!await TryConnectWaapiAsync() || @object == null) return null;
 
             try
             {
@@ -1551,6 +1563,8 @@ namespace WwiseTools.Utils
 
                 try // 尝试返回物体数据
                 {
+                    var func = WaapiFunction.CoreObjectGet;
+
                     JObject jresult = await Client.Call(func, query, options);
 
                     string file_path = "";
@@ -1615,8 +1629,7 @@ namespace WwiseTools.Utils
         /// <returns></returns>
         public static async Task LoadWwiseProjectAsync(string path, bool save_current = true)
         {
-            if (!await TryConnectWaapiAsync() ||
-                !Function.Contains("ak.wwise.ui.project.open", out string func)) return;
+            if (!await TryConnectWaapiAsync()) return;
 
             if (save_current) await SaveWwiseProjectAsync();
 
@@ -1629,6 +1642,8 @@ namespace WwiseTools.Utils
                 {
                     path = project_path
                 };
+
+                var func = Function.Verify("ak.wwise.ui.project.open");
                 await Client.Call(func, query);
 
                 WaapiLog.Log("Project loaded successfully!");
@@ -1657,8 +1672,7 @@ namespace WwiseTools.Utils
         /// <returns></returns>
         public static async Task<string> GetWwiseProjectNameAsync()
         {
-            if (!await TryConnectWaapiAsync() ||
-                !Function.Contains("ak.wwise.core.object.get", out string func)) return null;
+            if (!await TryConnectWaapiAsync()) return null;
 
             try
             {
@@ -1683,6 +1697,8 @@ namespace WwiseTools.Utils
 
                 try // 尝试返回物体数据
                 {
+                    var func = WaapiFunction.CoreObjectGet;
+
                     JObject jresult = await Client.Call(func, query, options);
 
                     string name = "";
@@ -1726,8 +1742,7 @@ namespace WwiseTools.Utils
         /// <returns></returns>
         public static async Task<string> GetWwiseProjectPathAsync()
         {
-            if (!await TryConnectWaapiAsync() ||
-                !Function.Contains("ak.wwise.core.object.get", out string func)) return null;
+            if (!await TryConnectWaapiAsync()) return null;
 
             try
             {
@@ -1752,6 +1767,8 @@ namespace WwiseTools.Utils
 
                 try // 尝试返回物体数据
                 {
+                    var func = WaapiFunction.CoreObjectGet;
+
                     JObject jresult = await Client.Call(func, query, options);
 
                     string file_path = "";
@@ -1779,11 +1796,12 @@ namespace WwiseTools.Utils
 
         public static async Task<WwiseInfo> GetWwiseInfoAsync()
         {
-            if (!await TryConnectWaapiAsync() ||
-                !Function.Contains("ak.wwise.core.getInfo", out string func)) return null;
+            if (!await TryConnectWaapiAsync()) return null;
 
             try
             {
+                var func = Function.Verify("ak.wwise.core.getInfo");
+
                 JObject result = await Client.Call(func, null, null);
                 int.TryParse(result["version"]["major"].ToString(), out int major);
                 int.TryParse(result["version"]["minor"].ToString(), out int minor);
@@ -1818,11 +1836,12 @@ namespace WwiseTools.Utils
         /// <returns></returns>
         public static async Task ExecuteUICommand(string command, string[] objectIDs = null)
         {
-            if (!await TryConnectWaapiAsync() ||
-                !Function.Contains("ak.wwise.ui.commands.execute", out string func)) return;
+            if (!await TryConnectWaapiAsync()) return;
 
             try
             {
+                var func = Function.Verify("ak.wwise.ui.commands.execute");
+
                 if (objectIDs != null)
                 {
                     var query = new
@@ -1888,9 +1907,7 @@ namespace WwiseTools.Utils
 
         public static async Task GenerateSelectedSoundBanksAllPlatformAsync(string[] soundBanks)
         {
-            if (!await TryConnectWaapiAsync() || 
-                !Function.Contains("ak.wwise.core.soundbank.generate",
-                    out string func)) return;
+            if (!await TryConnectWaapiAsync()) return;
             
             try
             {
@@ -1904,6 +1921,8 @@ namespace WwiseTools.Utils
                 {
                     query.soundbanks.Add(new { name = soundbank });
                 }
+
+                var func = Function.Verify("ak.wwise.core.soundbank.generate");
 
                 await Client.Call(func, query);
             }
@@ -1946,10 +1965,11 @@ namespace WwiseTools.Utils
         /// <returns></returns>
         public static async Task SaveWwiseProjectAsync()
         {
-            if (!await TryConnectWaapiAsync() || 
-                !Function.Contains("ak.wwise.core.project.save", out string func)) return;
+            if (!await TryConnectWaapiAsync()) return;
             try
             {
+                var func = Function.Verify("ak.wwise.core.project.save");
+
                 await Client.Call(func);
                 WaapiLog.Log("Project saved successfully!");
             }

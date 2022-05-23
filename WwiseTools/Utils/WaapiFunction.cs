@@ -9,6 +9,8 @@ namespace WwiseTools.Utils
 {
     internal class WaapiFunction : IEnumerable<string>
     {
+        public static string CoreObjectGet => "ak.wwise.core.object.get";
+
         private List<string> functions;
 
         public WaapiFunction()
@@ -22,12 +24,34 @@ namespace WwiseTools.Utils
                 functions.Add(function);
         }
 
-        public bool Contains(string function, out string final)
+        public string Verify(string func)
         {
-            final = function; 
-            var result = functions.Contains(function);
-            if (!result) WaapiLog.Log($"Function {function} not available in wwise {WwiseUtility.ConnectionInfo.Version.ToString()}!");
-            return result;
+            bool result = false;
+            string final = null;
+            if (functions.Contains(func))
+            {
+                final = func;
+                result = true;
+            }
+            else
+            {
+                foreach (var function in this)
+                {
+                    if (function.ToLower().Contains(func.ToLower()))
+                    {
+                        final = function;
+                        result = true;
+                        break;
+                    }
+                }
+                if (result)
+                    WaapiLog.Log($"Warning: No matching function for {func}! Using {final} instead!");
+            }
+
+            if (!result) 
+                throw new Exception($"Function {func} not available in wwise " +
+                                    $"{WwiseUtility.ConnectionInfo.Version.ToString()}!");
+            return final;
         }
 
         public IEnumerator<string> GetEnumerator()

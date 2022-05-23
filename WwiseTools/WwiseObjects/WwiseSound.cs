@@ -134,8 +134,7 @@ namespace WwiseTools.Objects
 
         private  async Task<JObject> GetWavFilePathAsync()
         {
-            if (!await WwiseUtility.TryConnectWaapiAsync() ||
-                !WwiseUtility.Function.Contains("ak.wwise.core.object.get", out string func)) return null;
+            if (!await WwiseUtility.TryConnectWaapiAsync()) return null;
 
 
             try
@@ -159,6 +158,8 @@ namespace WwiseTools.Objects
 
                 try // 尝试返回物体数据
                 {
+                    var func = WaapiFunction.CoreObjectGet;
+
                     JObject jresult = await WwiseUtility.Client.Call(func, query, options);
 
                     return jresult;

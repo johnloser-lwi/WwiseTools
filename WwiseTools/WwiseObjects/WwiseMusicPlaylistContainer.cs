@@ -124,8 +124,7 @@ namespace WwiseTools.Objects
         /// <returns></returns>
         public async Task<WwiseMusicPlaylistItem> GetRootPlaylistItemAsync()
         {
-            if (!await WwiseUtility.TryConnectWaapiAsync() ||
-                !WwiseUtility.Function.Contains("ak.wwise.core.object.get", out string func)) return null;
+            if (!await WwiseUtility.TryConnectWaapiAsync()) return null;
 
             try
             {
@@ -145,6 +144,8 @@ namespace WwiseTools.Objects
                     @return = new string[] { "musicPlaylistRoot" }
 
                 };
+
+                var func = WaapiFunction.CoreObjectGet;
 
                 JObject jresult = await WwiseUtility.Client.Call(func, query, options);
 

@@ -57,13 +57,13 @@ namespace WwiseTools.Objects
 
         public async Task<string> GetPropertyAndReferenceNamesAsync()
         {
-            if (!await WwiseUtility.TryConnectWaapiAsync() ||
-                !WwiseUtility.Function.Contains("ak.wwise.core.object.getPropertyAndReferenceNames", 
-                    out string func)) return null;
+            if (!await WwiseUtility.TryConnectWaapiAsync()) return null;
 
 
             try
             {
+                var func = WwiseUtility.Function.Verify("ak.wwise.core.object.getPropertyAndReferenceNames");
+
                 // 创建物体
                 var result = await WwiseUtility.Client.Call
                     (

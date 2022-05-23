@@ -101,9 +101,7 @@ namespace WwiseTools.Objects
         /// <returns></returns>
         public async Task AssignChildToStateOrSwitchAsync(WwiseObject child, WwiseObject state_or_switch)
         {
-            if (!await WwiseUtility.TryConnectWaapiAsync() ||
-                !WwiseUtility.Function.Contains("ak.wwise.core.switchContainer.addAssignment", 
-                    out string func)) return;
+            if (!await WwiseUtility.TryConnectWaapiAsync()) return;
 
 
             if (child == null || state_or_switch == null) return;
@@ -121,6 +119,8 @@ namespace WwiseTools.Objects
 
             try
             {
+                var func = WwiseUtility.Function.Verify("ak.wwise.core.switchContainer.addAssignment");
+
                 // 创建物体
                 var result = await WwiseUtility.Client.Call
                     (
@@ -158,15 +158,15 @@ namespace WwiseTools.Objects
         /// <param name="state_or_switch"></param>
         public async Task RemoveAssignedChildFromStateOrSwitchAsync(WwiseObject child, WwiseObject state_or_switch)
         {
-            if (!await WwiseUtility.TryConnectWaapiAsync() ||
-                !WwiseUtility.Function.Contains("ak.wwise.core.switchContainer.removeAssignment", 
-                    out string func)) return;
+            if (!await WwiseUtility.TryConnectWaapiAsync()) return;
 
 
             if (child == null || state_or_switch == null) return;
 
             try
             {
+                var func = WwiseUtility.Function.Verify("ak.wwise.core.switchContainer.removeAssignment");
+
                 // 创建物体
                 var result = await WwiseUtility.Client.Call
                     (
@@ -203,12 +203,13 @@ namespace WwiseTools.Objects
         /// <returns></returns>
         public async Task<JObject> GetAssignmentsAsync()
         {
-            if (!await WwiseUtility.TryConnectWaapiAsync() ||
-                !WwiseUtility.Function.Contains("ak.wwise.core.switchContainer.getAssignments", out string func)) return null;
+            if (!await WwiseUtility.TryConnectWaapiAsync()) return null;
 
 
             try
             {
+                var func = WwiseUtility.Function.Verify("ak.wwise.core.switchContainer.getAssignments");
+
                 // 获取信息
                 var result = await WwiseUtility.Client.Call
                     (
