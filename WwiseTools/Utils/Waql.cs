@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,17 +8,31 @@ using WwiseTools.Objects;
 
 namespace WwiseTools.Utils
 {
-    public class Waql
+    public class Waql : IEnumerable<WwiseObject>
     {
         private string waql_command;
-        public List<WwiseObject> Result = new List<WwiseObject>();
+        public List<WwiseObject> Result;
         public Waql(string waql)
         {
-            this.waql_command = "$ " +  waql;
+            waql_command = FormatQuery(waql);
         }
 
-        public async Task<bool> RunAsync()
+        private string FormatQuery(string waql)
         {
+            if (!waql.StartsWith("$")) waql = $"$ " + waql;
+
+            return waql;
+        }
+
+        public async Task<bool> RunAsync(string waql = "")
+        {
+            if (!await WwiseUtility.TryConnectWaapiAsync()) return false;
+            
+            if (!string.IsNullOrEmpty(waql)) waql_command = FormatQuery(waql);
+
+            if (Result == null) Result = new List<WwiseObject>();
+            else Result.Clear();
+
             try
             {
                 var query = new
@@ -42,11 +57,24 @@ namespace WwiseTools.Utils
             catch (Exception e)
             {
                 Console.WriteLine($"Failed to run query {waql_command}! ======> {e.Message}");
-
+                Result = null;
                 return false;
             }
 
             return true;
+        }
+
+        public IEnumerator<WwiseObject> GetEnumerator()
+        {
+            foreach (var wwiseObject in Result)
+            {
+                yield return wwiseObject;
+            }
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
         }
     }
 }

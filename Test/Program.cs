@@ -15,7 +15,31 @@ namespace Test
     {
         static async Task Main(string[] args)
         {
-            await ParserTestAsync();
+            await WaqlTest();
+        }
+
+        static async Task WaqlTest()
+        {
+            await WwiseUtility.ConnectAsync();
+            Waql query = new Waql("where type = \"Sound\"");
+
+            if (await query.RunAsync())
+            {
+                foreach (var wwieObject in query)
+                {
+                    Console.WriteLine(wwieObject.Name);
+                }
+            }
+
+            if (await query.RunAsync("where type = \"RandomSequenceContainer\""))
+            {
+                foreach (var wwieObject in query)
+                {
+                    Console.WriteLine(wwieObject.Name);
+                }
+            }
+
+            Console.ReadLine();
         }
 
         static async Task ParserTestAsync()
