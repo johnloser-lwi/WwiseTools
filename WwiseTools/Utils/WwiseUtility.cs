@@ -1143,11 +1143,11 @@ namespace WwiseTools.Utils
         /// </summary>
         /// <param name="target_type"></param>
         /// <returns></returns>
-        public static async Task<List<WwiseObject>> GetWwiseObjectsOfTypeAsync(string target_type)
+        public static async Task<List<WwiseObject>> GetWwiseObjectsOfTypeAsync(string target_type, bool standardType = true)
         {
             if (!await TryConnectWaapiAsync() || String.IsNullOrWhiteSpace(target_type)) return null;
 
-            if (ConnectionInfo.Version.Year >= 2021)
+            if (standardType && ConnectionInfo.Version.Year >= 2021)
             {
                 try
                 {
