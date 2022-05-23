@@ -1,9 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31410.357
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32516.85
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WwiseTools", "WwiseTools\WwiseTools.csproj", "{00FE4A42-1117-494C-B592-6713C3EC777C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WaapiClientCore", "%WWISEROOT%\SDK\samples\WwiseAuthoringAPI\cs\WaapiClientCore\WaapiClientCore.csproj", "{BF45323C-2BD1-9F00-34E2-22F5A0ECFB00}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WaapiClientJson", "%WWISEROOT%\SDK\samples\WwiseAuthoringAPI\cs\WaapiClientJson\WaapiClientJson.csproj", "{102D363C-7CB8-A300-85C9-26F5F1D3FF00}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +31,30 @@ Global
 		{00FE4A42-1117-494C-B592-6713C3EC777C}.Release|x64.Build.0 = Release|x64
 		{00FE4A42-1117-494C-B592-6713C3EC777C}.Release|x86.ActiveCfg = Release|x86
 		{00FE4A42-1117-494C-B592-6713C3EC777C}.Release|x86.Build.0 = Release|x86
+		{BF45323C-2BD1-9F00-34E2-22F5A0ECFB00}.Debug|Any CPU.ActiveCfg = Debug|x64
+		{BF45323C-2BD1-9F00-34E2-22F5A0ECFB00}.Debug|Any CPU.Build.0 = Debug|x64
+		{BF45323C-2BD1-9F00-34E2-22F5A0ECFB00}.Debug|x64.ActiveCfg = Debug|x64
+		{BF45323C-2BD1-9F00-34E2-22F5A0ECFB00}.Debug|x64.Build.0 = Debug|x64
+		{BF45323C-2BD1-9F00-34E2-22F5A0ECFB00}.Debug|x86.ActiveCfg = Debug|x64
+		{BF45323C-2BD1-9F00-34E2-22F5A0ECFB00}.Debug|x86.Build.0 = Debug|x64
+		{BF45323C-2BD1-9F00-34E2-22F5A0ECFB00}.Release|Any CPU.ActiveCfg = Release|x64
+		{BF45323C-2BD1-9F00-34E2-22F5A0ECFB00}.Release|Any CPU.Build.0 = Release|x64
+		{BF45323C-2BD1-9F00-34E2-22F5A0ECFB00}.Release|x64.ActiveCfg = Release|x64
+		{BF45323C-2BD1-9F00-34E2-22F5A0ECFB00}.Release|x64.Build.0 = Release|x64
+		{BF45323C-2BD1-9F00-34E2-22F5A0ECFB00}.Release|x86.ActiveCfg = Release|x64
+		{BF45323C-2BD1-9F00-34E2-22F5A0ECFB00}.Release|x86.Build.0 = Release|x64
+		{102D363C-7CB8-A300-85C9-26F5F1D3FF00}.Debug|Any CPU.ActiveCfg = Debug|x64
+		{102D363C-7CB8-A300-85C9-26F5F1D3FF00}.Debug|Any CPU.Build.0 = Debug|x64
+		{102D363C-7CB8-A300-85C9-26F5F1D3FF00}.Debug|x64.ActiveCfg = Debug|x64
+		{102D363C-7CB8-A300-85C9-26F5F1D3FF00}.Debug|x64.Build.0 = Debug|x64
+		{102D363C-7CB8-A300-85C9-26F5F1D3FF00}.Debug|x86.ActiveCfg = Debug|x64
+		{102D363C-7CB8-A300-85C9-26F5F1D3FF00}.Debug|x86.Build.0 = Debug|x64
+		{102D363C-7CB8-A300-85C9-26F5F1D3FF00}.Release|Any CPU.ActiveCfg = Release|x64
+		{102D363C-7CB8-A300-85C9-26F5F1D3FF00}.Release|Any CPU.Build.0 = Release|x64
+		{102D363C-7CB8-A300-85C9-26F5F1D3FF00}.Release|x64.ActiveCfg = Release|x64
+		{102D363C-7CB8-A300-85C9-26F5F1D3FF00}.Release|x64.Build.0 = Release|x64
+		{102D363C-7CB8-A300-85C9-26F5F1D3FF00}.Release|x86.ActiveCfg = Release|x64
+		{102D363C-7CB8-A300-85C9-26F5F1D3FF00}.Release|x86.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

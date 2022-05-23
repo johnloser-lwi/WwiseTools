@@ -3,10 +3,6 @@
 
 *作者 : [杨惟勤 (AKA John Loser)](https://losersworldindustries.com/john-yang)*
 
-*.NETFramework,Version=v4.5.2*
-
-*Wwise,Version=v2019.2.4.7329*
-
 ___
 
 ## 使用说明

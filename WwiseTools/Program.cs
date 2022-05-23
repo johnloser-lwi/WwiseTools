@@ -30,12 +30,9 @@ namespace WwiseTools
             await WwiseUtility.ExecuteUICommand("ShowSchematicView", ids);
 
             await WwiseUtility.DisconnectAsync();
-<<<<<<< HEAD
-=======
 
             Console.WriteLine("Press Any Key to Exit ...");
             Console.ReadLine();
->>>>>>> master
         }
     }
 }
