@@ -2,6 +2,7 @@
 using System.CodeDom;
 using System.Collections.Generic;
 using System.ComponentModel.Design;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,6 +16,8 @@ namespace Test
     {
         static async Task Main(string[] args)
         {
+            WaapiLog.AddCustomLogger(CustomLogger);
+
             if (await WwiseUtility.TryConnectWaapiAsync())
             {
                 await ParserTestAsync();
@@ -28,6 +31,21 @@ namespace Test
             Console.ReadLine();
         }
 
+        static void CustomLogger(object message, bool firstLog)
+        {
+            string msg = DateTime.Now.ToString() + " => " + message.ToString();
+
+
+            if (firstLog)
+                msg = "\n\n\n\n" + $"Session Started On {DateTime.Now.ToString()}>\n" +
+                      msg;
+
+            using (var writer = new StreamWriter("log", true))
+            {
+                writer.WriteLine(msg);
+            }
+        }
+
         static async Task WaqlTestAsync()
         {
             await WwiseUtility.ConnectAsync();
@@ -37,7 +55,7 @@ namespace Test
             {
                 foreach (var wwieObject in query)
                 {
-                    Console.WriteLine(wwieObject.Name);
+                    WaapiLog.Log(wwieObject.Name);
                 }
             }
 
@@ -45,7 +63,7 @@ namespace Test
             {
                 foreach (var wwieObject in query)
                 {
-                    Console.WriteLine(wwieObject.Name);
+                    WaapiLog.Log(wwieObject.Name);
                 }
             }
 
@@ -65,17 +83,17 @@ namespace Test
 
             foreach (XmlElement node in parser.GetChildrenNodeList(objNode))
             {
-                Console.WriteLine(node.Name);
+                WaapiLog.Log(node.Name);
             }
 
             foreach (var child in await obj.GetChildrenAsync())
             {
-                Console.WriteLine(child.Name);
+                WaapiLog.Log(child.Name);
             }
 
             foreach (var sound in await WwiseUtility.GetWwiseObjectsOfTypeAsync("Sound"))
             {
-                Console.WriteLine(sound.ID);
+                WaapiLog.Log(sound.ID);
             }
         }
     }

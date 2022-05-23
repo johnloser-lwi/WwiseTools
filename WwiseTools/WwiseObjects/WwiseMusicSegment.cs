@@ -236,11 +236,11 @@ namespace WwiseTools.Objects
                     }
                     );
 
-                Console.WriteLine($"Music Cue {name} created successfully!");
+                WaapiLog.Log($"Music Cue {name} created successfully!");
             }
             catch (Wamp.ErrorException e)
             {
-                Console.WriteLine($"Failed to create Cue : {name}! ======> {e.Message}");
+                WaapiLog.Log($"Failed to create Cue : {name}! ======> {e.Message}");
             }
         }
     }

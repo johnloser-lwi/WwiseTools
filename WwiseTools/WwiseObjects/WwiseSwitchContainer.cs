@@ -114,7 +114,7 @@ namespace WwiseTools.Objects
             {
                 if (assignment["stateOrSwitch"].ToString() == state_or_switch.ID && assignment["child"].ToString() == child.ID)
                 {
-                    Console.WriteLine($"Child {child.Name} has already been assigned to {state_or_switch.Type} : {state_or_switch.Name}!");
+                    WaapiLog.Log($"Child {child.Name} has already been assigned to {state_or_switch.Type} : {state_or_switch.Name}!");
                     return;
                 }
             }
@@ -135,7 +135,7 @@ namespace WwiseTools.Objects
             }
             catch (Wamp.ErrorException e)
             {
-                Console.WriteLine($"Failed to assign {child.Name} to {state_or_switch}! ======> {e.Message}");
+                WaapiLog.Log($"Failed to assign {child.Name} to {state_or_switch}! ======> {e.Message}");
             }
         }
 
@@ -181,7 +181,7 @@ namespace WwiseTools.Objects
             }
             catch (Wamp.ErrorException e)
             {
-                Console.WriteLine($"Failed to assign {child.Name} to {state_or_switch}! ======> {e.Message}");
+                WaapiLog.Log($"Failed to assign {child.Name} to {state_or_switch}! ======> {e.Message}");
             }
         }
 
@@ -223,7 +223,7 @@ namespace WwiseTools.Objects
             }
             catch (Wamp.ErrorException e)
             {
-                Console.WriteLine($"Failed to get assignment of {Name}! ======> {e.Message}");
+                WaapiLog.Log($"Failed to get assignment of {Name}! ======> {e.Message}");
                 return null;
             }
         }

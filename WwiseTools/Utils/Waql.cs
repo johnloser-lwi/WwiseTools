@@ -56,7 +56,7 @@ namespace WwiseTools.Utils
             }
             catch (Exception e)
             {
-                Console.WriteLine($"Failed to run query {waql_command}! ======> {e.Message}");
+                WaapiLog.Log($"Failed to run query {waql_command}! ======> {e.Message}");
                 Result = null;
                 return false;
             }

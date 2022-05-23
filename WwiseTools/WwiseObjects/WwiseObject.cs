@@ -77,7 +77,7 @@ namespace WwiseTools.Objects
             }
             catch (Wamp.ErrorException e)
             {
-                Console.WriteLine($"Failed to get property and reference names from {Name}! ======> {e.Message}");
+                WaapiLog.Log($"Failed to get property and reference names from {Name}! ======> {e.Message}");
                 return null;
             }
         }

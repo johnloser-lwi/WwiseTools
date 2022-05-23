@@ -158,13 +158,13 @@ namespace WwiseTools.Objects
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine($"Failed to get PlaylistRoot of object : {Name}! =======> {e.Message}");
+                    WaapiLog.Log($"Failed to get PlaylistRoot of object : {Name}! =======> {e.Message}");
                     return null;
                 }
             }
             catch (Wamp.ErrorException e)
             {
-                Console.WriteLine($"Failed to get PlaylistRoot of object : {Name}! =======> {e.Message}");
+                WaapiLog.Log($"Failed to get PlaylistRoot of object : {Name}! =======> {e.Message}");
                 return null;
             }
 

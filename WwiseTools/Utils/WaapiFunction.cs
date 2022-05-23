@@ -26,7 +26,7 @@ namespace WwiseTools.Utils
         {
             final = function; 
             var result = functions.Contains(function);
-            if (!result) Console.WriteLine($"Function {function} not available in wwise {WwiseUtility.ConnectionInfo.Version.ToString()}!");
+            if (!result) WaapiLog.Log($"Function {function} not available in wwise {WwiseUtility.ConnectionInfo.Version.ToString()}!");
             return result;
         }
 

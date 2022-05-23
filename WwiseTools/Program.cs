@@ -22,7 +22,7 @@ namespace WwiseTools
 
             foreach (var wwiseObject in selection)
             {
-                Console.WriteLine(wwiseObject.Name);
+                WaapiLog.Log(wwiseObject.Name);
             }
 
             var ids = selection.Select(x => x.ID).ToArray();
@@ -31,7 +31,7 @@ namespace WwiseTools
 
             await WwiseUtility.DisconnectAsync();
 
-            Console.WriteLine("Press Any Key to Exit ...");
+            WaapiLog.Log("Press Any Key to Exit ...");
             Console.ReadLine();
         }
     }

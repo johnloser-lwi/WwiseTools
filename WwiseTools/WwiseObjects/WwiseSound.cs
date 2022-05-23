@@ -165,13 +165,13 @@ namespace WwiseTools.Objects
                 }
                 catch
                 {
-                    Console.WriteLine($"Failed to return WaveFilePath from ID : {ID}!");
+                    WaapiLog.Log($"Failed to return WaveFilePath from ID : {ID}!");
                     return null;
                 }
             }
             catch (Wamp.ErrorException e)
             {
-                Console.WriteLine($"Failed to return WaveFilePath from ID : {ID}! ======> {e.Message}");
+                WaapiLog.Log($"Failed to return WaveFilePath from ID : {ID}! ======> {e.Message}");
                 return null;
             }
 

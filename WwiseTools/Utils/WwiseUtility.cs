@@ -49,18 +49,18 @@ namespace WwiseTools.Utils
                 Client = new JsonClient();
                 await Client.Connect(); // 尝试创建Wwise连接
 
-                Console.WriteLine("Connected successfully!");
+                WaapiLog.Log("Connected successfully!");
 
                 Client.Disconnected += () =>
                 {
                     Client = null;
-                    System.Console.WriteLine("Connection closed!"); // 丢失连接提示
+                    WaapiLog.Log("Connection closed!"); // 丢失连接提示
                 };
                 return true;
             }
             catch (Wamp.ErrorException e)
             {
-                Console.WriteLine($"Failed to connect! ======> {e.Message}");
+                WaapiLog.Log($"Failed to connect! ======> {e.Message}");
                 return false;
             }
         }
@@ -80,23 +80,23 @@ namespace WwiseTools.Utils
                 Client = new JsonClient();
                 await Client.Connect($"ws://localhost:{wampPort}/waapi"); // 尝试创建Wwise连接
                 await GetFunctionsAsync();
-                Console.WriteLine("Connected successfully!");
+                WaapiLog.Log("Connected successfully!");
 
                 Client.Disconnected += () =>
                 {
                     Client = null;
                     ConnectionInfo = null;
-                    System.Console.WriteLine("Connection closed unexpectedly!"); // 丢失连接提示
+                    WaapiLog.Log("Connection closed unexpectedly!"); // 丢失连接提示
                 };
 
                 ConnectionInfo = await GetWwiseInfoAsync();
                 
-                Console.WriteLine(ConnectionInfo);
+                WaapiLog.Log(ConnectionInfo);
                 return true;
             }
             catch (Wamp.ErrorException e)
             {
-                Console.WriteLine($"Failed to connect! ======> {e.Message}");
+                WaapiLog.Log($"Failed to connect! ======> {e.Message}");
                 return false;
             }
         }
@@ -116,7 +116,7 @@ namespace WwiseTools.Utils
             }
             catch (Wamp.ErrorException e)
             {
-                Console.WriteLine($"Error while closing! ======> {e.Message}");
+                WaapiLog.Log($"Error while closing! ======> {e.Message}");
             }
         }
 
@@ -132,7 +132,7 @@ namespace WwiseTools.Utils
             }
             catch (Wamp.ErrorException e)
             {
-                Console.WriteLine($"Error while closing! ======> {e.Message}");
+                WaapiLog.Log($"Error while closing! ======> {e.Message}");
             }
         }
 
@@ -198,14 +198,14 @@ namespace WwiseTools.Utils
                         new JProperty("object", wwiseObject.ID)),
 
                     null);
-                Console.WriteLine("Property and References fetched successfully!");
+                WaapiLog.Log("Property and References fetched successfully!");
                 return result.ToString();
 
                 
             }
             catch (Wamp.ErrorException e)
             {
-                Console.WriteLine($"Failed to fetch Property and References! ======> {e.Message}");
+                WaapiLog.Log($"Failed to fetch Property and References! ======> {e.Message}");
                 return "";
             }
         }
@@ -248,11 +248,11 @@ namespace WwiseTools.Utils
 
                     null);
 
-                Console.WriteLine("Reference set successfully!");
+                WaapiLog.Log("Reference set successfully!");
             }
             catch (Wamp.ErrorException e)
             {
-                Console.WriteLine($"Failed to set reference \"{wwiseReference.Name}\" to object {wwiseObject.Name} ======> {e.Message}");
+                WaapiLog.Log($"Failed to set reference \"{wwiseReference.Name}\" to object {wwiseObject.Name} ======> {e.Message}");
             }
         }
 
@@ -297,11 +297,11 @@ namespace WwiseTools.Utils
 
                     null);
 
-                Console.WriteLine($"Property {wwiseProperty.Name} successfully changed to {wwiseProperty.Value}!");
+                WaapiLog.Log($"Property {wwiseProperty.Name} successfully changed to {wwiseProperty.Value}!");
             }
             catch (Wamp.ErrorException e)
             {
-                Console.WriteLine($"Failed to set property \"{wwiseProperty.Name}\" of object {wwiseObject.Name} ======> {e.Message}");
+                WaapiLog.Log($"Failed to set property \"{wwiseProperty.Name}\" of object {wwiseObject.Name} ======> {e.Message}");
             }
         }
 
@@ -342,12 +342,12 @@ namespace WwiseTools.Utils
 
                 rename_object.Name = new_name;
 
-                Console.WriteLine($"Object {old_name} successfully renamed to {new_name}!");
+                WaapiLog.Log($"Object {old_name} successfully renamed to {new_name}!");
             }
 
             catch (AK.Wwise.Waapi.Wamp.ErrorException e)
             {
-                System.Console.Write($"Failed to rename object : {old_name} ======> {e.Message}");
+                WaapiLog.Log($"Failed to rename object : {old_name} ======> {e.Message}");
             }
         }
 
@@ -416,21 +416,21 @@ namespace WwiseTools.Utils
                     child.ID = jresult["return"].Last["id"].ToString();
                     child.Type = jresult["return"].Last["type"].ToString();
 
-                    Console.WriteLine($"Moved {child.Name} to {parent.Path}!");
+                    WaapiLog.Log($"Moved {child.Name} to {parent.Path}!");
                 }
                 catch (Wamp.ErrorException e)
                 {
-                    Console.WriteLine($"Failed to update WwiseObject! ======> {e.Message}");
+                    WaapiLog.Log($"Failed to update WwiseObject! ======> {e.Message}");
                 }
                 */
 
-                Console.WriteLine($"Copied {child.Name} to {parent.Name}!");
+                WaapiLog.Log($"Copied {child.Name} to {parent.Name}!");
 
                 //return GetWwiseObjectByID(jresult["return"].Last["id"].ToString());
             }
             catch (Wamp.ErrorException e)
             {
-                Console.WriteLine($"Failed to copy {child.Name} to {parent.Name}! ======> {e.Message}");
+                WaapiLog.Log($"Failed to copy {child.Name} to {parent.Name}! ======> {e.Message}");
             }
 
             //return null;
@@ -502,11 +502,11 @@ namespace WwiseTools.Utils
                     child.ID = jresult["return"].Last["id"].ToString();
                     child.Type = jresult["return"].Last["type"].ToString();
 
-                    Console.WriteLine($"Moved {child.Name} to {parent.Path}!");
+                    WaapiLog.Log($"Moved {child.Name} to {parent.Path}!");
                 }
                 catch (Wamp.ErrorException e)
                 {
-                    Console.WriteLine($"Failed to update WwiseObject! ======> {e.Message}");
+                    WaapiLog.Log($"Failed to update WwiseObject! ======> {e.Message}");
                 }
                 */
 
@@ -514,11 +514,11 @@ namespace WwiseTools.Utils
                 child.ID = jresult["return"].Last["id"].ToString();
                 child.Type = jresult["return"].Last["type"].ToString();
 
-                Console.WriteLine($"Moved {child.Name} to {parent.Name}!");
+                WaapiLog.Log($"Moved {child.Name} to {parent.Name}!");
             }
             catch (Wamp.ErrorException e)
             {
-                Console.WriteLine($"Failed to move {child.Name} to {parent.Name}! ======> {e.Message}");
+                WaapiLog.Log($"Failed to move {child.Name} to {parent.Name}! ======> {e.Message}");
             }
         }
         
@@ -548,11 +548,11 @@ namespace WwiseTools.Utils
                     }
                     );
                 
-                Console.WriteLine($"Successfully set {target.Name} note to \"{note}\"!");
+                WaapiLog.Log($"Successfully set {target.Name} note to \"{note}\"!");
             }
             catch (Wamp.ErrorException e)
             {
-                Console.WriteLine($"Failed to set note for {target.Name}! ======> {e.Message}");
+                WaapiLog.Log($"Failed to set note for {target.Name}! ======> {e.Message}");
             }
         }
 
@@ -633,12 +633,12 @@ namespace WwiseTools.Utils
                     }
                     );
 
-                Console.WriteLine($"Event {event_name} created successfully!");
+                WaapiLog.Log($"Event {event_name} created successfully!");
                 return await GetWwiseObjectByIDAsync(result["id"].ToString());
             }
             catch (Wamp.ErrorException e)
             {
-                Console.WriteLine($"Failed to created play event : {event_name}! ======> {e.Message} ");
+                WaapiLog.Log($"Failed to created play event : {event_name}! ======> {e.Message} ");
                 return null;
             }
         }
@@ -677,7 +677,7 @@ namespace WwiseTools.Utils
             }
             catch (Exception e)
             {
-                Console.WriteLine($"Failed to Add Event to Bank ======> {e.Message}");
+                WaapiLog.Log($"Failed to Add Event to Bank ======> {e.Message}");
             }
         }
 
@@ -725,12 +725,12 @@ namespace WwiseTools.Utils
                     null
                     );
 
-                Console.WriteLine($"Object {object_name} created successfully!");
+                WaapiLog.Log($"Object {object_name} created successfully!");
                 return await GetWwiseObjectByIDAsync(result["id"].ToString());
             }
             catch (Wamp.ErrorException e)
             {
-                Console.WriteLine($"Failed to create object : {object_name}! ======> {e.Message}");
+                WaapiLog.Log($"Failed to create object : {object_name}! ======> {e.Message}");
                 return null;
             }
         }
@@ -760,12 +760,12 @@ namespace WwiseTools.Utils
                     null
                     );
 
-                Console.WriteLine($"Object {path} deleted successfully!");
+                WaapiLog.Log($"Object {path} deleted successfully!");
                 return;
             }
             catch (Wamp.ErrorException e)
             {
-                Console.WriteLine($"Failed to delete object : {path}! ======> {e.Message}");
+                WaapiLog.Log($"Failed to delete object : {path}! ======> {e.Message}");
                 return;
             }
         }
@@ -822,19 +822,19 @@ namespace WwiseTools.Utils
                     string id = jresult["return"].Last["id"].ToString();
                     string type = jresult["return"].Last["type"].ToString();
 
-                    Console.WriteLine($"WwiseObject {name} successfully fetched!");
+                    WaapiLog.Log($"WwiseObject {name} successfully fetched!");
 
                     return new WwiseObject(name, id, type);
                 }
                 catch
                 {
-                    Console.WriteLine($"Failed to return WwiseObject from ID : {target_id}!");
+                    WaapiLog.Log($"Failed to return WwiseObject from ID : {target_id}!");
                     return null;
                 }
             }
             catch (Wamp.ErrorException e)
             {
-                Console.WriteLine($"Failed to return WwiseObject from ID : {target_id}! ======> {e.Message}");
+                WaapiLog.Log($"Failed to return WwiseObject from ID : {target_id}! ======> {e.Message}");
                 return null;
             }
             
@@ -880,19 +880,19 @@ namespace WwiseTools.Utils
 
                     
 
-                    Console.WriteLine($"WwiseProperty {wwise_property} successfully fetched!");
+                    WaapiLog.Log($"WwiseProperty {wwise_property} successfully fetched!");
 
                     return jresult["return"].Last["@" + wwise_property];
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine($"Failed to return WwiseObject Property : {target_id}! ======> {e.Message}");
+                    WaapiLog.Log($"Failed to return WwiseObject Property : {target_id}! ======> {e.Message}");
                     return null;
                 }
             }
             catch (Wamp.ErrorException e)
             {
-                Console.WriteLine($"Failed to return WwiseObject Property : {target_id}! ======> {e.Message}");
+                WaapiLog.Log($"Failed to return WwiseObject Property : {target_id}! ======> {e.Message}");
                 return null;
             }
 
@@ -943,13 +943,13 @@ namespace WwiseTools.Utils
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine($"Failed to get path of object : {ID}! =======> {e.Message}");
+                    WaapiLog.Log($"Failed to get path of object : {ID}! =======> {e.Message}");
                     return null;
                 }
             }
             catch (Wamp.ErrorException e)
             {
-                Console.WriteLine($"Failed to get path of object : {ID}! =======> {e.Message}");
+                WaapiLog.Log($"Failed to get path of object : {ID}! =======> {e.Message}");
                 return null;
             }
 
@@ -1056,19 +1056,19 @@ namespace WwiseTools.Utils
                     string id = jresult["return"].Last["id"].ToString();
                     string type = jresult["return"].Last["type"].ToString();
 
-                    Console.WriteLine($"WwiseObject {name} successfully fetched!");
+                    WaapiLog.Log($"WwiseObject {name} successfully fetched!");
 
                     return new WwiseObject(name, id, type);
                 }
                 catch (Wamp.ErrorException e)
                 {
-                    Console.WriteLine($"Failed to return WwiseObject by name : {target_name}! ======> {e.Message}");
+                    WaapiLog.Log($"Failed to return WwiseObject by name : {target_name}! ======> {e.Message}");
                     return null;
                 }
             }
             catch (Wamp.ErrorException e)
             {
-                Console.WriteLine($"Failed to return WwiseObject by name : {target_name}! ======> {e.Message}");
+                WaapiLog.Log($"Failed to return WwiseObject by name : {target_name}! ======> {e.Message}");
                 return null;
             }
             
@@ -1123,7 +1123,7 @@ namespace WwiseTools.Utils
                 string id = jresult["return"].Last["id"].ToString();
                 string type = jresult["return"].Last["type"].ToString();
 
-                Console.WriteLine($"WwiseObject {name} successfully fetched!");
+                WaapiLog.Log($"WwiseObject {name} successfully fetched!");
 
                 return new WwiseObject(name, id, type);
 
@@ -1134,13 +1134,13 @@ namespace WwiseTools.Utils
                 }
                 catch (Wamp.ErrorException e)
                 {
-                    Console.WriteLine($"Failed to return WwiseObject by path : {path}! ======> {e.Message}");
+                    WaapiLog.Log($"Failed to return WwiseObject by path : {path}! ======> {e.Message}");
                     return null;
                 }*/
             }
             catch (Wamp.ErrorException e)
             {
-                Console.WriteLine($"Failed to return WwiseObject by path : {path}! ======> {e.Message}");
+                WaapiLog.Log($"Failed to return WwiseObject by path : {path}! ======> {e.Message}");
                 return null;
             }
 
@@ -1185,7 +1185,7 @@ namespace WwiseTools.Utils
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine($"Failed to return WwiseObject list of type {target_type} ======> {e.Message}");
+                    WaapiLog.Log($"Failed to return WwiseObject list of type {target_type} ======> {e.Message}");
                     return null;
                 }
             }
@@ -1230,19 +1230,19 @@ namespace WwiseTools.Utils
 
                     
 
-                    Console.WriteLine($"WwiseObject list or type {target_type} successfully fetched!");
+                    WaapiLog.Log($"WwiseObject list or type {target_type} successfully fetched!");
 
                     return obj_list;
                 }
                 catch (Wamp.ErrorException e)
                 {
-                    Console.WriteLine($"Failed to return WwiseObject list of type : {target_type}! ======> {e.Message}");
+                    WaapiLog.Log($"Failed to return WwiseObject list of type : {target_type}! ======> {e.Message}");
                     return null;
                 }
             }
             catch (Wamp.ErrorException e)
             {
-                Console.WriteLine($"Failed to return WwiseObject list of type : {target_type}! ======> {e.Message}");
+                WaapiLog.Log($"Failed to return WwiseObject list of type : {target_type}! ======> {e.Message}");
                 return null;
             }
         }
@@ -1297,19 +1297,19 @@ namespace WwiseTools.Utils
 
 
 
-                    Console.WriteLine($"Selected WwiseObject list successfully fetched!");
+                    WaapiLog.Log($"Selected WwiseObject list successfully fetched!");
 
                     return obj_list;
                 }
                 catch (Wamp.ErrorException e)
                 {
-                    Console.WriteLine($"Failed to return Selected WwiseObject list! ======> {e.Message}");
+                    WaapiLog.Log($"Failed to return Selected WwiseObject list! ======> {e.Message}");
                     return null;
                 }
             }
             catch (Wamp.ErrorException e)
             {
-                Console.WriteLine($"Failed to return Selected WwiseObject list! ======> {e.Message}");
+                WaapiLog.Log($"Failed to return Selected WwiseObject list! ======> {e.Message}");
                 return null;
             }
         }
@@ -1360,12 +1360,12 @@ namespace WwiseTools.Utils
                         resultList.Add(name);
                 }
 
-                Console.WriteLine($"Language list fetched successfully!");
+                WaapiLog.Log($"Language list fetched successfully!");
                 
             }
             catch (Wamp.ErrorException e)
             {
-                Console.WriteLine($"Failed to return language list! ======> {e.Message}");
+                WaapiLog.Log($"Failed to return language list! ======> {e.Message}");
             }
 
             return resultList;
@@ -1398,12 +1398,12 @@ namespace WwiseTools.Utils
                     var r = ImportSound(f, language, subFolder, parent_path);
                     results.Add(r);
                 }
-                Console.WriteLine($"File(s) in folder {folder_path} imported successfully!");
+                WaapiLog.Log($"File(s) in folder {folder_path} imported successfully!");
                 return results;
             }
             catch (Exception e)
             {
-                Console.WriteLine($"Failed to import from folder : {folder_path}! ======> {e.Message}");
+                WaapiLog.Log($"Failed to import from folder : {folder_path}! ======> {e.Message}");
                 return null;
             }
         }
@@ -1457,7 +1457,7 @@ namespace WwiseTools.Utils
                 }
                 catch (IOException e)
                 {
-                    Console.WriteLine($"Failed to get file name from { file_path } ======> { e.Message }");
+                    WaapiLog.Log($"Failed to get file name from { file_path } ======> { e.Message }");
                     return null;
                 }
             }
@@ -1494,13 +1494,13 @@ namespace WwiseTools.Utils
 
                 if (result == null || result["objects"] == null || result["objects"].Last == null || result["objects"].Last["id"] == null) return null;
                 
-                Console.WriteLine($"File {file_path} imported successfully!");
+                WaapiLog.Log($"File {file_path} imported successfully!");
 
                 return await GetWwiseObjectByIDAsync(result["objects"].Last["id"].ToString());
             }
             catch (Wamp.ErrorException e)
             {
-                Console.WriteLine($"Failed to import file : {file_path} ======> {e.Message}");
+                WaapiLog.Log($"Failed to import file : {file_path} ======> {e.Message}");
                 return null;
             }
         }
@@ -1559,19 +1559,19 @@ namespace WwiseTools.Utils
                         file_path = obj["filePath"].ToString();
                     }
 
-                    Console.WriteLine($"Work Unit file path of object {@object.Name} successfully fetched!");
+                    WaapiLog.Log($"Work Unit file path of object {@object.Name} successfully fetched!");
 
                     return file_path;
                 }
                 catch (Wamp.ErrorException e)
                 {
-                    Console.WriteLine($"Failed to return Work Unit file path of object : {@object.Name}! ======> {e.Message}");
+                    WaapiLog.Log($"Failed to return Work Unit file path of object : {@object.Name}! ======> {e.Message}");
                     return null;
                 }
             }
             catch (Wamp.ErrorException e)
             {
-                Console.WriteLine($"Failed to return Work Unit file path of object : {@object.Name}! ======> {e.Message}");
+                WaapiLog.Log($"Failed to return Work Unit file path of object : {@object.Name}! ======> {e.Message}");
                 return null;
             }
         }
@@ -1631,11 +1631,11 @@ namespace WwiseTools.Utils
                 };
                 await Client.Call(func, query);
 
-                Console.WriteLine("Project loaded successfully!");
+                WaapiLog.Log("Project loaded successfully!");
             }
             catch (Wamp.ErrorException e)
             {
-                Console.WriteLine($"Failed to load project! =======> {e.Message}");
+                WaapiLog.Log($"Failed to load project! =======> {e.Message}");
             }
         }
 
@@ -1691,19 +1691,19 @@ namespace WwiseTools.Utils
                         name = obj["name"].ToString();
                     }
 
-                    Console.WriteLine($"Project name successfully fetched!");
+                    WaapiLog.Log($"Project name successfully fetched!");
 
                     return name;
                 }
                 catch (Wamp.ErrorException e)
                 {
-                    Console.WriteLine($"Failed to return project name! ======> {e.Message}");
+                    WaapiLog.Log($"Failed to return project name! ======> {e.Message}");
                     return null;
                 }
             }
             catch (Wamp.ErrorException e)
             {
-                Console.WriteLine($"Failed to return project name! ======> {e.Message}");
+                WaapiLog.Log($"Failed to return project name! ======> {e.Message}");
                 return null;
             }
         }
@@ -1760,19 +1760,19 @@ namespace WwiseTools.Utils
                         file_path = obj["filePath"].ToString();
                     }
 
-                    Console.WriteLine($"Project path successfully fetched!");
+                    WaapiLog.Log($"Project path successfully fetched!");
 
                     return file_path;
                 }
                 catch (Wamp.ErrorException e)
                 {
-                    Console.WriteLine($"Failed to return project path! ======> {e.Message}");
+                    WaapiLog.Log($"Failed to return project path! ======> {e.Message}");
                     return null;
                 }
             }
             catch (Wamp.ErrorException e)
             {
-                Console.WriteLine($"Failed to return project path! ======> {e.Message}");
+                WaapiLog.Log($"Failed to return project path! ======> {e.Message}");
                 return null;
             }
         }
@@ -1804,7 +1804,7 @@ namespace WwiseTools.Utils
             }
             catch (Exception e)
             {
-                Console.WriteLine($"Failed to get Wwise info! ======> {e.Message}");
+                WaapiLog.Log($"Failed to get Wwise info! ======> {e.Message}");
             }
 
             return null;
@@ -1842,7 +1842,7 @@ namespace WwiseTools.Utils
             }
             catch (Exception e)
             {
-                Console.WriteLine($"Failed to execute command {command}! ======> {e.Message}");
+                WaapiLog.Log($"Failed to execute command {command}! ======> {e.Message}");
             }
         }
 
@@ -1866,7 +1866,7 @@ namespace WwiseTools.Utils
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine($"Failed to get children of {wwiseObject.Name} ======> {e.Message}");
+                    WaapiLog.Log($"Failed to get children of {wwiseObject.Name} ======> {e.Message}");
                 }
 
             }
@@ -1909,7 +1909,7 @@ namespace WwiseTools.Utils
             }
             catch (Exception e)
             {
-                Console.WriteLine($"Failed to generate sound bank! ======> {e.Message}");
+                WaapiLog.Log($"Failed to generate sound bank! ======> {e.Message}");
             }
         }
 
@@ -1927,7 +1927,7 @@ namespace WwiseTools.Utils
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                WaapiLog.Log(e);
             }
         }
 
@@ -1951,11 +1951,11 @@ namespace WwiseTools.Utils
             try
             {
                 await Client.Call(func);
-                Console.WriteLine("Project saved successfully!");
+                WaapiLog.Log("Project saved successfully!");
             }
             catch (Wamp.ErrorException e)
             {
-                Console.WriteLine($"Failed to save project! =======> {e.Message}");
+                WaapiLog.Log($"Failed to save project! =======> {e.Message}");
             }
         }
         

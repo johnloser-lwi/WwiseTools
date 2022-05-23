@@ -112,20 +112,20 @@ namespace WwiseTools.Objects
 
                     float duration = float.Parse(jresult["return"].Last["audioSource:maxDurationSource"]["trimmedDuration"].ToString());
 
-                    Console.WriteLine($"Duration of WwiseObject {Name} is {duration}s");
+                    WaapiLog.Log($"Duration of WwiseObject {Name} is {duration}s");
 
                     return duration;
 
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine($"Failed to return file path of Object : {Name}! ======> {e.Message}");
+                    WaapiLog.Log($"Failed to return file path of Object : {Name}! ======> {e.Message}");
                     return -1;
                 }
             }
             catch (Wamp.ErrorException e)
             {
-                Console.WriteLine($"Failed to return file path of Object : {Name}! ======> {e.Message}");
+                WaapiLog.Log($"Failed to return file path of Object : {Name}! ======> {e.Message}");
                 return -1;
             }
         }
