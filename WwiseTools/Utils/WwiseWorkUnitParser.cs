@@ -48,6 +48,20 @@ namespace WwiseTools.Utils
             }
         }
 
+        public XmlNode GetNodeByID(string wwise_id)
+        {
+            if (XML == null) return null;
+
+            return XML.SelectSingleNode($"//*[@ID='{wwise_id}']");
+        }
+
+        public XmlNodeList GetChildrenNodeList(XmlNode node)
+        {
+            if (XML == null) return null;
+
+            return node.SelectNodes("ChildrenList/*");
+        }
+
         /// <summary>
         /// 保存文件
         /// </summary>

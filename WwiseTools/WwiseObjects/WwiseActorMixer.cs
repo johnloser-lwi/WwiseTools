@@ -500,20 +500,7 @@ namespace WwiseTools.Objects
 
         public async Task<List<WwiseObject>> GetChildrenAsync()
         {
-            await WwiseUtility.SaveWwiseProjectAsync();
-            
-            List<WwiseObject> result = new List<WwiseObject>();
-
-            WwiseWorkUnitParser parser = new WwiseWorkUnitParser(await WwiseUtility.GetWorkUnitFilePathAsync(this));
-            var xpath = $"//*[@ID='{ID}']/ChildrenList";
-            var children_list = parser.XML.SelectSingleNode(xpath);
-            var children = children_list.ChildNodes;
-            foreach (XmlElement child in children)
-            {
-                result.Add(await WwiseUtility.GetWwiseObjectByIDAsync(child.GetAttribute("ID")));
-            }
-
-            return result;
+            return await WwiseUtility.GetWwiseObjectChildrenAsync(this);
         }
     }
 }

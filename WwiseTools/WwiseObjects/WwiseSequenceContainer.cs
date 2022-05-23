@@ -145,7 +145,7 @@ namespace WwiseTools.Objects
             var playlistNode = parser.XML.SelectSingleNode(xpath);
 
 
-            var containerNode = parser.XML.SelectSingleNode("//*[@ID='" + ID + "']");
+            var containerNode = parser.GetNodeByID(ID);
 
             if (playlistNode != null)
             {

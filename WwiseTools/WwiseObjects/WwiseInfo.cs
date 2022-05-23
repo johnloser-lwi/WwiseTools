@@ -10,18 +10,13 @@ namespace WwiseTools.Objects
     {
         public WwiseVersion Version { get; set; }
 
-        public string SessionID { get; set; }
-
-        public int APIVersion { get; set; }
-
         public int ProcessID { get; set; }
 
         public override string ToString()
         {
             string result = "";
             result += "Wwise Version: " + Version.VersionString + "\n";
-            result += "API Version: " + APIVersion.ToString() + "\n";
-            result += "Session ID: " + SessionID.ToString() + "\n";
+            result += "Schema Version: " + Version.Schema.ToString() + "\n";
             result += "Process ID: " + ProcessID + "\n";
 
             return result;
@@ -37,6 +32,8 @@ namespace WwiseTools.Objects
 
         public int Build { get; set; }
 
+        public int Schema { get; set; }
+
         public string VersionString
         {
             get
@@ -45,12 +42,13 @@ namespace WwiseTools.Objects
             }
         }
 
-        public WwiseVersion(int year, int major, int minor, int build)
+        public WwiseVersion(int year, int major, int minor, int build, int schema)
         {
             Year = year;
             Major = major;
             Minor = minor;
             Build = build;
+            Schema = schema;
         }
 
         public override bool Equals(object obj)

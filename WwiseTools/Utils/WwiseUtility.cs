@@ -7,6 +7,7 @@ using Newtonsoft.Json.Linq;
 
 using AK.Wwise.Waapi;
 using System.Threading.Tasks;
+using System.Xml;
 using WwiseTools.Properties;
 using WwiseTools.Reference;
 using WwiseTools.Objects;
@@ -1146,6 +1147,28 @@ namespace WwiseTools.Utils
         {
             if (!await TryConnectWaapiAsync() || String.IsNullOrWhiteSpace(target_type)) return null;
 
+            if (ConnectionInfo.Version.Year >= 2021)
+            {
+                try
+                {
+                    var waql = new Waql($"where type = \"{target_type}\"");
+                    if (await waql.RunAsync())
+                    {
+                        return waql.Result;
+                    }
+                    else
+                    {
+                        throw new Exception("waql failed");
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine($"Failed to return WwiseObject list of type {target_type} ======> {e.Message}");
+                    return null;
+                }
+            }
+
+
             try
             {
                 // ak.wwise.core.@object.get 指令
@@ -1735,15 +1758,14 @@ namespace WwiseTools.Utils
                 int.TryParse(result["version"]["minor"].ToString(), out int minor);
                 int.TryParse(result["version"]["build"].ToString(), out int build);
                 int.TryParse(result["version"]["year"].ToString(), out int year);
-                int.TryParse(result["apiVersion"].ToString(), out int apiVersion);
-                string sessionId = result["sessionId"].ToString();
+                int.TryParse(result["version"]["schema"].ToString(), out int schema);
+                //string sessionId = result["sessionId"].ToString();
                 int.TryParse(result["processId"].ToString(), out int processId);
 
                 WwiseInfo wwiseInfo = new WwiseInfo()
                 {
-                    Version = new WwiseVersion(year, major, minor, build),
-                    APIVersion = apiVersion,
-                    SessionID = sessionId,
+                    Version = new WwiseVersion(year, major, minor, build, schema),
+                    //SessionID = sessionId,
                     ProcessID = processId
                 };
 
@@ -1790,6 +1812,46 @@ namespace WwiseTools.Utils
             {
                 Console.WriteLine($"Failed to execute command {command}! ======> {e.Message}");
             }
+        }
+
+        public static async Task<List<WwiseObject>> GetWwiseObjectChildrenAsync(WwiseObject wwiseObject)
+        {
+            List<WwiseObject> result = new List<WwiseObject>();
+
+            if (WwiseUtility.ConnectionInfo.Version.Year >= 2021)
+            {
+                try
+                {
+                    var waql = new Waql($"where parent.id = \"{wwiseObject.ID}\"");
+                    if (await waql.RunAsync())
+                    {
+                        result = waql.Result;
+                    }
+                    else
+                    {
+                        throw new Exception("waql failed");
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine($"Failed to get children of {wwiseObject.Name} ======> {e.Message}");
+                }
+
+            }
+            else
+            {
+                await WwiseUtility.SaveWwiseProjectAsync();
+
+                WwiseWorkUnitParser parser = new WwiseWorkUnitParser(await WwiseUtility.GetWorkUnitFilePathAsync(wwiseObject));
+                var node = parser.GetNodeByID(wwiseObject.ID);
+                foreach (XmlElement child in parser.GetChildrenNodeList(node))
+                {
+                    result.Add(await WwiseUtility.GetWwiseObjectByIDAsync(child.GetAttribute("ID")));
+                }
+
+            }
+
+            return result;
         }
 
         public static async Task GenerateSelectedSoundBanksAllPlatformAsync(string[] soundBanks)
