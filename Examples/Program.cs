@@ -3,16 +3,27 @@
 using Examples;
 using WwiseTools.Utils;
 
-WaapiLog.AddCustomLogger(ExampleFunctions.CustomLogger);
 
-if (await WwiseUtility.TryConnectWaapiAsync())
+try
 {
-    await ExampleFunctions.ParserTestAsync(); // 尝试不同的方法
+    WaapiLog.AddCustomLogger(ExampleFunctions.CustomLogger);
+
+    if (await WwiseUtility.TryConnectWaapiAsync())
+    {
+        await ExampleFunctions.ParserTestAsync(); // 尝试不同的方法
+    }
+    else
+    {
+        WaapiLog.Log("Waapi Connection Failed!");
+    }
+
+    await WwiseUtility.DisconnectAsync();
+
+    await Task.Delay(3000);
 }
-else
+catch (Exception e)
 {
-    Console.WriteLine("Waapi Connection Failed!");
+    WaapiLog.Log($"Exception: {e.Message}");
 }
 
-await WwiseUtility.DisconnectAsync();
-Console.ReadLine();
+

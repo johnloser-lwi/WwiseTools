@@ -58,7 +58,7 @@ namespace WwiseTools.Utils
                 };
                 return true;
             }
-            catch (Wamp.ErrorException e)
+            catch (Exception e)
             {
                 WaapiLog.Log($"Failed to connect! ======> {e.Message}");
                 return false;
@@ -94,7 +94,7 @@ namespace WwiseTools.Utils
                 WaapiLog.Log(ConnectionInfo);
                 return true;
             }
-            catch (Wamp.ErrorException e)
+            catch (Exception e)
             {
                 WaapiLog.Log($"Failed to connect! ======> {e.Message}");
                 return false;
@@ -114,7 +114,7 @@ namespace WwiseTools.Utils
             {
                 await Client.Close(); // 尝试断开连接
             }
-            catch (Wamp.ErrorException e)
+            catch (Exception e)
             {
                 WaapiLog.Log($"Error while closing! ======> {e.Message}");
             }
@@ -130,7 +130,7 @@ namespace WwiseTools.Utils
                 Client = null;
                 ConnectionInfo = null;
             }
-            catch (Wamp.ErrorException e)
+            catch (Exception e)
             {
                 WaapiLog.Log($"Error while closing! ======> {e.Message}");
             }
@@ -202,7 +202,7 @@ namespace WwiseTools.Utils
 
                 
             }
-            catch (Wamp.ErrorException e)
+            catch (Exception e)
             {
                 WaapiLog.Log($"Failed to fetch Property and References! ======> {e.Message}");
                 return "";
@@ -249,7 +249,7 @@ namespace WwiseTools.Utils
 
                 WaapiLog.Log("Reference set successfully!");
             }
-            catch (Wamp.ErrorException e)
+            catch (Exception e)
             {
                 WaapiLog.Log($"Failed to set reference \"{wwiseReference.Name}\" to object {wwiseObject.Name} ======> {e.Message}");
             }
@@ -298,7 +298,7 @@ namespace WwiseTools.Utils
 
                 WaapiLog.Log($"Property {wwiseProperty.Name} successfully changed to {wwiseProperty.Value}!");
             }
-            catch (Wamp.ErrorException e)
+            catch (Exception e)
             {
                 WaapiLog.Log($"Failed to set property \"{wwiseProperty.Name}\" of object {wwiseObject.Name} ======> {e.Message}");
             }
@@ -344,7 +344,7 @@ namespace WwiseTools.Utils
                 WaapiLog.Log($"Object {old_name} successfully renamed to {new_name}!");
             }
 
-            catch (AK.Wwise.Waapi.Wamp.ErrorException e)
+            catch (Exception e)
             {
                 WaapiLog.Log($"Failed to rename object : {old_name} ======> {e.Message}");
             }
@@ -409,26 +409,11 @@ namespace WwiseTools.Utils
                 // 获取子物体的新数据
                 JObject jresult = await Client.Call(func, query, options);
 
-                /*
-                try // 尝试更新子物体数据
-                {
-                    child.Name = jresult["return"].Last["name"].ToString();
-                    child.ID = jresult["return"].Last["id"].ToString();
-                    child.Type = jresult["return"].Last["type"].ToString();
-
-                    WaapiLog.Log($"Moved {child.Name} to {parent.Path}!");
-                }
-                catch (Wamp.ErrorException e)
-                {
-                    WaapiLog.Log($"Failed to update WwiseObject! ======> {e.Message}");
-                }
-                */
 
                 WaapiLog.Log($"Copied {child.Name} to {parent.Name}!");
 
-                //return GetWwiseObjectByID(jresult["return"].Last["id"].ToString());
             }
-            catch (Wamp.ErrorException e)
+            catch (Exception e)
             {
                 WaapiLog.Log($"Failed to copy {child.Name} to {parent.Name}! ======> {e.Message}");
             }
@@ -494,29 +479,14 @@ namespace WwiseTools.Utils
                 func = WaapiFunction.CoreObjectGet;
                 // 获取子物体的新数据
                 JObject jresult = await Client.Call(func, query, options);
-
-                /*
-                try // 尝试更新子物体数据
-                {
-                    child.Name = jresult["return"].Last["name"].ToString();
-                    child.ID = jresult["return"].Last["id"].ToString();
-                    child.Type = jresult["return"].Last["type"].ToString();
-
-                    WaapiLog.Log($"Moved {child.Name} to {parent.Path}!");
-                }
-                catch (Wamp.ErrorException e)
-                {
-                    WaapiLog.Log($"Failed to update WwiseObject! ======> {e.Message}");
-                }
-                */
-
-                child.Name = jresult["return"].Last["name"].ToString();
-                child.ID = jresult["return"].Last["id"].ToString();
-                child.Type = jresult["return"].Last["type"].ToString();
+                if (jresult["return"]?.Last == null) throw new Exception();
+                child.Name = jresult["return"].Last["name"]?.ToString();
+                child.ID = jresult["return"].Last["id"]?.ToString();
+                child.Type = jresult["return"].Last["type"]?.ToString();
 
                 WaapiLog.Log($"Moved {child.Name} to {parent.Name}!");
             }
-            catch (Wamp.ErrorException e)
+            catch (Exception e)
             {
                 WaapiLog.Log($"Failed to move {child.Name} to {parent.Name}! ======> {e.Message}");
             }
@@ -549,7 +519,7 @@ namespace WwiseTools.Utils
                 
                 WaapiLog.Log($"Successfully set {target.Name} note to \"{note}\"!");
             }
-            catch (Wamp.ErrorException e)
+            catch (Exception e)
             {
                 WaapiLog.Log($"Failed to set note for {target.Name}! ======> {e.Message}");
             }
@@ -633,9 +603,10 @@ namespace WwiseTools.Utils
                     );
 
                 WaapiLog.Log($"Event {event_name} created successfully!");
+                if (result["id"] == null) throw new Exception();
                 return await GetWwiseObjectByIDAsync(result["id"].ToString());
             }
-            catch (Wamp.ErrorException e)
+            catch (Exception e)
             {
                 WaapiLog.Log($"Failed to created play event : {event_name}! ======> {e.Message} ");
                 return null;
@@ -727,9 +698,10 @@ namespace WwiseTools.Utils
                     );
 
                 WaapiLog.Log($"Object {object_name} created successfully!");
+                if (result["id"] == null) throw new Exception();
                 return await GetWwiseObjectByIDAsync(result["id"].ToString());
             }
-            catch (Wamp.ErrorException e)
+            catch (Exception e)
             {
                 WaapiLog.Log($"Failed to create object : {object_name}! ======> {e.Message}");
                 return null;
@@ -765,7 +737,7 @@ namespace WwiseTools.Utils
                 WaapiLog.Log($"Object {path} deleted successfully!");
                 return;
             }
-            catch (Wamp.ErrorException e)
+            catch (Exception e)
             {
                 WaapiLog.Log($"Failed to delete object : {path}! ======> {e.Message}");
                 return;
@@ -820,10 +792,10 @@ namespace WwiseTools.Utils
                 try // 尝试返回物体数据
                 {
                     JObject jresult = await Client.Call(func, query, options);
-
-                    string name = jresult["return"].Last["name"].ToString();
-                    string id = jresult["return"].Last["id"].ToString();
-                    string type = jresult["return"].Last["type"].ToString();
+                    if (jresult["return"]?.Last == null) throw new Exception();
+                    string name = jresult["return"].Last["name"]?.ToString();
+                    string id = jresult["return"].Last["id"]?.ToString();
+                    string type = jresult["return"].Last["type"]?.ToString();
 
                     WaapiLog.Log($"WwiseObject {name} successfully fetched!");
 
@@ -835,7 +807,7 @@ namespace WwiseTools.Utils
                     return null;
                 }
             }
-            catch (Wamp.ErrorException e)
+            catch (Exception e)
             {
                 WaapiLog.Log($"Failed to return WwiseObject from ID : {target_id}! ======> {e.Message}");
                 return null;
@@ -885,8 +857,8 @@ namespace WwiseTools.Utils
                     
 
                     WaapiLog.Log($"WwiseProperty {wwise_property} successfully fetched!");
-
-                    return jresult["return"].Last["@" + wwise_property];
+                    if (jresult["return"] == null) throw new Exception();
+                    return jresult["return"].Last?["@" + wwise_property];
                 }
                 catch (Exception e)
                 {
@@ -894,7 +866,7 @@ namespace WwiseTools.Utils
                     return null;
                 }
             }
-            catch (Wamp.ErrorException e)
+            catch (Exception e)
             {
                 WaapiLog.Log($"Failed to return WwiseObject Property : {target_id}! ======> {e.Message}");
                 return null;
@@ -952,7 +924,7 @@ namespace WwiseTools.Utils
                     return null;
                 }
             }
-            catch (Wamp.ErrorException e)
+            catch (Exception e)
             {
                 WaapiLog.Log($"Failed to get path of object : {ID}! =======> {e.Message}");
                 return null;
@@ -1057,22 +1029,24 @@ namespace WwiseTools.Utils
                 {
 
                     JObject jresult = await Client.Call(func, query, options);
+                    var obj = jresult["return"]?.Last;
+                    if (obj == null) throw new Exception("Object not found!");
 
-                    string name = jresult["return"].Last["name"].ToString();
-                    string id = jresult["return"].Last["id"].ToString();
-                    string type = jresult["return"].Last["type"].ToString();
+                    string name = obj["name"]?.ToString();
+                    string id = obj["id"]?.ToString();
+                    string type = obj["type"]?.ToString();
 
                     WaapiLog.Log($"WwiseObject {name} successfully fetched!");
 
                     return new WwiseObject(name, id, type);
                 }
-                catch (Wamp.ErrorException e)
+                catch (Exception e)
                 {
                     WaapiLog.Log($"Failed to return WwiseObject by name : {target_name}! ======> {e.Message}");
                     return null;
                 }
             }
-            catch (Wamp.ErrorException e)
+            catch (Exception e)
             {
                 WaapiLog.Log($"Failed to return WwiseObject by name : {target_name}! ======> {e.Message}");
                 return null;
@@ -1125,10 +1099,12 @@ namespace WwiseTools.Utils
                 };
 
                 JObject jresult = await Client.Call(func, query, options);
+                var obj = jresult["return"]?.Last;
+                if (obj == null) throw new Exception("Object not found!");
 
-                string name = jresult["return"].Last["name"].ToString();
-                string id = jresult["return"].Last["id"].ToString();
-                string type = jresult["return"].Last["type"].ToString();
+                string name = obj["name"]?.ToString();
+                string id = obj["id"]?.ToString();
+                string type = obj["type"]?.ToString();
 
                 WaapiLog.Log($"WwiseObject {name} successfully fetched!");
 
@@ -1139,13 +1115,13 @@ namespace WwiseTools.Utils
 
                     
                 }
-                catch (Wamp.ErrorException e)
+                catch (Exception e)
                 {
                     WaapiLog.Log($"Failed to return WwiseObject by path : {path}! ======> {e.Message}");
                     return null;
                 }*/
             }
-            catch (Wamp.ErrorException e)
+            catch (Exception e)
             {
                 WaapiLog.Log($"Failed to return WwiseObject by path : {path}! ======> {e.Message}");
                 return null;
@@ -1228,12 +1204,12 @@ namespace WwiseTools.Utils
                     JObject jresult = await Client.Call(func, query, options);
 
                     List<WwiseObject> obj_list = new List<WwiseObject>();
-
+                    if (jresult["return"] == null) throw new Exception();
                     foreach (var obj in jresult["return"])
                     {
-                        string name = obj["name"].ToString();
-                        string id = obj["id"].ToString();
-                        string type = obj["type"].ToString();
+                        string name = obj["name"]?.ToString();
+                        string id = obj["id"]?.ToString();
+                        string type = obj["type"]?.ToString();
 
                         obj_list.Add(new WwiseObject(name, id, type));
                     }
@@ -1244,13 +1220,13 @@ namespace WwiseTools.Utils
 
                     return obj_list;
                 }
-                catch (Wamp.ErrorException e)
+                catch (Exception e)
                 {
                     WaapiLog.Log($"Failed to return WwiseObject list of type : {target_type}! ======> {e.Message}");
                     return null;
                 }
             }
-            catch (Wamp.ErrorException e)
+            catch (Exception e)
             {
                 WaapiLog.Log($"Failed to return WwiseObject list of type : {target_type}! ======> {e.Message}");
                 return null;
@@ -1270,15 +1246,6 @@ namespace WwiseTools.Utils
             if (!await TryConnectWaapiAsync()) return null;
             try
             {
-                // ak.wwise.core.@object.get 指令
-                /*var query = new
-                {
-                    from = new
-                    {
-                        ofType = new string[] { target_type }
-                    }
-                };*/
-
                 // ak.wwise.core.@object.get 返回参数设置
                 var options = new
                 {
@@ -1297,11 +1264,13 @@ namespace WwiseTools.Utils
 
                     List<WwiseObject> obj_list = new List<WwiseObject>();
 
+
+                    if (jresult["objects"] == null) throw new Exception(); 
                     foreach (var obj in jresult["objects"])
                     {
-                        string name = obj["name"].ToString();
-                        string id = obj["id"].ToString();
-                        string type = obj["type"].ToString();
+                        string name = obj["name"]?.ToString();
+                        string id = obj["id"]?.ToString();
+                        string type = obj["type"]?.ToString();
 
                         obj_list.Add(new WwiseObject(name, id, type));
                     }
@@ -1312,13 +1281,13 @@ namespace WwiseTools.Utils
 
                     return obj_list;
                 }
-                catch (Wamp.ErrorException e)
+                catch (Exception e)
                 {
                     WaapiLog.Log($"Failed to return Selected WwiseObject list! ======> {e.Message}");
                     return null;
                 }
             }
-            catch (Wamp.ErrorException e)
+            catch (Exception e)
             {
                 WaapiLog.Log($"Failed to return Selected WwiseObject list! ======> {e.Message}");
                 return null;
@@ -1363,10 +1332,10 @@ namespace WwiseTools.Utils
                 var func = WaapiFunction.CoreObjectGet;
 
                 var result = await Client.Call(func, query, options);
-
+                if (result["return"] == null) throw new Exception();
                 foreach (var r in result["return"])
                 {
-                    string name = r["name"].ToString();
+                    string name = r["name"]?.ToString();
                     var ignoreList = new string[] {"Mixed", "SFX", "External", "SoundSeed Grain"};
                     if (!ignoreList.Contains(name))
                         resultList.Add(name);
@@ -1375,7 +1344,7 @@ namespace WwiseTools.Utils
                 WaapiLog.Log($"Language list fetched successfully!");
                 
             }
-            catch (Wamp.ErrorException e)
+            catch (Exception e)
             {
                 WaapiLog.Log($"Failed to return language list! ======> {e.Message}");
             }
@@ -1496,10 +1465,10 @@ namespace WwiseTools.Utils
                 
                 if (!String.IsNullOrEmpty(subFolder))
                 {
-                    (import_q["default"] as JObject).Add(new JProperty("originalsSubFolder", subFolder));
+                    (import_q["default"] as JObject)?.Add(new JProperty("originalsSubFolder", subFolder));
                 }
 
-                var options = new JObject(new JProperty("return", new string[] { "name", "id", "type", "path" })); // 设置返回参数
+                var options = new JObject(new JProperty("return", new object[] { "name", "id", "type", "path" })); // 设置返回参数
 
                 var func = Function.Verify("ak.wwise.core.audio.import");
 
@@ -1511,7 +1480,7 @@ namespace WwiseTools.Utils
 
                 return await GetWwiseObjectByIDAsync(result["objects"].Last["id"].ToString());
             }
-            catch (Wamp.ErrorException e)
+            catch (Exception e)
             {
                 WaapiLog.Log($"Failed to import file : {file_path} ======> {e.Message}");
                 return null;
@@ -1568,22 +1537,23 @@ namespace WwiseTools.Utils
                     JObject jresult = await Client.Call(func, query, options);
 
                     string file_path = "";
+                    if (jresult["return"] == null) throw new Exception();
                     foreach (var obj in jresult["return"])
                     {
-                        file_path = obj["filePath"].ToString();
+                        file_path = obj["filePath"]?.ToString();
                     }
 
                     WaapiLog.Log($"Work Unit file path of object {@object.Name} successfully fetched!");
 
                     return file_path;
                 }
-                catch (Wamp.ErrorException e)
+                catch (Exception e)
                 {
                     WaapiLog.Log($"Failed to return Work Unit file path of object : {@object.Name}! ======> {e.Message}");
                     return null;
                 }
             }
-            catch (Wamp.ErrorException e)
+            catch (Exception e)
             {
                 WaapiLog.Log($"Failed to return Work Unit file path of object : {@object.Name}! ======> {e.Message}");
                 return null;
@@ -1648,7 +1618,7 @@ namespace WwiseTools.Utils
 
                 WaapiLog.Log("Project loaded successfully!");
             }
-            catch (Wamp.ErrorException e)
+            catch (Exception e)
             {
                 WaapiLog.Log($"Failed to load project! =======> {e.Message}");
             }
@@ -1702,22 +1672,23 @@ namespace WwiseTools.Utils
                     JObject jresult = await Client.Call(func, query, options);
 
                     string name = "";
+                    if (jresult["return"] == null) throw new Exception();
                     foreach (var obj in jresult["return"])
                     {
-                        name = obj["name"].ToString();
+                        name = obj["name"]?.ToString();
                     }
 
                     WaapiLog.Log($"Project name successfully fetched!");
 
                     return name;
                 }
-                catch (Wamp.ErrorException e)
+                catch (Exception e)
                 {
                     WaapiLog.Log($"Failed to return project name! ======> {e.Message}");
                     return null;
                 }
             }
-            catch (Wamp.ErrorException e)
+            catch (Exception e)
             {
                 WaapiLog.Log($"Failed to return project name! ======> {e.Message}");
                 return null;
@@ -1772,22 +1743,23 @@ namespace WwiseTools.Utils
                     JObject jresult = await Client.Call(func, query, options);
 
                     string file_path = "";
+                    if (jresult["return"] == null) throw new Exception();
                     foreach (var obj in jresult["return"])
                     {
-                        file_path = obj["filePath"].ToString();
+                        file_path = obj["filePath"]?.ToString();
                     }
 
                     WaapiLog.Log($"Project path successfully fetched!");
 
                     return file_path;
                 }
-                catch (Wamp.ErrorException e)
+                catch (Exception e)
                 {
                     WaapiLog.Log($"Failed to return project path! ======> {e.Message}");
                     return null;
                 }
             }
-            catch (Wamp.ErrorException e)
+            catch (Exception e)
             {
                 WaapiLog.Log($"Failed to return project path! ======> {e.Message}");
                 return null;
@@ -1803,13 +1775,14 @@ namespace WwiseTools.Utils
                 var func = Function.Verify("ak.wwise.core.getInfo");
 
                 JObject result = await Client.Call(func, null, null);
-                int.TryParse(result["version"]["major"].ToString(), out int major);
-                int.TryParse(result["version"]["minor"].ToString(), out int minor);
-                int.TryParse(result["version"]["build"].ToString(), out int build);
-                int.TryParse(result["version"]["year"].ToString(), out int year);
-                int.TryParse(result["version"]["schema"].ToString(), out int schema);
+                if (result["version"] == null) throw new Exception("Failed to fetch version info!");
+                int.TryParse(result["version"]["major"]?.ToString(), out int major);
+                int.TryParse(result["version"]["minor"]?.ToString(), out int minor);
+                int.TryParse(result["version"]["build"]?.ToString(), out int build);
+                int.TryParse(result["version"]["year"]?.ToString(), out int year);
+                int.TryParse(result["version"]["schema"]?.ToString(), out int schema);
                 //string sessionId = result["sessionId"].ToString();
-                int.TryParse(result["processId"].ToString(), out int processId);
+                int.TryParse(result["processId"]?.ToString(), out int processId);
 
                 WwiseInfo wwiseInfo = new WwiseInfo()
                 {
@@ -1973,7 +1946,7 @@ namespace WwiseTools.Utils
                 await Client.Call(func);
                 WaapiLog.Log("Project saved successfully!");
             }
-            catch (Wamp.ErrorException e)
+            catch (Exception e)
             {
                 WaapiLog.Log($"Failed to save project! =======> {e.Message}");
             }
