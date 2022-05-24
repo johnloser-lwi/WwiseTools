@@ -25,6 +25,8 @@ namespace WwiseTools.Utils
 
         internal static WaapiFunction Function { get; set; }
 
+        public static WwiseUtility Extensions { get; private set; }
+
         public enum GlobalImportSettings
         {
             useExisting,
@@ -90,7 +92,9 @@ namespace WwiseTools.Utils
                 };
 
                 ConnectionInfo = await GetWwiseInfoAsync();
-                
+
+                if (Extensions == null) Extensions = new WwiseUtility();
+
                 WaapiLog.Log(ConnectionInfo);
                 return true;
             }

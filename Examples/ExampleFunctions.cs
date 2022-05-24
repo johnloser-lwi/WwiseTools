@@ -5,7 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using WwiseTools.Objects;
+using WwiseTools.Properties;
+using WwiseTools.Reference;
 using WwiseTools.Utils;
+using WwiseTools.Utils.Feature2022;
 
 namespace Examples
 {
@@ -26,10 +29,20 @@ namespace Examples
             }
         }
 
+        public static async Task BatchSetTestAsync()
+        {
+            var selection = await WwiseUtility.GetWwiseObjectsBySelectionAsync();
+            await WwiseUtility.Extensions.BatchSetObjectPropertyAsync(selection, WwiseProperty.Prop_Volume(-3));
+
+            var bus = await WwiseUtility.GetWwiseObjectByNameAsync("Bus:Test");
+            if (bus == null) return;
+            await WwiseUtility.Extensions.BatchSetObjectPropertyAsync(selection, WwiseProperty.Prop_OverrideOutput(true));
+            await WwiseUtility.Extensions.BatchSetObjectReferenceAsync(selection, WwiseReference.Ref_OutputBus(bus));
+        }
+
 
         public static async Task WaqlTestAsync()
         {
-            await WwiseUtility.ConnectAsync();
             Waql query = new Waql("where type = \"Sound\"");
 
             if (await query.RunAsync())

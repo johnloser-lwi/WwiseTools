@@ -10,7 +10,7 @@ try
 
     if (await WwiseUtility.TryConnectWaapiAsync())
     {
-        await ExampleFunctions.ParserTestAsync(); // 尝试不同的方法
+        await ExampleFunctions.BatchSetTestAsync(); // 尝试不同的方法
     }
     else
     {
