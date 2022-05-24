@@ -11,13 +11,14 @@ using System.Xml;
 using WwiseTools.Properties;
 using WwiseTools.Reference;
 using WwiseTools.Objects;
+using WwiseTools.Utils.Feature2021;
 
 namespace WwiseTools.Utils
 {
     /// <summary>
     /// 用于实现基础功能
     /// </summary>
-    public class WwiseUtility
+    public partial class WwiseUtility
     {
         public static JsonClient Client { get; set; }
 

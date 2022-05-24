@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
@@ -12,9 +13,22 @@ namespace WwiseTools.Utils.Feature2022
 {
     public static class WwiseUtility2022Extension
     {
+        private static bool VersionVerify([CallerMemberName] string caller = "")
+        {
+            if (WwiseUtility.ConnectionInfo.Version.Year < 2022)
+            {
+                //var caller = (new System.Diagnostics.StackTrace()).GetFrame(0).GetMethod().Name;
+                WaapiLog.Log($"{caller} is an Wwise 2022 feature! " +
+                             $"Current Wwise version is {WwiseUtility.ConnectionInfo.Version.ToString()}.");
+                return false;
+            }
+            return true;
+        }
+
         public static async ValueTask BatchSetObjectPropertyAsync(this WwiseUtility utility, List<WwiseObject> wwiseObjects, WwiseProperty wwiseProperty)
         {
             if (!await WwiseUtility.TryConnectWaapiAsync() || wwiseObjects == null || wwiseProperty == null) return;
+            if (!VersionVerify()) return;
             try
             {
                 var query = new
@@ -47,7 +61,7 @@ namespace WwiseTools.Utils.Feature2022
         public static async ValueTask BatchSetObjectReferenceAsync(this WwiseUtility utility, List<WwiseObject> wwiseObjects, WwiseReference wwiseReference)
         {
             if (!await WwiseUtility.TryConnectWaapiAsync() || wwiseObjects == null || wwiseReference == null) return;
-
+            if (!VersionVerify()) return;
             try
             {
                 var query = new

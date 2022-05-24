@@ -2,11 +2,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using WwiseTools.Objects;
 
-namespace WwiseTools.Utils
+namespace WwiseTools.Utils.Feature2021
 {
     public class Waql : IEnumerable<WwiseObject>
     {
@@ -17,6 +18,17 @@ namespace WwiseTools.Utils
             waql_command = FormatQuery(waql);
         }
 
+        private bool VersionVerify()
+        {
+            if (WwiseUtility.ConnectionInfo.Version.Year < 2021)
+            {
+                WaapiLog.Log($"Class Waql is an Wwise 2021 feature! " +
+                             $"Current Wwise version is {WwiseUtility.ConnectionInfo.Version.ToString()}.");
+                return false;
+            }
+            return true;
+        }
+
         private string FormatQuery(string waql)
         {
             if (!waql.StartsWith("$")) waql = $"$ " + waql;
@@ -24,10 +36,11 @@ namespace WwiseTools.Utils
             return waql;
         }
 
-        public async Task<bool> RunAsync(string waql = "")
+        public async ValueTask<bool> RunAsync(string waql = "")
         {
             if (!await WwiseUtility.TryConnectWaapiAsync()) return false;
-            
+            if (!VersionVerify()) return false;
+
             if (!string.IsNullOrEmpty(waql)) waql_command = FormatQuery(waql);
 
             if (Result == null) Result = new List<WwiseObject>();
