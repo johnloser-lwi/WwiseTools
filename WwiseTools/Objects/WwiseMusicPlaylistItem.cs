@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WwiseTools.Properties;
-using WwiseTools.Reference;
+using WwiseTools.References;
 using WwiseTools.Utils;
 
 namespace WwiseTools.Objects

@@ -26,14 +26,14 @@ the specific language governing permissions and limitations under the License.
 
 *******************************************************************************/
 
-namespace AK.Wwise.Waapi
+namespace WaapiClient
 {
     /// <summary>
     /// The JsonClient provides an abstraction layer over the base Waapi Client and wraps everything under Newtonsoft.Json.Linq.JObject for convenience.
     /// </summary>
     public class JsonClient
     {
-        private AK.Wwise.Waapi.Client client = new AK.Wwise.Waapi.Client();
+        private Client client = new Client();
 
         public delegate void PublishHandler(Newtonsoft.Json.Linq.JObject json);
 

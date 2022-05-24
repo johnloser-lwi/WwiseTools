@@ -1,8 +1,6 @@
 ﻿using System;
 
 using Newtonsoft.Json.Linq;
-
-using AK.Wwise.Waapi;
 using System.Threading.Tasks;
 using WwiseTools.Utils;
 
@@ -75,7 +73,7 @@ namespace WwiseTools.Objects
                     );
                 return result.ToString();
             }
-            catch (Wamp.ErrorException e)
+            catch (Exception e)
             {
                 WaapiLog.Log($"Failed to get property and reference names from {Name}! ======> {e.Message}");
                 return null;

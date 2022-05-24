@@ -1,5 +1,4 @@
-﻿using AK.Wwise.Waapi;
-using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -239,7 +238,7 @@ namespace WwiseTools.Objects
 
                 WaapiLog.Log($"Music Cue {name} created successfully!");
             }
-            catch (Wamp.ErrorException e)
+            catch (Exception e)
             {
                 WaapiLog.Log($"Failed to create Cue : {name}! ======> {e.Message}");
             }

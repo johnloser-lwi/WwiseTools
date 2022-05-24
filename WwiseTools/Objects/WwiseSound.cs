@@ -1,12 +1,11 @@
-﻿using AK.Wwise.Waapi;
-using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WwiseTools.Properties;
-using WwiseTools.Reference;
+using WwiseTools.References;
 using WwiseTools.Utils;
 
 namespace WwiseTools.Objects
@@ -170,7 +169,7 @@ namespace WwiseTools.Objects
                     return null;
                 }
             }
-            catch (Wamp.ErrorException e)
+            catch (Exception e)
             {
                 WaapiLog.Log($"Failed to return WaveFilePath from ID : {ID}! ======> {e.Message}");
                 return null;

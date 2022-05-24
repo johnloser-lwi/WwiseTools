@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using Newtonsoft.Json.Linq;
 
-using AK.Wwise.Waapi;
 using System.Threading.Tasks;
 using WwiseTools.Properties;
-using WwiseTools.Reference;
+using WwiseTools.References;
 using WwiseTools.Objects;
 using WwiseTools.Utils;
 
@@ -123,7 +122,7 @@ namespace WwiseTools.Objects
                     return -1;
                 }
             }
-            catch (Wamp.ErrorException e)
+            catch (Exception e)
             {
                 WaapiLog.Log($"Failed to return file path of Object : {Name}! ======> {e.Message}");
                 return -1;

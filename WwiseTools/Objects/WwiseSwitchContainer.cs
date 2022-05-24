@@ -1,12 +1,11 @@
-﻿using AK.Wwise.Waapi;
-using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WwiseTools.Properties;
-using WwiseTools.Reference;
+using WwiseTools.References;
 using WwiseTools.Utils;
 
 namespace WwiseTools.Objects
@@ -133,7 +132,7 @@ namespace WwiseTools.Objects
                     null
                     );
             }
-            catch (Wamp.ErrorException e)
+            catch (Exception e)
             {
                 WaapiLog.Log($"Failed to assign {child.Name} to {state_or_switch}! ======> {e.Message}");
             }
@@ -179,7 +178,7 @@ namespace WwiseTools.Objects
                     null
                     );
             }
-            catch (Wamp.ErrorException e)
+            catch (Exception e)
             {
                 WaapiLog.Log($"Failed to assign {child.Name} to {state_or_switch}! ======> {e.Message}");
             }
@@ -222,7 +221,7 @@ namespace WwiseTools.Objects
                     );
                 return result;
             }
-            catch (Wamp.ErrorException e)
+            catch (Exception e)
             {
                 WaapiLog.Log($"Failed to get assignment of {Name}! ======> {e.Message}");
                 return null;

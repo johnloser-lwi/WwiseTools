@@ -7,7 +7,7 @@ using System.Xml;
 using Microsoft.VisualBasic.CompilerServices;
 using WwiseTools.Objects;
 using WwiseTools.Properties;
-using WwiseTools.Reference;
+using WwiseTools.References;
 using WwiseTools.Utils;
 using WwiseTools.Utils.Feature2021;
 using WwiseTools.Utils.Feature2022;

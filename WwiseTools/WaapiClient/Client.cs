@@ -26,7 +26,7 @@ the specific language governing permissions and limitations under the License.
 
 *******************************************************************************/
 
-namespace AK.Wwise.Waapi
+namespace WaapiClient
 {
     /// <summary>
     /// The Waapi Client provide a core interface to Waapi using strings only. You will need to provide your own JSON serialization.
@@ -34,7 +34,7 @@ namespace AK.Wwise.Waapi
     /// </summary>
     public class Client
     {
-        private AK.Wwise.Waapi.Wamp wamp;
+        private Wamp wamp;
 
         public event Wamp.DisconnectedHandler Disconnected;
 
@@ -49,7 +49,7 @@ namespace AK.Wwise.Waapi
             if(wamp != null)
                 throw new System.Exception("Connection is already established");
 
-            wamp = new Waapi.Wamp();
+            wamp = new Wamp();
             wamp.Disconnected += Wamp_Disconnected;
             await wamp.Connect(uri, timeout);
         }

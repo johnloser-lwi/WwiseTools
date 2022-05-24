@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Xml;
 using WwiseTools.Objects;
 using WwiseTools.Properties;
-using WwiseTools.Reference;
+using WwiseTools.References;
 using WwiseTools.Utils;
 
 namespace WwiseTools.Objects

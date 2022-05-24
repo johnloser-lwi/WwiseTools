@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using WwiseTools.Objects;
 using WwiseTools.Utils;
 
-namespace WwiseTools.Reference
+namespace WwiseTools.References
 {
     public class WwiseReference
     {

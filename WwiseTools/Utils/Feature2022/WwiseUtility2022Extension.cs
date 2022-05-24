@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using WwiseTools.Objects;
 using WwiseTools.Properties;
-using WwiseTools.Reference;
+using WwiseTools.References;
 
 namespace WwiseTools.Utils.Feature2022
 {

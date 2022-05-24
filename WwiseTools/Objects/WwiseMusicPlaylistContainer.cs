@@ -1,5 +1,4 @@
-﻿using AK.Wwise.Waapi;
-using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -163,7 +162,7 @@ namespace WwiseTools.Objects
                     return null;
                 }
             }
-            catch (Wamp.ErrorException e)
+            catch (Exception e)
             {
                 WaapiLog.Log($"Failed to get PlaylistRoot of object : {Name}! =======> {e.Message}");
                 return null;

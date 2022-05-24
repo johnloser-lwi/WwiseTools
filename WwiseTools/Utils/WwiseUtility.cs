@@ -6,10 +6,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 
-using AK.Wwise.Waapi;
 using System.Xml;
+using WaapiClient;
 using WwiseTools.Properties;
-using WwiseTools.Reference;
+using WwiseTools.References;
 using WwiseTools.Objects;
 using WwiseTools.Utils.Feature2021;
 
