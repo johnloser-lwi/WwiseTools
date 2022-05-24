@@ -79,7 +79,7 @@ namespace WwiseTools.Utils
 
             try
             {
-                
+                WaapiLog.Log("Initializing...");
                 Client = new JsonClient();
                 await Client.Connect($"ws://localhost:{wampPort}/waapi"); // 尝试创建Wwise连接
                 await GetFunctionsAsync();
