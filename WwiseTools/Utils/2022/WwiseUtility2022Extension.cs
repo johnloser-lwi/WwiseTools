@@ -18,7 +18,7 @@ namespace WwiseTools.Utils.Feature2022
             if (WwiseUtility.ConnectionInfo.Version.Year < 2022)
             {
                 //var caller = (new System.Diagnostics.StackTrace()).GetFrame(0).GetMethod().Name;
-                WaapiLog.Log($"{caller} is an Wwise 2022 feature! " +
+                WaapiLog.Log($"Warning: {caller} is a Wwise 2022 feature! " +
                              $"Current Wwise version is {WwiseUtility.ConnectionInfo.Version.ToString()}.");
                 return false;
             }

@@ -22,7 +22,7 @@ namespace WwiseTools.Utils.Feature2021
         {
             if (WwiseUtility.ConnectionInfo.Version.Year < 2021)
             {
-                WaapiLog.Log($"Class Waql is an Wwise 2021 feature! " +
+                WaapiLog.Log($"Warning: Class Waql is a Wwise 2021 feature! " +
                              $"Current Wwise version is {WwiseUtility.ConnectionInfo.Version.ToString()}.");
                 return false;
             }
