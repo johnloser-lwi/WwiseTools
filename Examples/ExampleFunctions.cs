@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
+using Microsoft.VisualBasic.CompilerServices;
 using WwiseTools.Objects;
 using WwiseTools.Properties;
 using WwiseTools.Reference;
@@ -33,12 +34,15 @@ namespace Examples
         public static async Task BatchSetTestAsync()
         {
             var selection = await WwiseUtility.GetWwiseObjectsBySelectionAsync();
-            await WwiseUtility.Extensions.BatchSetObjectPropertyAsync(selection, WwiseProperty.Prop_Volume(-3));
+            await WwiseUtility.Extensions.BatchSetObjectPropertyAsync(selection, 
+                WwiseProperty.Prop_Volume(-3),
+                WwiseProperty.Prop_OverrideOutput(true),
+                WwiseProperty.Prop_OutputBusVolume(-3));
 
             var bus = await WwiseUtility.GetWwiseObjectByNameAsync("Bus:Test");
             if (bus == null) return;
-            await WwiseUtility.Extensions.BatchSetObjectPropertyAsync(selection, WwiseProperty.Prop_OverrideOutput(true));
-            await WwiseUtility.Extensions.BatchSetObjectReferenceAsync(selection, WwiseReference.Ref_OutputBus(bus));
+            await WwiseUtility.Extensions.BatchSetObjectReferenceAsync(selection, 
+                WwiseReference.Ref_OutputBus(bus));
         }
 
 
