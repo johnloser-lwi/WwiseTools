@@ -54,7 +54,7 @@ namespace WwiseTools.Objects
         public override bool Equals(object obj)
         {
             WwiseVersion other = obj as WwiseVersion;
-            return VersionString == other.VersionString;
+            return VersionString == other?.VersionString;
         }
 
         public override string ToString()
@@ -64,7 +64,7 @@ namespace WwiseTools.Objects
 
         public override int GetHashCode()
         {
-            return base.GetHashCode();
+            return VersionString.GetHashCode();
         }
 
         public static bool operator ==(WwiseVersion left, WwiseVersion right)
