@@ -58,12 +58,9 @@ namespace Examples
                 }
             }
 
-            if (await query.RunAsync("where type = \"RandomSequenceContainer\""))
+            foreach (var wwieObject in await WwiseUtility.Extensions.Waql("where type = \"RandomSequenceContainer\""))
             {
-                foreach (var wwieObject in query)
-                {
-                    WaapiLog.Log(wwieObject.Name);
-                }
+                WaapiLog.Log(wwieObject.Name);
             }
 
 

@@ -3,14 +3,13 @@
 using Examples;
 using WwiseTools.Utils;
 
-
 try
 {
     WaapiLog.AddCustomLogger(ExampleFunctions.CustomLogger);
 
     if (await WwiseUtility.TryConnectWaapiAsync())
     {
-        await ExampleFunctions.BatchSetTestAsync(); // 尝试不同的方法
+        await ExampleFunctions.WaqlTestAsync(); // 尝试不同的方法
     }
     else
     {
