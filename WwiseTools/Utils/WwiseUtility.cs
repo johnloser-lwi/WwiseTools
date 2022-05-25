@@ -1168,7 +1168,7 @@ namespace WwiseTools.Utils
         {
             if (!await TryConnectWaapiAsync() || String.IsNullOrWhiteSpace(target_type)) return null;
 
-            if (standardType && ConnectionInfo.Version.Year >= 2021)
+            if (standardType && ConnectionInfo.Version >= VersionHelper.V2021_1_0_7575)
             {
                 try
                 {
