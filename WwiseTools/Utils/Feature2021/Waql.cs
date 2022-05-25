@@ -12,21 +12,24 @@ namespace WwiseTools.Utils.Feature2021
     public class Waql : IEnumerable<WwiseObject>
     {
         private string waql_command;
-        public List<WwiseObject> Result;
+        private List<WwiseObject> result;
+
+        public List<WwiseObject> Result
+        {
+            get
+            {
+                if (result == null) result = new List<WwiseObject>();
+                return result;
+            }
+            private set
+            {
+                result = value;
+            }
+        }
+
         public Waql(string waql)
         {
             waql_command = FormatQuery(waql);
-        }
-
-        private bool VersionVerify()
-        {
-            if (WwiseUtility.ConnectionInfo.Version.Year < 2021)
-            {
-                WaapiLog.Log($"Warning: Class Waql is a Wwise 2021 feature! " +
-                             $"Current Wwise version is {WwiseUtility.ConnectionInfo.Version.ToString()}.");
-                return false;
-            }
-            return true;
         }
 
         private string FormatQuery(string waql)
@@ -39,11 +42,10 @@ namespace WwiseTools.Utils.Feature2021
         public async ValueTask<bool> RunAsync(string waql = "")
         {
             if (!await WwiseUtility.TryConnectWaapiAsync()) return false;
-            if (!VersionVerify()) return false;
+            if (!VersionHelper.VersionVerify(VersionHelper.V2021_1_0_7575)) return false;
 
             if (!string.IsNullOrEmpty(waql)) waql_command = FormatQuery(waql);
 
-            if (Result == null) Result = new List<WwiseObject>();
             else Result.Clear();
 
             try
@@ -58,11 +60,12 @@ namespace WwiseTools.Utils.Feature2021
                     @return = new string[] { "name", "id", "type" }
                 };
                 var jresult = await WwiseUtility.Client.Call("ak.wwise.core.object.get", query, option);
+                if (jresult == null || jresult["return"] == null) return false;
                 foreach (var obj in jresult["return"])
                 {
-                    string name = obj["name"].ToString();
-                    string id = obj["id"].ToString();
-                    string type = obj["type"].ToString();
+                    string name = obj["name"]?.ToString();
+                    string id = obj["id"]?.ToString();
+                    string type = obj["type"]?.ToString();
 
                     Result.Add(new WwiseObject(name, id, type));
                 }
@@ -70,7 +73,7 @@ namespace WwiseTools.Utils.Feature2021
             catch (Exception e)
             {
                 WaapiLog.Log($"Failed to run query {waql_command}! ======> {e.Message}");
-                Result = null;
+                Result = new List<WwiseObject>();
                 return false;
             }
 

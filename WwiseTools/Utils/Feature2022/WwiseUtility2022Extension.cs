@@ -11,17 +11,7 @@ namespace WwiseTools.Utils.Feature2022
 {
     public static class WwiseUtility2022Extension
     {
-        private static bool VersionVerify([CallerMemberName] string caller = "")
-        {
-            if (WwiseUtility.ConnectionInfo.Version.Year < 2022)
-            {
-                //var caller = (new System.Diagnostics.StackTrace()).GetFrame(0).GetMethod().Name;
-                WaapiLog.Log($"Warning: {caller} is a Wwise 2022 feature! " +
-                             $"Current Wwise version is {WwiseUtility.ConnectionInfo.Version.ToString()}.");
-                return false;
-            }
-            return true;
-        }
+        
 
         /// <summary>
         /// 批量配置属性
@@ -34,7 +24,7 @@ namespace WwiseTools.Utils.Feature2022
             params WwiseProperty[] wwiseProperties)
         {
             if (!await WwiseUtility.TryConnectWaapiAsync() || wwiseObjects == null || wwiseProperties == null) return;
-            if (!VersionVerify()) return;
+            if (!VersionHelper.VersionVerify(VersionHelper.V2022_1_0_7929)) return;
             try
             {
                 var query = new
@@ -83,7 +73,7 @@ namespace WwiseTools.Utils.Feature2022
             params WwiseReference[] wwiseReferences)
         {
             if (!await WwiseUtility.TryConnectWaapiAsync() || wwiseObjects == null || wwiseReferences == null) return;
-            if (!VersionVerify()) return;
+            if (!VersionHelper.VersionVerify(VersionHelper.V2022_1_0_7929)) return;
             try
             {
                 var query = new

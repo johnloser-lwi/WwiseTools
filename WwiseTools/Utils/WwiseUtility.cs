@@ -1858,7 +1858,7 @@ namespace WwiseTools.Utils
         {
             List<WwiseObject> result = new List<WwiseObject>();
             if (wwiseObject == null || !await TryConnectWaapiAsync()) return result;
-            if (WwiseUtility.ConnectionInfo.Version.Year >= 2021)
+            if (WwiseUtility.ConnectionInfo.Version >= VersionHelper.V2021_1_0_7575)
             {
                 try
                 {

@@ -42,7 +42,7 @@ namespace WwiseTools.Objects
             }
         }
 
-        public WwiseVersion(int year, int major, int minor, int build, int schema)
+        public WwiseVersion(int year, int major, int minor, int build, int schema = 0)
         {
             Year = year;
             Major = major;
@@ -93,6 +93,16 @@ namespace WwiseTools.Objects
         public static bool operator <(WwiseVersion left, WwiseVersion right)
         {
             return !(left > right);
+        }
+
+        public static bool operator >=(WwiseVersion left, WwiseVersion right)
+        {
+            return left > right || left == right;
+        }
+
+        public static bool operator <=(WwiseVersion left, WwiseVersion right)
+        {
+            return left < right || left == right;
         }
     }
 }
