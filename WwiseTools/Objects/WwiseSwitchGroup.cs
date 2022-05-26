@@ -10,9 +10,9 @@ namespace WwiseTools.Objects
     public class WwiseSwitchGroup : WwiseObject
     {
         [Obsolete("use WwiseUtility.CreateObjectAsync instead")]
-        public WwiseSwitchGroup(string name, string parent_path = @"\Switches\Default Work Unit") : base(name, "", ObjectType.SwitchGroup.ToString())
+        public WwiseSwitchGroup(string name, string parentPath = @"\Switches\Default Work Unit") : base(name, "", ObjectType.SwitchGroup.ToString())
         {
-            var tempObj = WwiseUtility.CreateObject(name, ObjectType.SwitchGroup, parent_path);
+            var tempObj = WwiseUtility.CreateObject(name, ObjectType.SwitchGroup, parentPath);
             ID = tempObj.ID;
             Name = tempObj.Name;
         }

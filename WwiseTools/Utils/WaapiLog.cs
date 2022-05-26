@@ -8,14 +8,14 @@ namespace WwiseTools.Utils
 {
     public class WaapiLog
     {
-        private static WaapiLog instance;
+        private static WaapiLog _instance;
 
         private static WaapiLog Instance
         {
             get
             {
-                if (instance == null) instance = new WaapiLog();
-                return instance;
+                if (_instance == null) _instance = new WaapiLog();
+                return _instance;
             }
         }
         public event Action<object, bool> Logger;

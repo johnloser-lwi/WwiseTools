@@ -11,24 +11,24 @@ namespace WwiseTools.Utils
     {
         public static string CoreObjectGet => "ak.wwise.core.object.get";
 
-        private List<string> functions;
+        private List<string> _functions;
 
         public WaapiFunction()
         {
-            functions = new List<string>();
+            _functions = new List<string>();
         }
 
         public void AddFunction(string function)
         {
-            if (!functions.Contains(function))
-                functions.Add(function);
+            if (!_functions.Contains(function))
+                _functions.Add(function);
         }
 
         public string Verify(string func)
         {
             bool result = false;
             string final = null;
-            if (functions.Contains(func))
+            if (_functions.Contains(func))
             {
                 final = func;
                 result = true;
@@ -56,7 +56,7 @@ namespace WwiseTools.Utils
 
         public IEnumerator<string> GetEnumerator()
         {
-            return functions.GetEnumerator();
+            return _functions.GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()

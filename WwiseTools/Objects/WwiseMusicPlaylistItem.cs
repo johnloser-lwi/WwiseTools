@@ -14,29 +14,29 @@ namespace WwiseTools.Objects
         public Option_PlaylistItemType PlaylistItemType { get; private set; }
 
         [Obsolete("use WwiseUtility.CreateObjectAsync instead")]
-        public WwiseMusicPlaylistItem(Option_PlaylistItemType playlist_item_type, string parent_id) : base("", "", "MusicPlaylistItem")
+        public WwiseMusicPlaylistItem(Option_PlaylistItemType playlistItemType, string parentId) : base("", "", "MusicPlaylistItem")
         {
-            var tempObj = WwiseUtility.CreateObject("", ObjectType.MusicPlaylistItem, parent_id);
+            var tempObj = WwiseUtility.CreateObject("", ObjectType.MusicPlaylistItem, parentId);
             ID = tempObj.ID;
             Name = tempObj.Name;
 
-            SetPlaylistItemType(playlist_item_type);
+            SetPlaylistItemType(playlistItemType);
         }
 
         public static async Task<WwiseMusicPlaylistItem> CreateWwiseMusicPlaylistItem(
-            Option_PlaylistItemType playlist_item_type, string parent_id)
+            Option_PlaylistItemType playlistItemType, string parentId)
         {
-            var tempObj = await WwiseUtility.CreateObjectAsync("", ObjectType.MusicPlaylistItem, parent_id);
+            var tempObj = await WwiseUtility.CreateObjectAsync("", ObjectType.MusicPlaylistItem, parentId);
             var playlistItem = new WwiseMusicPlaylistItem(tempObj);
-            await playlistItem.SetPlaylistItemTypeAsync(playlist_item_type);
+            await playlistItem.SetPlaylistItemTypeAsync(playlistItemType);
             return playlistItem;
         }
         
         
         public static async Task<WwiseMusicPlaylistItem> CreateWwiseMusicPlaylistItem(
-            WwiseMusicSegment segment, string parent_id)
+            WwiseMusicSegment segment, string parentId)
         {
-            var tempObj = await WwiseUtility.CreateObjectAsync("", ObjectType.MusicPlaylistItem, parent_id);
+            var tempObj = await WwiseUtility.CreateObjectAsync("", ObjectType.MusicPlaylistItem, parentId);
             var playlistItem = new WwiseMusicPlaylistItem(tempObj);
             await playlistItem.SetPlaylistItemTypeAsync(Option_PlaylistItemType.Segment);
             await playlistItem.SetSegmentRefAsync(segment);
@@ -44,9 +44,9 @@ namespace WwiseTools.Objects
         }
 
         [Obsolete("use WwiseUtility.CreateObjectAsync instead")]
-        public WwiseMusicPlaylistItem(WwiseMusicSegment segment, string parent_id) : base("", "", "MusicPlaylistItem")
+        public WwiseMusicPlaylistItem(WwiseMusicSegment segment, string parentId) : base("", "", "MusicPlaylistItem")
         {
-            var tempObj = WwiseUtility.CreateObject("", ObjectType.MusicPlaylistItem, parent_id);
+            var tempObj = WwiseUtility.CreateObject("", ObjectType.MusicPlaylistItem, parentId);
             ID = tempObj.ID;
             Name = tempObj.Name;
 
@@ -81,14 +81,14 @@ namespace WwiseTools.Objects
         
         public enum Option_PlayMode { SequenceContinuous = 0, SequenceStep = 1, RandomContinuous = 2, RandomStep = 3 }
         [Obsolete("use async version instead")]
-        public void SetPlayMode(Option_PlayMode play_mode)
+        public void SetPlayMode(Option_PlayMode playMode)
         {
-            WwiseUtility.SetObjectProperty(this, new WwiseProperty("PlayMode", (int)play_mode));
+            WwiseUtility.SetObjectProperty(this, new WwiseProperty("PlayMode", (int)playMode));
         }
 
-        public async Task SetPlayModeAsync(Option_PlayMode play_mode)
+        public async Task SetPlayModeAsync(Option_PlayMode playMode)
         {
-            await WwiseUtility.SetObjectPropertyAsync(this, new WwiseProperty("PlayMode", (int)play_mode));
+            await WwiseUtility.SetObjectPropertyAsync(this, new WwiseProperty("PlayMode", (int)playMode));
         }
 
         public enum Option_PlaylistItemType { Group = 0, Segment = 1 }
@@ -109,23 +109,23 @@ namespace WwiseTools.Objects
         /// 设置随机
         /// </summary>
         /// <param name="shuffle"></param>
-        /// <param name="avoid_repeat_count"></param>
+        /// <param name="avoidRepeatCount"></param>
         [Obsolete("use async version instead")]
-        public void SetRandom(bool shuffle = true, uint avoid_repeat_count = 1)
+        public void SetRandom(bool shuffle = true, uint avoidRepeatCount = 1)
         {
             int standard = 0;
             if (!shuffle) standard = 1;
             WwiseUtility.SetObjectProperty(this, new WwiseProperty("NormalOrShuffle", standard));
 
-            WwiseUtility.SetObjectProperty(this, new WwiseProperty("RandomAvoidRepeatingCount", avoid_repeat_count));
+            WwiseUtility.SetObjectProperty(this, new WwiseProperty("RandomAvoidRepeatingCount", avoidRepeatCount));
         }
 
-        public async Task SetRandomAsync(bool shuffle = true, uint avoid_repeat_count = 1)
+        public async Task SetRandomAsync(bool shuffle = true, uint avoidRepeatCount = 1)
         {
             int standard = 0;
             if (!shuffle) standard = 1;
             await WwiseUtility.SetObjectPropertyAsync(this, new WwiseProperty("NormalOrShuffle", standard));
-            await WwiseUtility.SetObjectPropertyAsync(this, new WwiseProperty("RandomAvoidRepeatingCount", avoid_repeat_count));
+            await WwiseUtility.SetObjectPropertyAsync(this, new WwiseProperty("RandomAvoidRepeatingCount", avoidRepeatCount));
         }
 
         /// <summary>

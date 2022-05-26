@@ -18,11 +18,11 @@ namespace WwiseTools.Objects
         /// 创建一个音乐片段
         /// </summary>
         /// <param name="name"></param>
-        /// <param name="parent_path"></param>
+        /// <param name="parentPath"></param>
         [Obsolete("use WwiseUtility.CreateObjectAsync instead")]
-        public WwiseMusicSegment(string name, string parent_path = @"\Interactive Music Hierarchy\Default Work Unit\") : base(name, "", ObjectType.MusicSegment.ToString())
+        public WwiseMusicSegment(string name, string parentPath = @"\Interactive Music Hierarchy\Default Work Unit\") : base(name, "", ObjectType.MusicSegment.ToString())
         {
-            var segment = WwiseUtility.CreateObject(name, ObjectType.MusicSegment, parent_path);
+            var segment = WwiseUtility.CreateObject(name, ObjectType.MusicSegment, parentPath);
             ID = segment.ID;
             Name = segment.Name;
 
@@ -34,30 +34,30 @@ namespace WwiseTools.Objects
         /// 创建一个音乐片段，配置导入选项
         /// </summary>
         /// <param name="name"></param>
-        /// <param name="file_path"></param>
-        /// <param name="sub_folder"></param>
-        /// <param name="parent_path"></param>
+        /// <param name="filePath"></param>
+        /// <param name="subFolder"></param>
+        /// <param name="parentPath"></param>
         [Obsolete("use CreateMusicSegmentAsync instead")]
-        public WwiseMusicSegment(string name, string file_path, string sub_folder = "", string parent_path = @"\Interactive Music Hierarchy\Default Work Unit") : base(name, "", ObjectType.MusicSegment.ToString())
+        public WwiseMusicSegment(string name, string filePath, string subFolder = "", string parentPath = @"\Interactive Music Hierarchy\Default Work Unit") : base(name, "", ObjectType.MusicSegment.ToString())
         {
-            var segment = WwiseUtility.CreateObject(name, ObjectType.MusicSegment, parent_path);
-            parent_path = System.IO.Path.Combine(parent_path, name);
+            var segment = WwiseUtility.CreateObject(name, ObjectType.MusicSegment, parentPath);
+            parentPath = System.IO.Path.Combine(parentPath, name);
             ID = segment.ID;
             Name = name;
 
-            var tempObj = WwiseUtility.ImportSound(file_path, "SFX", sub_folder, parent_path);
+            var tempObj = WwiseUtility.ImportSound(filePath, "SFX", subFolder, parentPath);
 
             EntryCuePos = 0;
             ExitCuePos = 0;
 
         }
 
-        public static async Task<WwiseMusicSegment> CreateMusicSegmentAsync(string name, string file_path,
-            string sub_folder = "", string parent_path = @"\Interactive Music Hierarchy\Default Work Unit")
+        public static async Task<WwiseMusicSegment> CreateMusicSegmentAsync(string name, string filePath,
+            string subFolder = "", string parentPath = @"\Interactive Music Hierarchy\Default Work Unit")
         {
-            var segment = await WwiseUtility.CreateObjectAsync(name, ObjectType.MusicSegment, parent_path);
-            parent_path = System.IO.Path.Combine(parent_path, name);
-            await WwiseUtility.ImportSoundAsync(file_path, "SFX", sub_folder, parent_path);
+            var segment = await WwiseUtility.CreateObjectAsync(name, ObjectType.MusicSegment, parentPath);
+            parentPath = System.IO.Path.Combine(parentPath, name);
+            await WwiseUtility.ImportSoundAsync(filePath, "SFX", subFolder, parentPath);
 
             return new WwiseMusicSegment(segment) {EntryCuePos = 0, ExitCuePos = 0};
         }
@@ -79,21 +79,21 @@ namespace WwiseTools.Objects
         /// 设置BPM和拍号
         /// </summary>
         /// <param name="tempo"></param>
-        /// <param name="time_signature_lower"></param>
-        /// <param name="time_signature_upper"></param>
+        /// <param name="timeSignatureLower"></param>
+        /// <param name="timeSignatureUpper"></param>
         [Obsolete("use async version instead")]
-        public void SetTempoAndTimeSignature(float tempo, WwiseProperty.Option_TimeSignatureLower time_signature_lower, uint time_signature_upper)
+        public void SetTempoAndTimeSignature(float tempo, WwiseProperty.Option_TimeSignatureLower timeSignatureLower, uint timeSignatureUpper)
         {
             WwiseUtility.SetObjectProperty(this, WwiseProperty.Prop_Tempo(tempo));
-            WwiseUtility.SetObjectProperty(this, WwiseProperty.Prop_TimeSignatureLower(time_signature_lower));
-            WwiseUtility.SetObjectProperty(this, WwiseProperty.Prop_TimeSignatureUpper(time_signature_upper));
+            WwiseUtility.SetObjectProperty(this, WwiseProperty.Prop_TimeSignatureLower(timeSignatureLower));
+            WwiseUtility.SetObjectProperty(this, WwiseProperty.Prop_TimeSignatureUpper(timeSignatureUpper));
         }
 
-        public async Task SetTempoAndTimeSignatureAsync(float tempo, WwiseProperty.Option_TimeSignatureLower time_signature_lower, uint time_signature_upper)
+        public async Task SetTempoAndTimeSignatureAsync(float tempo, WwiseProperty.Option_TimeSignatureLower timeSignatureLower, uint timeSignatureUpper)
         {
             await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_Tempo(tempo));
-            await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_TimeSignatureLower(time_signature_lower));
-            await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_TimeSignatureUpper(time_signature_upper));
+            await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_TimeSignatureLower(timeSignatureLower));
+            await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_TimeSignatureUpper(timeSignatureUpper));
         }
 
         /// <summary>
@@ -145,11 +145,11 @@ namespace WwiseTools.Objects
         /// 设置Exit Cue位置
         /// </summary>
         /// <param name="timeMs"></param>
-        /// <param name="ignore_smaller_value"></param>
+        /// <param name="ignoreSmallerValue"></param>
         [Obsolete("Use async version instead")]
-        public void SetExitCue(float timeMs, bool ignore_smaller_value = true)
+        public void SetExitCue(float timeMs, bool ignoreSmallerValue = true)
         {
-            if (ignore_smaller_value && timeMs <= ExitCuePos) return; // 如果新的位置参数小于当前位置，则无视该参数
+            if (ignoreSmallerValue && timeMs <= ExitCuePos) return; // 如果新的位置参数小于当前位置，则无视该参数
 
                 var cues = WwiseUtility.GetWwiseObjectsOfType("MusicCue");
             WwiseObject exitCue = null;
@@ -171,9 +171,9 @@ namespace WwiseTools.Objects
             }
         }
         
-        public async Task SetExitCueAsync(float timeMs, bool ignore_smaller_value = true)
+        public async Task SetExitCueAsync(float timeMs, bool ignoreSmallerValue = true)
         {
-            if (ignore_smaller_value && timeMs <= ExitCuePos) return; // 如果新的位置参数小于当前位置，则无视该参数
+            if (ignoreSmallerValue && timeMs <= ExitCuePos) return; // 如果新的位置参数小于当前位置，则无视该参数
 
             var cues = await WwiseUtility.GetWwiseObjectsOfTypeAsync("MusicCue");
             WwiseObject exitCue = null;

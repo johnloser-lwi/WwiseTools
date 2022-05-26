@@ -13,22 +13,22 @@ namespace WwiseTools.Utils
     public class WwiseWorkUnitParser
     {
         public XmlDocument XML { get; private set; }
-        private string filePath;
+        private string _filePath;
 
-        public WwiseWorkUnitParser(string file_path)
+        public WwiseWorkUnitParser(string filePath)
         {
             XML = new XmlDocument();
-            Parse(file_path);
+            Parse(filePath);
         }
 
         /// <summary>
         /// 解析文件
         /// </summary>
-        /// <param name="file_path"></param>
-        public void Parse(string file_path)
+        /// <param name="filePath"></param>
+        public void Parse(string filePath)
         {
-            filePath = file_path;
-            XML.Load(file_path);
+            _filePath = filePath;
+            XML.Load(filePath);
         }
 
         /// <summary>
@@ -48,11 +48,11 @@ namespace WwiseTools.Utils
             }
         }
 
-        public XmlNode GetNodeByID(string wwise_id)
+        public XmlNode GetNodeByID(string wwiseId)
         {
             if (XML == null) return null;
 
-            return XML.SelectSingleNode($"//*[@ID='{wwise_id}']");
+            return XML.SelectSingleNode($"//*[@ID='{wwiseId}']");
         }
 
         public XmlNodeList GetChildrenNodeList(XmlNode node)
@@ -67,7 +67,7 @@ namespace WwiseTools.Utils
         /// </summary>
         public void SaveFile()
         {
-            XML.Save(filePath);
+            XML.Save(_filePath);
         }
     }
 }

@@ -15,33 +15,33 @@ namespace WwiseTools.Objects
         /// </summary>
         /// <param name="name"></param>
         /// <param name="option"></param>
-        /// <param name="parent_path"></param>
+        /// <param name="parentPath"></param>
         [Obsolete("use WwiseUtility.CreateObjectAsync instead")]
-        public WwiseRandomSequenceContainer(string name, WwiseProperty.Option_RandomOrSequence option, string parent_path = @"\Actor-Mixer Hierarchy\Default Work Unit") : base(name, "", WwiseObject.ObjectType.RandomSequenceContainer.ToString())
+        public WwiseRandomSequenceContainer(string name, WwiseProperty.Option_RandomOrSequence option, string parentPath = @"\Actor-Mixer Hierarchy\Default Work Unit") : base(name, "", WwiseObject.ObjectType.RandomSequenceContainer.ToString())
         {
-            var tempObj = WwiseUtility.CreateObject(name, ObjectType.RandomSequenceContainer, parent_path);
+            var tempObj = WwiseUtility.CreateObject(name, ObjectType.RandomSequenceContainer, parentPath);
             ID = tempObj.ID;
             Name = tempObj.Name;
             WwiseUtility.SetObjectProperty(this, WwiseProperty.Prop_RandomOrSequence(option));
         }
 
-        public static async Task<WwiseRandomSequenceContainer> CreateWwiseRandomSequenceContainer(string name, WwiseProperty.Option_RandomOrSequence option, string parent_path = @"\Actor-Mixer Hierarchy\Default Work Unit")
+        public static async Task<WwiseRandomSequenceContainer> CreateWwiseRandomSequenceContainer(string name, WwiseProperty.Option_RandomOrSequence option, string parentPath = @"\Actor-Mixer Hierarchy\Default Work Unit")
         {
-            var tempObj = await WwiseUtility.CreateObjectAsync(name, ObjectType.RandomSequenceContainer, parent_path);
+            var tempObj = await WwiseUtility.CreateObjectAsync(name, ObjectType.RandomSequenceContainer, parentPath);
             await WwiseUtility.SetObjectPropertyAsync(tempObj, WwiseProperty.Prop_RandomOrSequence(option));
 
             return new WwiseRandomSequenceContainer(tempObj);
         }
 
-        public static async Task<WwiseRandomContainer> CreateWwiseRandomContainer(string name, string parent_path = @"\Actor-Mixer Hierarchy\Default Work Unit")
+        public static async Task<WwiseRandomContainer> CreateWwiseRandomContainer(string name, string parentPath = @"\Actor-Mixer Hierarchy\Default Work Unit")
         {
-            var tempObj = await CreateWwiseRandomSequenceContainer(name, WwiseProperty.Option_RandomOrSequence.Random, parent_path);
+            var tempObj = await CreateWwiseRandomSequenceContainer(name, WwiseProperty.Option_RandomOrSequence.Random, parentPath);
             return new WwiseRandomContainer(tempObj);
         }
 
-        public static async Task<WwiseSequenceContainer> CreateWwiseSequenceContainer(string name, string parent_path = @"\Actor-Mixer Hierarchy\Default Work Unit")
+        public static async Task<WwiseSequenceContainer> CreateWwiseSequenceContainer(string name, string parentPath = @"\Actor-Mixer Hierarchy\Default Work Unit")
         {
-            var tempObj = await CreateWwiseRandomSequenceContainer(name, WwiseProperty.Option_RandomOrSequence.Sequence, parent_path);
+            var tempObj = await CreateWwiseRandomSequenceContainer(name, WwiseProperty.Option_RandomOrSequence.Sequence, parentPath);
             return new WwiseSequenceContainer(tempObj);
         }
 
@@ -107,22 +107,22 @@ namespace WwiseTools.Objects
         /// 设置循环
         /// </summary>
         /// <param name="loop"></param>
-        /// <param name="loop_count"></param>
+        /// <param name="loopCount"></param>
         /// <param name="mode"></param>
         [Obsolete("use async version instead")]
-        public void SetLoop(bool loop, uint loop_count, WwiseProperty.Option_PlayMechanismInfiniteOrNumberOfLoops mode)
+        public void SetLoop(bool loop, uint loopCount, WwiseProperty.Option_PlayMechanismInfiniteOrNumberOfLoops mode)
         {
             WwiseUtility.SetObjectProperty(this, WwiseProperty.Prop_PlayMechanismLoop(loop));
             WwiseUtility.SetObjectProperty(this, WwiseProperty.Prop_PlayMechanismInfiniteOrNumberOfLoops(mode));
-            WwiseUtility.SetObjectProperty(this, WwiseProperty.Prop_PlayMechanismLoopCount(loop_count));
+            WwiseUtility.SetObjectProperty(this, WwiseProperty.Prop_PlayMechanismLoopCount(loopCount));
 
         }
 
-        public async Task SetLoopAsync(bool loop, uint loop_count, WwiseProperty.Option_PlayMechanismInfiniteOrNumberOfLoops mode)
+        public async Task SetLoopAsync(bool loop, uint loopCount, WwiseProperty.Option_PlayMechanismInfiniteOrNumberOfLoops mode)
         {
             await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_PlayMechanismLoop(loop));
             await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_PlayMechanismInfiniteOrNumberOfLoops(mode));
-            await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_PlayMechanismLoopCount(loop_count));
+            await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_PlayMechanismLoopCount(loopCount));
 
         }
 

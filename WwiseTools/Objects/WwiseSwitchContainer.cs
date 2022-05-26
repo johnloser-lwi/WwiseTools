@@ -16,11 +16,11 @@ namespace WwiseTools.Objects
         /// 创建一个转变容器
         /// </summary>
         /// <param name="name"></param>
-        /// <param name="parent_path"></param>
+        /// <param name="parentPath"></param>
         [Obsolete("use WwiseUtility.CreateObjectAsync instead")]
-        public WwiseSwitchContainer(string name, string parent_path = @"\Actor-Mixer Hierarchy\Default Work Unit") : base(name, "", WwiseObject.ObjectType.SwitchContainer.ToString())
+        public WwiseSwitchContainer(string name, string parentPath = @"\Actor-Mixer Hierarchy\Default Work Unit") : base(name, "", WwiseObject.ObjectType.SwitchContainer.ToString())
         {
-            var tempObj = WwiseUtility.CreateObject(name, ObjectType.SwitchContainer, parent_path);
+            var tempObj = WwiseUtility.CreateObject(name, ObjectType.SwitchContainer, parentPath);
             ID = tempObj.ID;
             Name = tempObj.Name;
         }
@@ -67,28 +67,28 @@ namespace WwiseTools.Objects
         /// <summary>
         /// 设置默认的Switch或者State
         /// </summary>
-        /// <param name="switch_or_state"></param>
+        /// <param name="switchOrState"></param>
         
         [Obsolete("use async version instead")]
-        public void SetDefaultSwitchOrState(WwiseReference switch_or_state)
+        public void SetDefaultSwitchOrState(WwiseReference switchOrState)
         {
-            WwiseUtility.SetObjectReference(this, switch_or_state);
+            WwiseUtility.SetObjectReference(this, switchOrState);
         }
 
-        public async Task SetDefaultSwitchOrStateAsync(WwiseReference switch_or_state)
+        public async Task SetDefaultSwitchOrStateAsync(WwiseReference switchOrState)
         {
-            await WwiseUtility.SetObjectReferenceAsync(this, switch_or_state);
+            await WwiseUtility.SetObjectReferenceAsync(this, switchOrState);
         }
 
         /// <summary>
         /// 分配子对象至State或者Switch
         /// </summary>
         /// <param name="child"></param>
-        /// <param name="state_or_switch"></param>
+        /// <param name="stateOrSwitch"></param>
         [Obsolete("use async version instead")]
-        public void AssignChildToStateOrSwitch(WwiseObject child, WwiseObject state_or_switch)
+        public void AssignChildToStateOrSwitch(WwiseObject child, WwiseObject stateOrSwitch)
         {
-            var temp = AssignChildToStateOrSwitchAsync(child, state_or_switch);
+            var temp = AssignChildToStateOrSwitchAsync(child, stateOrSwitch);
             temp.Wait();
         }
 
@@ -96,22 +96,22 @@ namespace WwiseTools.Objects
         /// 分配子对象至State或者Switch，后台运行
         /// </summary>
         /// <param name="child"></param>
-        /// <param name="state_or_switch"></param>
+        /// <param name="stateOrSwitch"></param>
         /// <returns></returns>
-        public async Task AssignChildToStateOrSwitchAsync(WwiseObject child, WwiseObject state_or_switch)
+        public async Task AssignChildToStateOrSwitchAsync(WwiseObject child, WwiseObject stateOrSwitch)
         {
             if (!await WwiseUtility.TryConnectWaapiAsync()) return;
 
 
-            if (child == null || state_or_switch == null) return;
+            if (child == null || stateOrSwitch == null) return;
 
 
 
             foreach (var assignment in (await GetAssignmentsAsync())["return"])
             {
-                if (assignment["stateOrSwitch"].ToString() == state_or_switch.ID && assignment["child"].ToString() == child.ID)
+                if (assignment["stateOrSwitch"].ToString() == stateOrSwitch.ID && assignment["child"].ToString() == child.ID)
                 {
-                    WaapiLog.Log($"Child {child.Name} has already been assigned to {state_or_switch.Type} : {state_or_switch.Name}!");
+                    WaapiLog.Log($"Child {child.Name} has already been assigned to {stateOrSwitch.Type} : {stateOrSwitch.Name}!");
                     return;
                 }
             }
@@ -127,14 +127,14 @@ namespace WwiseTools.Objects
                     new JObject
                     {
                         new JProperty("child", child.ID),
-                        new JProperty("stateOrSwitch", state_or_switch.ID),
+                        new JProperty("stateOrSwitch", stateOrSwitch.ID),
                     },
                     null
                     );
             }
             catch (Exception e)
             {
-                WaapiLog.Log($"Failed to assign {child.Name} to {state_or_switch}! ======> {e.Message}");
+                WaapiLog.Log($"Failed to assign {child.Name} to {stateOrSwitch}! ======> {e.Message}");
             }
         }
 
@@ -142,11 +142,11 @@ namespace WwiseTools.Objects
         /// 从State或者Switch删除分配的子对象
         /// </summary>
         /// <param name="child"></param>
-        /// <param name="state_or_switch"></param>
+        /// <param name="stateOrSwitch"></param>
         [Obsolete("Use async version instead")]
-        public void RemoveAssignedChildFromStateOrSwitch(WwiseObject child, WwiseObject state_or_switch)
+        public void RemoveAssignedChildFromStateOrSwitch(WwiseObject child, WwiseObject stateOrSwitch)
         {
-            var temp = RemoveAssignedChildFromStateOrSwitchAsync(child, state_or_switch);
+            var temp = RemoveAssignedChildFromStateOrSwitchAsync(child, stateOrSwitch);
             temp.Wait();
         }
 
@@ -154,13 +154,13 @@ namespace WwiseTools.Objects
         /// 从State或者Switch删除分配的子对象，后台运行
         /// </summary>
         /// <param name="child"></param>
-        /// <param name="state_or_switch"></param>
-        public async Task RemoveAssignedChildFromStateOrSwitchAsync(WwiseObject child, WwiseObject state_or_switch)
+        /// <param name="stateOrSwitch"></param>
+        public async Task RemoveAssignedChildFromStateOrSwitchAsync(WwiseObject child, WwiseObject stateOrSwitch)
         {
             if (!await WwiseUtility.TryConnectWaapiAsync()) return;
 
 
-            if (child == null || state_or_switch == null) return;
+            if (child == null || stateOrSwitch == null) return;
 
             try
             {
@@ -173,14 +173,14 @@ namespace WwiseTools.Objects
                     new JObject
                     {
                         new JProperty("child", child.ID),
-                        new JProperty("stateOrSwitch", state_or_switch.ID),
+                        new JProperty("stateOrSwitch", stateOrSwitch.ID),
                     },
                     null
                     );
             }
             catch (Exception e)
             {
-                WaapiLog.Log($"Failed to assign {child.Name} to {state_or_switch}! ======> {e.Message}");
+                WaapiLog.Log($"Failed to assign {child.Name} to {stateOrSwitch}! ======> {e.Message}");
             }
         }
 

@@ -13,11 +13,11 @@ namespace WwiseTools.Objects
         /// 创建一个步进容器
         /// </summary>
         /// <param name="name"></param>
-        /// <param name="parent_path"></param>
+        /// <param name="parentPath"></param>
         [Obsolete("use WwiseUtility.CreateObjectAsync instead")]
-        public WwiseSequenceContainer(string name, string parent_path = @"\Actor-Mixer Hierarchy\Default Work Unit") : base(name, "", WwiseObject.ObjectType.RandomSequenceContainer.ToString())
+        public WwiseSequenceContainer(string name, string parentPath = @"\Actor-Mixer Hierarchy\Default Work Unit") : base(name, "", WwiseObject.ObjectType.RandomSequenceContainer.ToString())
         {
-            var tempObj = WwiseUtility.CreateObject(name, ObjectType.RandomSequenceContainer, parent_path);
+            var tempObj = WwiseUtility.CreateObject(name, ObjectType.RandomSequenceContainer, parentPath);
             ID = tempObj.ID;
             Name = tempObj.Name;
             WwiseUtility.SetObjectProperty(this, WwiseProperty.Prop_RandomOrSequence(WwiseProperty.Option_RandomOrSequence.Sequence));
@@ -65,9 +65,9 @@ namespace WwiseTools.Objects
         /// 设置播放列表
         /// </summary>
         /// <param name="item"></param>
-        /// <param name="at_front"></param>
+        /// <param name="atFront"></param>
         [Obsolete("Use async version instead")]
-        public void SetPlaylist(WwiseObject item, bool at_front = false)
+        public void SetPlaylist(WwiseObject item, bool atFront = false)
         {
             if (!item.Path.Contains(Path)) return;
 
@@ -93,7 +93,7 @@ namespace WwiseTools.Objects
                 node.SetAttribute("Name", item.Name);
                 node.SetAttribute("ID", item.ID);
 
-                if (!at_front) playlist.AppendChild(parser.XML.ImportNode(node, true));
+                if (!atFront) playlist.AppendChild(parser.XML.ImportNode(node, true));
                 else playlist.InsertBefore(parser.XML.ImportNode(node, true), playlist.FirstChild);
 
                 //parser.AddToUnit(this, node);
@@ -101,13 +101,13 @@ namespace WwiseTools.Objects
             }
             else
             {
-                var new_playlist = parser.XML.CreateElement("Playlist");
+                var newPlaylist = parser.XML.CreateElement("Playlist");
 
                 var node = parser.XML.CreateElement("ItemRef");
                 node.SetAttribute("Name", item.Name);
                 node.SetAttribute("ID", item.ID);
 
-                new_playlist.AppendChild(node);
+                newPlaylist.AppendChild(node);
 
                 var containers = parser.XML.GetElementsByTagName(Type);
 
@@ -117,7 +117,7 @@ namespace WwiseTools.Objects
                 {
                     if (container.GetAttribute("ID") == ID)
                     {
-                        container.AppendChild(parser.XML.ImportNode(new_playlist, true));
+                        container.AppendChild(parser.XML.ImportNode(newPlaylist, true));
 
                         parser.SaveFile();
                         break;
@@ -130,7 +130,7 @@ namespace WwiseTools.Objects
             
         }
         
-        public async Task SetPlaylistAsync(List<WwiseObject> items, bool auto_reload = false)
+        public async Task SetPlaylistAsync(List<WwiseObject> items, bool autoReload = false)
         {
             foreach (var item in items)
             {
@@ -155,7 +155,7 @@ namespace WwiseTools.Objects
             }
             
             
-            var new_playlist = parser.XML.CreateElement("Playlist");
+            var newPlaylist = parser.XML.CreateElement("Playlist");
 
 
             foreach (var item in items)
@@ -163,14 +163,14 @@ namespace WwiseTools.Objects
                 var node = parser.XML.CreateElement("ItemRef");
                 node.SetAttribute("Name", item.Name);
                 node.SetAttribute("ID", item.ID);
-                new_playlist.AppendChild(node);
+                newPlaylist.AppendChild(node);
             }
 
-            containerNode.AppendChild(parser.XML.ImportNode(new_playlist, true));
+            containerNode.AppendChild(parser.XML.ImportNode(newPlaylist, true));
 
             parser.SaveFile();
 
-            if (auto_reload) await WwiseUtility.ReloadWwiseProjectAsync();
+            if (autoReload) await WwiseUtility.ReloadWwiseProjectAsync();
             
         }
     }

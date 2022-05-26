@@ -11,25 +11,25 @@ namespace WwiseTools.Utils.Feature2021
 {
     public class Waql : IEnumerable<WwiseObject>
     {
-        private string waql_command;
-        private List<WwiseObject> result;
+        private string _waqlCommand;
+        private List<WwiseObject> _result;
 
         public List<WwiseObject> Result
         {
             get
             {
-                if (result == null) result = new List<WwiseObject>();
-                return result;
+                if (_result == null) _result = new List<WwiseObject>();
+                return _result;
             }
             private set
             {
-                result = value;
+                _result = value;
             }
         }
 
         public Waql(string waql)
         {
-            waql_command = FormatQuery(waql);
+            _waqlCommand = FormatQuery(waql);
         }
 
         private string FormatQuery(string waql)
@@ -44,7 +44,7 @@ namespace WwiseTools.Utils.Feature2021
             if (!await WwiseUtility.TryConnectWaapiAsync()) return false;
             if (!VersionHelper.VersionVerify(VersionHelper.V2021_1_0_7575)) return false;
 
-            if (!string.IsNullOrEmpty(waql)) waql_command = FormatQuery(waql);
+            if (!string.IsNullOrEmpty(waql)) _waqlCommand = FormatQuery(waql);
 
             else Result.Clear();
 
@@ -52,7 +52,7 @@ namespace WwiseTools.Utils.Feature2021
             {
                 var query = new
                 {
-                    waql =  waql_command
+                    waql =  _waqlCommand
                 };
 
                 var option = new
@@ -72,7 +72,7 @@ namespace WwiseTools.Utils.Feature2021
             }
             catch (Exception e)
             {
-                WaapiLog.Log($"Failed to run query {waql_command}! ======> {e.Message}");
+                WaapiLog.Log($"Failed to run query {_waqlCommand}! ======> {e.Message}");
                 Result = new List<WwiseObject>();
                 return false;
             }

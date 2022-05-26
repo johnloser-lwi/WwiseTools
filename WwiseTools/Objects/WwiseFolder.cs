@@ -14,11 +14,11 @@ namespace WwiseTools.Objects
         /// 创建一个虚拟文件夹
         /// </summary>
         /// <param name="name"></param>
-        /// <param name="parent_path"></param>
+        /// <param name="parentPath"></param>
         [Obsolete("use WwiseUtility.CreateObjectAsync instead")]
-        public WwiseFolder(string name, string parent_path = @"\Actor-Mixer Hierarchy\Default Work Unit") : base(name, "", "Folder")
+        public WwiseFolder(string name, string parentPath = @"\Actor-Mixer Hierarchy\Default Work Unit") : base(name, "", "Folder")
         {
-            var tempObj = WwiseUtility.CreateObject(name, ObjectType.Folder, parent_path);
+            var tempObj = WwiseUtility.CreateObject(name, ObjectType.Folder, parentPath);
             ID = tempObj.ID;
             Name = tempObj.Name;
         }

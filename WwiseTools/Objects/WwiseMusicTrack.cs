@@ -52,13 +52,13 @@ namespace WwiseTools.Objects
         /// 创建一个音轨，配置导入选项
         /// </summary>
         /// <param name="name"></param>
-        /// <param name="file_path"></param>
-        /// <param name="sub_folder"></param>
+        /// <param name="filePath"></param>
+        /// <param name="subFolder"></param>
         /// <param name="parent"></param>
         [Obsolete("use CreateWwiseMusicTrackAsync() instead")]
-        public WwiseMusicTrack(string name, string file_path, WwiseMusicSegment parent, string sub_folder = "") : base(name, "", ObjectType.MusicTrack.ToString())
+        public WwiseMusicTrack(string name, string filePath, WwiseMusicSegment parent, string subFolder = "") : base(name, "", ObjectType.MusicTrack.ToString())
         {
-            var tempObj = WwiseUtility.ImportSound(file_path, "SFX", sub_folder, parent.Path);
+            var tempObj = WwiseUtility.ImportSound(filePath, "SFX", subFolder, parent.Path);
             WwiseUtility.ChangeObjectName(tempObj, name);
             ID = tempObj.ID;
             Name = tempObj.Name;
@@ -133,28 +133,28 @@ namespace WwiseTools.Objects
         /// 设置流
         /// </summary>
         /// <param name="stream"></param>
-        /// <param name="non_cachable"></param>
-        /// <param name="zero_latency"></param>
+        /// <param name="nonCachable"></param>
+        /// <param name="zeroLatency"></param>
         [Obsolete("Use async version instead")]
-        public void SetStream(bool stream, bool non_cachable, bool zero_latency, uint look_ahead_time = 100, uint prefetch_length = 100)
+        public void SetStream(bool stream, bool nonCachable, bool zeroLatency, uint lookAheadTime = 100, uint prefetchLength = 100)
         {
             WwiseUtility.SetObjectProperty(this, WwiseProperty.Prop_IsStreamingEnabled(stream));
-            WwiseUtility.SetObjectProperty(this, WwiseProperty.Prop_IsNonCachable(non_cachable));
-            WwiseUtility.SetObjectProperty(this, WwiseProperty.Prop_IsZeroLantency(zero_latency));
+            WwiseUtility.SetObjectProperty(this, WwiseProperty.Prop_IsNonCachable(nonCachable));
+            WwiseUtility.SetObjectProperty(this, WwiseProperty.Prop_IsZeroLantency(zeroLatency));
 
-            WwiseUtility.SetObjectProperty(this, WwiseProperty.Prop_LookAheadTime(look_ahead_time));
-            WwiseUtility.SetObjectProperty(this, WwiseProperty.Prop_PreFetchLength(prefetch_length));
+            WwiseUtility.SetObjectProperty(this, WwiseProperty.Prop_LookAheadTime(lookAheadTime));
+            WwiseUtility.SetObjectProperty(this, WwiseProperty.Prop_PreFetchLength(prefetchLength));
 
         }
         
-        public async Task SetStreamAsync(bool stream, bool non_cachable, bool zero_latency, uint look_ahead_time = 100, uint prefetch_length = 100)
+        public async Task SetStreamAsync(bool stream, bool nonCachable, bool zeroLatency, uint lookAheadTime = 100, uint prefetchLength = 100)
         {
             await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_IsStreamingEnabled(stream));
-            await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_IsNonCachable(non_cachable));
-            await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_IsZeroLantency(zero_latency));
+            await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_IsNonCachable(nonCachable));
+            await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_IsZeroLantency(zeroLatency));
             
-            await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_LookAheadTime(look_ahead_time));
-            await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_PreFetchLength(prefetch_length));
+            await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_LookAheadTime(lookAheadTime));
+            await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_PreFetchLength(prefetchLength));
 
         }
 
@@ -191,16 +191,16 @@ namespace WwiseTools.Objects
         /// <summary>
         /// 设置默认的Switch或者State
         /// </summary>
-        /// <param name="switch_or_state"></param>
+        /// <param name="switchOrState"></param>
         [Obsolete("Use async version instead")]
-        public void SetDefaultSwitchOrState(WwiseReference switch_or_state)
+        public void SetDefaultSwitchOrState(WwiseReference switchOrState)
         {
-            WwiseUtility.SetObjectReference(this, switch_or_state);
+            WwiseUtility.SetObjectReference(this, switchOrState);
         }
         
-        public async Task SetDefaultSwitchOrStateAsync(WwiseReference switch_or_state)
+        public async Task SetDefaultSwitchOrStateAsync(WwiseReference switchOrState)
         {
-            await WwiseUtility.SetObjectReferenceAsync(this, switch_or_state);
+            await WwiseUtility.SetObjectReferenceAsync(this, switchOrState);
         }
     }
 }

@@ -15,11 +15,11 @@ namespace WwiseTools.Objects
         /// 创建一个音乐片段
         /// </summary>
         /// <param name="name"></param>
-        /// <param name="parent_path"></param>
+        /// <param name="parentPath"></param>
         [Obsolete("use WwiseUtility.CreateObjectAsync instead")]
-        public WwiseMusicPlaylistContainer(string name, string parent_path = @"\Interactive Music Hierarchy\Default Work Unit\") : base(name, "", ObjectType.MusicPlaylistContainer.ToString())
+        public WwiseMusicPlaylistContainer(string name, string parentPath = @"\Interactive Music Hierarchy\Default Work Unit\") : base(name, "", ObjectType.MusicPlaylistContainer.ToString())
         {
-            var playlist = WwiseUtility.CreateObject(name, ObjectType.MusicPlaylistContainer, parent_path);
+            var playlist = WwiseUtility.CreateObject(name, ObjectType.MusicPlaylistContainer, parentPath);
             ID = playlist.ID;
             Name = playlist.Name;
         }
@@ -39,11 +39,11 @@ namespace WwiseTools.Objects
         [Obsolete("use async version instead")]
         public WwiseMusicPlaylistItem AddPlaylistItemGroup()
         {
-            var root_item = GetRootPlaylistItem();
+            var rootItem = GetRootPlaylistItem();
 
-            if (root_item != null) // && segment != null)
+            if (rootItem != null) // && segment != null)
             {
-                var item = new WwiseMusicPlaylistItem(WwiseMusicPlaylistItem.Option_PlaylistItemType.Group, root_item.ID);
+                var item = new WwiseMusicPlaylistItem(WwiseMusicPlaylistItem.Option_PlaylistItemType.Group, rootItem.ID);
                 return item;
             }
 
@@ -52,12 +52,12 @@ namespace WwiseTools.Objects
 
         public async Task<WwiseMusicPlaylistItem> AddPlaylistItemGroupAsync()
         {
-            var root_item = await GetRootPlaylistItemAsync();
+            var rootItem = await GetRootPlaylistItemAsync();
 
-            if (root_item != null) // && segment != null)
+            if (rootItem != null) // && segment != null)
             {
                 var item = await 
-                    WwiseMusicPlaylistItem.CreateWwiseMusicPlaylistItem(WwiseMusicPlaylistItem.Option_PlaylistItemType.Group, root_item.ID);
+                    WwiseMusicPlaylistItem.CreateWwiseMusicPlaylistItem(WwiseMusicPlaylistItem.Option_PlaylistItemType.Group, rootItem.ID);
                 return item;
             }
 
@@ -72,11 +72,11 @@ namespace WwiseTools.Objects
         [Obsolete("use async version instead")]
         public WwiseMusicPlaylistItem AddPlaylistItemSegment(WwiseMusicSegment segment)
         {
-            var root_item = GetRootPlaylistItem();
+            var rootItem = GetRootPlaylistItem();
 
-            if (root_item != null) // && segment != null)
+            if (rootItem != null) // && segment != null)
             {
-                var item = new WwiseMusicPlaylistItem(segment, root_item.ID);
+                var item = new WwiseMusicPlaylistItem(segment, rootItem.ID);
 
                 //WwiseUtility.ReloadWwiseProject();
 
@@ -88,11 +88,11 @@ namespace WwiseTools.Objects
 
         public async Task<WwiseMusicPlaylistItem> AddPlaylistItemSegmentAsync(WwiseMusicSegment segment)
         {
-            var root_item = await GetRootPlaylistItemAsync();
+            var rootItem = await GetRootPlaylistItemAsync();
 
-            if (root_item != null) // && segment != null)
+            if (rootItem != null) // && segment != null)
             {
-                var item = await WwiseMusicPlaylistItem.CreateWwiseMusicPlaylistItem(segment, root_item.ID);
+                var item = await WwiseMusicPlaylistItem.CreateWwiseMusicPlaylistItem(segment, rootItem.ID);
 
                 //WwiseUtility.ReloadWwiseProject();
 
@@ -110,11 +110,11 @@ namespace WwiseTools.Objects
         public WwiseMusicPlaylistItem GetRootPlaylistItem()
         {
 
-            var root_item = GetRootPlaylistItemAsync();
-            root_item.Wait();
+            var rootItem = GetRootPlaylistItemAsync();
+            rootItem.Wait();
 
 
-            return root_item.Result;
+            return rootItem.Result;
         }
 
         /// <summary>

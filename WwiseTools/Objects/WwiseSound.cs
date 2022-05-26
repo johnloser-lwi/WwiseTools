@@ -16,11 +16,11 @@ namespace WwiseTools.Objects
         /// 创建一个Wwise Sound对象
         /// </summary>
         /// <param name="name"></param>
-        /// <param name="parent_path"></param>
+        /// <param name="parentPath"></param>
         [Obsolete("use WwiseUtility.CreateObjectAsync instead")]
-        public WwiseSound(string name, string parent_path =@"\Actor-Mixer Hierarchy\Default Work Unit") : base(name, "", "Sound")
+        public WwiseSound(string name, string parentPath =@"\Actor-Mixer Hierarchy\Default Work Unit") : base(name, "", "Sound")
         {
-            var tempObj = WwiseUtility.CreateObject(name, ObjectType.Sound, parent_path);
+            var tempObj = WwiseUtility.CreateObject(name, ObjectType.Sound, parentPath);
             ID = tempObj.ID;
             Name = tempObj.Name;
         }
@@ -29,14 +29,14 @@ namespace WwiseTools.Objects
         /// 创建一个Wwise Sound对象，设置包含的音频文件信息
         /// </summary>
         /// <param name="name"></param>
-        /// <param name="file_path"></param>
+        /// <param name="filePath"></param>
         /// <param name="language"></param>
-        /// <param name="sub_folder"></param>
-        /// <param name="parent_path"></param>
+        /// <param name="subFolder"></param>
+        /// <param name="parentPath"></param>
         [Obsolete("Use WwiseUtility.ImportSoundAsync instead")]
-        public WwiseSound(string name, string file_path, string language = "SFX", string sub_folder = "", string parent_path = @"\Actor-Mixer Hierachy\Default Work Unit") : base(name, "", "Sound")
+        public WwiseSound(string name, string filePath, string language = "SFX", string subFolder = "", string parentPath = @"\Actor-Mixer Hierachy\Default Work Unit") : base(name, "", "Sound")
         {
-            var tempObj = WwiseUtility.ImportSound(file_path, language, sub_folder, parent_path);
+            var tempObj = WwiseUtility.ImportSound(filePath, language, subFolder, parentPath);
             WwiseUtility.ChangeObjectName(tempObj, name);
             ID = tempObj.ID;
             Name = tempObj.Name;
@@ -90,21 +90,21 @@ namespace WwiseTools.Objects
         /// 设置流
         /// </summary>
         /// <param name="stream"></param>
-        /// <param name="non_cachable"></param>
-        /// <param name="zero_latency"></param>
+        /// <param name="nonCachable"></param>
+        /// <param name="zeroLatency"></param>
         [Obsolete("use async version instead")]
-        public void SetStream(bool stream, bool non_cachable, bool zero_latency)
+        public void SetStream(bool stream, bool nonCachable, bool zeroLatency)
         {
             WwiseUtility.SetObjectProperty(this, WwiseProperty.Prop_IsStreamingEnabled(stream));
-            WwiseUtility.SetObjectProperty(this, WwiseProperty.Prop_IsNonCachable(non_cachable));
-            WwiseUtility.SetObjectProperty(this, WwiseProperty.Prop_IsZeroLantency(zero_latency));
+            WwiseUtility.SetObjectProperty(this, WwiseProperty.Prop_IsNonCachable(nonCachable));
+            WwiseUtility.SetObjectProperty(this, WwiseProperty.Prop_IsZeroLantency(zeroLatency));
         }
 
-        public async Task SetStreamAsync(bool stream, bool non_cachable, bool zero_latency)
+        public async Task SetStreamAsync(bool stream, bool nonCachable, bool zeroLatency)
         {
             await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_IsStreamingEnabled(stream));
-            await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_IsNonCachable(non_cachable));
-            await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_IsZeroLantency(zero_latency));
+            await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_IsNonCachable(nonCachable));
+            await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_IsZeroLantency(zeroLatency));
         }
 
         [Obsolete("use async version instead")]

@@ -30,12 +30,12 @@ namespace WwiseTools.Utils
         {
             get
             {
-                if (extensions == null) extensions = new WwiseUtility();
-                return extensions;
+                if (_extensions == null) _extensions = new WwiseUtility();
+                return _extensions;
             }
         }
 
-        private static WwiseUtility extensions;
+        private static WwiseUtility _extensions;
 
         public enum GlobalImportSettings
         {
@@ -281,8 +281,8 @@ namespace WwiseTools.Utils
         {
             if (!TryConnectWaapi() || wwiseObject == null ||wwiseProperty == null) return;
 
-            var set_prop = SetObjectPropertyAsync(wwiseObject, wwiseProperty);
-            set_prop.AsTask().Wait();
+            var setProp = SetObjectPropertyAsync(wwiseObject, wwiseProperty);
+            setProp.AsTask().Wait();
 
         }
 
@@ -323,27 +323,27 @@ namespace WwiseTools.Utils
         /// <summary>
         /// 修改名称
         /// </summary>
-        /// <param name="rename_object"></param>
-        /// <param name="new_name"></param>
+        /// <param name="renameObject"></param>
+        /// <param name="newName"></param>
         [Obsolete("Use async version instead")]
-        public static void ChangeObjectName(WwiseObject rename_object, string new_name)
+        public static void ChangeObjectName(WwiseObject renameObject, string newName)
         {
-            if (!TryConnectWaapi() || rename_object == null || String.IsNullOrEmpty(new_name)) return;
-            var change_name = ChangeObjectNameAsync(rename_object, new_name);
-            change_name.AsTask().Wait();
+            if (!TryConnectWaapi() || renameObject == null || String.IsNullOrEmpty(newName)) return;
+            var changeName = ChangeObjectNameAsync(renameObject, newName);
+            changeName.AsTask().Wait();
         }
 
         /// <summary>
         /// 修改名称，异步执行
         /// </summary>
-        /// <param name="rename_object"></param>
-        /// <param name="new_name"></param>
+        /// <param name="renameObject"></param>
+        /// <param name="newName"></param>
         /// <returns></returns>
-        public static async ValueTask ChangeObjectNameAsync(WwiseObject rename_object, string new_name)
+        public static async ValueTask ChangeObjectNameAsync(WwiseObject renameObject, string newName)
         {
-            if(!await TryConnectWaapiAsync() || rename_object == null || String.IsNullOrEmpty(new_name)) return;
+            if(!await TryConnectWaapiAsync() || renameObject == null || String.IsNullOrEmpty(newName)) return;
 
-            string old_name = rename_object.Name;
+            string oldName = renameObject.Name;
             try
             {
                 var func = Function.Verify("ak.wwise.core.object.setName");
@@ -351,18 +351,18 @@ namespace WwiseTools.Utils
                     ,
                     new
                     {
-                        @object = rename_object.ID,
-                        value = new_name,
+                        @object = renameObject.ID,
+                        value = newName,
                     });
 
-                rename_object.Name = new_name;
+                renameObject.Name = newName;
 
-                WaapiLog.Log($"Object {old_name} successfully renamed to {new_name}!");
+                WaapiLog.Log($"Object {oldName} successfully renamed to {newName}!");
             }
 
             catch (Exception e)
             {
-                WaapiLog.Log($"Failed to rename object : {old_name} ======> {e.Message}");
+                WaapiLog.Log($"Failed to rename object : {oldName} ======> {e.Message}");
             }
         }
 
@@ -544,15 +544,15 @@ namespace WwiseTools.Utils
         /// <summary>
         /// 生成播放事件
         /// </summary>
-        /// <param name="event_name"></param>
+        /// <param name="eventName"></param>
         /// <param name="wwiseObject"></param>
-        /// <param name="parent_path"></param>
+        /// <param name="parentPath"></param>
         /// <returns></returns>
         [Obsolete("Use async version instead")]
-        public static WwiseObject CreatePlayEvent(string event_name, string object_path, string parent_path = @"\Events\Default Work Unit")
+        public static WwiseObject CreatePlayEvent(string eventName, string objectPath, string parentPath = @"\Events\Default Work Unit")
         {
             if (!TryConnectWaapi()) return null;
-            var evt = AddEventActionAsync(event_name, object_path, parent_path);
+            var evt = AddEventActionAsync(eventName, objectPath, parentPath);
             evt.AsTask().Wait();
             return evt.Result;
         }
@@ -561,22 +561,22 @@ namespace WwiseTools.Utils
         /// <summary>
         /// 生成播放事件
         /// </summary>
-        /// <param name="event_name"></param>
-        /// <param name="object_path"></param>
-        /// <param name="parent_path"></param>
+        /// <param name="eventName"></param>
+        /// <param name="objectPath"></param>
+        /// <param name="parentPath"></param>
         /// <returns></returns>
-        public static async ValueTask<WwiseObject> CreatePlayEventAsync(string event_name, string object_path, string parent_path = @"\Events\Default Work Unit")
+        public static async ValueTask<WwiseObject> CreatePlayEventAsync(string eventName, string objectPath, string parentPath = @"\Events\Default Work Unit")
         {
             if (!await TryConnectWaapiAsync()) return null;
-            return await AddEventActionAsync(event_name, object_path, parent_path);
+            return await AddEventActionAsync(eventName, objectPath, parentPath);
         }
 
         [Obsolete("Use async version instead")]
-        public static WwiseObject AddEventAction(string event_name, string object_path,
-            string parent_path = @"\Events\Default Work Unit", int action_type = 1)
+        public static WwiseObject AddEventAction(string eventName, string objectPath,
+            string parentPath = @"\Events\Default Work Unit", int actionType = 1)
         {
             if (!TryConnectWaapi()) return null;
-            var evt = AddEventActionAsync(event_name, object_path, parent_path, action_type);
+            var evt = AddEventActionAsync(eventName, objectPath, parentPath, actionType);
             evt.AsTask().Wait();
             return evt.Result;
         }
@@ -585,11 +585,11 @@ namespace WwiseTools.Utils
         /// <summary>
         /// 生成播放事件，异步执行
         /// </summary>
-        /// <param name="event_name"></param>
-        /// <param name="object_path"></param>
-        /// <param name="parent_path"></param>
+        /// <param name="eventName"></param>
+        /// <param name="objectPath"></param>
+        /// <param name="parentPath"></param>
         /// <returns></returns>
-        public static async ValueTask<WwiseObject> AddEventActionAsync(string event_name, string object_path, string parent_path = @"\Events\Default Work Unit", int action_type = 1)
+        public static async ValueTask<WwiseObject> AddEventActionAsync(string eventName, string objectPath, string parentPath = @"\Events\Default Work Unit", int actionType = 1)
         {
             if (!await TryConnectWaapiAsync()) return null;
 
@@ -601,9 +601,9 @@ namespace WwiseTools.Utils
                         func,
                     new JObject
                     {
-                        new JProperty("parent", parent_path),
+                        new JProperty("parent", parentPath),
                         new JProperty("type", "Event"),
-                        new JProperty("name", event_name),
+                        new JProperty("name", eventName),
                         new JProperty("onNameConflict", "merge"),
                         new JProperty("children", new JArray
                         {
@@ -611,32 +611,32 @@ namespace WwiseTools.Utils
                             {
                                 new JProperty("name", ""),
                                 new JProperty("type", "Action"),
-                                new JProperty("@ActionType", action_type),
-                                new JProperty("@Target", object_path)
+                                new JProperty("@ActionType", actionType),
+                                new JProperty("@Target", objectPath)
                             }
                         })
                     }
                     );
 
-                WaapiLog.Log($"Event {event_name} created successfully!");
+                WaapiLog.Log($"Event {eventName} created successfully!");
                 if (result["id"] == null) throw new Exception();
                 return await GetWwiseObjectByIDAsync(result["id"].ToString());
             }
             catch (Exception e)
             {
-                WaapiLog.Log($"Failed to created play event : {event_name}! ======> {e.Message} ");
+                WaapiLog.Log($"Failed to created play event : {eventName}! ======> {e.Message} ");
                 return null;
             }
         }
 
         [Obsolete("Use async version instead")]
-        public static void AddEventToBank(WwiseObject soundBank, string eventID)
+        public static void AddEventToBank(WwiseObject soundBank, string eventId)
         {
-            var r = AddEventToBankAsync(soundBank, eventID);
+            var r = AddEventToBankAsync(soundBank, eventId);
             r.AsTask().Wait();
         }
 
-        public static async ValueTask AddEventToBankAsync(WwiseObject soundBank, string eventID)
+        public static async ValueTask AddEventToBankAsync(WwiseObject soundBank, string eventId)
         {
             if (!await TryConnectWaapiAsync()) return;
 
@@ -655,7 +655,7 @@ namespace WwiseTools.Utils
                         {
                             new JObject
                             {
-                                new JProperty("object", eventID),
+                                new JProperty("object", eventId),
                                 new JProperty("filter", new JArray("events", "structures", "media"))
                             }
                         })
@@ -671,14 +671,14 @@ namespace WwiseTools.Utils
         /// <summary>
         /// 创建物体
         /// </summary>
-        /// <param name="object_name"></param>
-        /// <param name="object_type"></param>
-        /// <param name="parent_path"></param>
+        /// <param name="objectName"></param>
+        /// <param name="objectType"></param>
+        /// <param name="parentPath"></param>
         /// <returns></returns>
         [Obsolete("Use async version instead")]
-        public static WwiseObject CreateObject(string object_name, WwiseObject.ObjectType object_type, string parent_path = @"\Actor-Mixer Hierarchy\Default Work Unit")
+        public static WwiseObject CreateObject(string objectName, WwiseObject.ObjectType objectType, string parentPath = @"\Actor-Mixer Hierarchy\Default Work Unit")
         {
-            var obj = CreateObjectAsync(object_name, object_type, parent_path);
+            var obj = CreateObjectAsync(objectName, objectType, parentPath);
             obj.AsTask().Wait();
             return obj.Result;
         }
@@ -687,11 +687,11 @@ namespace WwiseTools.Utils
         /// <summary>
         /// 创建物体，后台进行
         /// </summary>
-        /// <param name="object_name"></param>
-        /// <param name="object_type"></param>
-        /// <param name="parent_path"></param>
+        /// <param name="objectName"></param>
+        /// <param name="objectType"></param>
+        /// <param name="parentPath"></param>
         /// <returns></returns>
-        public static async ValueTask<WwiseObject> CreateObjectAsync(string object_name, WwiseObject.ObjectType object_type, string parent_path = @"\Actor-Mixer Hierarchy\Default Work Unit")
+        public static async ValueTask<WwiseObject> CreateObjectAsync(string objectName, WwiseObject.ObjectType objectType, string parentPath = @"\Actor-Mixer Hierarchy\Default Work Unit")
         {
             if (!await TryConnectWaapiAsync()) return null;
 
@@ -705,21 +705,21 @@ namespace WwiseTools.Utils
                         func,
                     new JObject
                     {
-                        new JProperty("name", object_name),
-                        new JProperty("type", object_type.ToString()),
-                        new JProperty("parent", parent_path),
+                        new JProperty("name", objectName),
+                        new JProperty("type", objectType.ToString()),
+                        new JProperty("parent", parentPath),
                         new JProperty("onNameConflict", "fail")
                     },
                     null
                     );
 
-                WaapiLog.Log($"Object {object_name} created successfully!");
+                WaapiLog.Log($"Object {objectName} created successfully!");
                 if (result["id"] == null) throw new Exception();
                 return await GetWwiseObjectByIDAsync(result["id"].ToString());
             }
             catch (Exception e)
             {
-                WaapiLog.Log($"Failed to create object : {object_name}! ======> {e.Message}");
+                WaapiLog.Log($"Failed to create object : {objectName}! ======> {e.Message}");
                 return null;
             }
         }
@@ -765,12 +765,12 @@ namespace WwiseTools.Utils
         /// <summary>
         /// 通过ID搜索物体
         /// </summary>
-        /// <param name="target_id"></param>
+        /// <param name="targetId"></param>
         /// <returns></returns>
         [Obsolete("Use async version instead")]
-        public static WwiseObject GetWwiseObjectByID(string target_id)
+        public static WwiseObject GetWwiseObjectByID(string targetId)
         {
-            var get = GetWwiseObjectByIDAsync(target_id);
+            var get = GetWwiseObjectByIDAsync(targetId);
             get.AsTask().Wait();
             return get.Result;
         }
@@ -778,11 +778,11 @@ namespace WwiseTools.Utils
         /// <summary>
         /// 通过ID搜索物体，异步执行
         /// </summary>
-        /// <param name="target_id"></param>
+        /// <param name="targetId"></param>
         /// <returns></returns>
-        public static async ValueTask<WwiseObject> GetWwiseObjectByIDAsync(string target_id)
+        public static async ValueTask<WwiseObject> GetWwiseObjectByIDAsync(string targetId)
         {
-            if (!await TryConnectWaapiAsync() || String.IsNullOrWhiteSpace(target_id)) return null; 
+            if (!await TryConnectWaapiAsync() || String.IsNullOrWhiteSpace(targetId)) return null; 
 
             try
             {
@@ -793,7 +793,7 @@ namespace WwiseTools.Utils
                 {
                     from = new
                     {
-                        id = new string[] { target_id }
+                        id = new string[] { targetId }
                     }
                 };
 
@@ -819,13 +819,13 @@ namespace WwiseTools.Utils
                 }
                 catch
                 {
-                    WaapiLog.Log($"Failed to return WwiseObject from ID : {target_id}!");
+                    WaapiLog.Log($"Failed to return WwiseObject from ID : {targetId}!");
                     return null;
                 }
             }
             catch (Exception e)
             {
-                WaapiLog.Log($"Failed to return WwiseObject from ID : {target_id}! ======> {e.Message}");
+                WaapiLog.Log($"Failed to return WwiseObject from ID : {targetId}! ======> {e.Message}");
                 return null;
             }
             
@@ -833,17 +833,17 @@ namespace WwiseTools.Utils
 
 
         [Obsolete("Use async version instead")]
-        public static JToken GetWwiseObjectProperty(string target_id, string wwise_property)
+        public static JToken GetWwiseObjectProperty(string targetId, string wwiseProperty)
         {
-            var get = GetWwiseObjectPropertyAsync(target_id, wwise_property);
+            var get = GetWwiseObjectPropertyAsync(targetId, wwiseProperty);
             get.AsTask().Wait();
             return get.Result;
         }
 
 
-        public static async ValueTask<JToken> GetWwiseObjectPropertyAsync(string target_id, string wwise_property)
+        public static async ValueTask<JToken> GetWwiseObjectPropertyAsync(string targetId, string wwiseProperty)
         {
-            if (!await TryConnectWaapiAsync() || String.IsNullOrWhiteSpace(target_id)) return null;
+            if (!await TryConnectWaapiAsync() || String.IsNullOrWhiteSpace(targetId)) return null;
 
             try
             {
@@ -854,7 +854,7 @@ namespace WwiseTools.Utils
                 {
                     from = new
                     {
-                        id = new string[] { target_id }
+                        id = new string[] { targetId }
                     }
                 };
 
@@ -862,7 +862,7 @@ namespace WwiseTools.Utils
                 var options = new
                 {
 
-                    @return = new string[] { "@"+wwise_property }
+                    @return = new string[] { "@"+wwiseProperty }
 
                 };
 
@@ -872,19 +872,19 @@ namespace WwiseTools.Utils
 
                     
 
-                    WaapiLog.Log($"WwiseProperty {wwise_property} successfully fetched!");
+                    WaapiLog.Log($"WwiseProperty {wwiseProperty} successfully fetched!");
                     if (jresult["return"] == null) throw new Exception();
-                    return jresult["return"].Last?["@" + wwise_property];
+                    return jresult["return"].Last?["@" + wwiseProperty];
                 }
                 catch (Exception e)
                 {
-                    WaapiLog.Log($"Failed to return WwiseObject Property : {target_id}! ======> {e.Message}");
+                    WaapiLog.Log($"Failed to return WwiseObject Property : {targetId}! ======> {e.Message}");
                     return null;
                 }
             }
             catch (Exception e)
             {
-                WaapiLog.Log($"Failed to return WwiseObject Property : {target_id}! ======> {e.Message}");
+                WaapiLog.Log($"Failed to return WwiseObject Property : {targetId}! ======> {e.Message}");
                 return null;
             }
 
@@ -977,16 +977,16 @@ namespace WwiseTools.Utils
         /// 通过类型与父对象路径检索对象
         /// </summary>
         /// <param name="type"></param>
-        /// <param name="parent_path"></param>
+        /// <param name="parentPath"></param>
         /// <returns></returns>
         [Obsolete]
-        public static List<WwiseObject> GetWwiseObjectsByTypeAndParent(string type, string parent_path)
+        public static List<WwiseObject> GetWwiseObjectsByTypeAndParent(string type, string parentPath)
         {
             List<WwiseObject> temp = GetWwiseObjectsOfType(type);
             List<WwiseObject> result = new List<WwiseObject>();
             foreach (var obj in temp)
             {
-                if (obj.Path.Contains(parent_path))
+                if (obj.Path.Contains(parentPath))
                 {
                     result.Add(obj);
                 }
@@ -998,13 +998,13 @@ namespace WwiseTools.Utils
         /// <summary>
         /// 通过名称搜索唯一命名对象，格式必须为"type:name
         /// </summary>
-        /// <param name="target_name"></param>
+        /// <param name="targetName"></param>
         /// <returns></returns>
         [Obsolete("Use async version instead")]
-        public static WwiseObject GetWwiseObjectByName(string target_name)
+        public static WwiseObject GetWwiseObjectByName(string targetName)
         {
 
-            var get = GetWwiseObjectByNameAsync(target_name);
+            var get = GetWwiseObjectByNameAsync(targetName);
             get.AsTask().Wait();
             return get.Result;
         }
@@ -1012,11 +1012,11 @@ namespace WwiseTools.Utils
         /// <summary>
         /// 通过名称搜索唯一命名对象，异步执行，格式必须为"type:name"
         /// </summary>
-        /// <param name="target_name"></param>
+        /// <param name="targetName"></param>
         /// <returns></returns>
-        public static async ValueTask<WwiseObject> GetWwiseObjectByNameAsync(string target_name)
+        public static async ValueTask<WwiseObject> GetWwiseObjectByNameAsync(string targetName)
         {
-            if (!await TryConnectWaapiAsync() || String.IsNullOrWhiteSpace(target_name)) return null;
+            if (!await TryConnectWaapiAsync() || String.IsNullOrWhiteSpace(targetName)) return null;
 
             try
             {
@@ -1027,7 +1027,7 @@ namespace WwiseTools.Utils
                 {
                     from = new
                     {
-                        name = new string[] { target_name }
+                        name = new string[] { targetName }
                     }
                 };
 
@@ -1058,13 +1058,13 @@ namespace WwiseTools.Utils
                 }
                 catch (Exception e)
                 {
-                    WaapiLog.Log($"Failed to return WwiseObject by name : {target_name}! ======> {e.Message}");
+                    WaapiLog.Log($"Failed to return WwiseObject by name : {targetName}! ======> {e.Message}");
                     return null;
                 }
             }
             catch (Exception e)
             {
-                WaapiLog.Log($"Failed to return WwiseObject by name : {target_name}! ======> {e.Message}");
+                WaapiLog.Log($"Failed to return WwiseObject by name : {targetName}! ======> {e.Message}");
                 return null;
             }
             
@@ -1148,13 +1148,13 @@ namespace WwiseTools.Utils
         /// <summary>
         /// 获取指定类型的对象
         /// </summary>
-        /// <param name="target_type"></param>
+        /// <param name="targetType"></param>
         /// <returns></returns>
         [Obsolete("Use async version instead")]
-        public static List<WwiseObject> GetWwiseObjectsOfType(string target_type)
+        public static List<WwiseObject> GetWwiseObjectsOfType(string targetType)
         {
 
-            var get = GetWwiseObjectsOfTypeAsync(target_type);
+            var get = GetWwiseObjectsOfTypeAsync(targetType);
             get.AsTask().Wait();
             return get.Result;
         }
@@ -1162,17 +1162,17 @@ namespace WwiseTools.Utils
         /// <summary>
         /// 获取指定类型的对象，异步执行
         /// </summary>
-        /// <param name="target_type"></param>
+        /// <param name="targetType"></param>
         /// <returns></returns>
-        public static async ValueTask<List<WwiseObject>> GetWwiseObjectsOfTypeAsync(string target_type, bool standardType = true)
+        public static async ValueTask<List<WwiseObject>> GetWwiseObjectsOfTypeAsync(string targetType, bool standardType = true)
         {
-            if (!await TryConnectWaapiAsync() || String.IsNullOrWhiteSpace(target_type)) return null;
+            if (!await TryConnectWaapiAsync() || String.IsNullOrWhiteSpace(targetType)) return null;
 
             if (standardType && ConnectionInfo.Version >= VersionHelper.V2021_1_0_7575)
             {
                 try
                 {
-                    var waql = new Waql($"where type = \"{target_type}\"");
+                    var waql = new Waql($"where type = \"{targetType}\"");
                     if (await waql.RunAsync())
                     {
                         return waql.Result;
@@ -1184,7 +1184,7 @@ namespace WwiseTools.Utils
                 }
                 catch (Exception e)
                 {
-                    WaapiLog.Log($"Failed to return WwiseObject list of type {target_type} ======> {e.Message}");
+                    WaapiLog.Log($"Failed to return WwiseObject list of type {targetType} ======> {e.Message}");
                     return null;
                 }
             }
@@ -1199,7 +1199,7 @@ namespace WwiseTools.Utils
                 {
                     from = new
                     {
-                        ofType = new string[] { target_type }
+                        ofType = new string[] { targetType }
                     }
                 };
 
@@ -1219,7 +1219,7 @@ namespace WwiseTools.Utils
 
                     JObject jresult = await Client.Call(func, query, options);
 
-                    List<WwiseObject> obj_list = new List<WwiseObject>();
+                    List<WwiseObject> objList = new List<WwiseObject>();
                     if (jresult["return"] == null) throw new Exception();
                     foreach (var obj in jresult["return"])
                     {
@@ -1227,24 +1227,24 @@ namespace WwiseTools.Utils
                         string id = obj["id"]?.ToString();
                         string type = obj["type"]?.ToString();
 
-                        obj_list.Add(new WwiseObject(name, id, type));
+                        objList.Add(new WwiseObject(name, id, type));
                     }
 
                     
 
-                    WaapiLog.Log($"WwiseObject list or type {target_type} successfully fetched!");
+                    WaapiLog.Log($"WwiseObject list or type {targetType} successfully fetched!");
 
-                    return obj_list;
+                    return objList;
                 }
                 catch (Exception e)
                 {
-                    WaapiLog.Log($"Failed to return WwiseObject list of type : {target_type}! ======> {e.Message}");
+                    WaapiLog.Log($"Failed to return WwiseObject list of type : {targetType}! ======> {e.Message}");
                     return null;
                 }
             }
             catch (Exception e)
             {
-                WaapiLog.Log($"Failed to return WwiseObject list of type : {target_type}! ======> {e.Message}");
+                WaapiLog.Log($"Failed to return WwiseObject list of type : {targetType}! ======> {e.Message}");
                 return null;
             }
         }
@@ -1278,7 +1278,7 @@ namespace WwiseTools.Utils
 
                     JObject jresult = await Client.Call(func, null, options);
 
-                    List<WwiseObject> obj_list = new List<WwiseObject>();
+                    List<WwiseObject> objList = new List<WwiseObject>();
 
 
                     if (jresult["objects"] == null) throw new Exception(); 
@@ -1288,14 +1288,14 @@ namespace WwiseTools.Utils
                         string id = obj["id"]?.ToString();
                         string type = obj["type"]?.ToString();
 
-                        obj_list.Add(new WwiseObject(name, id, type));
+                        objList.Add(new WwiseObject(name, id, type));
                     }
 
 
 
                     WaapiLog.Log($"Selected WwiseObject list successfully fetched!");
 
-                    return obj_list;
+                    return objList;
                 }
                 catch (Exception e)
                 {
@@ -1371,15 +1371,15 @@ namespace WwiseTools.Utils
         /// <summary>
         /// 从指定文件夹导入音频
         /// </summary>
-        /// <param name="folder_path"></param>
+        /// <param name="folderPath"></param>
         /// <param name="language"></param>
         /// <param name="subFolder"></param>
-        /// <param name="parent_path"></param>
+        /// <param name="parentPath"></param>
         /// <param name="work_unit"></param>
         /// <param name="hierarchy"></param>
         /// <returns></returns>
         [Obsolete]
-        public static List<WwiseObject> ImportSoundFromFolder(string folder_path, string language = "SFX", string subFolder = "", string parent_path = @"\Actor-Mixer Hierarchy\Default Work Unit") // 从指定文件夹路径导入
+        public static List<WwiseObject> ImportSoundFromFolder(string folderPath, string language = "SFX", string subFolder = "", string parentPath = @"\Actor-Mixer Hierarchy\Default Work Unit") // 从指定文件夹路径导入
         {
             if (!TryConnectWaapi()) return null; // 没有成功连接时返回空的WwiseObject List
 
@@ -1387,20 +1387,20 @@ namespace WwiseTools.Utils
             {
                 List<WwiseObject> results = new List<WwiseObject>();
 
-                string[] files = Directory.GetFiles(folder_path);
+                string[] files = Directory.GetFiles(folderPath);
                 foreach (var f in files)
                 {
                     if (!f.Contains(".wav")) continue;
 
-                    var r = ImportSound(f, language, subFolder, parent_path);
+                    var r = ImportSound(f, language, subFolder, parentPath);
                     results.Add(r);
                 }
-                WaapiLog.Log($"File(s) in folder {folder_path} imported successfully!");
+                WaapiLog.Log($"File(s) in folder {folderPath} imported successfully!");
                 return results;
             }
             catch (Exception e)
             {
-                WaapiLog.Log($"Failed to import from folder : {folder_path}! ======> {e.Message}");
+                WaapiLog.Log($"Failed to import from folder : {folderPath}! ======> {e.Message}");
                 return null;
             }
         }
@@ -1409,17 +1409,17 @@ namespace WwiseTools.Utils
         /// <summary>
         /// 从指定路径导入音频
         /// </summary>
-        /// <param name="file_path"></param>
+        /// <param name="filePath"></param>
         /// <param name="language"></param>
-        /// <param name="sub_folder"></param>
-        /// <param name="parent_path"></param>
+        /// <param name="subFolder"></param>
+        /// <param name="parentPath"></param>
         /// <param name="work_unit"></param>
         /// <param name="hierarchy"></param>
         /// <returns></returns>
         [Obsolete("Use async version instead")]
-        public static WwiseObject ImportSound(string file_path, string language = "SFX", string sub_folder = "", string parent_path = @"\Actor-Mixer Hierarchy\Default Work Unit", string sound_name = "") // 直接调用的版本
+        public static WwiseObject ImportSound(string filePath, string language = "SFX", string subFolder = "", string parentPath = @"\Actor-Mixer Hierarchy\Default Work Unit", string soundName = "") // 直接调用的版本
         {
-            ValueTask<WwiseObject> obj = WwiseUtility.ImportSoundAsync(file_path, language, sub_folder, parent_path, sound_name);
+            ValueTask<WwiseObject> obj = WwiseUtility.ImportSoundAsync(filePath, language, subFolder, parentPath, soundName);
             obj.AsTask().Wait();
             return obj.Result;
         }
@@ -1427,40 +1427,40 @@ namespace WwiseTools.Utils
         /// <summary>
         /// 从指定路径导入音频，后台进行
         /// </summary>
-        /// <param name="file_path"></param>
+        /// <param name="filePath"></param>
         /// <param name="language"></param>
         /// <param name="subFolder"></param>
-        /// <param name="parent_path"></param>
+        /// <param name="parentPath"></param>
         /// <param name="work_unit"></param>
         /// <param name="hierarchy"></param>
         /// <returns></returns>
-        public static async ValueTask<WwiseObject> ImportSoundAsync(string file_path, string language = "SFX", string subFolder = "", string parent_path = @"\Actor-Mixer Hierarchy\Default Work Unit", string sound_name = "") // Async版本
+        public static async ValueTask<WwiseObject> ImportSoundAsync(string filePath, string language = "SFX", string subFolder = "", string parentPath = @"\Actor-Mixer Hierarchy\Default Work Unit", string soundName = "") // Async版本
         {
-            if (!file_path.EndsWith(".wav") || !await TryConnectWaapiAsync()) return null; // 目标不是文件或者没有成功连接时返回空的WwiseObject
+            if (!filePath.EndsWith(".wav") || !await TryConnectWaapiAsync()) return null; // 目标不是文件或者没有成功连接时返回空的WwiseObject
             
             
             
-            string file_name = "";
-            if (!string.IsNullOrEmpty(sound_name))
+            string fileName = "";
+            if (!string.IsNullOrEmpty(soundName))
             {
-                file_name = sound_name;
+                fileName = soundName;
             }
             else
             {
                 try
                 {
-                    file_name = Path.GetFileName(file_path).Replace(".wav", ""); // 尝试获取文件名
+                    fileName = Path.GetFileName(filePath).Replace(".wav", ""); // 尝试获取文件名
                 }
                 catch (IOException e)
                 {
-                    WaapiLog.Log($"Failed to get file name from { file_path } ======> { e.Message }");
+                    WaapiLog.Log($"Failed to get file name from { filePath } ======> { e.Message }");
                     return null;
                 }
             }
 
             try
             {
-                var import_q = new JObject // 导入配置
+                var importQ = new JObject // 导入配置
                 {
                     new JProperty("importOperation", ImportSettings.ToString()),
                     
@@ -1473,32 +1473,32 @@ namespace WwiseTools.Utils
                     {
                         new JObject
                         {
-                            new JProperty("audioFile", file_path),
-                            new JProperty("objectPath", $"{parent_path}\\<Sound>{file_name}")
+                            new JProperty("audioFile", filePath),
+                            new JProperty("objectPath", $"{parentPath}\\<Sound>{fileName}")
                         }
                     })
                 };
                 
                 if (!String.IsNullOrEmpty(subFolder))
                 {
-                    (import_q["default"] as JObject)?.Add(new JProperty("originalsSubFolder", subFolder));
+                    (importQ["default"] as JObject)?.Add(new JProperty("originalsSubFolder", subFolder));
                 }
 
                 var options = new JObject(new JProperty("return", new object[] { "name", "id", "type", "path" })); // 设置返回参数
 
                 var func = Function.Verify("ak.wwise.core.audio.import");
 
-                var result = await Client.Call(func, import_q, options); // 执行导入
+                var result = await Client.Call(func, importQ, options); // 执行导入
 
                 if (result == null || result["objects"] == null || result["objects"].Last == null || result["objects"].Last["id"] == null) return null;
                 
-                WaapiLog.Log($"File {file_path} imported successfully!");
+                WaapiLog.Log($"File {filePath} imported successfully!");
 
                 return await GetWwiseObjectByIDAsync(result["objects"].Last["id"].ToString());
             }
             catch (Exception e)
             {
-                WaapiLog.Log($"Failed to import file : {file_path} ======> {e.Message}");
+                WaapiLog.Log($"Failed to import file : {filePath} ======> {e.Message}");
                 return null;
             }
         }
@@ -1552,16 +1552,16 @@ namespace WwiseTools.Utils
 
                     JObject jresult = await Client.Call(func, query, options);
 
-                    string file_path = "";
+                    string filePath = "";
                     if (jresult["return"] == null) throw new Exception();
                     foreach (var obj in jresult["return"])
                     {
-                        file_path = obj["filePath"]?.ToString();
+                        filePath = obj["filePath"]?.ToString();
                     }
 
                     WaapiLog.Log($"Work Unit file path of object {@object.Name} successfully fetched!");
 
-                    return file_path;
+                    return filePath;
                 }
                 catch (Exception e)
                 {
@@ -1600,33 +1600,33 @@ namespace WwiseTools.Utils
         /// 加载工程
         /// </summary>
         /// <param name="path"></param>
-        /// <param name="save_current"></param>
+        /// <param name="saveCurrent"></param>
         [Obsolete("Use async version instead")]
-        public static void LoadWwiseProject(string path, bool save_current = true)
+        public static void LoadWwiseProject(string path, bool saveCurrent = true)
         {
-            LoadWwiseProjectAsync(path, save_current).AsTask().Wait();
+            LoadWwiseProjectAsync(path, saveCurrent).AsTask().Wait();
         }
 
         /// <summary>
         /// 加载工程，异步执行
         /// </summary>
         /// <param name="path"></param>
-        /// <param name="save_current"></param>
+        /// <param name="saveCurrent"></param>
         /// <returns></returns>
-        public static async ValueTask LoadWwiseProjectAsync(string path, bool save_current = true)
+        public static async ValueTask LoadWwiseProjectAsync(string path, bool saveCurrent = true)
         {
             if (!await TryConnectWaapiAsync()) return;
 
-            if (save_current) await SaveWwiseProjectAsync();
+            if (saveCurrent) await SaveWwiseProjectAsync();
 
-            var project_path = await GetWwiseProjectPathAsync();
+            var projectPath = await GetWwiseProjectPathAsync();
 
             try
             {
                 //await Client.Call(ak.wwise.ui.project.close);
                 var query = new
                 {
-                    path = project_path
+                    path = projectPath
                 };
 
                 var func = Function.Verify("ak.wwise.ui.project.open");
@@ -1758,16 +1758,16 @@ namespace WwiseTools.Utils
 
                     JObject jresult = await Client.Call(func, query, options);
 
-                    string file_path = "";
+                    string filePath = "";
                     if (jresult["return"] == null) throw new Exception();
                     foreach (var obj in jresult["return"])
                     {
-                        file_path = obj["filePath"]?.ToString();
+                        filePath = obj["filePath"]?.ToString();
                     }
 
                     WaapiLog.Log($"Project path successfully fetched!");
 
-                    return file_path;
+                    return filePath;
                 }
                 catch (Exception e)
                 {
