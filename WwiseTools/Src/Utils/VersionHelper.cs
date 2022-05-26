@@ -18,11 +18,11 @@ namespace WwiseTools.Utils
 
         public static bool VersionVerify(WwiseVersion minimumVersion, [CallerMemberName] string caller = "")
         {
-            if (WwiseUtility.ConnectionInfo.Version < minimumVersion)
+            if (WwiseUtility.Instance.ConnectionInfo.Version < minimumVersion)
             {
                 //var caller = (new System.Diagnostics.StackTrace()).GetFrame(0).GetMethod().Name;
                 WaapiLog.Log($"Warning: {caller} required minimum Wwise version {minimumVersion.ToString()}! " +
-                             $"Current Wwise minimumVersion is {WwiseUtility.ConnectionInfo.Version.ToString()}.");
+                             $"Current Wwise minimumVersion is {WwiseUtility.Instance.ConnectionInfo.Version.ToString()}.");
                 return false;
             }
             return true;

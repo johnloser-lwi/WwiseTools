@@ -11,11 +11,11 @@ ___
 // 所有非异步执行的函数将会被逐步删除，请尽可能使用异步执行函数
 static async Task Main(string[] args)
 {
-    await WwiseUtility.ConnectAsync(); // 首先初始化Wwise工程连接(可以跳过)。
-    var obj = await WwiseUtility.ImportSoundAsync(@"音频文件路径"); // 导入指定音频文件，返回"WwiseObject"。
+    await WwiseUtility.Instance.ConnectAsync(); // 首先初始化Wwise工程连接(可以跳过)。
+    var obj = await WwiseUtility.Instance.ImportSoundAsync(@"音频文件路径"); // 导入指定音频文件，返回"WwiseObject"。
     Console.WriteLine(obj.ToString()); // 显示添加对象的信息。
     
-    await WwiseUtility.DisconnectAsync(); // 关闭Wwise工程连接。
+    await WwiseUtility.Instance.DisconnectAsync(); // 关闭Wwise工程连接。
 }
 
 ```
@@ -56,15 +56,15 @@ await randomContainer.SetAttenuationAsync("TestAttenuation");
 运行程序后Wwise工程中将会有一个名为"TestRandomContainer"的RandomContainer，"Positioning"菜单中的"Attenuation"参数被勾选，引用设置为"TestAttenuation"。
 
 ### 手动设置属性以及引用
-除了"RandomContainer"自带的"SetAttenuation"函数，我们还可以手动设置属性以及引用来实现相同的功能，同时拥有更大的灵活性。我们可以在Wwise的ShareSet/Attenuations/Default Work Unit中添加一个名为"TestAttenuation"的Attenuation，然后通过"WwiseUtility.SetObjectProperty"和"WwiseUtility.SetObjectReference"函数来设置属性以及引用。
+除了"RandomContainer"自带的"SetAttenuation"函数，我们还可以手动设置属性以及引用来实现相同的功能，同时拥有更大的灵活性。我们可以在Wwise的ShareSet/Attenuations/Default Work Unit中添加一个名为"TestAttenuation"的Attenuation，然后通过"WwiseUtility.Instance.SetObjectProperty"和"WwiseUtility.Instance.SetObjectReference"函数来设置属性以及引用。
 ```csharp
 /*
  通过名称获取我们创建的Attenuation，存于"attenuation"中，此处名称必须为"type:name"的格式，
  该案例中的"type"为"Attenuation"，"name"为"TestAttenuation"。
  */
-var attenuation = await WwiseUtility.GetWwiseObjectByNameAsync("Attenuation:TestAttenuation"); 
-await WwiseUtility.SetObjectPropertyAsync(randomContainer, WwiseProperty.Prop_EnableAttenuation(true)); // 启用"Attenuation"。
-await WwiseUtility.SetObjectReferenceAsync(randomContainer, WwiseReference.Ref_Attenuation(attenuation)); // 为"randomContainer"添加引用"attenuation"。
+var attenuation = await WwiseUtility.Instance.GetWwiseObjectByNameAsync("Attenuation:TestAttenuation"); 
+await WwiseUtility.Instance.SetObjectPropertyAsync(randomContainer, WwiseProperty.Prop_EnableAttenuation(true)); // 启用"Attenuation"。
+await WwiseUtility.Instance.SetObjectReferenceAsync(randomContainer, WwiseReference.Ref_Attenuation(attenuation)); // 为"randomContainer"添加引用"attenuation"。
 ```
 
 运行程序后，将会实现与上一个案例相同的效果。
@@ -76,11 +76,11 @@ var randomContainer = await CreateObjectAsync("TestRandomContainer"); // 创建�
 
 var testProperty = new WwiseProperty("EnableAttenuation", true); // 创建一个属性对象，属性名称为"EnableAttenuation"，值为"true"。
 
-var attenuation = await WwiseUtility.GetWwiseObjectByNameAsync("Attenuation:TestAttenuation"); // 从Wwise工程中获取名为"TestAttenuation"的"Attenuation"
+var attenuation = await WwiseUtility.Instance.GetWwiseObjectByNameAsync("Attenuation:TestAttenuation"); // 从Wwise工程中获取名为"TestAttenuation"的"Attenuation"
 var testReference = new WwiseReference(attenuation); // 创建一个引用对象，引用"attenuation"
 
-await WwiseUtility.SetObjectPropertyAsync(randomContainer, testProperty); // 为"randomContainer设置属性"testProperty""。
-await WwiseUtility.SetObjectReferenceAsync(randomContainer, testReference); // 为"randomContainer"添加引用"testReference"。
+await WwiseUtility.Instance.SetObjectPropertyAsync(randomContainer, testProperty); // 为"randomContainer设置属性"testProperty""。
+await WwiseUtility.Instance.SetObjectReferenceAsync(randomContainer, testReference); // 为"randomContainer"添加引用"testReference"。
 ```
 运行程序后，将会实现与上一个案例相同的效果，当然我们也可以设置其他的属性与引用，可以在[Wwise Objects Reference](https://www.audiokinetic.com/zh/library/edge/?source=SDK&id=wobjects_index.html)中找到更多的属性、应用参数说明。
 
@@ -92,8 +92,8 @@ static async Task Main(string[] args)
     WwiseSequenceContainer container = await CreateObjectAsync("TestContainer", WwiseObject.ObjectType.RandomSequenceContainer); // 创建一个Sequence Container
     WwiseSound sound = await CreateObjectAsync("TestSound", WwiseObject.ObjectType.Sound, await container.GetPathAsync()); // 创建一个空音频
     
-    await WwiseUtility.SaveWwiseProjectAsync(); // 保存工程
-    WwiseWorkUnitParser parser = new WwiseWorkUnitParser(await WwiseUtility.GetWorkUnitFilePathAsync(container)); // 创建WwiseWorkUnitParser，并获取container的WorkUnit文件
+    await WwiseUtility.Instance.SaveWwiseProjectAsync(); // 保存工程
+    WwiseWorkUnitParser parser = new WwiseWorkUnitParser(await WwiseUtility.Instance.GetWorkUnitFilePathAsync(container)); // 创建WwiseWorkUnitParser，并获取container的WorkUnit文件
 
     // 获取container的Playlist节点
     var xpath = "//*[@ID='" + container.ID + "']/Playlist";
@@ -123,9 +123,9 @@ static async Task Main(string[] args)
 
     parser.SaveFile();
     
-    await WwiseUtility.ReloadWwiseProjectAsync();// 为了使修改生效，避免错误，需要重新加载工程
+    await WwiseUtility.Instance.ReloadWwiseProjectAsync();// 为了使修改生效，避免错误，需要重新加载工程
     
-    await WwiseUtility.DisconnectAsync();
+    await WwiseUtility.Instance.DisconnectAsync();
 }
 
 ```

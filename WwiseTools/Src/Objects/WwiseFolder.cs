@@ -15,10 +15,10 @@ namespace WwiseTools.Objects
         /// </summary>
         /// <param name="name"></param>
         /// <param name="parentPath"></param>
-        [Obsolete("use WwiseUtility.CreateObjectAsync instead")]
+        [Obsolete("use WwiseUtility.Instance.CreateObjectAsync instead")]
         public WwiseFolder(string name, string parentPath = @"\Actor-Mixer Hierarchy\Default Work Unit") : base(name, "", "Folder")
         {
-            var tempObj = WwiseUtility.CreateObject(name, ObjectType.Folder, parentPath);
+            var tempObj = WwiseUtility.Instance.CreateObject(name, ObjectType.Folder, parentPath);
             ID = tempObj.ID;
             Name = tempObj.Name;
         }
@@ -39,13 +39,13 @@ namespace WwiseTools.Objects
         public void AddChild(WwiseObject wwiseObject)
         {
             if (wwiseObject == null) return;
-            WwiseUtility.MoveToParent(wwiseObject, this);
+            WwiseUtility.Instance.MoveToParent(wwiseObject, this);
         }
 
         public async Task AddChildAsync(WwiseObject wwiseObject)
         {
             if (wwiseObject == null) return;
-            await WwiseUtility.MoveToParentAsync(wwiseObject, this);
+            await WwiseUtility.Instance.MoveToParentAsync(wwiseObject, this);
         }
 
         [Obsolete("use async version instead")]
@@ -53,7 +53,7 @@ namespace WwiseTools.Objects
         {
             List<WwiseObject> result = new List<WwiseObject>();
 
-            WwiseWorkUnitParser parser = new WwiseWorkUnitParser(WwiseUtility.GetWorkUnitFilePath(this));
+            WwiseWorkUnitParser parser = new WwiseWorkUnitParser(WwiseUtility.Instance.GetWorkUnitFilePath(this));
             var folders = parser.XML.GetElementsByTagName("Folder");
             foreach (XmlElement folder in folders)
             {
@@ -62,7 +62,7 @@ namespace WwiseTools.Objects
                     var children = (folder.GetElementsByTagName("ChildrenList")[0] as XmlElement).ChildNodes;
                     foreach (XmlElement child in children)
                     {
-                        result.Add(WwiseUtility.GetWwiseObjectByID(child.GetAttribute("ID")));
+                        result.Add(WwiseUtility.Instance.GetWwiseObjectByID(child.GetAttribute("ID")));
                     }
                     break;
                 }
@@ -73,7 +73,7 @@ namespace WwiseTools.Objects
 
         public async Task<List<WwiseObject>> GetChildrenAsync()
         {
-            return await WwiseUtility.GetWwiseObjectChildrenAsync(this);
+            return await WwiseUtility.Instance.GetWwiseObjectChildrenAsync(this);
         }
     }
 }

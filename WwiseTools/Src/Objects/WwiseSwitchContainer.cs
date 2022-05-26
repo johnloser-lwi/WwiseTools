@@ -17,10 +17,10 @@ namespace WwiseTools.Objects
         /// </summary>
         /// <param name="name"></param>
         /// <param name="parentPath"></param>
-        [Obsolete("use WwiseUtility.CreateObjectAsync instead")]
+        [Obsolete("use WwiseUtility.Instance.CreateObjectAsync instead")]
         public WwiseSwitchContainer(string name, string parentPath = @"\Actor-Mixer Hierarchy\Default Work Unit") : base(name, "", WwiseObject.ObjectType.SwitchContainer.ToString())
         {
-            var tempObj = WwiseUtility.CreateObject(name, ObjectType.SwitchContainer, parentPath);
+            var tempObj = WwiseUtility.Instance.CreateObject(name, ObjectType.SwitchContainer, parentPath);
             ID = tempObj.ID;
             Name = tempObj.Name;
         }
@@ -41,12 +41,12 @@ namespace WwiseTools.Objects
         [Obsolete("use async version instead")]
         public void SetPlayMode(WwiseProperty.Option_SwitchBehavior behavior)
         {
-            WwiseUtility.SetObjectProperty(this, WwiseProperty.Prop_SwitchBehavior(behavior));
+            WwiseUtility.Instance.SetObjectProperty(this, WwiseProperty.Prop_SwitchBehavior(behavior));
         }
 
         public async Task SetPlayModeAsync(WwiseProperty.Option_SwitchBehavior behavior)
         {
-            await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_SwitchBehavior(behavior));
+            await WwiseUtility.Instance.SetObjectPropertyAsync(this, WwiseProperty.Prop_SwitchBehavior(behavior));
         }
 
         /// <summary>
@@ -56,12 +56,12 @@ namespace WwiseTools.Objects
         [Obsolete("use async version instead")]
         public void SetSwitchGroupOrStateGroup(WwiseReference group)
         {
-            WwiseUtility.SetObjectReference(this, group);
+            WwiseUtility.Instance.SetObjectReference(this, group);
         }
 
         public async Task SetSwitchGroupOrStateGroupAsync(WwiseReference group)
         {
-            await WwiseUtility.SetObjectReferenceAsync(this, group);
+            await WwiseUtility.Instance.SetObjectReferenceAsync(this, group);
         }
 
         /// <summary>
@@ -72,12 +72,12 @@ namespace WwiseTools.Objects
         [Obsolete("use async version instead")]
         public void SetDefaultSwitchOrState(WwiseReference switchOrState)
         {
-            WwiseUtility.SetObjectReference(this, switchOrState);
+            WwiseUtility.Instance.SetObjectReference(this, switchOrState);
         }
 
         public async Task SetDefaultSwitchOrStateAsync(WwiseReference switchOrState)
         {
-            await WwiseUtility.SetObjectReferenceAsync(this, switchOrState);
+            await WwiseUtility.Instance.SetObjectReferenceAsync(this, switchOrState);
         }
 
         /// <summary>
@@ -100,7 +100,7 @@ namespace WwiseTools.Objects
         /// <returns></returns>
         public async Task AssignChildToStateOrSwitchAsync(WwiseObject child, WwiseObject stateOrSwitch)
         {
-            if (!await WwiseUtility.TryConnectWaapiAsync()) return;
+            if (!await WwiseUtility.Instance.TryConnectWaapiAsync()) return;
 
 
             if (child == null || stateOrSwitch == null) return;
@@ -118,10 +118,10 @@ namespace WwiseTools.Objects
 
             try
             {
-                var func = WwiseUtility.Function.Verify("ak.wwise.core.switchContainer.addAssignment");
+                var func = WwiseUtility.Instance.Function.Verify("ak.wwise.core.switchContainer.addAssignment");
 
                 // 创建物体
-                var result = await WwiseUtility.Client.Call
+                var result = await WwiseUtility.Instance.Client.Call
                     (
                     func,
                     new JObject
@@ -157,17 +157,17 @@ namespace WwiseTools.Objects
         /// <param name="stateOrSwitch"></param>
         public async Task RemoveAssignedChildFromStateOrSwitchAsync(WwiseObject child, WwiseObject stateOrSwitch)
         {
-            if (!await WwiseUtility.TryConnectWaapiAsync()) return;
+            if (!await WwiseUtility.Instance.TryConnectWaapiAsync()) return;
 
 
             if (child == null || stateOrSwitch == null) return;
 
             try
             {
-                var func = WwiseUtility.Function.Verify("ak.wwise.core.switchContainer.removeAssignment");
+                var func = WwiseUtility.Instance.Function.Verify("ak.wwise.core.switchContainer.removeAssignment");
 
                 // 创建物体
-                var result = await WwiseUtility.Client.Call
+                var result = await WwiseUtility.Instance.Client.Call
                     (
                     func,
                     new JObject
@@ -202,15 +202,15 @@ namespace WwiseTools.Objects
         /// <returns></returns>
         public async Task<JObject> GetAssignmentsAsync()
         {
-            if (!await WwiseUtility.TryConnectWaapiAsync()) return null;
+            if (!await WwiseUtility.Instance.TryConnectWaapiAsync()) return null;
 
 
             try
             {
-                var func = WwiseUtility.Function.Verify("ak.wwise.core.switchContainer.getAssignments");
+                var func = WwiseUtility.Instance.Function.Verify("ak.wwise.core.switchContainer.getAssignments");
 
                 // 获取信息
-                var result = await WwiseUtility.Client.Call
+                var result = await WwiseUtility.Instance.Client.Call
                     (
                     func,
                     new JObject

@@ -21,12 +21,12 @@ namespace WwiseTools.Objects
         [Obsolete("use async version instead")]
         public void SetInitialDelay(float delay)
         {
-            WwiseUtility.SetObjectProperty(this, WwiseProperty.Prop_InitialDelay(delay));
+            WwiseUtility.Instance.SetObjectProperty(this, WwiseProperty.Prop_InitialDelay(delay));
         }
 
         public async Task SetInitialDelayAsync(float delay)
         {
-            await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_InitialDelay(delay));
+            await WwiseUtility.Instance.SetObjectPropertyAsync(this, WwiseProperty.Prop_InitialDelay(delay));
         }
 
 
@@ -38,13 +38,13 @@ namespace WwiseTools.Objects
         public void AddChild(WwiseObject wwiseObject)
         {
             if (wwiseObject == null) return;
-            WwiseUtility.MoveToParent(wwiseObject, this);
+            WwiseUtility.Instance.MoveToParent(wwiseObject, this);
         }
         
         public async Task AddChildAsync(WwiseObject wwiseObject)
         {
             if (wwiseObject == null) return;
-            await WwiseUtility.MoveToParentAsync(wwiseObject, this);
+            await WwiseUtility.Instance.MoveToParentAsync(wwiseObject, this);
         }
     }
 }

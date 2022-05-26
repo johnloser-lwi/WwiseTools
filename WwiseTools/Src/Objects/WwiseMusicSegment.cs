@@ -19,10 +19,10 @@ namespace WwiseTools.Objects
         /// </summary>
         /// <param name="name"></param>
         /// <param name="parentPath"></param>
-        [Obsolete("use WwiseUtility.CreateObjectAsync instead")]
+        [Obsolete("use WwiseUtility.Instance.CreateObjectAsync instead")]
         public WwiseMusicSegment(string name, string parentPath = @"\Interactive Music Hierarchy\Default Work Unit\") : base(name, "", ObjectType.MusicSegment.ToString())
         {
-            var segment = WwiseUtility.CreateObject(name, ObjectType.MusicSegment, parentPath);
+            var segment = WwiseUtility.Instance.CreateObject(name, ObjectType.MusicSegment, parentPath);
             ID = segment.ID;
             Name = segment.Name;
 
@@ -40,12 +40,12 @@ namespace WwiseTools.Objects
         [Obsolete("use CreateMusicSegmentAsync instead")]
         public WwiseMusicSegment(string name, string filePath, string subFolder = "", string parentPath = @"\Interactive Music Hierarchy\Default Work Unit") : base(name, "", ObjectType.MusicSegment.ToString())
         {
-            var segment = WwiseUtility.CreateObject(name, ObjectType.MusicSegment, parentPath);
+            var segment = WwiseUtility.Instance.CreateObject(name, ObjectType.MusicSegment, parentPath);
             parentPath = System.IO.Path.Combine(parentPath, name);
             ID = segment.ID;
             Name = name;
 
-            var tempObj = WwiseUtility.ImportSound(filePath, "SFX", subFolder, parentPath);
+            var tempObj = WwiseUtility.Instance.ImportSound(filePath, "SFX", subFolder, parentPath);
 
             EntryCuePos = 0;
             ExitCuePos = 0;
@@ -55,9 +55,9 @@ namespace WwiseTools.Objects
         public static async Task<WwiseMusicSegment> CreateMusicSegmentAsync(string name, string filePath,
             string subFolder = "", string parentPath = @"\Interactive Music Hierarchy\Default Work Unit")
         {
-            var segment = await WwiseUtility.CreateObjectAsync(name, ObjectType.MusicSegment, parentPath);
+            var segment = await WwiseUtility.Instance.CreateObjectAsync(name, ObjectType.MusicSegment, parentPath);
             parentPath = System.IO.Path.Combine(parentPath, name);
-            await WwiseUtility.ImportSoundAsync(filePath, "SFX", subFolder, parentPath);
+            await WwiseUtility.Instance.ImportSoundAsync(filePath, "SFX", subFolder, parentPath);
 
             return new WwiseMusicSegment(segment) {EntryCuePos = 0, ExitCuePos = 0};
         }
@@ -84,16 +84,16 @@ namespace WwiseTools.Objects
         [Obsolete("use async version instead")]
         public void SetTempoAndTimeSignature(float tempo, WwiseProperty.Option_TimeSignatureLower timeSignatureLower, uint timeSignatureUpper)
         {
-            WwiseUtility.SetObjectProperty(this, WwiseProperty.Prop_Tempo(tempo));
-            WwiseUtility.SetObjectProperty(this, WwiseProperty.Prop_TimeSignatureLower(timeSignatureLower));
-            WwiseUtility.SetObjectProperty(this, WwiseProperty.Prop_TimeSignatureUpper(timeSignatureUpper));
+            WwiseUtility.Instance.SetObjectProperty(this, WwiseProperty.Prop_Tempo(tempo));
+            WwiseUtility.Instance.SetObjectProperty(this, WwiseProperty.Prop_TimeSignatureLower(timeSignatureLower));
+            WwiseUtility.Instance.SetObjectProperty(this, WwiseProperty.Prop_TimeSignatureUpper(timeSignatureUpper));
         }
 
         public async Task SetTempoAndTimeSignatureAsync(float tempo, WwiseProperty.Option_TimeSignatureLower timeSignatureLower, uint timeSignatureUpper)
         {
-            await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_Tempo(tempo));
-            await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_TimeSignatureLower(timeSignatureLower));
-            await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_TimeSignatureUpper(timeSignatureUpper));
+            await WwiseUtility.Instance.SetObjectPropertyAsync(this, WwiseProperty.Prop_Tempo(tempo));
+            await WwiseUtility.Instance.SetObjectPropertyAsync(this, WwiseProperty.Prop_TimeSignatureLower(timeSignatureLower));
+            await WwiseUtility.Instance.SetObjectPropertyAsync(this, WwiseProperty.Prop_TimeSignatureUpper(timeSignatureUpper));
         }
 
         /// <summary>
@@ -103,7 +103,7 @@ namespace WwiseTools.Objects
         [Obsolete("Use async version instead")]
         public void SetEntryCue(float timeMs)
         {
-            var cues = WwiseUtility.GetWwiseObjectsOfType("MusicCue");
+            var cues = WwiseUtility.Instance.GetWwiseObjectsOfType("MusicCue");
             WwiseObject entryCue = null;
             foreach (var cue in cues)
             {
@@ -116,14 +116,14 @@ namespace WwiseTools.Objects
 
             if (entryCue != null)
             {
-                WwiseUtility.SetObjectProperty(entryCue, new WwiseProperty("TimeMs", timeMs));
+                WwiseUtility.Instance.SetObjectProperty(entryCue, new WwiseProperty("TimeMs", timeMs));
                 EntryCuePos = timeMs;
             }
         }
         
         public async Task SetEntryCueAsync(float timeMs)
         {
-            var cues = await WwiseUtility.GetWwiseObjectsOfTypeAsync("MusicCue");
+            var cues = await WwiseUtility.Instance.GetWwiseObjectsOfTypeAsync("MusicCue");
             WwiseObject entryCue = null;
             foreach (var cue in cues)
             {
@@ -136,7 +136,7 @@ namespace WwiseTools.Objects
 
             if (entryCue != null)
             {
-                await WwiseUtility.SetObjectPropertyAsync(entryCue, new WwiseProperty("TimeMs", timeMs));
+                await WwiseUtility.Instance.SetObjectPropertyAsync(entryCue, new WwiseProperty("TimeMs", timeMs));
                 EntryCuePos = timeMs;
             }
         }
@@ -151,7 +151,7 @@ namespace WwiseTools.Objects
         {
             if (ignoreSmallerValue && timeMs <= ExitCuePos) return; // 如果新的位置参数小于当前位置，则无视该参数
 
-                var cues = WwiseUtility.GetWwiseObjectsOfType("MusicCue");
+                var cues = WwiseUtility.Instance.GetWwiseObjectsOfType("MusicCue");
             WwiseObject exitCue = null;
             foreach (var cue in cues)
             {
@@ -166,7 +166,7 @@ namespace WwiseTools.Objects
 
             if (exitCue != null)
             {
-                WwiseUtility.SetObjectProperty(exitCue, new WwiseProperty("TimeMs", timeMs));
+                WwiseUtility.Instance.SetObjectProperty(exitCue, new WwiseProperty("TimeMs", timeMs));
                 ExitCuePos = timeMs;
             }
         }
@@ -175,7 +175,7 @@ namespace WwiseTools.Objects
         {
             if (ignoreSmallerValue && timeMs <= ExitCuePos) return; // 如果新的位置参数小于当前位置，则无视该参数
 
-            var cues = await WwiseUtility.GetWwiseObjectsOfTypeAsync("MusicCue");
+            var cues = await WwiseUtility.Instance.GetWwiseObjectsOfTypeAsync("MusicCue");
             WwiseObject exitCue = null;
             foreach (var cue in cues)
             {
@@ -190,7 +190,7 @@ namespace WwiseTools.Objects
 
             if (exitCue != null)
             {
-                await WwiseUtility.SetObjectPropertyAsync(exitCue, new WwiseProperty("TimeMs", timeMs));
+                await WwiseUtility.Instance.SetObjectPropertyAsync(exitCue, new WwiseProperty("TimeMs", timeMs));
                 ExitCuePos = timeMs;
             }
         }
@@ -214,14 +214,14 @@ namespace WwiseTools.Objects
         /// <returns></returns>
         public async Task CreateCueAsync(string name, float timeMs)
         {
-            if (!await WwiseUtility.TryConnectWaapiAsync()) return;
+            if (!await WwiseUtility.Instance.TryConnectWaapiAsync()) return;
 
             try
             {
-                var func = WwiseUtility.Function.Verify("ak.wwise.core.object.create");
+                var func = WwiseUtility.Instance.Function.Verify("ak.wwise.core.object.create");
 
                 // 创建物体
-                var result = await WwiseUtility.Client.Call
+                var result = await WwiseUtility.Instance.Client.Call
                     (
                         func,
                     new JObject

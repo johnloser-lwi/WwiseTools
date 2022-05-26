@@ -41,7 +41,7 @@ namespace WwiseTools.Utils.Feature2021
 
         public async Task<bool> RunAsync(string waql = "")
         {
-            if (!await WwiseUtility.TryConnectWaapiAsync()) return false;
+            if (!await WwiseUtility.Instance.TryConnectWaapiAsync()) return false;
             if (!VersionHelper.VersionVerify(VersionHelper.V2021_1_0_7575)) return false;
 
             if (!string.IsNullOrEmpty(waql)) _waqlCommand = FormatQuery(waql);
@@ -59,7 +59,7 @@ namespace WwiseTools.Utils.Feature2021
                 {
                     @return = new string[] { "name", "id", "type" }
                 };
-                var jresult = await WwiseUtility.Client.Call("ak.wwise.core.object.get", query, option);
+                var jresult = await WwiseUtility.Instance.Client.Call("ak.wwise.core.object.get", query, option);
                 if (jresult == null || jresult["return"] == null) return false;
                 foreach (var obj in jresult["return"])
                 {

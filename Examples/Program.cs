@@ -7,7 +7,7 @@ try
 {
     WaapiLog.AddCustomLogger(ExampleFunctions.CustomLogger);
 
-    if (await WwiseUtility.TryConnectWaapiAsync())
+    if (await WwiseUtility.Instance.TryConnectWaapiAsync())
     {
         await ExampleFunctions.WaqlTestAsync(); // 尝试不同的方法
     }
@@ -16,7 +16,7 @@ try
         WaapiLog.Log("Waapi Connection Failed!");
     }
 
-    await WwiseUtility.DisconnectAsync();
+    await WwiseUtility.Instance.DisconnectAsync();
 
     await Task.Delay(3000);
 }

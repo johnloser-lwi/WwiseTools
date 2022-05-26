@@ -14,13 +14,13 @@ namespace WwiseTools.Objects
         /// </summary>
         /// <param name="name"></param>
         /// <param name="parentPath"></param>
-        [Obsolete("use WwiseUtility.CreateObjectAsync instead")]
+        [Obsolete("use WwiseUtility.Instance.CreateObjectAsync instead")]
         public WwiseSequenceContainer(string name, string parentPath = @"\Actor-Mixer Hierarchy\Default Work Unit") : base(name, "", WwiseObject.ObjectType.RandomSequenceContainer.ToString())
         {
-            var tempObj = WwiseUtility.CreateObject(name, ObjectType.RandomSequenceContainer, parentPath);
+            var tempObj = WwiseUtility.Instance.CreateObject(name, ObjectType.RandomSequenceContainer, parentPath);
             ID = tempObj.ID;
             Name = tempObj.Name;
-            WwiseUtility.SetObjectProperty(this, WwiseProperty.Prop_RandomOrSequence(WwiseProperty.Option_RandomOrSequence.Sequence));
+            WwiseUtility.Instance.SetObjectProperty(this, WwiseProperty.Prop_RandomOrSequence(WwiseProperty.Option_RandomOrSequence.Sequence));
         }
 
         public WwiseSequenceContainer(WwiseObject @object) : base("", "", "")
@@ -38,12 +38,12 @@ namespace WwiseTools.Objects
         [Obsolete("use async version instead")]
         public void SetSequenceEndBehavior(WwiseProperty.Option_RestartBeginningOrBackward option)
         {
-            WwiseUtility.SetObjectProperty(this, WwiseProperty.Prop_RestartBeginningOrBackward(option));
+            WwiseUtility.Instance.SetObjectProperty(this, WwiseProperty.Prop_RestartBeginningOrBackward(option));
         }
 
         public async Task SetSequenceEndBehaviorAsync(WwiseProperty.Option_RestartBeginningOrBackward option)
         {
-            await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_RestartBeginningOrBackward(option));
+            await WwiseUtility.Instance.SetObjectPropertyAsync(this, WwiseProperty.Prop_RestartBeginningOrBackward(option));
         }
 
         /// <summary>
@@ -53,12 +53,12 @@ namespace WwiseTools.Objects
         [Obsolete("use async version instead")]
         public void SetAlwaysResetPlaylist(bool reset)
         {
-            WwiseUtility.SetObjectProperty(this, WwiseProperty.Prop_PlayMechanismResetPlaylistEachPlay(reset));
+            WwiseUtility.Instance.SetObjectProperty(this, WwiseProperty.Prop_PlayMechanismResetPlaylistEachPlay(reset));
         }
 
         public async Task SetAlwaysResetPlaylistAsync(bool reset)
         {
-            await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_PlayMechanismResetPlaylistEachPlay(reset));
+            await WwiseUtility.Instance.SetObjectPropertyAsync(this, WwiseProperty.Prop_PlayMechanismResetPlaylistEachPlay(reset));
         }
 
         /// <summary>
@@ -71,8 +71,8 @@ namespace WwiseTools.Objects
         {
             if (!item.Path.Contains(Path)) return;
 
-            WwiseUtility.SaveWwiseProject();
-            WwiseWorkUnitParser parser = new WwiseWorkUnitParser(WwiseUtility.GetWorkUnitFilePath(this));
+            WwiseUtility.Instance.SaveWwiseProject();
+            WwiseWorkUnitParser parser = new WwiseWorkUnitParser(WwiseUtility.Instance.GetWorkUnitFilePath(this));
 
             var playlists = parser.XML.GetElementsByTagName("Playlist");
 
@@ -126,7 +126,7 @@ namespace WwiseTools.Objects
 
             }
 
-            WwiseUtility.ReloadWwiseProject();
+            WwiseUtility.Instance.ReloadWwiseProject();
             
         }
         
@@ -138,8 +138,8 @@ namespace WwiseTools.Objects
             }
             
 
-            await WwiseUtility.SaveWwiseProjectAsync();
-            WwiseWorkUnitParser parser = new WwiseWorkUnitParser(await WwiseUtility.GetWorkUnitFilePathAsync((this)));
+            await WwiseUtility.Instance.SaveWwiseProjectAsync();
+            WwiseWorkUnitParser parser = new WwiseWorkUnitParser(await WwiseUtility.Instance.GetWorkUnitFilePathAsync((this)));
 
             var xpath = "//*[@ID='" + ID + "']/Playlist";
             var playlistNode = parser.XML.SelectSingleNode(xpath);
@@ -170,7 +170,7 @@ namespace WwiseTools.Objects
 
             parser.SaveFile();
 
-            if (autoReload) await WwiseUtility.ReloadWwiseProjectAsync();
+            if (autoReload) await WwiseUtility.Instance.ReloadWwiseProjectAsync();
             
         }
     }

@@ -9,10 +9,10 @@ namespace WwiseTools.Objects
 {
     public class WwiseSwitchGroup : WwiseObject
     {
-        [Obsolete("use WwiseUtility.CreateObjectAsync instead")]
+        [Obsolete("use WwiseUtility.Instance.CreateObjectAsync instead")]
         public WwiseSwitchGroup(string name, string parentPath = @"\Switches\Default Work Unit") : base(name, "", ObjectType.SwitchGroup.ToString())
         {
-            var tempObj = WwiseUtility.CreateObject(name, ObjectType.SwitchGroup, parentPath);
+            var tempObj = WwiseUtility.Instance.CreateObject(name, ObjectType.SwitchGroup, parentPath);
             ID = tempObj.ID;
             Name = tempObj.Name;
         }
@@ -32,7 +32,7 @@ namespace WwiseTools.Objects
         [Obsolete("use async version instead")]
         public List<WwiseObject> GetSwitches()
         {
-            List<WwiseObject> temp = WwiseUtility.GetWwiseObjectsOfType(ObjectType.Switch.ToString());
+            List<WwiseObject> temp = WwiseUtility.Instance.GetWwiseObjectsOfType(ObjectType.Switch.ToString());
             List<WwiseObject> result = new List<WwiseObject>();
             foreach (var obj in temp)
             {
@@ -48,7 +48,7 @@ namespace WwiseTools.Objects
 
         public async Task<List<WwiseObject>> GetSwitchesAsync()
         {
-            List<WwiseObject> temp = await WwiseUtility.GetWwiseObjectsOfTypeAsync(ObjectType.Switch.ToString());
+            List<WwiseObject> temp = await WwiseUtility.Instance.GetWwiseObjectsOfTypeAsync(ObjectType.Switch.ToString());
             List<WwiseObject> result = new List<WwiseObject>();
             foreach (var obj in temp)
             {

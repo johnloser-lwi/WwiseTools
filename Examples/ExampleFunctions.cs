@@ -16,6 +16,8 @@ namespace Examples
 {
     internal class ExampleFunctions
     {
+        static WwiseUtility Waapi = WwiseTools.Utils.WwiseUtility.Instance;
+
         public static void CustomLogger(object message, bool firstLog)
         {
             string msg = DateTime.Now.ToString() + " => " + message.ToString();
@@ -33,15 +35,15 @@ namespace Examples
 
         public static async Task BatchSetTestAsync()
         {
-            var selection = await WwiseUtility.GetWwiseObjectsBySelectionAsync();
-            await WwiseUtility.Extensions.BatchSetObjectPropertyAsync(selection, 
+            var selection = await Waapi.GetWwiseObjectsBySelectionAsync();
+            await WwiseUtility.Instance.BatchSetObjectPropertyAsync(selection, 
                 WwiseProperty.Prop_Volume(-3),
                 WwiseProperty.Prop_OverrideOutput(true),
                 WwiseProperty.Prop_OutputBusVolume(-3));
 
-            var bus = await WwiseUtility.GetWwiseObjectByNameAsync("Bus:Test");
+            var bus = await Waapi.GetWwiseObjectByNameAsync("Bus:Test");
             if (bus == null) return;
-            await WwiseUtility.Extensions.BatchSetObjectReferenceAsync(selection, 
+            await WwiseUtility.Instance.BatchSetObjectReferenceAsync(selection, 
                 WwiseReference.Ref_OutputBus(bus));
         }
 
@@ -58,7 +60,7 @@ namespace Examples
                 }
             }
 
-            foreach (var wwieObject in await WwiseUtility.Extensions.Waql("where type = \"RandomSequenceContainer\""))
+            foreach (var wwieObject in await WwiseUtility.Instance.Waql("where type = \"RandomSequenceContainer\""))
             {
                 WaapiLog.Log(wwieObject.Name);
             }
@@ -68,11 +70,11 @@ namespace Examples
 
         public static async Task ParserTestAsync()
         {
-            var selection = await WwiseUtility.GetWwiseObjectsBySelectionAsync();
+            var selection = await Waapi.GetWwiseObjectsBySelectionAsync();
 
             var obj = new WwiseActorMixer(selection[0]);
 
-            var workUnitPath = await WwiseUtility.GetWorkUnitFilePathAsync(obj);
+            var workUnitPath = await Waapi.GetWorkUnitFilePathAsync(obj);
 
             WwiseWorkUnitParser parser = new WwiseWorkUnitParser(workUnitPath);
             var objNode = parser.GetNodeByID(obj.ID);
@@ -87,7 +89,7 @@ namespace Examples
                 WaapiLog.Log(child.Name);
             }
 
-            foreach (var sound in await WwiseUtility.GetWwiseObjectsOfTypeAsync("Sound"))
+            foreach (var sound in await Waapi.GetWwiseObjectsOfTypeAsync("Sound"))
             {
                 WaapiLog.Log(sound.ID);
             }
