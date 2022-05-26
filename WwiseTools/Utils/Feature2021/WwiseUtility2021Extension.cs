@@ -14,7 +14,7 @@ namespace WwiseTools.Utils.Feature2021
         /// <param name="util"></param>
         /// <param name="query"></param>
         /// <returns></returns>
-        public static async ValueTask<List<WwiseObject>> Waql(this WwiseUtility util, string query)
+        public static async Task<List<WwiseObject>> Waql(this WwiseUtility util, string query)
         {
             if (!await WwiseUtility.TryConnectWaapiAsync() || string.IsNullOrEmpty(query)) return new List<WwiseObject>();
             if (!VersionHelper.VersionVerify(VersionHelper.V2021_1_0_7575)) return new List<WwiseObject>();

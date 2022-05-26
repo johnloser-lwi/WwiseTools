@@ -39,7 +39,7 @@ namespace WwiseTools.Utils.Feature2021
             return waql;
         }
 
-        public async ValueTask<bool> RunAsync(string waql = "")
+        public async Task<bool> RunAsync(string waql = "")
         {
             if (!await WwiseUtility.TryConnectWaapiAsync()) return false;
             if (!VersionHelper.VersionVerify(VersionHelper.V2021_1_0_7575)) return false;

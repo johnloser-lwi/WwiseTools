@@ -20,7 +20,7 @@ namespace WwiseTools.Utils.Feature2022
         /// <param name="wwiseObjects"></param>
         /// <param name="wwiseProperties"></param>
         /// <returns></returns>
-        public static async ValueTask BatchSetObjectPropertyAsync(this WwiseUtility utility, List<WwiseObject> wwiseObjects, 
+        public static async Task BatchSetObjectPropertyAsync(this WwiseUtility utility, List<WwiseObject> wwiseObjects, 
             params WwiseProperty[] wwiseProperties)
         {
             if (!await WwiseUtility.TryConnectWaapiAsync() || wwiseObjects == null || wwiseProperties == null) return;
@@ -69,7 +69,7 @@ namespace WwiseTools.Utils.Feature2022
         /// <param name="wwiseObjects"></param>
         /// <param name="wwiseReferences"></param>
         /// <returns></returns>
-        public static async ValueTask BatchSetObjectReferenceAsync(this WwiseUtility utility, List<WwiseObject> wwiseObjects, 
+        public static async Task BatchSetObjectReferenceAsync(this WwiseUtility utility, List<WwiseObject> wwiseObjects, 
             params WwiseReference[] wwiseReferences)
         {
             if (!await WwiseUtility.TryConnectWaapiAsync() || wwiseObjects == null || wwiseReferences == null) return;

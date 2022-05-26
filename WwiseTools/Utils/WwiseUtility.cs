@@ -55,7 +55,7 @@ namespace WwiseTools.Utils
         /// </summary>
         /// <returns></returns>
         [Obsolete("Use WwiseUtility.ConnectAsync() instead")]
-        public static async ValueTask<bool> Init() // 初始化，返回连接状态
+        public static async Task<bool> Init() // 初始化，返回连接状态
         {
             if (Client != null && Client.IsConnected()) return true;
 
@@ -86,7 +86,7 @@ namespace WwiseTools.Utils
             return Client != null && Client.IsConnected();
         }
         
-        public static async ValueTask<bool> ConnectAsync(int wampPort = 8080) // 初始化，返回连接状态
+        public static async Task<bool> ConnectAsync(int wampPort = 8080) // 初始化，返回连接状态
         {
             if (Client != null && Client.IsConnected()) return true;
 
@@ -122,7 +122,7 @@ namespace WwiseTools.Utils
         /// </summary>
         /// <returns></returns>
         [Obsolete("Use WwiseUtility.DisconnectAsync() instead")]
-        public static async ValueTask Close()
+        public static async Task Close()
         {
             if (Client == null || !Client.IsConnected()) return;
 
@@ -136,7 +136,7 @@ namespace WwiseTools.Utils
             }
         }
 
-        public static async ValueTask DisconnectAsync()
+        public static async Task DisconnectAsync()
         {
             if (Client == null || !Client.IsConnected()) return;
 
@@ -160,12 +160,12 @@ namespace WwiseTools.Utils
         public static bool TryConnectWaapi() 
         {
             var connected = Init();
-            connected.AsTask().Wait();
+            connected.Wait();
 
             return connected.Result && Client.IsConnected();
         }
         
-        public static async ValueTask<bool> TryConnectWaapiAsync(int wampPort = 8080) 
+        public static async Task<bool> TryConnectWaapiAsync(int wampPort = 8080) 
         {
             var connected = await ConnectAsync(wampPort);
 
@@ -188,7 +188,7 @@ namespace WwiseTools.Utils
             if (!TryConnectWaapi() || wwiseObject == null) return "";
 
             var get = GetPropertyAndReferenceNamesAsync(wwiseObject);
-            get.AsTask().Wait();
+            get.Wait();
             return get.Result;
         }
 
@@ -197,7 +197,7 @@ namespace WwiseTools.Utils
         /// </summary>
         /// <param name="wwiseObject"></param>
         /// <returns></returns>
-        public static async ValueTask<string> GetPropertyAndReferenceNamesAsync(WwiseObject wwiseObject)
+        public static async Task<string> GetPropertyAndReferenceNamesAsync(WwiseObject wwiseObject)
         {
             //ak.wwise.core.object.getPropertyAndReferenceNames
 
@@ -235,7 +235,7 @@ namespace WwiseTools.Utils
         {
             if (!TryConnectWaapi() || wwiseObject == null || wwiseReference == null) return;
             var setRef = SetObjectReferenceAsync(wwiseObject, wwiseReference);
-            setRef.AsTask().Wait();
+            setRef.Wait();
         }
 
         /// <summary>
@@ -244,7 +244,7 @@ namespace WwiseTools.Utils
         /// <param name="wwiseObject"></param>
         /// <param name="wwiseReference"></param>
         /// <returns></returns>
-        public static async ValueTask SetObjectReferenceAsync(WwiseObject wwiseObject, WwiseReference wwiseReference)
+        public static async Task SetObjectReferenceAsync(WwiseObject wwiseObject, WwiseReference wwiseReference)
         {
             if (!await TryConnectWaapiAsync() || wwiseObject == null || wwiseReference == null) return;
 
@@ -282,7 +282,7 @@ namespace WwiseTools.Utils
             if (!TryConnectWaapi() || wwiseObject == null ||wwiseProperty == null) return;
 
             var setProp = SetObjectPropertyAsync(wwiseObject, wwiseProperty);
-            setProp.AsTask().Wait();
+            setProp.Wait();
 
         }
 
@@ -293,7 +293,7 @@ namespace WwiseTools.Utils
         /// <param name="property"></param>
         /// <param name="value"></param>
         /// <returns></returns>
-        public static async ValueTask SetObjectPropertyAsync(WwiseObject wwiseObject, WwiseProperty wwiseProperty)
+        public static async Task SetObjectPropertyAsync(WwiseObject wwiseObject, WwiseProperty wwiseProperty)
         {
             if (!await TryConnectWaapiAsync() || wwiseObject == null || wwiseProperty == null) return;
 
@@ -330,7 +330,7 @@ namespace WwiseTools.Utils
         {
             if (!TryConnectWaapi() || renameObject == null || String.IsNullOrEmpty(newName)) return;
             var changeName = ChangeObjectNameAsync(renameObject, newName);
-            changeName.AsTask().Wait();
+            changeName.Wait();
         }
 
         /// <summary>
@@ -339,7 +339,7 @@ namespace WwiseTools.Utils
         /// <param name="renameObject"></param>
         /// <param name="newName"></param>
         /// <returns></returns>
-        public static async ValueTask ChangeObjectNameAsync(WwiseObject renameObject, string newName)
+        public static async Task ChangeObjectNameAsync(WwiseObject renameObject, string newName)
         {
             if(!await TryConnectWaapiAsync() || renameObject == null || String.IsNullOrEmpty(newName)) return;
 
@@ -377,7 +377,7 @@ namespace WwiseTools.Utils
             if (!TryConnectWaapi() || child == null || parent == null) return;
 
             var copy = CopyToParentAsync(child, parent);
-            copy.AsTask().Wait();
+            copy.Wait();
         }
 
         /// <summary>
@@ -386,7 +386,7 @@ namespace WwiseTools.Utils
         /// <param name="child"></param>
         /// <param name="parent"></param>
         /// <returns></returns>
-        public static async ValueTask CopyToParentAsync(WwiseObject child, WwiseObject parent)
+        public static async Task CopyToParentAsync(WwiseObject child, WwiseObject parent)
         {
             if (!await TryConnectWaapiAsync() || child == null || parent == null) return;
 
@@ -449,7 +449,7 @@ namespace WwiseTools.Utils
             if (!TryConnectWaapi() || child == null || parent == null) return;
 
             var move = MoveToParentAsync(child, parent);
-            move.AsTask().Wait();
+            move.Wait();
         }
 
         /// <summary>
@@ -458,7 +458,7 @@ namespace WwiseTools.Utils
         /// <param name="child"></param>
         /// <param name="parent"></param>
         /// <returns></returns>
-        public static async ValueTask MoveToParentAsync(WwiseObject child, WwiseObject parent)
+        public static async Task MoveToParentAsync(WwiseObject child, WwiseObject parent)
         {
             if (!await TryConnectWaapiAsync() || child == null || parent == null) return;
 
@@ -514,10 +514,10 @@ namespace WwiseTools.Utils
             if (!TryConnectWaapi() || target== null) return;
 
             var set = SetNoteAsync(target, note);
-            set.AsTask().Wait();
+            set.Wait();
         }
         
-         public static async ValueTask SetNoteAsync(WwiseObject target, string note)
+         public static async Task SetNoteAsync(WwiseObject target, string note)
         {
             if (!await TryConnectWaapiAsync() || target == null) return;
 
@@ -553,7 +553,7 @@ namespace WwiseTools.Utils
         {
             if (!TryConnectWaapi()) return null;
             var evt = AddEventActionAsync(eventName, objectPath, parentPath);
-            evt.AsTask().Wait();
+            evt.Wait();
             return evt.Result;
         }
 
@@ -565,7 +565,7 @@ namespace WwiseTools.Utils
         /// <param name="objectPath"></param>
         /// <param name="parentPath"></param>
         /// <returns></returns>
-        public static async ValueTask<WwiseObject> CreatePlayEventAsync(string eventName, string objectPath, string parentPath = @"\Events\Default Work Unit")
+        public static async Task<WwiseObject> CreatePlayEventAsync(string eventName, string objectPath, string parentPath = @"\Events\Default Work Unit")
         {
             if (!await TryConnectWaapiAsync()) return null;
             return await AddEventActionAsync(eventName, objectPath, parentPath);
@@ -577,7 +577,7 @@ namespace WwiseTools.Utils
         {
             if (!TryConnectWaapi()) return null;
             var evt = AddEventActionAsync(eventName, objectPath, parentPath, actionType);
-            evt.AsTask().Wait();
+            evt.Wait();
             return evt.Result;
         }
 
@@ -589,7 +589,7 @@ namespace WwiseTools.Utils
         /// <param name="objectPath"></param>
         /// <param name="parentPath"></param>
         /// <returns></returns>
-        public static async ValueTask<WwiseObject> AddEventActionAsync(string eventName, string objectPath, string parentPath = @"\Events\Default Work Unit", int actionType = 1)
+        public static async Task<WwiseObject> AddEventActionAsync(string eventName, string objectPath, string parentPath = @"\Events\Default Work Unit", int actionType = 1)
         {
             if (!await TryConnectWaapiAsync()) return null;
 
@@ -633,10 +633,10 @@ namespace WwiseTools.Utils
         public static void AddEventToBank(WwiseObject soundBank, string eventId)
         {
             var r = AddEventToBankAsync(soundBank, eventId);
-            r.AsTask().Wait();
+            r.Wait();
         }
 
-        public static async ValueTask AddEventToBankAsync(WwiseObject soundBank, string eventId)
+        public static async Task AddEventToBankAsync(WwiseObject soundBank, string eventId)
         {
             if (!await TryConnectWaapiAsync()) return;
 
@@ -679,7 +679,7 @@ namespace WwiseTools.Utils
         public static WwiseObject CreateObject(string objectName, WwiseObject.ObjectType objectType, string parentPath = @"\Actor-Mixer Hierarchy\Default Work Unit")
         {
             var obj = CreateObjectAsync(objectName, objectType, parentPath);
-            obj.AsTask().Wait();
+            obj.Wait();
             return obj.Result;
         }
 
@@ -691,7 +691,7 @@ namespace WwiseTools.Utils
         /// <param name="objectType"></param>
         /// <param name="parentPath"></param>
         /// <returns></returns>
-        public static async ValueTask<WwiseObject> CreateObjectAsync(string objectName, WwiseObject.ObjectType objectType, string parentPath = @"\Actor-Mixer Hierarchy\Default Work Unit")
+        public static async Task<WwiseObject> CreateObjectAsync(string objectName, WwiseObject.ObjectType objectType, string parentPath = @"\Actor-Mixer Hierarchy\Default Work Unit")
         {
             if (!await TryConnectWaapiAsync()) return null;
 
@@ -728,10 +728,10 @@ namespace WwiseTools.Utils
         public static void DeleteObject(string path)
         {
             var obj = DeleteObjectAsync(path);
-            obj.AsTask().Wait();
+            obj.Wait();
         }
 
-        public static async ValueTask DeleteObjectAsync(string path)
+        public static async Task DeleteObjectAsync(string path)
         {
             if (!await TryConnectWaapiAsync()) return;
 
@@ -771,7 +771,7 @@ namespace WwiseTools.Utils
         public static WwiseObject GetWwiseObjectByID(string targetId)
         {
             var get = GetWwiseObjectByIDAsync(targetId);
-            get.AsTask().Wait();
+            get.Wait();
             return get.Result;
         }
 
@@ -780,7 +780,7 @@ namespace WwiseTools.Utils
         /// </summary>
         /// <param name="targetId"></param>
         /// <returns></returns>
-        public static async ValueTask<WwiseObject> GetWwiseObjectByIDAsync(string targetId)
+        public static async Task<WwiseObject> GetWwiseObjectByIDAsync(string targetId)
         {
             if (!await TryConnectWaapiAsync() || String.IsNullOrWhiteSpace(targetId)) return null; 
 
@@ -836,12 +836,12 @@ namespace WwiseTools.Utils
         public static JToken GetWwiseObjectProperty(string targetId, string wwiseProperty)
         {
             var get = GetWwiseObjectPropertyAsync(targetId, wwiseProperty);
-            get.AsTask().Wait();
+            get.Wait();
             return get.Result;
         }
 
 
-        public static async ValueTask<JToken> GetWwiseObjectPropertyAsync(string targetId, string wwiseProperty)
+        public static async Task<JToken> GetWwiseObjectPropertyAsync(string targetId, string wwiseProperty)
         {
             if (!await TryConnectWaapiAsync() || String.IsNullOrWhiteSpace(targetId)) return null;
 
@@ -895,11 +895,11 @@ namespace WwiseTools.Utils
         public static string GetWwiseObjectPath(string ID)
         {
             var r = GetWwiseObjectPathAsync(ID);
-            r.AsTask().Wait();
+            r.Wait();
             return r.Result;
         }
 
-        public static async ValueTask<string> GetWwiseObjectPathAsync(string ID)
+        public static async Task<string> GetWwiseObjectPathAsync(string ID)
         {
             if (!await TryConnectWaapiAsync()) return null;
 
@@ -1005,7 +1005,7 @@ namespace WwiseTools.Utils
         {
 
             var get = GetWwiseObjectByNameAsync(targetName);
-            get.AsTask().Wait();
+            get.Wait();
             return get.Result;
         }
 
@@ -1014,7 +1014,7 @@ namespace WwiseTools.Utils
         /// </summary>
         /// <param name="targetName"></param>
         /// <returns></returns>
-        public static async ValueTask<WwiseObject> GetWwiseObjectByNameAsync(string targetName)
+        public static async Task<WwiseObject> GetWwiseObjectByNameAsync(string targetName)
         {
             if (!await TryConnectWaapiAsync() || String.IsNullOrWhiteSpace(targetName)) return null;
 
@@ -1080,7 +1080,7 @@ namespace WwiseTools.Utils
         {
 
             var get = GetWwiseObjectByPathAsync(path);
-            get.AsTask().Wait();
+            get.Wait();
             return get.Result;
         }
 
@@ -1089,7 +1089,7 @@ namespace WwiseTools.Utils
         /// </summary>
         /// <param name="path"></param>
         /// <returns></returns>
-        public static async ValueTask<WwiseObject> GetWwiseObjectByPathAsync(string path)
+        public static async Task<WwiseObject> GetWwiseObjectByPathAsync(string path)
         {
             if (!await TryConnectWaapiAsync() || String.IsNullOrWhiteSpace(path)) return null;
 
@@ -1155,7 +1155,7 @@ namespace WwiseTools.Utils
         {
 
             var get = GetWwiseObjectsOfTypeAsync(targetType);
-            get.AsTask().Wait();
+            get.Wait();
             return get.Result;
         }
 
@@ -1164,11 +1164,11 @@ namespace WwiseTools.Utils
         /// </summary>
         /// <param name="targetType"></param>
         /// <returns></returns>
-        public static async ValueTask<List<WwiseObject>> GetWwiseObjectsOfTypeAsync(string targetType, bool standardType = true)
+        public static async Task<List<WwiseObject>> GetWwiseObjectsOfTypeAsync(string targetType)
         {
             if (!await TryConnectWaapiAsync() || String.IsNullOrWhiteSpace(targetType)) return null;
 
-            if (standardType && ConnectionInfo.Version >= VersionHelper.V2021_1_0_7575)
+            if (ConnectionInfo.Version >= VersionHelper.V2021_1_0_7575)
             {
                 try
                 {
@@ -1254,10 +1254,10 @@ namespace WwiseTools.Utils
         public static List<WwiseObject> GetWwiseObjectsBySelection()
         {
             var get = GetWwiseObjectsBySelectionAsync();
-            get.AsTask().Wait();
+            get.Wait();
             return get.Result;
         }
-        public static async ValueTask<List<WwiseObject>> GetWwiseObjectsBySelectionAsync()
+        public static async Task<List<WwiseObject>> GetWwiseObjectsBySelectionAsync()
         {
             if (!await TryConnectWaapiAsync()) return null;
             try
@@ -1315,11 +1315,11 @@ namespace WwiseTools.Utils
         public static List<string> GetLanguages()
         {
             var result = GetLanguagesAsync();
-            result.AsTask().Wait();
+            result.Wait();
             return result.Result;
         }
         
-        public static async ValueTask<List<string>> GetLanguagesAsync()
+        public static async Task<List<string>> GetLanguagesAsync()
         {
             if (!await TryConnectWaapiAsync()) return null;
 
@@ -1419,8 +1419,8 @@ namespace WwiseTools.Utils
         [Obsolete("Use async version instead")]
         public static WwiseObject ImportSound(string filePath, string language = "SFX", string subFolder = "", string parentPath = @"\Actor-Mixer Hierarchy\Default Work Unit", string soundName = "") // 直接调用的版本
         {
-            ValueTask<WwiseObject> obj = WwiseUtility.ImportSoundAsync(filePath, language, subFolder, parentPath, soundName);
-            obj.AsTask().Wait();
+            Task<WwiseObject> obj = WwiseUtility.ImportSoundAsync(filePath, language, subFolder, parentPath, soundName);
+            obj.Wait();
             return obj.Result;
         }
 
@@ -1434,7 +1434,7 @@ namespace WwiseTools.Utils
         /// <param name="work_unit"></param>
         /// <param name="hierarchy"></param>
         /// <returns></returns>
-        public static async ValueTask<WwiseObject> ImportSoundAsync(string filePath, string language = "SFX", string subFolder = "", string parentPath = @"\Actor-Mixer Hierarchy\Default Work Unit", string soundName = "") // Async版本
+        public static async Task<WwiseObject> ImportSoundAsync(string filePath, string language = "SFX", string subFolder = "", string parentPath = @"\Actor-Mixer Hierarchy\Default Work Unit", string soundName = "") // Async版本
         {
             if (!filePath.EndsWith(".wav") || !await TryConnectWaapiAsync()) return null; // 目标不是文件或者没有成功连接时返回空的WwiseObject
             
@@ -1512,7 +1512,7 @@ namespace WwiseTools.Utils
         public static string GetWorkUnitFilePath(WwiseObject @object)
         {
             var get = GetWorkUnitFilePathAsync(@object);
-            get.AsTask().Wait();
+            get.Wait();
             return get.Result;
         }
 
@@ -1521,7 +1521,7 @@ namespace WwiseTools.Utils
         /// </summary>
         /// <param name="object"></param>
         /// <returns></returns>
-        public static async ValueTask<string> GetWorkUnitFilePathAsync(WwiseObject @object)
+        public static async Task<string> GetWorkUnitFilePathAsync(WwiseObject @object)
         {
             if (!await TryConnectWaapiAsync() || @object == null) return null;
 
@@ -1585,10 +1585,10 @@ namespace WwiseTools.Utils
             
             LoadWwiseProject(GetWwiseProjectPath(), true);
             Client = null;
-            Init().AsTask().Wait();
+            Init().Wait();
         }
         
-        public static async ValueTask ReloadWwiseProjectAsync()
+        public static async Task ReloadWwiseProjectAsync()
         {
             await LoadWwiseProjectAsync(await GetWwiseProjectPathAsync(), true);
             await DisconnectAsync();
@@ -1604,7 +1604,7 @@ namespace WwiseTools.Utils
         [Obsolete("Use async version instead")]
         public static void LoadWwiseProject(string path, bool saveCurrent = true)
         {
-            LoadWwiseProjectAsync(path, saveCurrent).AsTask().Wait();
+            LoadWwiseProjectAsync(path, saveCurrent).Wait();
         }
 
         /// <summary>
@@ -1613,7 +1613,7 @@ namespace WwiseTools.Utils
         /// <param name="path"></param>
         /// <param name="saveCurrent"></param>
         /// <returns></returns>
-        public static async ValueTask LoadWwiseProjectAsync(string path, bool saveCurrent = true)
+        public static async Task LoadWwiseProjectAsync(string path, bool saveCurrent = true)
         {
             if (!await TryConnectWaapiAsync()) return;
 
@@ -1648,7 +1648,7 @@ namespace WwiseTools.Utils
         public static string GetWwiseProjectName()
         {
             var get = GetWwiseProjectNameAsync();
-            get.AsTask().Wait();
+            get.Wait();
             return get.Result;
         }
 
@@ -1656,7 +1656,7 @@ namespace WwiseTools.Utils
         /// 获取工程路径，异步执行
         /// </summary>
         /// <returns></returns>
-        public static async ValueTask<string> GetWwiseProjectNameAsync()
+        public static async Task<string> GetWwiseProjectNameAsync()
         {
             if (!await TryConnectWaapiAsync()) return null;
 
@@ -1719,7 +1719,7 @@ namespace WwiseTools.Utils
         public static string GetWwiseProjectPath()
         {
             var get = GetWwiseProjectPathAsync();
-            get.AsTask().Wait();
+            get.Wait();
             return get.Result;
         }
 
@@ -1727,7 +1727,7 @@ namespace WwiseTools.Utils
         /// 获取工程路径，异步执行
         /// </summary>
         /// <returns></returns>
-        public static async ValueTask<string> GetWwiseProjectPathAsync()
+        public static async Task<string> GetWwiseProjectPathAsync()
         {
             if (!await TryConnectWaapiAsync()) return null;
 
@@ -1782,7 +1782,7 @@ namespace WwiseTools.Utils
             }
         }
 
-        public static async ValueTask<WwiseInfo> GetWwiseInfoAsync()
+        public static async Task<WwiseInfo> GetWwiseInfoAsync()
         {
             if (!await TryConnectWaapiAsync()) return null;
 
@@ -1823,7 +1823,7 @@ namespace WwiseTools.Utils
         /// </summary>
         /// <param name="command"></param>
         /// <returns></returns>
-        public static async ValueTask ExecuteUICommand(string command, string[] objectIDs = null)
+        public static async Task ExecuteUICommand(string command, string[] objectIDs = null)
         {
             if (!await TryConnectWaapiAsync()) return;
 
@@ -1854,7 +1854,7 @@ namespace WwiseTools.Utils
             }
         }
 
-        public static async ValueTask<List<WwiseObject>> GetWwiseObjectChildrenAsync(WwiseObject wwiseObject)
+        public static async Task<List<WwiseObject>> GetWwiseObjectChildrenAsync(WwiseObject wwiseObject)
         {
             List<WwiseObject> result = new List<WwiseObject>();
             if (wwiseObject == null || !await TryConnectWaapiAsync()) return result;
@@ -1894,7 +1894,7 @@ namespace WwiseTools.Utils
             return result;
         }
 
-        public static async ValueTask GenerateSelectedSoundBanksAllPlatformAsync(string[] soundBanks)
+        public static async Task GenerateSelectedSoundBanksAllPlatformAsync(string[] soundBanks)
         {
             if (!await TryConnectWaapiAsync() || soundBanks == null) return;
             
@@ -1921,7 +1921,7 @@ namespace WwiseTools.Utils
             }
         }
 
-        private static async ValueTask GetFunctionsAsync()
+        private static async Task GetFunctionsAsync()
         {
             if (!await TryConnectWaapiAsync() || Function != null) return;
             Function = new WaapiFunction();
@@ -1945,14 +1945,14 @@ namespace WwiseTools.Utils
         [Obsolete("Use async version instead")]
         public static void SaveWwiseProject()
         {
-            SaveWwiseProjectAsync().AsTask().Wait();
+            SaveWwiseProjectAsync().Wait();
         }
 
         /// <summary>
         /// 保存工程，异步执行
         /// </summary>
         /// <returns></returns>
-        public static async ValueTask SaveWwiseProjectAsync()
+        public static async Task SaveWwiseProjectAsync()
         {
             if (!await TryConnectWaapiAsync()) return;
             try
