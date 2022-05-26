@@ -18,7 +18,7 @@ namespace WwiseTools.Utils
                 return _instance;
             }
         }
-        public event Action<object, bool> Logger;
+        internal event Action<object, bool> Logger;
 
 
         public bool firstLog = true;
