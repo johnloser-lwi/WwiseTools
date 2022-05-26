@@ -102,7 +102,7 @@ namespace WwiseTools.Utils
                 {
                     Client = null;
                     ConnectionInfo = null;
-                    WaapiLog.Log("Connection closed unexpectedly!"); // 丢失连接提示
+                    WaapiLog.Log("Connection closed!"); // 丢失连接提示
                 };
 
                 ConnectionInfo = await GetWwiseInfoAsync();
