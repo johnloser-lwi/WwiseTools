@@ -15,13 +15,13 @@ namespace WwiseTools.Objects
         /// </summary>
         /// <param name="name"></param>
         /// <param name="parentPath"></param>
-        [Obsolete("use WwiseUtility.CreateObjectAsync instead")]
+        [Obsolete("use WwiseUtility.Instance.CreateObjectAsync instead")]
         public WwiseRandomContainer(string name, string parentPath = @"\Actor-Mixer Hierarchy\Default Work Unit") : base(name, "", WwiseObject.ObjectType.RandomSequenceContainer.ToString())
         {
-            var tempObj = WwiseUtility.CreateObject(name, ObjectType.RandomSequenceContainer, parentPath);
+            var tempObj = WwiseUtility.Instance.CreateObject(name, ObjectType.RandomSequenceContainer, parentPath);
             ID = tempObj.ID;
             Name = tempObj.Name;
-            WwiseUtility.SetObjectProperty(this, WwiseProperty.Prop_RandomOrSequence(WwiseProperty.Option_RandomOrSequence.Random));
+            WwiseUtility.Instance.SetObjectProperty(this, WwiseProperty.Prop_RandomOrSequence(WwiseProperty.Option_RandomOrSequence.Random));
         }
 
         public WwiseRandomContainer(WwiseObject @object) : base("", "", "")
@@ -40,12 +40,12 @@ namespace WwiseTools.Objects
         [Obsolete("use async version instead")]
         public void SetRandomMode(WwiseProperty.Option_NormalOrShuffle option)
         {
-            WwiseUtility.SetObjectProperty(this, WwiseProperty.Prop_NormalOrShuffle(option));
+            WwiseUtility.Instance.SetObjectProperty(this, WwiseProperty.Prop_NormalOrShuffle(option));
         }
 
         public async  Task SetRandomModeAsync(WwiseProperty.Option_NormalOrShuffle option)
         {
-            await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_NormalOrShuffle(option));
+            await WwiseUtility.Instance.SetObjectPropertyAsync(this, WwiseProperty.Prop_NormalOrShuffle(option));
         }
     }
 }

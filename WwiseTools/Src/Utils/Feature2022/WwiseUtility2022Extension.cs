@@ -23,7 +23,7 @@ namespace WwiseTools.Utils.Feature2022
         public static async Task BatchSetObjectPropertyAsync(this WwiseUtility utility, List<WwiseObject> wwiseObjects, 
             params WwiseProperty[] wwiseProperties)
         {
-            if (!await WwiseUtility.TryConnectWaapiAsync() || wwiseObjects == null || wwiseProperties == null) return;
+            if (!await WwiseUtility.Instance.TryConnectWaapiAsync() || wwiseObjects == null || wwiseProperties == null) return;
             if (!VersionHelper.VersionVerify(VersionHelper.V2022_1_0_7929)) return;
             try
             {
@@ -44,8 +44,8 @@ namespace WwiseTools.Utils.Feature2022
                     query.objects.Add(jObject);
                 }
 
-                var func = WwiseUtility.Function.Verify("ak.wwise.core.object.set");
-                await WwiseUtility.Client.Call(func,
+                var func = WwiseUtility.Instance.Function.Verify("ak.wwise.core.object.set");
+                await WwiseUtility.Instance.Client.Call(func,
                     query,
                     null);
 
@@ -72,7 +72,7 @@ namespace WwiseTools.Utils.Feature2022
         public static async Task BatchSetObjectReferenceAsync(this WwiseUtility utility, List<WwiseObject> wwiseObjects, 
             params WwiseReference[] wwiseReferences)
         {
-            if (!await WwiseUtility.TryConnectWaapiAsync() || wwiseObjects == null || wwiseReferences == null) return;
+            if (!await WwiseUtility.Instance.TryConnectWaapiAsync() || wwiseObjects == null || wwiseReferences == null) return;
             if (!VersionHelper.VersionVerify(VersionHelper.V2022_1_0_7929)) return;
             try
             {
@@ -93,8 +93,8 @@ namespace WwiseTools.Utils.Feature2022
                     query.objects.Add(jObject);
                 }
 
-                var func = WwiseUtility.Function.Verify("ak.wwise.core.object.set");
-                await WwiseUtility.Client.Call(
+                var func = WwiseUtility.Instance.Function.Verify("ak.wwise.core.object.set");
+                await WwiseUtility.Instance.Client.Call(
                     func,
 
                     query,

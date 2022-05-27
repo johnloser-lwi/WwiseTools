@@ -17,10 +17,10 @@ namespace WwiseTools.Objects
         /// </summary>
         /// <param name="name"></param>
         /// <param name="parentPath"></param>
-        [Obsolete("use WwiseUtility.CreateObjectAsync instead")]
+        [Obsolete("use WwiseUtility.Instance.CreateObjectAsync instead")]
         public WwiseSound(string name, string parentPath =@"\Actor-Mixer Hierarchy\Default Work Unit") : base(name, "", "Sound")
         {
-            var tempObj = WwiseUtility.CreateObject(name, ObjectType.Sound, parentPath);
+            var tempObj = WwiseUtility.Instance.CreateObject(name, ObjectType.Sound, parentPath);
             ID = tempObj.ID;
             Name = tempObj.Name;
         }
@@ -33,11 +33,11 @@ namespace WwiseTools.Objects
         /// <param name="language"></param>
         /// <param name="subFolder"></param>
         /// <param name="parentPath"></param>
-        [Obsolete("Use WwiseUtility.ImportSoundAsync instead")]
+        [Obsolete("Use WwiseUtility.Instance.ImportSoundAsync instead")]
         public WwiseSound(string name, string filePath, string language = "SFX", string subFolder = "", string parentPath = @"\Actor-Mixer Hierachy\Default Work Unit") : base(name, "", "Sound")
         {
-            var tempObj = WwiseUtility.ImportSound(filePath, language, subFolder, parentPath);
-            WwiseUtility.ChangeObjectName(tempObj, name);
+            var tempObj = WwiseUtility.Instance.ImportSound(filePath, language, subFolder, parentPath);
+            WwiseUtility.Instance.ChangeObjectName(tempObj, name);
             ID = tempObj.ID;
             Name = tempObj.Name;
         }
@@ -57,12 +57,12 @@ namespace WwiseTools.Objects
         [Obsolete("use async version instead")]
         public void SetInitialDelay(float delay)
         {
-            WwiseUtility.SetObjectProperty(this, WwiseProperty.Prop_InitialDelay(delay));
+            WwiseUtility.Instance.SetObjectProperty(this, WwiseProperty.Prop_InitialDelay(delay));
         }
 
         public async Task SetInitialDelayAsync(float delay)
         {
-            await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_InitialDelay(delay));
+            await WwiseUtility.Instance.SetObjectPropertyAsync(this, WwiseProperty.Prop_InitialDelay(delay));
         }
 
         /// <summary>
@@ -74,16 +74,16 @@ namespace WwiseTools.Objects
         [Obsolete("use async version instead")]
         public void SetLoop(bool loop, bool infinite = true , uint numOfLoop = 2)
         {
-            WwiseUtility.SetObjectProperty(this, WwiseProperty.Prop_IsLoopingEnabled(loop));
-            WwiseUtility.SetObjectProperty(this, WwiseProperty.Prop_IsLoopingInfinite(infinite));
-            WwiseUtility.SetObjectProperty(this, WwiseProperty.Prop_LoopCount(numOfLoop));
+            WwiseUtility.Instance.SetObjectProperty(this, WwiseProperty.Prop_IsLoopingEnabled(loop));
+            WwiseUtility.Instance.SetObjectProperty(this, WwiseProperty.Prop_IsLoopingInfinite(infinite));
+            WwiseUtility.Instance.SetObjectProperty(this, WwiseProperty.Prop_LoopCount(numOfLoop));
         }
         
         public async Task SetLoopAsync(bool loop, bool infinite = true , uint numOfLoop = 2)
         {
-            await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_IsLoopingEnabled(loop));
-            await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_IsLoopingInfinite(infinite));
-            await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_LoopCount(numOfLoop));
+            await WwiseUtility.Instance.SetObjectPropertyAsync(this, WwiseProperty.Prop_IsLoopingEnabled(loop));
+            await WwiseUtility.Instance.SetObjectPropertyAsync(this, WwiseProperty.Prop_IsLoopingInfinite(infinite));
+            await WwiseUtility.Instance.SetObjectPropertyAsync(this, WwiseProperty.Prop_LoopCount(numOfLoop));
         }
         
         /// <summary>
@@ -95,16 +95,16 @@ namespace WwiseTools.Objects
         [Obsolete("use async version instead")]
         public void SetStream(bool stream, bool nonCachable, bool zeroLatency)
         {
-            WwiseUtility.SetObjectProperty(this, WwiseProperty.Prop_IsStreamingEnabled(stream));
-            WwiseUtility.SetObjectProperty(this, WwiseProperty.Prop_IsNonCachable(nonCachable));
-            WwiseUtility.SetObjectProperty(this, WwiseProperty.Prop_IsZeroLantency(zeroLatency));
+            WwiseUtility.Instance.SetObjectProperty(this, WwiseProperty.Prop_IsStreamingEnabled(stream));
+            WwiseUtility.Instance.SetObjectProperty(this, WwiseProperty.Prop_IsNonCachable(nonCachable));
+            WwiseUtility.Instance.SetObjectProperty(this, WwiseProperty.Prop_IsZeroLantency(zeroLatency));
         }
 
         public async Task SetStreamAsync(bool stream, bool nonCachable, bool zeroLatency)
         {
-            await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_IsStreamingEnabled(stream));
-            await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_IsNonCachable(nonCachable));
-            await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_IsZeroLantency(zeroLatency));
+            await WwiseUtility.Instance.SetObjectPropertyAsync(this, WwiseProperty.Prop_IsStreamingEnabled(stream));
+            await WwiseUtility.Instance.SetObjectPropertyAsync(this, WwiseProperty.Prop_IsNonCachable(nonCachable));
+            await WwiseUtility.Instance.SetObjectPropertyAsync(this, WwiseProperty.Prop_IsZeroLantency(zeroLatency));
         }
 
         [Obsolete("use async version instead")]
@@ -133,7 +133,7 @@ namespace WwiseTools.Objects
 
         private  async Task<JObject> GetWavFilePathAsync()
         {
-            if (!await WwiseUtility.TryConnectWaapiAsync()) return null;
+            if (!await WwiseUtility.Instance.TryConnectWaapiAsync()) return null;
 
 
             try
@@ -159,7 +159,7 @@ namespace WwiseTools.Objects
                 {
                     var func = WaapiFunction.CoreObjectGet;
 
-                    JObject jresult = await WwiseUtility.Client.Call(func, query, options);
+                    JObject jresult = await WwiseUtility.Instance.Client.Call(func, query, options);
 
                     return jresult;
                 }

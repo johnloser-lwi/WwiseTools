@@ -11,10 +11,10 @@ namespace WwiseTools.Objects
 {
     public class WwiseMusicSwitchContainer : WwiseContainer
     {
-        [Obsolete("use WwiseUtility.CreateObjectAsync instead")]
+        [Obsolete("use WwiseUtility.Instance.CreateObjectAsync instead")]
         public WwiseMusicSwitchContainer(string name, string parentPath = @"\Interactive Music Hierarchy\Default Work Unit\") : base(name, "", ObjectType.MusicPlaylistContainer.ToString())
         {
-            var playlist = WwiseUtility.CreateObject(name, ObjectType.MusicSwitchContainer, parentPath);
+            var playlist = WwiseUtility.Instance.CreateObject(name, ObjectType.MusicSwitchContainer, parentPath);
             ID = playlist.ID;
             Name = playlist.Name;
         }
@@ -34,12 +34,12 @@ namespace WwiseTools.Objects
         [Obsolete("use async version instead")]
         public void SetContinuePlay(bool value)
         {
-            WwiseUtility.SetObjectProperty(this, WwiseProperty.Prop_ContinuePlay(value));
+            WwiseUtility.Instance.SetObjectProperty(this, WwiseProperty.Prop_ContinuePlay(value));
         }
 
         public async Task SetContinuePlayAsync(bool value)
         {
-            await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_ContinuePlay(value));
+            await WwiseUtility.Instance.SetObjectPropertyAsync(this, WwiseProperty.Prop_ContinuePlay(value));
         }
     }
 }

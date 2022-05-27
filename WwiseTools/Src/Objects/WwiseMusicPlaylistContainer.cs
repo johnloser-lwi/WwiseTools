@@ -16,10 +16,10 @@ namespace WwiseTools.Objects
         /// </summary>
         /// <param name="name"></param>
         /// <param name="parentPath"></param>
-        [Obsolete("use WwiseUtility.CreateObjectAsync instead")]
+        [Obsolete("use WwiseUtility.Instance.CreateObjectAsync instead")]
         public WwiseMusicPlaylistContainer(string name, string parentPath = @"\Interactive Music Hierarchy\Default Work Unit\") : base(name, "", ObjectType.MusicPlaylistContainer.ToString())
         {
-            var playlist = WwiseUtility.CreateObject(name, ObjectType.MusicPlaylistContainer, parentPath);
+            var playlist = WwiseUtility.Instance.CreateObject(name, ObjectType.MusicPlaylistContainer, parentPath);
             ID = playlist.ID;
             Name = playlist.Name;
         }
@@ -78,7 +78,7 @@ namespace WwiseTools.Objects
             {
                 var item = new WwiseMusicPlaylistItem(segment, rootItem.ID);
 
-                //WwiseUtility.ReloadWwiseProject();
+                //WwiseUtility.Instance.ReloadWwiseProject();
 
                 return item;
             }
@@ -94,7 +94,7 @@ namespace WwiseTools.Objects
             {
                 var item = await WwiseMusicPlaylistItem.CreateWwiseMusicPlaylistItem(segment, rootItem.ID);
 
-                //WwiseUtility.ReloadWwiseProject();
+                //WwiseUtility.Instance.ReloadWwiseProject();
 
                 return item;
             }
@@ -123,7 +123,7 @@ namespace WwiseTools.Objects
         /// <returns></returns>
         public async Task<WwiseMusicPlaylistItem> GetRootPlaylistItemAsync()
         {
-            if (!await WwiseUtility.TryConnectWaapiAsync()) return null;
+            if (!await WwiseUtility.Instance.TryConnectWaapiAsync()) return null;
 
             try
             {
@@ -146,7 +146,7 @@ namespace WwiseTools.Objects
 
                 var func = WaapiFunction.CoreObjectGet;
 
-                JObject jresult = await WwiseUtility.Client.Call(func, query, options);
+                JObject jresult = await WwiseUtility.Instance.Client.Call(func, query, options);
 
                 try // 尝试返回物体数据
                 {
@@ -154,7 +154,7 @@ namespace WwiseTools.Objects
                     if (jresult["return"].Last["musicPlaylistRoot"] == null) throw new Exception();
                     string id = jresult["return"].Last["musicPlaylistRoot"]["id"].ToString();
 
-                    return new WwiseMusicPlaylistItem(await WwiseUtility.GetWwiseObjectByIDAsync(id));
+                    return new WwiseMusicPlaylistItem(await WwiseUtility.Instance.GetWwiseObjectByIDAsync(id));
                 }
                 catch (Exception e)
                 {

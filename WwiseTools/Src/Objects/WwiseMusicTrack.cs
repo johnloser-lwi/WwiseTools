@@ -33,8 +33,8 @@ namespace WwiseTools.Objects
         public WwiseMusicTrack(string name, WwiseMusicSegment parent) : base(name, "", ObjectType.MusicTrack.ToString())
         {
 
-            var tempObj = WwiseUtility.CreateObject(name, ObjectType.MusicTrack, parent.Path);
-            WwiseUtility.ChangeObjectName(tempObj, name);
+            var tempObj = WwiseUtility.Instance.CreateObject(name, ObjectType.MusicTrack, parent.Path);
+            WwiseUtility.Instance.ChangeObjectName(tempObj, name);
             ID = tempObj.ID;
             Name = tempObj.Name;
             parent.SetExitCue(TrackLenghtMs);
@@ -42,7 +42,7 @@ namespace WwiseTools.Objects
 
         public static async Task<WwiseMusicTrack> CreateWwiseMusicTrackAsync(string name, WwiseMusicSegment parent)
         {
-            var tempObj = await WwiseUtility.CreateObjectAsync(name, ObjectType.MusicTrack, await parent.GetPathAsync());
+            var tempObj = await WwiseUtility.Instance.CreateObjectAsync(name, ObjectType.MusicTrack, await parent.GetPathAsync());
             var musicTrack = new WwiseMusicTrack(tempObj);
             await parent.SetExitCueAsync(await musicTrack.GetTrackLengthAsync());
             return musicTrack;
@@ -58,8 +58,8 @@ namespace WwiseTools.Objects
         [Obsolete("use CreateWwiseMusicTrackAsync() instead")]
         public WwiseMusicTrack(string name, string filePath, WwiseMusicSegment parent, string subFolder = "") : base(name, "", ObjectType.MusicTrack.ToString())
         {
-            var tempObj = WwiseUtility.ImportSound(filePath, "SFX", subFolder, parent.Path);
-            WwiseUtility.ChangeObjectName(tempObj, name);
+            var tempObj = WwiseUtility.Instance.ImportSound(filePath, "SFX", subFolder, parent.Path);
+            WwiseUtility.Instance.ChangeObjectName(tempObj, name);
             ID = tempObj.ID;
             Name = tempObj.Name;
             parent.SetExitCue(TrackLenghtMs);
@@ -79,7 +79,7 @@ namespace WwiseTools.Objects
         /// <returns></returns>
         public async Task<float> GetTrackLengthAsync()
         {
-            if (!await WwiseUtility.TryConnectWaapiAsync()) return 0;
+            if (!await WwiseUtility.Instance.TryConnectWaapiAsync()) return 0;
 
 
             try
@@ -105,7 +105,7 @@ namespace WwiseTools.Objects
                 {
                     var func = WaapiFunction.CoreObjectGet;
 
-                    JObject jresult = await WwiseUtility.Client.Call(func, query, options);
+                    JObject jresult = await WwiseUtility.Instance.Client.Call(func, query, options);
                     
                     if (jresult["return"].Last["audioSource:maxDurationSource"] == null) throw new Exception();
 
@@ -138,23 +138,23 @@ namespace WwiseTools.Objects
         [Obsolete("Use async version instead")]
         public void SetStream(bool stream, bool nonCachable, bool zeroLatency, uint lookAheadTime = 100, uint prefetchLength = 100)
         {
-            WwiseUtility.SetObjectProperty(this, WwiseProperty.Prop_IsStreamingEnabled(stream));
-            WwiseUtility.SetObjectProperty(this, WwiseProperty.Prop_IsNonCachable(nonCachable));
-            WwiseUtility.SetObjectProperty(this, WwiseProperty.Prop_IsZeroLantency(zeroLatency));
+            WwiseUtility.Instance.SetObjectProperty(this, WwiseProperty.Prop_IsStreamingEnabled(stream));
+            WwiseUtility.Instance.SetObjectProperty(this, WwiseProperty.Prop_IsNonCachable(nonCachable));
+            WwiseUtility.Instance.SetObjectProperty(this, WwiseProperty.Prop_IsZeroLantency(zeroLatency));
 
-            WwiseUtility.SetObjectProperty(this, WwiseProperty.Prop_LookAheadTime(lookAheadTime));
-            WwiseUtility.SetObjectProperty(this, WwiseProperty.Prop_PreFetchLength(prefetchLength));
+            WwiseUtility.Instance.SetObjectProperty(this, WwiseProperty.Prop_LookAheadTime(lookAheadTime));
+            WwiseUtility.Instance.SetObjectProperty(this, WwiseProperty.Prop_PreFetchLength(prefetchLength));
 
         }
         
         public async Task SetStreamAsync(bool stream, bool nonCachable, bool zeroLatency, uint lookAheadTime = 100, uint prefetchLength = 100)
         {
-            await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_IsStreamingEnabled(stream));
-            await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_IsNonCachable(nonCachable));
-            await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_IsZeroLantency(zeroLatency));
+            await WwiseUtility.Instance.SetObjectPropertyAsync(this, WwiseProperty.Prop_IsStreamingEnabled(stream));
+            await WwiseUtility.Instance.SetObjectPropertyAsync(this, WwiseProperty.Prop_IsNonCachable(nonCachable));
+            await WwiseUtility.Instance.SetObjectPropertyAsync(this, WwiseProperty.Prop_IsZeroLantency(zeroLatency));
             
-            await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_LookAheadTime(lookAheadTime));
-            await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_PreFetchLength(prefetchLength));
+            await WwiseUtility.Instance.SetObjectPropertyAsync(this, WwiseProperty.Prop_LookAheadTime(lookAheadTime));
+            await WwiseUtility.Instance.SetObjectPropertyAsync(this, WwiseProperty.Prop_PreFetchLength(prefetchLength));
 
         }
 
@@ -165,12 +165,12 @@ namespace WwiseTools.Objects
         [Obsolete("Use async version instead")]
         public void SetTrackType(WwiseProperty.Option_MusicTrackType type)
         {
-            WwiseUtility.SetObjectProperty(this, WwiseProperty.Prop_MusicTrackType(type));
+            WwiseUtility.Instance.SetObjectProperty(this, WwiseProperty.Prop_MusicTrackType(type));
         }
         
         public async Task SetTrackTypeAsync(WwiseProperty.Option_MusicTrackType type)
         {
-            await WwiseUtility.SetObjectPropertyAsync(this, WwiseProperty.Prop_MusicTrackType(type));
+            await WwiseUtility.Instance.SetObjectPropertyAsync(this, WwiseProperty.Prop_MusicTrackType(type));
         }
 
         /// <summary>
@@ -180,12 +180,12 @@ namespace WwiseTools.Objects
         [Obsolete("Use async version instead")]
         public void SetSwitchGroupOrStateGroup(WwiseReference group)
         {
-            WwiseUtility.SetObjectReference(this, group);
+            WwiseUtility.Instance.SetObjectReference(this, group);
         }
         
         public async Task SetSwitchGroupOrStateGroupAsync(WwiseReference group)
         {
-            await WwiseUtility.SetObjectReferenceAsync(this, group);
+            await WwiseUtility.Instance.SetObjectReferenceAsync(this, group);
         }
 
         /// <summary>
@@ -195,12 +195,12 @@ namespace WwiseTools.Objects
         [Obsolete("Use async version instead")]
         public void SetDefaultSwitchOrState(WwiseReference switchOrState)
         {
-            WwiseUtility.SetObjectReference(this, switchOrState);
+            WwiseUtility.Instance.SetObjectReference(this, switchOrState);
         }
         
         public async Task SetDefaultSwitchOrStateAsync(WwiseReference switchOrState)
         {
-            await WwiseUtility.SetObjectReferenceAsync(this, switchOrState);
+            await WwiseUtility.Instance.SetObjectReferenceAsync(this, switchOrState);
         }
     }
 }

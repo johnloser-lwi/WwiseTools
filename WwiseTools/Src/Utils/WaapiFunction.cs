@@ -50,7 +50,7 @@ namespace WwiseTools.Utils
 
             if (!result) 
                 throw new Exception($"Function {func} not available in wwise " +
-                                    $"{WwiseUtility.ConnectionInfo.Version.ToString()}!");
+                                    $"{WwiseUtility.Instance.ConnectionInfo.Version.ToString()}!");
             return final;
         }
 

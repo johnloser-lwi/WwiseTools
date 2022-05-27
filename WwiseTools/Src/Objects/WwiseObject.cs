@@ -15,20 +15,20 @@ namespace WwiseTools.Objects
         public string Type { get; set; }
         
         [Obsolete("Use GetPathAsync instead")]
-        public string Path { get { return WwiseUtility.GetWwiseObjectPath(ID); } }
+        public string Path { get { return WwiseUtility.Instance.GetWwiseObjectPath(ID); } }
 
         [Obsolete("Use GetParentAsync() instead")]
-        public WwiseObject Parent { get { return WwiseUtility.GetWwiseObjectByPath(Path.TrimEnd(Name.ToCharArray())); } }
+        public WwiseObject Parent { get { return WwiseUtility.Instance.GetWwiseObjectByPath(Path.TrimEnd(Name.ToCharArray())); } }
 
         public async Task<WwiseObject> GetParentAsync()
         {
             string path = await GetPathAsync();
-            return await WwiseUtility.GetWwiseObjectByPathAsync(System.IO.Path.GetDirectoryName(path));
+            return await WwiseUtility.Instance.GetWwiseObjectByPathAsync(System.IO.Path.GetDirectoryName(path));
         }
         
         public async Task<string> GetPathAsync()
         {
-            return await WwiseUtility.GetWwiseObjectPathAsync(ID);
+            return await WwiseUtility.Instance.GetWwiseObjectPathAsync(ID);
         }
 
         public WwiseObject(string name, string id, string type)
@@ -36,8 +36,8 @@ namespace WwiseTools.Objects
             this.Name = name;
             this.ID = id;
             this.Type = type;
-            //this.Path = WwiseUtility.GetWwiseObjectPath(id);
-           // this.Parent = WwiseUtility.GetWwiseObjectByPath(this.Path.Replace(Name, ""));
+            //this.Path = WwiseUtility.Instance.GetWwiseObjectPath(id);
+           // this.Parent = WwiseUtility.Instance.GetWwiseObjectByPath(this.Path.Replace(Name, ""));
         }
         
         public static WwiseObject Empty(ObjectType type)
@@ -55,15 +55,15 @@ namespace WwiseTools.Objects
 
         public async Task<string> GetPropertyAndReferenceNamesAsync()
         {
-            if (!await WwiseUtility.TryConnectWaapiAsync()) return null;
+            if (!await WwiseUtility.Instance.TryConnectWaapiAsync()) return null;
 
 
             try
             {
-                var func = WwiseUtility.Function.Verify("ak.wwise.core.object.getPropertyAndReferenceNames");
+                var func = WwiseUtility.Instance.Function.Verify("ak.wwise.core.object.getPropertyAndReferenceNames");
 
                 // 创建物体
-                var result = await WwiseUtility.Client.Call
+                var result = await WwiseUtility.Instance.Client.Call
                     (
                         func,
                     new JObject
