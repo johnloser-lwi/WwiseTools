@@ -174,27 +174,6 @@ namespace WwiseTools.Utils
                     }
                     );
 
-                // ak.wwise.core.@object.get 指令
-                var query = new
-                {
-                    from = new
-                    {
-                        id = new string[] { child.ID }
-                    }
-                };
-
-                // ak.wwise.core.@object.get 返回参数设置
-                var options = new
-                {
-
-                    @return = new string[] { "name", "id", "type" }
-
-                };
-
-                func = WaapiFunction.CoreObjectGet;
-                // 获取子物体的新数据
-                JObject jresult = await Client.Call(func, query, options);
-
 
                 WaapiLog.Log($"Copied {child.Name} to {parent.Name}!");
 
@@ -231,31 +210,6 @@ namespace WwiseTools.Utils
                         new JProperty("onNameConflict", "rename")
                     }
                     );
-
-                // ak.wwise.core.@object.get 指令
-                var query = new
-                {
-                    from = new
-                    {
-                        id = new string[] { child.ID }
-                    }
-                };
-
-                // ak.wwise.core.@object.get 返回参数设置
-                var options = new
-                {
-
-                    @return = new string[] { "name", "id", "type" }
-
-                };
-
-                func = WaapiFunction.CoreObjectGet;
-                // 获取子物体的新数据
-                JObject jresult = await Client.Call(func, query, options);
-                if (jresult["return"]?.Last == null) throw new Exception();
-                child.Name = jresult["return"].Last["name"]?.ToString();
-                child.ID = jresult["return"].Last["id"]?.ToString();
-                child.Type = jresult["return"].Last["type"]?.ToString();
 
                 WaapiLog.Log($"Moved {child.Name} to {parent.Name}!");
             }
@@ -486,23 +440,15 @@ namespace WwiseTools.Utils
 
                 };
 
-                try // 尝试返回物体数据
-                {
-                    JObject jresult = await Client.Call(func, query, options);
-                    if (jresult["return"]?.Last == null) throw new Exception();
-                    string name = jresult["return"].Last["name"]?.ToString();
-                    string id = jresult["return"].Last["id"]?.ToString();
-                    string type = jresult["return"].Last["type"]?.ToString();
+                JObject jresult = await Client.Call(func, query, options);
+                if (jresult["return"]?.Last == null) throw new Exception();
+                string name = jresult["return"].Last["name"]?.ToString();
+                string id = jresult["return"].Last["id"]?.ToString();
+                string type = jresult["return"].Last["type"]?.ToString();
 
-                    WaapiLog.Log($"WwiseObject {name} successfully fetched!");
+                WaapiLog.Log($"WwiseObject {name} successfully fetched!");
 
-                    return new WwiseObject(name, id, type);
-                }
-                catch
-                {
-                    WaapiLog.Log($"Failed to return WwiseObject from ID : {targetId}!");
-                    return null;
-                }
+                return new WwiseObject(name, id, type);
             }
             catch (Exception e)
             {
@@ -538,21 +484,13 @@ namespace WwiseTools.Utils
 
                 };
 
-                try // 尝试返回物体数据
-                {
-                    JObject jresult = await Client.Call(func, query, options);
+                JObject jresult = await Client.Call(func, query, options);
 
+                
+                if (jresult["return"] == null) throw new Exception();
 
-
-                    WaapiLog.Log($"WwiseProperty {wwiseProperty} successfully fetched!");
-                    if (jresult["return"] == null) throw new Exception();
-                    return jresult["return"].Last?["@" + wwiseProperty];
-                }
-                catch (Exception e)
-                {
-                    WaapiLog.Log($"Failed to return WwiseObject Property : {targetId}! ======> {e.Message}");
-                    return null;
-                }
+                WaapiLog.Log($"WwiseProperty {wwiseProperty} successfully fetched!");
+                return jresult["return"].Last?["@" + wwiseProperty];
             }
             catch (Exception e)
             {
@@ -589,20 +527,12 @@ namespace WwiseTools.Utils
                 };
 
 
+                JObject jresult = await WwiseUtility.Instance.Client.Call(func, query, options);
+                if (jresult["return"] == null || jresult["return"].Last == null || 
+                    jresult["return"].Last["path"] == null) throw new Exception();
+                string path = jresult["return"].Last["path"].ToString();
 
-                try // 尝试返回物体数据
-                {
-                    JObject jresult = await WwiseUtility.Instance.Client.Call(func, query, options);
-                    if (jresult["return"].Last["path"] == null) throw new Exception();
-                    string path = jresult["return"].Last["path"].ToString();
-
-                    return path;
-                }
-                catch (Exception e)
-                {
-                    WaapiLog.Log($"Failed to get path of object : {ID}! =======> {e.Message}");
-                    return null;
-                }
+                return path;
             }
             catch (Exception e)
             {
@@ -644,26 +574,17 @@ namespace WwiseTools.Utils
 
 
 
-                try // 尝试返回物体数据
-                {
+                JObject jresult = await Client.Call(func, query, options);
+                var obj = jresult["return"]?.Last;
+                if (obj == null) throw new Exception("Object not found!");
 
-                    JObject jresult = await Client.Call(func, query, options);
-                    var obj = jresult["return"]?.Last;
-                    if (obj == null) throw new Exception("Object not found!");
+                string name = obj["name"]?.ToString();
+                string id = obj["id"]?.ToString();
+                string type = obj["type"]?.ToString();
 
-                    string name = obj["name"]?.ToString();
-                    string id = obj["id"]?.ToString();
-                    string type = obj["type"]?.ToString();
+                WaapiLog.Log($"WwiseObject {name} successfully fetched!");
 
-                    WaapiLog.Log($"WwiseObject {name} successfully fetched!");
-
-                    return new WwiseObject(name, id, type);
-                }
-                catch (Exception e)
-                {
-                    WaapiLog.Log($"Failed to return WwiseObject by name : {targetName}! ======> {e.Message}");
-                    return null;
-                }
+                return new WwiseObject(name, id, type);
             }
             catch (Exception e)
             {
@@ -714,17 +635,6 @@ namespace WwiseTools.Utils
                 WaapiLog.Log($"WwiseObject {name} successfully fetched!");
 
                 return new WwiseObject(name, id, type);
-
-                /*try // 尝试返回物体数据
-                {
-
-                    
-                }
-                catch (Exception e)
-                {
-                    WaapiLog.Log($"Failed to return WwiseObject by path : {path}! ======> {e.Message}");
-                    return null;
-                }*/
             }
             catch (Exception e)
             {
@@ -788,34 +698,26 @@ namespace WwiseTools.Utils
 
 
 
-                try // 尝试返回物体数据
+                var func = WaapiFunction.CoreObjectGet;
+
+                JObject jresult = await Client.Call(func, query, options);
+
+                List<WwiseObject> objList = new List<WwiseObject>();
+                if (jresult["return"] == null) throw new Exception();
+                foreach (var obj in jresult["return"])
                 {
-                    var func = WaapiFunction.CoreObjectGet;
+                    string name = obj["name"]?.ToString();
+                    string id = obj["id"]?.ToString();
+                    string type = obj["type"]?.ToString();
 
-                    JObject jresult = await Client.Call(func, query, options);
-
-                    List<WwiseObject> objList = new List<WwiseObject>();
-                    if (jresult["return"] == null) throw new Exception();
-                    foreach (var obj in jresult["return"])
-                    {
-                        string name = obj["name"]?.ToString();
-                        string id = obj["id"]?.ToString();
-                        string type = obj["type"]?.ToString();
-
-                        objList.Add(new WwiseObject(name, id, type));
-                    }
-
-
-
-                    WaapiLog.Log($"WwiseObject list or type {targetType} successfully fetched!");
-
-                    return objList;
+                    objList.Add(new WwiseObject(name, id, type));
                 }
-                catch (Exception e)
-                {
-                    WaapiLog.Log($"Failed to return WwiseObject list of type : {targetType}! ======> {e.Message}");
-                    return null;
-                }
+
+
+
+                WaapiLog.Log($"WwiseObject list or type {targetType} successfully fetched!");
+
+                return objList;
             }
             catch (Exception e)
             {
@@ -838,38 +740,26 @@ namespace WwiseTools.Utils
 
                 };
 
+                var func = Function.Verify("ak.wwise.ui.getSelectedObjects");
+
+                JObject jresult = await Client.Call(func, null, options);
+
+                List<WwiseObject> objList = new List<WwiseObject>();
 
 
-                try // 尝试返回物体数据
+                if (jresult["objects"] == null) throw new Exception();
+                foreach (var obj in jresult["objects"])
                 {
-                    var func = Function.Verify("ak.wwise.ui.getSelectedObjects");
+                    string name = obj["name"]?.ToString();
+                    string id = obj["id"]?.ToString();
+                    string type = obj["type"]?.ToString();
 
-                    JObject jresult = await Client.Call(func, null, options);
-
-                    List<WwiseObject> objList = new List<WwiseObject>();
-
-
-                    if (jresult["objects"] == null) throw new Exception();
-                    foreach (var obj in jresult["objects"])
-                    {
-                        string name = obj["name"]?.ToString();
-                        string id = obj["id"]?.ToString();
-                        string type = obj["type"]?.ToString();
-
-                        objList.Add(new WwiseObject(name, id, type));
-                    }
-
-
-
-                    WaapiLog.Log($"Selected WwiseObject list successfully fetched!");
-
-                    return objList;
+                    objList.Add(new WwiseObject(name, id, type));
                 }
-                catch (Exception e)
-                {
-                    WaapiLog.Log($"Failed to return Selected WwiseObject list! ======> {e.Message}");
-                    return null;
-                }
+
+                WaapiLog.Log($"Selected WwiseObject list successfully fetched!");
+
+                return objList;
             }
             catch (Exception e)
             {
@@ -944,7 +834,7 @@ namespace WwiseTools.Utils
 
 
 
-            string fileName = "";
+            string fileName;
             if (!string.IsNullOrEmpty(soundName))
             {
                 fileName = soundName;
@@ -994,7 +884,8 @@ namespace WwiseTools.Utils
 
                 var result = await Client.Call(func, importQ, options); // 执行导入
 
-                if (result == null || result["objects"] == null || result["objects"].Last == null || result["objects"].Last["id"] == null) return null;
+                if (result == null || result["objects"] == null || 
+                    result["objects"].Last == null || result["objects"].Last["id"] == null) return null;
 
                 WaapiLog.Log($"File {filePath} imported successfully!");
 
@@ -1035,30 +926,20 @@ namespace WwiseTools.Utils
 
                 };
 
+                var func = WaapiFunction.CoreObjectGet;
 
+                JObject jresult = await Client.Call(func, query, options);
 
-                try // 尝试返回物体数据
+                string filePath = "";
+                if (jresult["return"] == null) throw new Exception();
+                foreach (var obj in jresult["return"])
                 {
-                    var func = WaapiFunction.CoreObjectGet;
-
-                    JObject jresult = await Client.Call(func, query, options);
-
-                    string filePath = "";
-                    if (jresult["return"] == null) throw new Exception();
-                    foreach (var obj in jresult["return"])
-                    {
-                        filePath = obj["filePath"]?.ToString();
-                    }
-
-                    WaapiLog.Log($"Work Unit file path of object {@object.Name} successfully fetched!");
-
-                    return filePath;
+                    filePath = obj["filePath"]?.ToString();
                 }
-                catch (Exception e)
-                {
-                    WaapiLog.Log($"Failed to return Work Unit file path of object : {@object.Name}! ======> {e.Message}");
-                    return null;
-                }
+
+                WaapiLog.Log($"Work Unit file path of object {@object.Name} successfully fetched!");
+
+                return filePath;
             }
             catch (Exception e)
             {
@@ -1135,30 +1016,20 @@ namespace WwiseTools.Utils
 
                 };
 
+                var func = WaapiFunction.CoreObjectGet;
 
+                JObject jresult = await Client.Call(func, query, options);
 
-                try // 尝试返回物体数据
+                string name = "";
+                if (jresult["return"] == null) throw new Exception();
+                foreach (var obj in jresult["return"])
                 {
-                    var func = WaapiFunction.CoreObjectGet;
-
-                    JObject jresult = await Client.Call(func, query, options);
-
-                    string name = "";
-                    if (jresult["return"] == null) throw new Exception();
-                    foreach (var obj in jresult["return"])
-                    {
-                        name = obj["name"]?.ToString();
-                    }
-
-                    WaapiLog.Log($"Project name successfully fetched!");
-
-                    return name;
+                    name = obj["name"]?.ToString();
                 }
-                catch (Exception e)
-                {
-                    WaapiLog.Log($"Failed to return project name! ======> {e.Message}");
-                    return null;
-                }
+
+                WaapiLog.Log($"Project name successfully fetched!");
+
+                return name;
             }
             catch (Exception e)
             {
@@ -1194,30 +1065,20 @@ namespace WwiseTools.Utils
 
                 };
 
+                var func = WaapiFunction.CoreObjectGet;
 
+                JObject jresult = await Client.Call(func, query, options);
 
-                try // 尝试返回物体数据
+                string filePath = "";
+                if (jresult["return"] == null) throw new Exception();
+                foreach (var obj in jresult["return"])
                 {
-                    var func = WaapiFunction.CoreObjectGet;
-
-                    JObject jresult = await Client.Call(func, query, options);
-
-                    string filePath = "";
-                    if (jresult["return"] == null) throw new Exception();
-                    foreach (var obj in jresult["return"])
-                    {
-                        filePath = obj["filePath"]?.ToString();
-                    }
-
-                    WaapiLog.Log($"Project path successfully fetched!");
-
-                    return filePath;
+                    filePath = obj["filePath"]?.ToString();
                 }
-                catch (Exception e)
-                {
-                    WaapiLog.Log($"Failed to return project path! ======> {e.Message}");
-                    return null;
-                }
+
+                WaapiLog.Log($"Project path successfully fetched!");
+
+                return filePath;
             }
             catch (Exception e)
             {
@@ -1241,13 +1102,11 @@ namespace WwiseTools.Utils
                 int.TryParse(result["version"]["build"]?.ToString(), out int build);
                 int.TryParse(result["version"]["year"]?.ToString(), out int year);
                 int.TryParse(result["version"]["schema"]?.ToString(), out int schema);
-                //string sessionId = result["sessionId"].ToString();
                 int.TryParse(result["processId"]?.ToString(), out int processId);
 
                 WwiseInfo wwiseInfo = new WwiseInfo()
                 {
                     Version = new WwiseVersion(year, major, minor, build, schema),
-                    //SessionID = sessionId,
                     ProcessID = processId
                 };
 
@@ -1372,6 +1231,7 @@ namespace WwiseTools.Utils
             try
             {
                 var result = await Client.Call("ak.wwise.waapi.getFunctions");
+                if (result["functions"] == null) throw new Exception();
                 foreach (var func in result["functions"])
                 {
                     Function.AddFunction(func.ToString());
