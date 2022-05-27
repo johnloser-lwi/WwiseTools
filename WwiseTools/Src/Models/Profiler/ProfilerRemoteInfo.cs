@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace WwiseTools.Models.Profiler
 {
-    public class WwiseRemoteInfo
+    public class ProfilerRemoteInfo
     {
         public string Name { get; set; }
         public string Platform { get; set; }

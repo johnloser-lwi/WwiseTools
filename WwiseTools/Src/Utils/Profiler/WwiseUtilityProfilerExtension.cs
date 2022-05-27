@@ -21,11 +21,11 @@ namespace WwiseTools.Utils.Profiler
             return await util.TryConnectWaapiAsync() && !util.ConnectionInfo.IsCommandLine;
         }
 
-        public static async Task<List<WwiseRemoteInfo>> ProfilerGetAvailableConsolesAsync(this WwiseUtility util)
+        public static async Task<List<ProfilerRemoteInfo>> ProfilerGetAvailableConsolesAsync(this WwiseUtility util)
         {
-            if (!await util.isProfilerReady()) return new List<WwiseRemoteInfo>();
+            if (!await util.isProfilerReady()) return new List<ProfilerRemoteInfo>();
 
-            var result = new List<WwiseRemoteInfo>();
+            var result = new List<ProfilerRemoteInfo>();
 
             try
             {
@@ -46,7 +46,7 @@ namespace WwiseTools.Utils.Profiler
                     int.TryParse(console["commandPort"]?.ToString(), out int commandPort);
                     int.TryParse(console["notificationPort"]?.ToString(), out int notificationPort);
 
-                    var remoteInfo = new WwiseRemoteInfo()
+                    var remoteInfo = new ProfilerRemoteInfo()
                     {
                         Name = name,
                         Platform = platform,
@@ -68,7 +68,7 @@ namespace WwiseTools.Utils.Profiler
             return result;
         }
 
-        public static async Task ProfilerConnectToRemoteAsync(this WwiseUtility util, WwiseRemoteInfo remoteInfo)
+        public static async Task ProfilerConnectToRemoteAsync(this WwiseUtility util, ProfilerRemoteInfo remoteInfo)
         {
             if (!await util.isProfilerReady() || remoteInfo == null) return;
 
