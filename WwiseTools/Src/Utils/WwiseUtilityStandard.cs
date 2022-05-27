@@ -1104,11 +1104,13 @@ namespace WwiseTools.Utils
                 int.TryParse(result["version"]["year"]?.ToString(), out int year);
                 int.TryParse(result["version"]["schema"]?.ToString(), out int schema);
                 int.TryParse(result["processId"]?.ToString(), out int processId);
+                bool.TryParse(result["isCommandLine"]?.ToString(), out bool isCommandLine);
 
                 WwiseInfo wwiseInfo = new WwiseInfo()
                 {
                     Version = new WwiseVersion(year, major, minor, build, schema),
-                    ProcessID = processId
+                    ProcessID = processId,
+                    IsCommandLine = isCommandLine
                 };
 
                 return wwiseInfo;

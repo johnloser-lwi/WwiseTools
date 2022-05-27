@@ -12,6 +12,8 @@ namespace WwiseTools.Models
 
         public int ProcessID { get; set; }
 
+        public bool IsCommandLine { get; set; }
+
         public override string ToString()
         {
             string result = "";

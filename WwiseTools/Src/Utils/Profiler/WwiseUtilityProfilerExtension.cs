@@ -16,9 +16,14 @@ namespace WwiseTools.Utils.Profiler
             capture
         }
 
+        private static async Task<bool> isProfilerReady(this WwiseUtility util)
+        {
+            return await util.TryConnectWaapiAsync() && !util.ConnectionInfo.IsCommandLine;
+        }
+
         public static async Task<List<WwiseRemoteInfo>> ProfilerGetAvailableConsolesAsync(this WwiseUtility util)
         {
-            if (!await util.TryConnectWaapiAsync()) return new List<WwiseRemoteInfo>();
+            if (!await util.isProfilerReady()) return new List<WwiseRemoteInfo>();
 
             var result = new List<WwiseRemoteInfo>();
 
@@ -65,7 +70,7 @@ namespace WwiseTools.Utils.Profiler
 
         public static async Task ProfilerConnectToRemoteAsync(this WwiseUtility util, WwiseRemoteInfo remoteInfo)
         {
-            if (!await util.TryConnectWaapiAsync() || remoteInfo == null) return;
+            if (!await util.isProfilerReady() || remoteInfo == null) return;
 
             try
             {
@@ -88,7 +93,7 @@ namespace WwiseTools.Utils.Profiler
 
         public static async Task ProfilerDisconnectRemoteAsync(this WwiseUtility util)
         {
-            if (!await util.TryConnectWaapiAsync()) return;
+            if (!await util.isProfilerReady()) return;
 
             try
             {
@@ -106,7 +111,7 @@ namespace WwiseTools.Utils.Profiler
 
         public static async Task<bool> ProfilerGetRemoteConnectionStatusAsync(this WwiseUtility util)
         {
-            if (!await util.TryConnectWaapiAsync()) return false;
+            if (!await util.isProfilerReady()) return false;
 
             try
             {
@@ -165,7 +170,7 @@ namespace WwiseTools.Utils.Profiler
 
         public static async Task<int> ProfilerGetCursorTimeMsAsync(this WwiseUtility util, Cursor cursor = Cursor.capture)
         {
-            if (!await util.TryConnectWaapiAsync()) return -1;
+            if (!await util.isProfilerReady()) return -1;
 
             try
             {
@@ -192,7 +197,7 @@ namespace WwiseTools.Utils.Profiler
 
         public static async Task<List<ProfilerRTPC>> ProfilerGetRTPCsAsync(this WwiseUtility util, Cursor cursor = Cursor.capture)
         {
-            if (!await util.TryConnectWaapiAsync()) return null;
+            if (!await util.isProfilerReady()) return null;
 
             var result = new List<ProfilerRTPC>();
 
@@ -237,7 +242,7 @@ namespace WwiseTools.Utils.Profiler
 
         public static async Task<List<ProfilerVoice>> ProfilerGetVoicesAsync(this WwiseUtility util, Cursor cursor = Cursor.capture)
         {
-            if (!await util.TryConnectWaapiAsync()) return null;
+            if (!await util.isProfilerReady()) return null;
 
             var result = new List<ProfilerVoice>();
 
@@ -343,7 +348,7 @@ namespace WwiseTools.Utils.Profiler
 
         public static async Task<List<ProfilerBus>> ProfilerGetBussesAsync(this WwiseUtility util, Cursor cursor = Cursor.capture)
         {
-            if (!await util.TryConnectWaapiAsync()) return null;
+            if (!await util.isProfilerReady()) return null;
 
             var result = new List<ProfilerBus>();
 

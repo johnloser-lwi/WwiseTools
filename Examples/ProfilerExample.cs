@@ -14,6 +14,8 @@ namespace Examples
 
         public static async Task ProfilerTestAsync()
         {
+            if (Waapi.ConnectionInfo.IsCommandLine) return;
+
             var result = await Waapi.ProfilerGetAvailableConsolesAsync();
             if (result == null) return;
             foreach (var info in result)
