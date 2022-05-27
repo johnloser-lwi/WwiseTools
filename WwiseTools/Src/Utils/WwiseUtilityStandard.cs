@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using Newtonsoft.Json.Linq;
+using WwiseTools.Models;
 using WwiseTools.Objects;
 using WwiseTools.Properties;
 using WwiseTools.References;

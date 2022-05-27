@@ -26,6 +26,7 @@ namespace WwiseTools.Utils
 
         public string Verify(string func)
         {
+            func = func.Trim();
             bool result = false;
             string final = null;
             if (_functions.Contains(func))

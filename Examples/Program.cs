@@ -9,7 +9,7 @@ try
 
     if (await WwiseUtility.Instance.TryConnectWaapiAsync())
     {
-        await ExampleFunctions.WaqlTestAsync(); // 尝试不同的方法
+        await ProfilerExample.ProfilerTestAsync(); // 尝试不同的方法
     }
     else
     {

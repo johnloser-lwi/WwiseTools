@@ -4,14 +4,8 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Newtonsoft.Json.Linq;
-
-using System.Xml;
 using WaapiClient;
-using WwiseTools.Properties;
-using WwiseTools.References;
-using WwiseTools.Objects;
-using WwiseTools.Utils.Feature2021;
+using WwiseTools.Models;
 
 namespace WwiseTools.Utils
 {

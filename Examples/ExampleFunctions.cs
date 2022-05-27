@@ -11,6 +11,7 @@ using WwiseTools.References;
 using WwiseTools.Utils;
 using WwiseTools.Utils.Feature2021;
 using WwiseTools.Utils.Feature2022;
+using WwiseTools.Utils.Profiler;
 
 namespace Examples
 {
@@ -32,6 +33,8 @@ namespace Examples
                 writer.WriteLine(msg);
             }
         }
+
+        
 
         public static async Task BatchSetTestAsync()
         {
