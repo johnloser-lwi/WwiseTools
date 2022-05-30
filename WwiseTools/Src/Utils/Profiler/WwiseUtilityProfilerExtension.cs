@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Net.Configuration;
 using System.Threading.Tasks;
-using Newtonsoft.Json.Linq;
 using WwiseTools.Models.Profiler;
 
 namespace WwiseTools.Utils.Profiler
