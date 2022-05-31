@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
@@ -1160,41 +1161,371 @@ namespace WwiseTools.Utils
             }
         }
 
+        public async Task<List<WwiseObject>> GetReferencesToWwiseObjectAsync(WwiseObject wwiseObject)
+        {
+            List<WwiseObject> result = new List<WwiseObject>();
+            if (wwiseObject == null || !await TryConnectWaapiAsync()) return result;
+            try
+            {
+                var query = new
+                {
+                    from = new
+                    {
+                        id = new string[] { wwiseObject.ID }
+                    },
+                    transform = new object[] {
+                        new
+                        {
+                            select = new string[]
+                            {
+                                "referencesTo"
+                            }
+                        }
+                    }
+                };
+
+                var options = new
+                {
+
+                    @return = new string[] { "name", "id", "type" }
+
+                };
+
+                var func = WaapiFunction.CoreObjectGet;
+
+                var jresult = await Client.Call(func, query, options);
+                if (jresult == null || jresult["return"] == null) return result;
+                foreach (var obj in jresult["return"])
+                {
+                    string name = obj["name"]?.ToString();
+                    string id = obj["id"]?.ToString();
+                    string type = obj["type"]?.ToString();
+
+                    result.Add(new WwiseObject(name, id, type));
+                }
+
+
+            }
+            catch (Exception e)
+            {
+                WaapiLog.Log($"Failed to get references of {wwiseObject.Name} ======> {e.Message}");
+            }
+
+            return result;
+        }
+
+        public async Task<List<WwiseObject>> BatchGetWwiseObjectParentAsync(List<WwiseObject> wwiseObjects)
+        {
+            var result = new List<WwiseObject>();
+            if (wwiseObjects == null || !await TryConnectWaapiAsync()) return result;
+            try
+            {
+                var query = new
+                {
+                    from = new
+                    {
+                        id = wwiseObjects.Select(w => w.ID).ToArray()
+                    },
+                    transform = new object[] {
+                        new
+                        {
+                            select = new string[]
+                            {
+                                "parent"
+                            }
+                        }
+                    }
+                };
+
+                var options = new
+                {
+
+                    @return = new string[] { "name", "id", "type" }
+
+                };
+
+                var func = WaapiFunction.CoreObjectGet;
+
+                var jresult = await Client.Call(func, query, options);
+                if (jresult == null || jresult["return"] == null) return result;
+                foreach (var obj in jresult["return"])
+                {
+                    string name = obj["name"]?.ToString();
+                    string id = obj["id"]?.ToString();
+                    string type = obj["type"]?.ToString();
+
+                    result.Add(new WwiseObject(name, id, type));
+                }
+
+
+            }
+            catch (Exception e)
+            {
+                WaapiLog.Log($"Failed to get children ======> {e.Message}");
+            }
+
+            return result;
+        }
+
+        public async Task<WwiseObject> GetWwiseObjectParentAsync(WwiseObject wwiseObject)
+        {
+            if (wwiseObject == null || !await TryConnectWaapiAsync()) return null;
+            try
+            {
+                var query = new
+                {
+                    from = new
+                    {
+                        id = new string[] { wwiseObject.ID }
+                    },
+                    transform = new object[] {
+                        new
+                        {
+                            select = new string[]
+                            {
+                                "parent"
+                            }
+                        }
+                    }
+                };
+
+                var options = new
+                {
+
+                    @return = new string[] { "name", "id", "type" }
+
+                };
+
+                var func = WaapiFunction.CoreObjectGet;
+
+                var jresult = await Client.Call(func, query, options);
+                if (jresult == null || jresult["return"] == null) return null;
+                foreach (var obj in jresult["return"])
+                {
+                    string name = obj["name"]?.ToString();
+                    string id = obj["id"]?.ToString();
+                    string type = obj["type"]?.ToString();
+
+                    return new WwiseObject(name, id, type);
+                }
+
+
+            }
+            catch (Exception e)
+            {
+                WaapiLog.Log($"Failed to get children of {wwiseObject.Name} ======> {e.Message}");
+            }
+
+            return null;
+        }
+
+        public async Task<List<WwiseObject>> BatchGetWwiseObjectChildrenAsync(List<WwiseObject> wwiseObjects)
+        {
+            List<WwiseObject> result = new List<WwiseObject>();
+            if (wwiseObjects == null || !await TryConnectWaapiAsync()) return result;
+            try
+            {
+                var query = new
+                {
+                    from = new
+                    {
+                        id = wwiseObjects.Select(w => w.ID).ToArray()
+                    },
+                    transform = new object[] {
+                        new
+                        {
+                            select = new string[]
+                            {
+                                "children"
+                            }
+                        }
+                    }
+                };
+
+                var options = new
+                {
+
+                    @return = new string[] { "name", "id", "type" }
+
+                };
+
+                var func = WaapiFunction.CoreObjectGet;
+
+                var jresult = await Client.Call(func, query, options);
+                if (jresult == null || jresult["return"] == null) return result;
+                foreach (var obj in jresult["return"])
+                {
+                    string name = obj["name"]?.ToString();
+                    string id = obj["id"]?.ToString();
+                    string type = obj["type"]?.ToString();
+
+                    result.Add(new WwiseObject(name, id, type));
+                }
+
+
+            }
+            catch (Exception e)
+            {
+                WaapiLog.Log($"Failed to get children ======> {e.Message}");
+            }
+
+            return result;
+        }
+
         public async Task<List<WwiseObject>> GetWwiseObjectChildrenAsync(WwiseObject wwiseObject)
         {
             List<WwiseObject> result = new List<WwiseObject>();
             if (wwiseObject == null || !await TryConnectWaapiAsync()) return result;
-            if (WwiseUtility.Instance.ConnectionInfo.Version >= VersionHelper.V2021_1_0_7575)
+            try
             {
-                try
+                var query = new
                 {
-                    var waql = new Waql($"where parent.id = \"{wwiseObject.ID}\"");
-                    if (await waql.RunAsync())
+                    from = new
                     {
-                        result = waql.Result;
+                        id = new string[]{ wwiseObject.ID }
+                    },
+                    transform = new object[] {
+                        new
+                        {
+                            select = new string[]
+                            {
+                                "children"
+                            }
+                        }
                     }
-                    else
-                    {
-                        throw new Exception("waql failed");
-                    }
-                }
-                catch (Exception e)
+                };
+
+                var options = new
                 {
-                    WaapiLog.Log($"Failed to get children of {wwiseObject.Name} ======> {e.Message}");
+
+                    @return = new string[] { "name", "id", "type" }
+
+                };
+
+                var func = WaapiFunction.CoreObjectGet;
+
+                var jresult = await Client.Call(func, query, options);
+                if (jresult == null || jresult["return"] == null) return result;
+                foreach (var obj in jresult["return"])
+                {
+                    string name = obj["name"]?.ToString();
+                    string id = obj["id"]?.ToString();
+                    string type = obj["type"]?.ToString();
+
+                    result.Add(new WwiseObject(name, id, type));
                 }
+
 
             }
-            else
+            catch (Exception e)
             {
-                await WwiseUtility.Instance.SaveWwiseProjectAsync();
+                WaapiLog.Log($"Failed to get children of {wwiseObject.Name} ======> {e.Message}");
+            }
 
-                WwiseWorkUnitParser parser = new WwiseWorkUnitParser(await WwiseUtility.Instance.GetWorkUnitFilePathAsync(wwiseObject));
-                var node = parser.GetNodeByID(wwiseObject.ID);
-                foreach (XmlElement child in parser.GetChildrenNodeList(node))
+            return result;
+        }
+
+        public async Task<List<WwiseObject>> GetWwiseObjectAncestorsAsync(WwiseObject wwiseObject)
+        {
+            List<WwiseObject> result = new List<WwiseObject>();
+            if (wwiseObject == null || !await TryConnectWaapiAsync()) return result;
+            try
+            {
+                var query = new
                 {
-                    result.Add(await WwiseUtility.Instance.GetWwiseObjectByIDAsync(child.GetAttribute("ID")));
+                    from = new
+                    {
+                        id = new string[] { wwiseObject.ID }
+                    },
+                    transform = new object[] {
+                        new
+                        {
+                            select = new string[]
+                            {
+                                "ancestors"
+                            }
+                        }
+                    }
+                };
+
+                var options = new
+                {
+
+                    @return = new string[] { "name", "id", "type" }
+
+                };
+
+                var func = WaapiFunction.CoreObjectGet;
+
+                var jresult = await Client.Call(func, query, options);
+                if (jresult == null || jresult["return"] == null) return result;
+                foreach (var obj in jresult["return"])
+                {
+                    string name = obj["name"]?.ToString();
+                    string id = obj["id"]?.ToString();
+                    string type = obj["type"]?.ToString();
+
+                    result.Add(new WwiseObject(name, id, type));
                 }
 
+
+            }
+            catch (Exception e)
+            {
+                WaapiLog.Log($"Failed to get children of {wwiseObject.Name} ======> {e.Message}");
+            }
+
+            return result;
+        }
+
+        public async Task<List<WwiseObject>> GetWwiseObjectDescendantsAsync(WwiseObject wwiseObject)
+        {
+            List<WwiseObject> result = new List<WwiseObject>();
+            if (wwiseObject == null || !await TryConnectWaapiAsync()) return result;
+            try
+            {
+                var query = new
+                {
+                    from = new
+                    {
+                        id = new string[] { wwiseObject.ID }
+                    },
+                    transform = new object[] {
+                        new
+                        {
+                            select = new string[]
+                            {
+                                "descendants"
+                            }
+                        }
+                    }
+                };
+
+                var options = new
+                {
+
+                    @return = new string[] { "name", "id", "type" }
+
+                };
+
+                var func = WaapiFunction.CoreObjectGet;
+
+                var jresult = await Client.Call(func, query, options);
+                if (jresult == null || jresult["return"] == null) return result;
+                foreach (var obj in jresult["return"])
+                {
+                    string name = obj["name"]?.ToString();
+                    string id = obj["id"]?.ToString();
+                    string type = obj["type"]?.ToString();
+
+                    result.Add(new WwiseObject(name, id, type));
+                }
+
+
+            }
+            catch (Exception e)
+            {
+                WaapiLog.Log($"Failed to get children of {wwiseObject.Name} ======> {e.Message}");
             }
 
             return result;

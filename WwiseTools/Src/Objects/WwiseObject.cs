@@ -23,7 +23,7 @@ namespace WwiseTools.Objects
         public async Task<WwiseObject> GetParentAsync()
         {
             string path = await GetPathAsync();
-            return await WwiseUtility.Instance.GetWwiseObjectByPathAsync(System.IO.Path.GetDirectoryName(path));
+            return await WwiseUtility.Instance.GetWwiseObjectParentAsync(this);
         }
         
         public async Task<string> GetPathAsync()
