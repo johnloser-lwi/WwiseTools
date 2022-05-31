@@ -29,7 +29,7 @@ namespace WwiseTools.Utils
 
         public static void Log(object message)
         {
-            Instance.Logger(message.ToString(), Instance.firstLog);
+            Instance.Logger(message?.ToString(), Instance.firstLog);
             if (Instance.firstLog) Instance.firstLog = false;
         }
 
