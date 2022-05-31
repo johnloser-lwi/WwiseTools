@@ -99,7 +99,26 @@ namespace WwiseTools.Utils
                     WaapiLog.Log("Connection closed!"); // 丢失连接提示
                 };
 
-                ConnectionInfo = await GetWwiseInfoAsync();
+
+                WaapiLog.Log("Fetching connection info ...");
+
+                for (int i = 0; i < 5; i++)
+                {
+                    ConnectionInfo = await GetWwiseInfoAsync();
+
+                    if (ConnectionInfo != null) break;
+
+                    await Task.Delay(3000);
+                }
+
+                if (ConnectionInfo == null)
+                {
+                    WaapiLog.Log("Failed to fetch connection info!");
+
+                    await DisconnectAsync();
+                    return false;
+                }
+
 
                 WaapiLog.Log(ConnectionInfo);
                 return true;
