@@ -151,7 +151,7 @@ namespace WwiseTools.Objects
             {
 
                 containerNode.RemoveChild(playlistNode);
-                parser.SaveFile();
+                //parser.SaveFile();
             }
             
             

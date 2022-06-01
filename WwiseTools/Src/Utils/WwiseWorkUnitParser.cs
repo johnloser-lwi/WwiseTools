@@ -34,18 +34,13 @@ namespace WwiseTools.Utils
         /// <summary>
         /// 增加xml node至指定对象
         /// </summary>
-        /// <param name="object"></param>
+        /// <param name="wwiseObject"></param>
         /// <param name="node"></param>
-        public void AddToUnit(WwiseObject @object, XmlNode node)
+        public void AddToUnit(WwiseObject wwiseObject, XmlNode node)
         {
-            XmlNodeList list = XML.GetElementsByTagName(@object.Type);
-            foreach (XmlElement el in list)
-            {
-                if (el.GetAttribute("ID") == @object.ID)
-                {
-                    el.AppendChild(XML.ImportNode(node, true));
-                }
-            }
+            if (wwiseObject == null) return;
+            var target = (XmlElement)GetNodeByID(wwiseObject.ID);
+            target?.AppendChild(XML.ImportNode(node, true));
         }
 
         public XmlNode GetNodeByID(string wwiseId)
