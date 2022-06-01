@@ -20,6 +20,8 @@ namespace WwiseTools.Utils
 
         internal WaapiFunction Function { get; set; }
 
+        public int TimeOut => 5000;
+
         public static WwiseUtility Instance
         {
             get
@@ -88,7 +90,7 @@ namespace WwiseTools.Utils
             {
                 WaapiLog.Log("Initializing...");
                 Client = new JsonClient();
-                await Client.Connect($"ws://localhost:{wampPort}/waapi"); // 尝试创建Wwise连接
+                await Client.Connect($"ws://localhost:{wampPort}/waapi", TimeOut); // 尝试创建Wwise连接
                 await GetFunctionsAsync();
                 WaapiLog.Log("Connected successfully!");
 
@@ -100,10 +102,12 @@ namespace WwiseTools.Utils
                 };
 
 
-                WaapiLog.Log("Fetching connection info ...");
+               
 
                 for (int i = 0; i < 5; i++)
                 {
+                    WaapiLog.Log("Trying to fetch connection info ...");
+
                     ConnectionInfo = await GetWwiseInfoAsync();
 
                     if (ConnectionInfo != null) break;

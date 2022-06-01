@@ -66,10 +66,12 @@ namespace WwiseTools.Objects
                 var result = await WwiseUtility.Instance.Client.Call
                     (
                         func,
-                    new JObject
-                    {
-                        new JProperty("object", ID)
-                    }
+                        new JObject
+                        {
+                            new JProperty("object", ID)
+                        },
+                        null,
+                        WwiseUtility.Instance.TimeOut
                     );
                 return result.ToString();
             }

@@ -47,7 +47,7 @@ namespace WwiseTools.Utils.Feature2022
                 var func = WwiseUtility.Instance.Function.Verify("ak.wwise.core.object.set");
                 await WwiseUtility.Instance.Client.Call(func,
                     query,
-                    null);
+                    null, utility.TimeOut);
 
                 for (int i = 0; i < wwiseProperties.Length; i++)
                 {
@@ -99,7 +99,7 @@ namespace WwiseTools.Utils.Feature2022
 
                     query,
 
-                    null);
+                    null, utility.TimeOut);
 
                 for (int i = 0; i < wwiseReferences.Length; i++)
                     WaapiLog.Log($"Reference {wwiseReferences[i].Name} successfully set to {wwiseReferences[i].Object.Name}!");

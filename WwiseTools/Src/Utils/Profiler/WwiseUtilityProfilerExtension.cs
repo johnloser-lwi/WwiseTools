@@ -29,7 +29,7 @@ namespace WwiseTools.Utils.Profiler
             {
                 var func = util.Function.Verify("ak.wwise.core.remote.getAvailableConsoles");
 
-                var jresult = await util.Client.Call(func);
+                var jresult = await util.Client.Call(func, null, null, util.TimeOut);
                 var consoles = jresult?["consoles"];
                 if (consoles == null) throw new Exception("Result not valid!");
 
@@ -79,7 +79,7 @@ namespace WwiseTools.Utils.Profiler
                     host = remoteInfo.Host
                 };
 
-                await util.Client.Call(func, query);
+                await util.Client.Call(func, query, null, util.TimeOut);
 
                 WaapiLog.Log($"Successfully connected to remote {remoteInfo}!");
             }
@@ -97,7 +97,7 @@ namespace WwiseTools.Utils.Profiler
             {
                 var func = util.Function.Verify("ak.wwise.core.remote.disconnect");
 
-                await util.Client.Call(func);
+                await util.Client.Call(func, null, null, util.TimeOut);
 
                 WaapiLog.Log("Remote disconnected!");
             }
@@ -115,7 +115,7 @@ namespace WwiseTools.Utils.Profiler
             {
                 var func = util.Function.Verify("ak.wwise.core.remote.getConnectionStatus");
 
-                var jresult = await util.Client.Call(func);
+                var jresult = await util.Client.Call(func, null, null, util.TimeOut);
 
                 bool.TryParse(jresult["isConnected"]?.ToString(), out bool connected);
                 return connected;
@@ -135,7 +135,7 @@ namespace WwiseTools.Utils.Profiler
             try
             {
                 var func = util.Function.Verify("ak.wwise.core.profiler.startCapture");
-                await util.Client.Call(func);
+                await util.Client.Call(func, null, null, util.TimeOut);
                 WaapiLog.Log("Profiler capture started!");
             }
             catch (Exception e)
@@ -151,7 +151,7 @@ namespace WwiseTools.Utils.Profiler
             try
             {
                 var func = util.Function.Verify("ak.wwise.core.profiler.stopCapture");
-                var jresult = await util.Client.Call(func);
+                var jresult = await util.Client.Call(func, null, null, util.TimeOut);
                 int.TryParse(jresult["return"]?.ToString(), out int cursorTime);
 
                 WaapiLog.Log("Profiler capture stop!");
@@ -179,7 +179,7 @@ namespace WwiseTools.Utils.Profiler
                     cursor = cursor.ToString()
                 };
 
-                var jresult = await util.Client.Call(func, option);
+                var jresult = await util.Client.Call(func, option, null, util.TimeOut);
                 int.TryParse(jresult["return"]?.ToString(), out int cursorTime);
 
 
@@ -208,7 +208,7 @@ namespace WwiseTools.Utils.Profiler
                 };
 
 
-                var jresult = await util.Client.Call(func, query);
+                var jresult = await util.Client.Call(func, query, null, util.TimeOut);
                 var objects = jresult["return"];
 
                 if (objects == null) return result;
@@ -280,7 +280,7 @@ namespace WwiseTools.Utils.Profiler
                     }
                 };
 
-                var jresult = await util.Client.Call(func, query, options);
+                var jresult = await util.Client.Call(func, query, options, util.TimeOut);
                 var objects = jresult["return"];
                 if (objects == null) return result;
 
@@ -378,7 +378,7 @@ namespace WwiseTools.Utils.Profiler
                     }
                 };
 
-                var jresult = await util.Client.Call(func, query, options);
+                var jresult = await util.Client.Call(func, query, options, util.TimeOut);
                 var objects = jresult["return"];
                 if (objects == null) return result;
 

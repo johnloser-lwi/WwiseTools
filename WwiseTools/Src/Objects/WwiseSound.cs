@@ -159,7 +159,7 @@ namespace WwiseTools.Objects
                 {
                     var func = WaapiFunction.CoreObjectGet;
 
-                    JObject jresult = await WwiseUtility.Instance.Client.Call(func, query, options);
+                    JObject jresult = await WwiseUtility.Instance.Client.Call(func, query, options, WwiseUtility.Instance.TimeOut);
 
                     return jresult;
                 }

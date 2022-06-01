@@ -224,16 +224,18 @@ namespace WwiseTools.Objects
                 var result = await WwiseUtility.Instance.Client.Call
                     (
                         func,
-                    new JObject
-                    {
-                        new JProperty("name", name),
-                        new JProperty("type", "MusicCue"),
-                        new JProperty("parent", await GetPathAsync()),
-                        new JProperty("onNameConflict", "replace"),
-                        new JProperty("list", "Cues"),
-                        new JProperty("@TimeMs", timeMs),
-                        new JProperty("@CueType", 2)
-                    }
+                        new JObject
+                        {
+                            new JProperty("name", name),
+                            new JProperty("type", "MusicCue"),
+                            new JProperty("parent", await GetPathAsync()),
+                            new JProperty("onNameConflict", "replace"),
+                            new JProperty("list", "Cues"),
+                            new JProperty("@TimeMs", timeMs),
+                            new JProperty("@CueType", 2)
+                        },
+                        null,
+                        WwiseUtility.Instance.TimeOut
                     );
 
                 WaapiLog.Log($"Music Cue {name} created successfully!");
