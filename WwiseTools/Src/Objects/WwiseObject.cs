@@ -84,11 +84,14 @@ namespace WwiseTools.Objects
 
         public bool Equals(WwiseObject other)
         {
+            if (other == null) return false;
             return ID == other.ID;
         }
 
         public static bool operator == (WwiseObject left, WwiseObject right)
         {
+            if (left == null && right == null) return true;
+            if (left == null || right == null) return false;
             return left.Equals(right);
         }
 
