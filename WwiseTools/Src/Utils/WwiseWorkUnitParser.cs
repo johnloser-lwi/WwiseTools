@@ -15,10 +15,14 @@ namespace WwiseTools.Utils
         public XmlDocument XML { get; private set; }
         private string _filePath;
 
+        private bool _parsedSuccessfully = false;
+
         public WwiseWorkUnitParser(string filePath)
         {
             XML = new XmlDocument();
             Parse(filePath);
+            
+            
         }
 
         /// <summary>
@@ -27,8 +31,22 @@ namespace WwiseTools.Utils
         /// <param name="filePath"></param>
         public void Parse(string filePath)
         {
-            _filePath = filePath;
-            XML.Load(filePath);
+            try
+            {
+                _parsedSuccessfully = false;
+
+                if (!File.Exists(filePath))
+                    throw new FileNotFoundException($"{filePath} doesn't exist!");
+
+                _filePath = filePath;
+                XML.Load(filePath);
+
+                _parsedSuccessfully = true;
+            }
+            catch (Exception e)
+            {
+                WaapiLog.Log($"Failed to parse file {filePath}! ======> {e.Message}");
+            }
         }
 
         /// <summary>
@@ -38,6 +56,8 @@ namespace WwiseTools.Utils
         /// <param name="node"></param>
         public void AddToUnit(WwiseObject wwiseObject, XmlNode node)
         {
+            XmlCheck();
+
             if (wwiseObject == null) return;
             var target = (XmlElement)GetNodeByID(wwiseObject.ID);
             target?.AppendChild(XML.ImportNode(node, true));
@@ -45,16 +65,22 @@ namespace WwiseTools.Utils
 
         public XmlNode GetNodeByID(string wwiseId)
         {
-            if (XML == null) return null;
+            XmlCheck();
 
             return XML.SelectSingleNode($"//*[@ID='{wwiseId}']");
         }
 
         public XmlNodeList GetChildrenNodeList(XmlNode node)
         {
-            if (XML == null) return null;
+            XmlCheck();
 
             return node.SelectNodes("ChildrenList/*");
+        }
+
+        private void XmlCheck()
+        {
+            if (!_parsedSuccessfully)
+                throw new Exception($"{nameof(WwiseWorkUnitParser)} doesn't have a valid XML file parsed!");
         }
 
         /// <summary>

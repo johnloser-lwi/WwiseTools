@@ -743,7 +743,9 @@ namespace WwiseTools.Utils
         
         public async Task<List<WwiseObject>> GetWwiseObjectsBySelectionAsync()
         {
-            if (!await TryConnectWaapiAsync()) return null;
+            List<WwiseObject> result = new List<WwiseObject>();
+
+            if (!await TryConnectWaapiAsync()) return result;
             try
             {
                 // ak.wwise.core.@object.get 返回参数设置
@@ -758,7 +760,7 @@ namespace WwiseTools.Utils
 
                 JObject jresult = await Client.Call(func, null, options, TimeOut);
 
-                List<WwiseObject> objList = new List<WwiseObject>();
+                
 
 
                 if (jresult["objects"] == null) throw new Exception();
@@ -768,18 +770,19 @@ namespace WwiseTools.Utils
                     string id = obj["id"]?.ToString();
                     string type = obj["type"]?.ToString();
 
-                    objList.Add(new WwiseObject(name, id, type));
+                    result.Add(new WwiseObject(name, id, type));
                 }
 
                 WaapiLog.Log($"Selected WwiseObject list successfully fetched!");
 
-                return objList;
+               
             }
             catch (Exception e)
             {
                 WaapiLog.Log($"Failed to return Selected WwiseObject list! ======> {e.Message}");
-                return null;
             }
+
+            return result;
         }
         
         public async Task<List<string>> GetLanguagesAsync()

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using WwiseTools.Utils;
@@ -48,17 +49,8 @@ namespace WwiseTools.Objects
 
         public async Task<List<WwiseObject>> GetSwitchesAsync()
         {
-            List<WwiseObject> temp = await WwiseUtility.Instance.GetWwiseObjectsOfTypeAsync(ObjectType.Switch.ToString());
-            List<WwiseObject> result = new List<WwiseObject>();
-            foreach (var obj in temp)
-            {
-                if ((await obj.GetPathAsync()).Contains(await GetPathAsync()))
-                {
-                    result.Add(obj);
-                }
-            }
-
-            return result;
+            if (Type != "SwitchGroup") return new List<WwiseObject> ();
+            return await WwiseUtility.Instance.GetWwiseObjectChildrenAsync(this);
 
         }
     }

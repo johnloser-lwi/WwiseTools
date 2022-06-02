@@ -207,7 +207,7 @@ namespace WwiseTools.Objects
         }
 
         /// <summary>
-        /// 创建新的Cue，后台运行
+        /// 创建新的Cue，异步执行
         /// </summary>
         /// <param name="name"></param>
         /// <param name="timeMs"></param>
