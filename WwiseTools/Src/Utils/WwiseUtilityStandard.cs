@@ -388,7 +388,11 @@ namespace WwiseTools.Utils
                 return null;
             }
         }
-        
+
+        public async Task DeleteObjectAsync(WwiseObject wwiseObject)
+        {
+            await DeleteObjectAsync(await wwiseObject.GetPathAsync());
+        }
 
         public async Task DeleteObjectAsync(string path)
         {
