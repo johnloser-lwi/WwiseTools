@@ -471,11 +471,11 @@ namespace WwiseTools.Utils
             }
 
         }
-        
 
-        public async Task<JToken> GetWwiseObjectPropertyAsync(string targetId, string wwiseProperty)
+
+        public async Task<WwiseProperty> GetWwiseObjectPropertyAsync(WwiseObject wwiseObject, string wwiseProperty)
         {
-            if (!await TryConnectWaapiAsync() || String.IsNullOrWhiteSpace(targetId)) return null;
+            if (!await TryConnectWaapiAsync() || wwiseObject == null) return null;
 
             try
             {
@@ -486,7 +486,7 @@ namespace WwiseTools.Utils
                 {
                     from = new
                     {
-                        id = new string[] { targetId }
+                        id = new string[] { wwiseObject.ID }
                     }
                 };
 
@@ -500,21 +500,23 @@ namespace WwiseTools.Utils
 
                 JObject jresult = await Client.Call(func, query, options, TimeOut);
 
-                
+
                 if (jresult["return"] == null) throw new Exception();
 
                 WaapiLog.Log($"WwiseProperty {wwiseProperty} successfully fetched!");
-                return jresult["return"].Last?["@" + wwiseProperty];
+                var r = jresult["return"].Last?["@" + wwiseProperty];
+                if (r == null) return null;
+                return new WwiseProperty(wwiseProperty, r.ToString());
             }
             catch (Exception e)
             {
-                WaapiLog.Log($"Failed to return WwiseObject Property : {targetId}! ======> {e.Message}");
+                WaapiLog.Log($"Failed to return WwiseObject Property : {wwiseObject.Name}! ======> {e.Message}");
                 return null;
             }
 
         }
 
-        
+
         public async Task<string> GetWwiseObjectPathAsync(string ID)
         {
             if (!await TryConnectWaapiAsync()) return null;
