@@ -6,7 +6,7 @@ using WwiseTools.Utils;
 
 namespace WwiseTools.Objects
 {
-    public class WwiseObject : IEquatable<WwiseObject>
+    public partial class WwiseObject
     {
         public enum ObjectType { AcousticTexture, Action, ActionException, ActorMixer, Attenuation, AudioDevice, AuxBus, BlendContainer, BlendTrack, Bus, ControlSurfaceBinding, ControlSurfaceBindingGroup, ControlSurfaceSession, Conversion, Curve, CustomState, DialogueEvent, Deffect, Event, ExternalSource, ExternalSourceFile, Folder, GameParameter, Language, Metadata, MidiParameter, MixingSession, Modifier, ModulatorEnvelope, ModulatorLfo, ModulatorTime, MultiSwitchEntry, MusicClip, MusicClipMidi, MusicCue, MusicEventCue, MusicFade, MusicPlaylistContainer, MusicPlaylistItem, MusicSegment, MusicStinger, MusicSwitchContainer, MusicTrack, MusicTrackSequence, MusicTransition, ObjectSettingAssoc, Panner, ParamControl, Path, Platform, PluginDataSource, Position, Project, Query, RandomSequenceContainer, SerchCriteria, Sound, SoundBank, SoundcasterSession, State, StateGroup, Switch, SwitchContainer, SwitchGroup, Trigger, UserProjectSettings, WorkUnit, SegmentRef }
 
@@ -63,7 +63,7 @@ namespace WwiseTools.Objects
                 var func = WwiseUtility.Instance.Function.Verify("ak.wwise.core.object.getPropertyAndReferenceNames");
 
                 // 创建物体
-                var result = await WwiseUtility.Instance.Client.Call
+                var result = await WwiseUtility.Instance.CallAsync
                     (
                         func,
                         new JObject
@@ -82,10 +82,17 @@ namespace WwiseTools.Objects
             }
         }
 
-        public bool Equals(WwiseObject other)
+        public override int GetHashCode()
         {
-            if (other == null) return false;
-            return ID == other.ID;
+            return ToString().GetHashCode();
+        }
+
+        public override bool Equals(object obj)
+        {
+            var wwiseObject = obj as WwiseObject;
+            if (wwiseObject is null) return false;
+
+            return ID == wwiseObject.ID;
         }
 
         public static bool operator == (WwiseObject left, WwiseObject right)

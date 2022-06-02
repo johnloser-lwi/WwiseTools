@@ -221,7 +221,7 @@ namespace WwiseTools.Objects
                 var func = WwiseUtility.Instance.Function.Verify("ak.wwise.core.object.create");
 
                 // 创建物体
-                var result = await WwiseUtility.Instance.Client.Call
+                var result = await WwiseUtility.Instance.CallAsync
                     (
                         func,
                         new JObject

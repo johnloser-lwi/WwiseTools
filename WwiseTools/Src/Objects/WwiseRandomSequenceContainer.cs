@@ -67,7 +67,7 @@ namespace WwiseTools.Objects
 
         public async Task< WwiseProperty.Option_RandomOrSequence> GetPlayTypeAsync()
         {
-            var result = (await WwiseUtility.Instance.GetWwiseObjectPropertyAsync(ID, "RandomOrSequence")).ToString();
+            var result = (await WwiseUtility.Instance.GetWwiseObjectPropertyAsync(this, "RandomOrSequence")).Value.ToString();
 
             return (WwiseProperty.Option_RandomOrSequence)int.Parse(result);
         }

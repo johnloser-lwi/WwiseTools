@@ -45,7 +45,7 @@ namespace WwiseTools.Utils.Feature2022
                 }
 
                 var func = WwiseUtility.Instance.Function.Verify("ak.wwise.core.object.set");
-                await WwiseUtility.Instance.Client.Call(func,
+                await WwiseUtility.Instance.CallAsync(func,
                     query,
                     null, utility.TimeOut);
 
@@ -94,7 +94,7 @@ namespace WwiseTools.Utils.Feature2022
                 }
 
                 var func = WwiseUtility.Instance.Function.Verify("ak.wwise.core.object.set");
-                await WwiseUtility.Instance.Client.Call(
+                await WwiseUtility.Instance.CallAsync(
                     func,
 
                     query,

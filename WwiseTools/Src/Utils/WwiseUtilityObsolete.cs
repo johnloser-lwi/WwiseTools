@@ -374,7 +374,7 @@ namespace WwiseTools.Utils
         {
 
             LoadWwiseProject(GetWwiseProjectPath(), true);
-            Client = null;
+            _client = null;
             Init().Wait();
         }
         
@@ -449,7 +449,7 @@ namespace WwiseTools.Utils
 
                 };
 
-                JObject jresult = await Client.Call(func, query, options, TimeOut);
+                JObject jresult = await _client.Call(func, query, options, TimeOut);
 
 
                 if (jresult["return"] == null) throw new Exception();

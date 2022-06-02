@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Newtonsoft.Json.Linq;
 using WaapiClient;
 using WwiseTools.Models;
 
@@ -14,7 +15,7 @@ namespace WwiseTools.Utils
     /// </summary>
     public partial class WwiseUtility
     {
-        public JsonClient Client { get; set; }
+        private JsonClient _client;
 
         public WwiseInfo ConnectionInfo { get; private set; }
 
@@ -53,19 +54,19 @@ namespace WwiseTools.Utils
         [Obsolete("Use WwiseUtility.ConnectAsync() instead")]
         public async Task<bool> Init() // 初始化，返回连接状态
         {
-            if (Client != null && Client.IsConnected()) return true;
+            if (_client != null && _client.IsConnected()) return true;
 
             try
             {
                 
-                Client = new JsonClient();
-                await Client.Connect(); // 尝试创建Wwise连接
+                _client = new JsonClient();
+                await _client.Connect(); // 尝试创建Wwise连接
 
                 WaapiLog.Log("Connected successfully!");
 
-                Client.Disconnected += () =>
+                _client.Disconnected += () =>
                 {
-                    Client = null;
+                    _client = null;
                     WaapiLog.Log("Connection closed!"); // 丢失连接提示
                 };
                 return true;
@@ -79,24 +80,33 @@ namespace WwiseTools.Utils
 
         public bool IsConnected()
         {
-            return Client != null && Client.IsConnected();
+            return _client != null && _client.IsConnected();
         }
-        
+
+        public async Task<JObject> CallAsync(string uri, JObject args, JObject options, int timeOut = Int32.MaxValue)
+        {
+            return await _client.Call(uri, args, options, timeOut);
+        }
+        public async Task<JObject> CallAsync(string uri, object args, object options, int timeOut = Int32.MaxValue)
+        {
+            return await _client.Call(uri, args, options, timeOut);
+        }
+
         public async Task<bool> ConnectAsync(int wampPort = 8080) // 初始化，返回连接状态
         {
-            if (Client != null && Client.IsConnected()) return true;
+            if (_client != null && _client.IsConnected()) return true;
 
             try
             {
                 WaapiLog.Log("Initializing...");
-                Client = new JsonClient();
-                await Client.Connect($"ws://localhost:{wampPort}/waapi", TimeOut); // 尝试创建Wwise连接
+                _client = new JsonClient();
+                await _client.Connect($"ws://localhost:{wampPort}/waapi", TimeOut); // 尝试创建Wwise连接
                 await GetFunctionsAsync();
                 WaapiLog.Log("Connected successfully!");
 
-                Client.Disconnected += () =>
+                _client.Disconnected += () =>
                 {
-                    Client = null;
+                    _client = null;
                     ConnectionInfo = null;
                     WaapiLog.Log("Connection closed!"); // 丢失连接提示
                 };
@@ -141,11 +151,11 @@ namespace WwiseTools.Utils
         [Obsolete("Use WwiseUtility.DisconnectAsync() instead")]
         public async Task Close()
         {
-            if (Client == null || !Client.IsConnected()) return;
+            if (_client == null || !_client.IsConnected()) return;
 
             try
             {
-                await Client.Close(); // 尝试断开连接
+                await _client.Close(); // 尝试断开连接
             }
             catch (Exception e)
             {
@@ -155,12 +165,12 @@ namespace WwiseTools.Utils
 
         public async Task DisconnectAsync()
         {
-            if (Client == null || !Client.IsConnected()) return;
+            if (_client == null || !_client.IsConnected()) return;
 
             try
             {
-                await Client.Close(); // 尝试断开连接
-                Client = null;
+                await _client.Close(); // 尝试断开连接
+                _client = null;
                 ConnectionInfo = null;
             }
             catch (Exception e)
@@ -179,14 +189,14 @@ namespace WwiseTools.Utils
             var connected = Init();
             connected.Wait();
 
-            return connected.Result && Client.IsConnected();
+            return connected.Result && _client.IsConnected();
         }
         
         public async Task<bool> TryConnectWaapiAsync(int wampPort = 8080) 
         {
             var connected = await ConnectAsync(wampPort);
 
-            return connected && Client.IsConnected();
+            return connected && _client.IsConnected();
         }
 
         public static string NewGUID()

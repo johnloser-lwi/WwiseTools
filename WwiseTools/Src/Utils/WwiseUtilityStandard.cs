@@ -31,7 +31,7 @@ namespace WwiseTools.Utils
             try
             {
                 var func = Function.Verify("ak.wwise.core.object.getPropertyAndReferenceNames");
-                var result = await Client.Call(func,
+                var result = await _client.Call(func,
 
                     new JObject(
 
@@ -64,7 +64,7 @@ namespace WwiseTools.Utils
             try
             {
                 var func = Function.Verify("ak.wwise.core.object.setReference");
-                await Client.Call(func,
+                await _client.Call(func,
 
                     new JObject(
 
@@ -98,7 +98,7 @@ namespace WwiseTools.Utils
             try
             {
                 var func = Function.Verify("ak.wwise.core.object.setProperty");
-                await Client.Call(func,
+                await _client.Call(func,
 
                     new JObject(
 
@@ -133,7 +133,7 @@ namespace WwiseTools.Utils
             try
             {
                 var func = Function.Verify("ak.wwise.core.object.setName");
-                await Client.Call(func
+                await _client.Call(func
                     ,
                     new
                     {
@@ -166,7 +166,7 @@ namespace WwiseTools.Utils
             {
                 var func = Function.Verify("ak.wwise.core.object.copy");
                 // 移动物体
-                await Client.Call(func
+                await _client.Call(func
                     ,
                     new JObject
                     {
@@ -204,7 +204,7 @@ namespace WwiseTools.Utils
             {
                 var func = Function.Verify("ak.wwise.core.object.move");
                 // 移动物体
-                await Client.Call(func,
+                await _client.Call(func,
                     new JObject
                     {
                         new JProperty("object", child.ID),
@@ -232,7 +232,7 @@ namespace WwiseTools.Utils
             {
                 var func = Function.Verify("ak.wwise.core.object.setNotes");
                 // 移动物体
-                await Client.Call(func,
+                await _client.Call(func,
                     new JObject
                     {
                         new JProperty("object", target.ID),
@@ -279,7 +279,7 @@ namespace WwiseTools.Utils
             try
             {
                 var func = Function.Verify("ak.wwise.core.object.create");
-                var result = await Client.Call
+                var result = await _client.Call
                     (
                         func,
                         new JObject
@@ -322,7 +322,7 @@ namespace WwiseTools.Utils
             {
 
                 var func = Function.Verify("ak.wwise.core.soundbank.setInclusions");
-                await Client.Call
+                await _client.Call
                 (
                     func,
                     new JObject
@@ -365,7 +365,7 @@ namespace WwiseTools.Utils
                 var func = Function.Verify("ak.wwise.core.object.create");
 
                 // 创建物体
-                var result = await Client.Call
+                var result = await _client.Call
                     (
                         func,
                     new JObject
@@ -403,7 +403,7 @@ namespace WwiseTools.Utils
                 var func = Function.Verify("ak.wwise.core.object.delete");
 
                 // 创建物体
-                var result = await Client.Call
+                var result = await _client.Call
                     (
                         func,
                     new JObject
@@ -454,7 +454,7 @@ namespace WwiseTools.Utils
 
                 };
 
-                JObject jresult = await Client.Call(func, query, options, TimeOut);
+                JObject jresult = await _client.Call(func, query, options, TimeOut);
                 if (jresult["return"]?.Last == null) throw new Exception();
                 string name = jresult["return"].Last["name"]?.ToString();
                 string id = jresult["return"].Last["id"]?.ToString();
@@ -498,7 +498,7 @@ namespace WwiseTools.Utils
 
                 };
 
-                JObject jresult = await Client.Call(func, query, options, TimeOut);
+                JObject jresult = await _client.Call(func, query, options, TimeOut);
 
 
                 if (jresult["return"] == null) throw new Exception();
@@ -543,7 +543,7 @@ namespace WwiseTools.Utils
                 };
 
 
-                JObject jresult = await WwiseUtility.Instance.Client.Call(func, query, options, TimeOut);
+                JObject jresult = await WwiseUtility.Instance._client.Call(func, query, options, TimeOut);
                 if (jresult["return"] == null || jresult["return"].Last == null || 
                     jresult["return"].Last["path"] == null) throw new Exception();
                 string path = jresult["return"].Last["path"].ToString();
@@ -590,7 +590,7 @@ namespace WwiseTools.Utils
 
 
 
-                JObject jresult = await Client.Call(func, query, options, TimeOut);
+                JObject jresult = await _client.Call(func, query, options, TimeOut);
                 var obj = jresult["return"]?.Last;
                 if (obj == null) throw new Exception("Object not found!");
 
@@ -640,7 +640,7 @@ namespace WwiseTools.Utils
 
                 };
 
-                JObject jresult = await Client.Call(func, query, options, TimeOut);
+                JObject jresult = await _client.Call(func, query, options, TimeOut);
                 var obj = jresult["return"]?.Last;
                 if (obj == null) throw new Exception("Object not found!");
 
@@ -716,7 +716,7 @@ namespace WwiseTools.Utils
 
                 var func = WaapiFunction.CoreObjectGet;
 
-                JObject jresult = await Client.Call(func, query, options, TimeOut);
+                JObject jresult = await _client.Call(func, query, options, TimeOut);
 
                 List<WwiseObject> objList = new List<WwiseObject>();
                 if (jresult["return"] == null) throw new Exception();
@@ -760,7 +760,7 @@ namespace WwiseTools.Utils
 
                 var func = Function.Verify("ak.wwise.ui.getSelectedObjects");
 
-                JObject jresult = await Client.Call(func, null, options, TimeOut);
+                JObject jresult = await _client.Call(func, null, options, TimeOut);
 
                 
 
@@ -815,7 +815,7 @@ namespace WwiseTools.Utils
 
                 var func = WaapiFunction.CoreObjectGet;
 
-                var result = await Client.Call(func, query, options, TimeOut);
+                var result = await _client.Call(func, query, options, TimeOut);
                 if (result["return"] == null) throw new Exception();
                 foreach (var r in result["return"])
                 {
@@ -901,7 +901,7 @@ namespace WwiseTools.Utils
 
                 var func = Function.Verify("ak.wwise.core.audio.import");
 
-                var result = await Client.Call(func, importQ, options); // 执行导入
+                var result = await _client.Call(func, importQ, options); // 执行导入
 
                 if (result == null || result["objects"] == null || 
                     result["objects"].Last == null || result["objects"].Last["id"] == null) return null;
@@ -947,7 +947,7 @@ namespace WwiseTools.Utils
 
                 var func = WaapiFunction.CoreObjectGet;
 
-                JObject jresult = await Client.Call(func, query, options, TimeOut);
+                JObject jresult = await _client.Call(func, query, options, TimeOut);
 
                 string filePath = "";
                 if (jresult["return"] == null) throw new Exception();
@@ -971,7 +971,7 @@ namespace WwiseTools.Utils
         {
             await LoadWwiseProjectAsync(await GetWwiseProjectPathAsync(), true);
             await DisconnectAsync();
-            Client = null;
+            _client = null;
             await ConnectAsync();
         }
         
@@ -998,7 +998,7 @@ namespace WwiseTools.Utils
                 };
 
                 var func = Function.Verify("ak.wwise.ui.project.open");
-                await Client.Call(func, query, null, TimeOut);
+                await _client.Call(func, query, null, TimeOut);
 
                 WaapiLog.Log("Project loaded successfully!");
             }
@@ -1037,7 +1037,7 @@ namespace WwiseTools.Utils
 
                 var func = WaapiFunction.CoreObjectGet;
 
-                JObject jresult = await Client.Call(func, query, options, TimeOut);
+                JObject jresult = await _client.Call(func, query, options, TimeOut);
 
                 string name = "";
                 if (jresult["return"] == null) throw new Exception();
@@ -1086,7 +1086,7 @@ namespace WwiseTools.Utils
 
                 var func = WaapiFunction.CoreObjectGet;
 
-                JObject jresult = await Client.Call(func, query, options, TimeOut);
+                JObject jresult = await _client.Call(func, query, options, TimeOut);
 
                 string filePath = "";
                 if (jresult["return"] == null) throw new Exception();
@@ -1114,7 +1114,7 @@ namespace WwiseTools.Utils
             {
                 var func = Function.Verify("ak.wwise.core.getInfo");
 
-                JObject result = await Client.Call(func, null, null);
+                JObject result = await _client.Call(func, null, null);
                 if (result["version"] == null) throw new Exception("Failed to fetch version info!");
                 int.TryParse(result["version"]["major"]?.ToString(), out int major);
                 int.TryParse(result["version"]["minor"]?.ToString(), out int minor);
@@ -1163,12 +1163,12 @@ namespace WwiseTools.Utils
                         objects = objectIDs
                     };
 
-                    await Client.Call(func, query, null, TimeOut);
+                    await _client.Call(func, query, null, TimeOut);
                 }
                 else
                 {
                     var query = new { command = command };
-                    await Client.Call(func, query, null, TimeOut);
+                    await _client.Call(func, query, null, TimeOut);
                 }
 
             }
@@ -1210,7 +1210,7 @@ namespace WwiseTools.Utils
 
                 var func = WaapiFunction.CoreObjectGet;
 
-                var jresult = await Client.Call(func, query, options, TimeOut);
+                var jresult = await _client.Call(func, query, options, TimeOut);
                 if (jresult == null || jresult["return"] == null) return result;
                 foreach (var obj in jresult["return"])
                 {
@@ -1263,7 +1263,7 @@ namespace WwiseTools.Utils
 
                 var func = WaapiFunction.CoreObjectGet;
 
-                var jresult = await Client.Call(func, query, options, TimeOut);
+                var jresult = await _client.Call(func, query, options, TimeOut);
                 if (jresult == null || jresult["return"] == null) return result;
                 foreach (var obj in jresult["return"])
                 {
@@ -1315,7 +1315,7 @@ namespace WwiseTools.Utils
 
                 var func = WaapiFunction.CoreObjectGet;
 
-                var jresult = await Client.Call(func, query, options, TimeOut);
+                var jresult = await _client.Call(func, query, options, TimeOut);
                 if (jresult == null || jresult["return"] == null) return null;
                 foreach (var obj in jresult["return"])
                 {
@@ -1368,7 +1368,7 @@ namespace WwiseTools.Utils
 
                 var func = WaapiFunction.CoreObjectGet;
 
-                var jresult = await Client.Call(func, query, options, TimeOut);
+                var jresult = await _client.Call(func, query, options, TimeOut);
                 if (jresult == null || jresult["return"] == null) return result;
                 foreach (var obj in jresult["return"])
                 {
@@ -1421,7 +1421,7 @@ namespace WwiseTools.Utils
 
                 var func = WaapiFunction.CoreObjectGet;
 
-                var jresult = await Client.Call(func, query, options, TimeOut);
+                var jresult = await _client.Call(func, query, options, TimeOut);
                 if (jresult == null || jresult["return"] == null) return result;
                 foreach (var obj in jresult["return"])
                 {
@@ -1474,7 +1474,7 @@ namespace WwiseTools.Utils
 
                 var func = WaapiFunction.CoreObjectGet;
 
-                var jresult = await Client.Call(func, query, options, TimeOut);
+                var jresult = await _client.Call(func, query, options, TimeOut);
                 if (jresult == null || jresult["return"] == null) return result;
                 foreach (var obj in jresult["return"])
                 {
@@ -1527,7 +1527,7 @@ namespace WwiseTools.Utils
 
                 var func = WaapiFunction.CoreObjectGet;
 
-                var jresult = await Client.Call(func, query, options, TimeOut);
+                var jresult = await _client.Call(func, query, options, TimeOut);
                 if (jresult == null || jresult["return"] == null) return result;
                 foreach (var obj in jresult["return"])
                 {
@@ -1567,7 +1567,7 @@ namespace WwiseTools.Utils
 
                 var func = Function.Verify("ak.wwise.core.soundbank.generate");
 
-                await Client.Call(func, query, null, TimeOut);
+                await _client.Call(func, query, null, TimeOut);
             }
             catch (Exception e)
             {
@@ -1581,7 +1581,7 @@ namespace WwiseTools.Utils
             Function = new WaapiFunction();
             try
             {
-                var result = await Client.Call("ak.wwise.waapi.getFunctions", null, null, TimeOut);
+                var result = await _client.Call("ak.wwise.waapi.getFunctions", null, null, TimeOut);
                 if (result["functions"] == null) throw new Exception();
                 foreach (var func in result["functions"])
                 {
@@ -1606,7 +1606,7 @@ namespace WwiseTools.Utils
             {
                 var func = Function.Verify("ak.wwise.core.project.save");
 
-                await Client.Call(func, null, null, TimeOut);
+                await _client.Call(func, null, null, TimeOut);
                 WaapiLog.Log("Project saved successfully!");
             }
             catch (Exception e)

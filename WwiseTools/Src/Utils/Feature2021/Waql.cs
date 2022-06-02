@@ -59,7 +59,7 @@ namespace WwiseTools.Utils.Feature2021
                 {
                     @return = new string[] { "name", "id", "type" }
                 };
-                var jresult = await WwiseUtility.Instance.Client.Call("ak.wwise.core.object.get", query, option, WwiseUtility.Instance.TimeOut);
+                var jresult = await WwiseUtility.Instance.CallAsync("ak.wwise.core.object.get", query, option, WwiseUtility.Instance.TimeOut);
                 if (jresult == null || jresult["return"] == null) return false;
                 foreach (var obj in jresult["return"])
                 {
