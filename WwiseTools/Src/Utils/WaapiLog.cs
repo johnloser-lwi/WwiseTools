@@ -18,24 +18,38 @@ namespace WwiseTools.Utils
                 return _instance;
             }
         }
-        internal event Action<object, bool> Logger;
+        private event Action<object, bool> Logger;
 
 
-        public bool firstLog = true;
+        private bool _firstLog = true;
+
+        private bool _enabled = true;
+
         private WaapiLog()
         {
-            Logger = (msg, _) => Console.WriteLine(msg);
+            Logger = DefaultLog;
+        }
+
+        private static void DefaultLog(object msg, bool firstLog)
+        {
+            Console.WriteLine(msg);
         }
 
         public static void Log(object message)
         {
-            Instance.Logger(message?.ToString(), Instance.firstLog);
-            if (Instance.firstLog) Instance.firstLog = false;
+            
+            if (Instance._enabled) Instance.Logger?.Invoke(message?.ToString(), Instance._firstLog);
+            if (Instance._firstLog) Instance._firstLog = false;
         }
 
         public static void AddCustomLogger(Action<object, bool> logger)
         {
             Instance.Logger += logger;
+        }
+
+        public static void SetEnabled(bool enabled)
+        {
+            Instance._enabled = enabled;
         }
     }
 }
