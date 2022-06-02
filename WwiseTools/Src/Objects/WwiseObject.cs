@@ -6,7 +6,7 @@ using WwiseTools.Utils;
 
 namespace WwiseTools.Objects
 {
-    public class WwiseObject
+    public class WwiseObject : IEquatable<WwiseObject>
     {
         public enum ObjectType { AcousticTexture, Action, ActionException, ActorMixer, Attenuation, AudioDevice, AuxBus, BlendContainer, BlendTrack, Bus, ControlSurfaceBinding, ControlSurfaceBindingGroup, ControlSurfaceSession, Conversion, Curve, CustomState, DialogueEvent, Deffect, Event, ExternalSource, ExternalSourceFile, Folder, GameParameter, Language, Metadata, MidiParameter, MixingSession, Modifier, ModulatorEnvelope, ModulatorLfo, ModulatorTime, MultiSwitchEntry, MusicClip, MusicClipMidi, MusicCue, MusicEventCue, MusicFade, MusicPlaylistContainer, MusicPlaylistItem, MusicSegment, MusicStinger, MusicSwitchContainer, MusicTrack, MusicTrackSequence, MusicTransition, ObjectSettingAssoc, Panner, ParamControl, Path, Platform, PluginDataSource, Position, Project, Query, RandomSequenceContainer, SerchCriteria, Sound, SoundBank, SoundcasterSession, State, StateGroup, Switch, SwitchContainer, SwitchGroup, Trigger, UserProjectSettings, WorkUnit, SegmentRef }
 
@@ -82,9 +82,25 @@ namespace WwiseTools.Objects
             }
         }
 
+        public bool Equals(WwiseObject other)
+        {
+            return ID == other.ID;
+        }
+
+        public static bool operator == (WwiseObject left, WwiseObject right)
+        {
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(WwiseObject left, WwiseObject right)
+        {
+            return !(left == right);
+        }
+
         public override string ToString()
         {
             return $"Name : {Name}, ID : {ID}, Type: {Type}";
         }
+
     }
 }
