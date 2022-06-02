@@ -25,12 +25,12 @@ namespace WwiseTools.Objects
             Name = tempObj.Name;
         }
 
-        public WwiseSwitchContainer(WwiseObject @object) : base("", "", "")
+        public WwiseSwitchContainer(WwiseObject wwiseObject) : base("", "", "")
         {
-            if (@object == null) return;
-            ID = @object.ID;
-            Name = @object.Name;
-            Type = @object.Type;
+            if (wwiseObject == null) return;
+            ID = wwiseObject.ID;
+            Name = wwiseObject.Name;
+            Type = wwiseObject.Type;
         }
 
 
@@ -93,7 +93,7 @@ namespace WwiseTools.Objects
         }
 
         /// <summary>
-        /// 分配子对象至State或者Switch，后台运行
+        /// 分配子对象至State或者Switch，异步执行
         /// </summary>
         /// <param name="child"></param>
         /// <param name="stateOrSwitch"></param>
@@ -151,7 +151,7 @@ namespace WwiseTools.Objects
         }
 
         /// <summary>
-        /// 从State或者Switch删除分配的子对象，后台运行
+        /// 从State或者Switch删除分配的子对象，异步执行
         /// </summary>
         /// <param name="child"></param>
         /// <param name="stateOrSwitch"></param>
@@ -197,12 +197,14 @@ namespace WwiseTools.Objects
         }
 
         /// <summary>
-        /// 获取分配信息，后台运行
+        /// 获取分配信息，异步执行
         /// </summary>
         /// <returns></returns>
+        [Obsolete("Use GetSwitchAssignmentAsync instead")]
         public async Task<JObject> GetAssignmentsAsync()
         {
-            if (!await WwiseUtility.Instance.TryConnectWaapiAsync()) return null;
+            if (!await WwiseUtility.Instance.TryConnectWaapiAsync() ||
+                Type != "SwitchContainer") return null;
 
 
             try
@@ -226,6 +228,66 @@ namespace WwiseTools.Objects
                 WaapiLog.Log($"Failed to get assignment of {Name}! ======> {e.Message}");
                 return null;
             }
+        }
+
+        public async Task<List<SwitchAssignment>> GetSwitchAssignmentsAsync()
+        {
+            var result = new List<SwitchAssignment>();
+
+            if (!await WwiseUtility.Instance.TryConnectWaapiAsync() || 
+                Type != "SwitchContainer") return result;
+
+
+            try
+            {
+                var func = WwiseUtility.Instance.Function.Verify("ak.wwise.core.switchContainer.getAssignments");
+
+                // 获取信息
+                var jresult = await WwiseUtility.Instance.Client.Call
+                (
+                    func,
+                    new JObject
+                    {
+                        new JProperty("id", ID),
+                    },
+                    null
+                );
+
+                var results = jresult["return"];
+                if (results == null) return result;
+                foreach (var token in results)
+                {
+                    string childID = token["child"]?.ToString();
+                    string switchID = token["stateOrSwitch"]?.ToString();
+                    if (string.IsNullOrEmpty(childID) ||
+                        string.IsNullOrEmpty(switchID)) continue;
+
+                    result.Add(new SwitchAssignment()
+                    {
+                        Target = await WwiseUtility.Instance.GetWwiseObjectByIDAsync(childID),
+                        AssignedSwitch = await WwiseUtility.Instance.GetWwiseObjectByIDAsync(switchID)
+                    });
+                }
+
+            }
+            catch (Exception e)
+            {
+                WaapiLog.Log($"Failed to get assignment of {Name}! ======> {e.Message}");
+
+            }
+
+            return result;
+        }
+    }
+
+    public class SwitchAssignment
+    {
+        public WwiseObject Target { get; set; }
+        public WwiseObject AssignedSwitch { get; set; }
+
+        public async Task<WwiseSwitchGroup> GetSwitchGroupAsync()
+        {
+            return new WwiseSwitchGroup(await AssignedSwitch.GetParentAsync());
         }
     }
 }
