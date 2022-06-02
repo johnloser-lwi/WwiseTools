@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using WwiseTools.Components;
 using WwiseTools.Properties;
 using WwiseTools.References;
-using WwiseTools.Src.Components;
 using WwiseTools.Utils;
 
 namespace WwiseTools.Objects

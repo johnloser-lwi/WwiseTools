@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using WwiseTools.Objects;
 using WwiseTools.Properties;
-using WwiseTools.Src.Components;
 using WwiseTools.Utils;
 
 namespace WwiseTools.Components
@@ -13,7 +12,7 @@ namespace WwiseTools.Components
     {
         public async Task SetPlayModeAsync(WwiseProperty.Option_SwitchBehavior behavior)
         {
-            await WwiseUtility.Instance.SetObjectPropertyAsync(_wwiseObject, WwiseProperty.Prop_SwitchBehavior(behavior));
+            await WwiseUtility.Instance.SetObjectPropertyAsync(WwiseObject, WwiseProperty.Prop_SwitchBehavior(behavior));
         }
 
         public async Task<List<SwitchAssignment>> GetSwitchAssignmentsAsync()
@@ -33,7 +32,7 @@ namespace WwiseTools.Components
                     func,
                     new JObject
                     {
-                        new JProperty("id", _wwiseObject.ID),
+                        new JProperty("id", WwiseObject.ID),
                     },
                     null
                 );
@@ -57,7 +56,7 @@ namespace WwiseTools.Components
             }
             catch (Exception e)
             {
-                WaapiLog.Log($"Failed to get assignment of {_wwiseObject.Name}! ======> {e.Message}");
+                WaapiLog.Log($"Failed to get assignment of {WwiseObject.Name}! ======> {e.Message}");
 
             }
 

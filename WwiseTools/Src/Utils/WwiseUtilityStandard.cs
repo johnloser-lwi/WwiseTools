@@ -347,7 +347,11 @@ namespace WwiseTools.Utils
                 WaapiLog.Log($"Failed to Add Event to Bank ======> {e.Message}");
             }
         }
-        
+
+        public async Task<WwiseObject> CreateObjectAsync(string objectName, WwiseObject.ObjectType objectType, WwiseObject parent)
+        {
+            return await CreateObjectAsync(objectName, objectType, await parent.GetPathAsync());
+        }
 
         /// <summary>
         /// 创建物体，后台进行

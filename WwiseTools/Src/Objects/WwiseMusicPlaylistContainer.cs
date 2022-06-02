@@ -9,6 +9,7 @@ using WwiseTools.Utils;
 
 namespace WwiseTools.Objects
 {
+    [Obsolete]
     public class WwiseMusicPlaylistContainer : WwiseContainer
     {
         /// <summary>

@@ -9,6 +9,7 @@ using WwiseTools.Utils;
 
 namespace WwiseTools.Objects
 {
+    [Obsolete]
     public class WwiseMusicSegment : WwiseActorMixer
     {
         public float EntryCuePos { get; private set; }

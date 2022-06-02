@@ -10,6 +10,7 @@ using WwiseTools.Utils;
 
 namespace WwiseTools.Objects
 {
+    [Obsolete]
     public class WwiseSound : WwiseActorMixer
     {
         /// <summary>

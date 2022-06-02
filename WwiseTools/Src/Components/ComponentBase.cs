@@ -1,19 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using WwiseTools.Objects;
+﻿using WwiseTools.Objects;
 
-namespace WwiseTools.Src.Components
+namespace WwiseTools.Components
 {
     public abstract class ComponentBase
     {
-        protected WwiseObject _wwiseObject;
+        protected WwiseObject WwiseObject;
 
         public ComponentBase(WwiseObject wwiseObject)
         {
-            _wwiseObject = wwiseObject;
+            WwiseObject = wwiseObject;
         }
     }
 }

@@ -11,6 +11,7 @@ using WwiseTools.Utils;
 
 namespace WwiseTools.Objects
 {
+    [Obsolete]
     public class WwiseActorMixer : WwiseObject
     {
         /// <summary>

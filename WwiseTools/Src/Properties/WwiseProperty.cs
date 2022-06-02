@@ -641,6 +641,19 @@ namespace WwiseTools.Properties
         }
 
 
+        public enum Option_PlaylistItemType { Group = 0, Segment = 1 }
+        public static WwiseProperty Prop_PlaylistItemType(Option_PlaylistItemType type)
+        {
+            return new WwiseProperty("PlaylistItemType", (int)type);
+        }
+
+        public enum Option_PlayMode { SequenceContinuous = 0, SequenceStep = 1, RandomContinuous = 2, RandomStep = 3 }
+        public static WwiseProperty Prop_PlayMode(Option_PlayMode mode)
+        {
+            return new WwiseProperty("PlayMode", (int)mode);
+        }
+
+
         private static float valueLimiter(float value, float min, float max)
         {
             float result = value;

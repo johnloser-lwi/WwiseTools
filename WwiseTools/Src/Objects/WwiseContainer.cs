@@ -8,6 +8,7 @@ using WwiseTools.Utils;
 
 namespace WwiseTools.Objects
 {
+    [Obsolete]
     public class WwiseContainer : WwiseActorMixer
     {
         public WwiseContainer(string name, string id, string type) : base(name, id, type)

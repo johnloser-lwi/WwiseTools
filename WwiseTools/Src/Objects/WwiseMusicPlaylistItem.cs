@@ -9,6 +9,7 @@ using WwiseTools.Utils;
 
 namespace WwiseTools.Objects
 {
+    [Obsolete]
     public class WwiseMusicPlaylistItem : WwiseObject
     {
         public Option_PlaylistItemType PlaylistItemType { get; private set; }
@@ -24,9 +25,9 @@ namespace WwiseTools.Objects
         }
 
         public static async Task<WwiseMusicPlaylistItem> CreateWwiseMusicPlaylistItem(
-            Option_PlaylistItemType playlistItemType, string parentId)
+            Option_PlaylistItemType playlistItemType, string parentPath)
         {
-            var tempObj = await WwiseUtility.Instance.CreateObjectAsync("", ObjectType.MusicPlaylistItem, parentId);
+            var tempObj = await WwiseUtility.Instance.CreateObjectAsync("", ObjectType.MusicPlaylistItem, parentPath);
             var playlistItem = new WwiseMusicPlaylistItem(tempObj);
             await playlistItem.SetPlaylistItemTypeAsync(playlistItemType);
             return playlistItem;
@@ -34,9 +35,9 @@ namespace WwiseTools.Objects
         
         
         public static async Task<WwiseMusicPlaylistItem> CreateWwiseMusicPlaylistItem(
-            WwiseMusicSegment segment, string parentId)
+            WwiseMusicSegment segment, string parentPath)
         {
-            var tempObj = await WwiseUtility.Instance.CreateObjectAsync("", ObjectType.MusicPlaylistItem, parentId);
+            var tempObj = await WwiseUtility.Instance.CreateObjectAsync("", ObjectType.MusicPlaylistItem, parentPath);
             var playlistItem = new WwiseMusicPlaylistItem(tempObj);
             await playlistItem.SetPlaylistItemTypeAsync(Option_PlaylistItemType.Segment);
             await playlistItem.SetSegmentRefAsync(segment);

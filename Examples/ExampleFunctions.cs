@@ -75,7 +75,7 @@ namespace Examples
         {
             var selection = await Waapi.GetWwiseObjectsBySelectionAsync();
 
-            var obj = new WwiseActorMixer(selection[0]);
+            var obj = selection[0];
 
             var workUnitPath = await Waapi.GetWorkUnitFilePathAsync(obj);
 
@@ -87,7 +87,7 @@ namespace Examples
                 WaapiLog.Log(node.Name);
             }
 
-            foreach (var child in await obj.GetChildrenAsync())
+            foreach (var child in await obj.Hierarchy.GetChildrenAsync())
             {
                 WaapiLog.Log(child.Name);
             }

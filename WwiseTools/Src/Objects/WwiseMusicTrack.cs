@@ -12,6 +12,7 @@ using WwiseTools.Utils;
 
 namespace WwiseTools.Objects
 {
+    [Obsolete]
     public class WwiseMusicTrack : WwiseActorMixer
     {
         [Obsolete("use GetTrackLengthAsync() instead")]

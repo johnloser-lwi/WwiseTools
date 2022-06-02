@@ -1,6 +1,9 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
+using System.Reflection.Metadata.Ecma335;
 using Examples;
+using WwiseTools.Components;
+using WwiseTools.Objects;
 using WwiseTools.Utils;
 
 try
@@ -9,7 +12,10 @@ try
 
     if (await WwiseUtility.Instance.TryConnectWaapiAsync())
     {
-        await ProfilerExample.ProfilerTestAsync(); // 尝试不同的方法
+        //await ProfilerExample.ProfilerTestAsync(); // 尝试不同的方法
+        var selection = await WwiseUtility.Instance.GetWwiseObjectsBySelectionAsync();
+        var root = await selection[0].MusicPlaylistContainer.AddPlaylistItemGroupAsync();
+
     }
     else
     {

@@ -9,6 +9,7 @@ using WwiseTools.Utils;
 
 namespace WwiseTools.Objects
 {
+    [Obsolete]
     public class WwiseMusicSwitchContainer : WwiseContainer
     {
         [Obsolete("use WwiseUtility.Instance.CreateObjectAsync instead")]

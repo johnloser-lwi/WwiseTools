@@ -8,6 +8,7 @@ using WwiseTools.Utils;
 
 namespace WwiseTools.Objects
 {
+    [Obsolete]
     public class WwiseRandomContainer : WwiseRandomSequenceContainer
     {
         /// <summary>
