@@ -90,8 +90,8 @@ namespace WwiseTools.Objects
 
         public static bool operator == (WwiseObject left, WwiseObject right)
         {
-            if (left == null && right == null) return true;
-            if (left == null || right == null) return false;
+            if (left is null)
+                return right is null;
             return left.Equals(right);
         }
 
