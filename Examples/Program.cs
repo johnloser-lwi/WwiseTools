@@ -4,6 +4,7 @@ using System.Reflection.Metadata.Ecma335;
 using Examples;
 using WwiseTools.Components;
 using WwiseTools.Objects;
+using WwiseTools.Properties;
 using WwiseTools.Utils;
 
 try
@@ -12,10 +13,7 @@ try
 
     if (await WwiseUtility.Instance.TryConnectWaapiAsync())
     {
-        //await ProfilerExample.ProfilerTestAsync(); // 尝试不同的方法
-        var selection = await WwiseUtility.Instance.GetWwiseObjectsBySelectionAsync();
-        var root = await selection[0].MusicPlaylistContainer.AddPlaylistItemGroupAsync();
-
+        await ProfilerExample.ProfilerTestAsync(); // 尝试不同的方法
     }
     else
     {
