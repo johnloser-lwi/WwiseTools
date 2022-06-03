@@ -153,7 +153,7 @@ namespace WwiseTools.Utils
         }
         
         /// <summary>
-        /// 将物体移动至指定父物体，后台进行
+        /// 将物体移动至指定父物体，异步执行
         /// </summary>
         /// <param name="child"></param>
         /// <param name="parent"></param>
@@ -191,7 +191,7 @@ namespace WwiseTools.Utils
         
 
         /// <summary>
-        /// 将物体复制至指定父物体，后台进行
+        /// 将物体复制至指定父物体，异步执行
         /// </summary>
         /// <param name="child"></param>
         /// <param name="parent"></param>
@@ -350,17 +350,45 @@ namespace WwiseTools.Utils
 
         public async Task<WwiseObject> CreateObjectAsync(string objectName, WwiseObject.ObjectType objectType, WwiseObject parent)
         {
-            return await CreateObjectAsync(objectName, objectType, await parent.GetPathAsync());
+            if(!await TryConnectWaapiAsync()) return null;
+
+            try
+            {
+                var func = Function.Verify("ak.wwise.core.object.create");
+
+                // 创建物体
+                var result = await _client.Call
+                (
+                    func,
+                    new JObject
+                    {
+                        new JProperty("name", objectName),
+                        new JProperty("type", objectType.ToString()),
+                        new JProperty("parent", parent.ID),
+                        new JProperty("onNameConflict", "fail")
+                    },
+                    null
+                );
+
+                WaapiLog.Log($"Object {objectName} created successfully!");
+                if (result["id"] == null) throw new Exception();
+                return await GetWwiseObjectByIDAsync(result["id"].ToString());
+            }
+            catch (Exception e)
+            {
+                WaapiLog.Log($"Failed to create object : {objectName}! ======> {e.Message}");
+                return null;
+            }
         }
 
         /// <summary>
-        /// 创建物体，后台进行
+        /// 创建物体，异步执行
         /// </summary>
         /// <param name="objectName"></param>
         /// <param name="objectType"></param>
         /// <param name="parentPath"></param>
         /// <returns></returns>
-        public async Task<WwiseObject> CreateObjectAsync(string objectName, WwiseObject.ObjectType objectType, string parentPath = @"\Actor-Mixer Hierarchy\Default Work Unit")
+        public async Task<WwiseObject> CreateObjectAtPathAsync(string objectName, WwiseObject.ObjectType objectType, string parentPath = @"\Actor-Mixer Hierarchy\Default Work Unit")
         {
             if (!await TryConnectWaapiAsync()) return null;
 
@@ -392,6 +420,49 @@ namespace WwiseTools.Utils
                 return null;
             }
         }
+
+        /// <summary>
+        /// 创建物体，异步执行
+        /// </summary>
+        /// <param name="objectName"></param>
+        /// <param name="objectType"></param>
+        /// <param name="parentPath"></param>
+        /// <returns></returns>
+        [Obsolete("Use CreateObjectAtPathAsync instead")]
+        public async Task<WwiseObject> CreateObjectAsync(string objectName, WwiseObject.ObjectType objectType, string parentPath = @"\Actor-Mixer Hierarchy\Default Work Unit")
+        {
+            if (!await TryConnectWaapiAsync()) return null;
+
+            try
+            {
+                var func = Function.Verify("ak.wwise.core.object.create");
+
+                // 创建物体
+                var result = await _client.Call
+                (
+                    func,
+                    new JObject
+                    {
+                        new JProperty("name", objectName),
+                        new JProperty("type", objectType.ToString()),
+                        new JProperty("parent", parentPath),
+                        new JProperty("onNameConflict", "fail")
+                    },
+                    null
+                );
+
+                WaapiLog.Log($"Object {objectName} created successfully!");
+                if (result["id"] == null) throw new Exception();
+                return await GetWwiseObjectByIDAsync(result["id"].ToString());
+            }
+            catch (Exception e)
+            {
+                WaapiLog.Log($"Failed to create object : {objectName}! ======> {e.Message}");
+                return null;
+            }
+        }
+
+
 
         public async Task DeleteObjectAsync(WwiseObject wwiseObject)
         {
@@ -842,7 +913,7 @@ namespace WwiseTools.Utils
         
         
         /// <summary>
-        /// 从指定路径导入音频，后台进行
+        /// 从指定路径导入音频，异步执行
         /// </summary>
         /// <param name="filePath"></param>
         /// <param name="language"></param>

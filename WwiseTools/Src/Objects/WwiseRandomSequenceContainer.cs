@@ -28,7 +28,7 @@ namespace WwiseTools.Objects
 
         public static async Task<WwiseRandomSequenceContainer> CreateWwiseRandomSequenceContainer(string name, WwiseProperty.Option_RandomOrSequence option, string parentPath = @"\Actor-Mixer Hierarchy\Default Work Unit")
         {
-            var tempObj = await WwiseUtility.Instance.CreateObjectAsync(name, ObjectType.RandomSequenceContainer, parentPath);
+            var tempObj = await WwiseUtility.Instance.CreateObjectAtPathAsync(name, ObjectType.RandomSequenceContainer, parentPath);
             await WwiseUtility.Instance.SetObjectPropertyAsync(tempObj, WwiseProperty.Prop_RandomOrSequence(option));
 
             return new WwiseRandomSequenceContainer(tempObj);

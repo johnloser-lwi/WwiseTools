@@ -5,7 +5,7 @@ using WwiseTools.Utils;
 
 namespace WwiseTools.Components
 {
-    public class WwiseMusicSwitchContainerComponent : ComponentBase
+    public class WwiseMusicSwitchContainerComponent : WwiseSwitchGroupComponent
     {
         public async Task SetContinuePlayAsync(bool value)
         {

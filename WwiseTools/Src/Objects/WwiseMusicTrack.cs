@@ -43,7 +43,7 @@ namespace WwiseTools.Objects
 
         public static async Task<WwiseMusicTrack> CreateWwiseMusicTrackAsync(string name, WwiseMusicSegment parent)
         {
-            var tempObj = await WwiseUtility.Instance.CreateObjectAsync(name, ObjectType.MusicTrack, await parent.GetPathAsync());
+            var tempObj = await WwiseUtility.Instance.CreateObjectAtPathAsync(name, ObjectType.MusicTrack, await parent.GetPathAsync());
             var musicTrack = new WwiseMusicTrack(tempObj);
             await parent.SetExitCueAsync(await musicTrack.GetTrackLengthAsync());
             return musicTrack;

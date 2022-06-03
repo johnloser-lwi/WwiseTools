@@ -145,7 +145,7 @@ namespace WwiseTools.Utils
         [Obsolete("Use async version instead")]
         public WwiseObject CreateObject(string objectName, WwiseObject.ObjectType objectType, string parentPath = @"\Actor-Mixer Hierarchy\Default Work Unit")
         {
-            var obj = CreateObjectAsync(objectName, objectType, parentPath);
+            var obj = CreateObjectAtPathAsync(objectName, objectType, parentPath);
             obj.Wait();
             return obj.Result;
         }

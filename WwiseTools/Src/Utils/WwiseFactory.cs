@@ -16,5 +16,26 @@ namespace WwiseTools.Utils
 
             return segment;
         }
+
+        public static async Task<WwiseObject> CreateWwiseMusicPlaylistItem(
+            WwiseProperty.Option_PlaylistItemType playlistItemType, WwiseObject parentPlaylistItem)
+        {
+            var playlistItem = await WwiseUtility.Instance.CreateObjectAsync("", 
+                WwiseObject.ObjectType.MusicPlaylistItem, 
+                parentPlaylistItem);
+
+            await playlistItem.MusicPlaylistItem.SetPlaylistItemTypeAsync(playlistItemType);
+            return playlistItem;
+        }
+
+
+        public static async Task<WwiseObject> CreateWwiseMusicPlaylistItem(
+            WwiseObject segment, WwiseObject parentPlaylistItem)
+        {
+            var playlistItem = await WwiseUtility.Instance.CreateObjectAsync("", WwiseObject.ObjectType.MusicPlaylistItem, parentPlaylistItem);
+            await playlistItem.MusicPlaylistItem.SetPlaylistItemTypeAsync(WwiseProperty.Option_PlaylistItemType.Segment);
+            await playlistItem.MusicPlaylistItem.SetSegmentRefAsync(segment);
+            return playlistItem;
+        }
     }
 }

@@ -27,7 +27,7 @@ namespace WwiseTools.Objects
         public static async Task<WwiseMusicPlaylistItem> CreateWwiseMusicPlaylistItem(
             Option_PlaylistItemType playlistItemType, string parentPath)
         {
-            var tempObj = await WwiseUtility.Instance.CreateObjectAsync("", ObjectType.MusicPlaylistItem, parentPath);
+            var tempObj = await WwiseUtility.Instance.CreateObjectAtPathAsync("", ObjectType.MusicPlaylistItem, parentPath);
             var playlistItem = new WwiseMusicPlaylistItem(tempObj);
             await playlistItem.SetPlaylistItemTypeAsync(playlistItemType);
             return playlistItem;
@@ -37,7 +37,7 @@ namespace WwiseTools.Objects
         public static async Task<WwiseMusicPlaylistItem> CreateWwiseMusicPlaylistItem(
             WwiseMusicSegment segment, string parentPath)
         {
-            var tempObj = await WwiseUtility.Instance.CreateObjectAsync("", ObjectType.MusicPlaylistItem, parentPath);
+            var tempObj = await WwiseUtility.Instance.CreateObjectAtPathAsync("", ObjectType.MusicPlaylistItem, parentPath);
             var playlistItem = new WwiseMusicPlaylistItem(tempObj);
             await playlistItem.SetPlaylistItemTypeAsync(Option_PlaylistItemType.Segment);
             await playlistItem.SetSegmentRefAsync(segment);
@@ -195,7 +195,7 @@ namespace WwiseTools.Objects
         {
             if (PlaylistItemType == Option_PlaylistItemType.Segment) return null;
 
-            var tempObj = await WwiseUtility.Instance.CreateObjectAsync("", ObjectType.MusicPlaylistItem, ID);
+            var tempObj = await WwiseUtility.Instance.CreateObjectAtPathAsync("", ObjectType.MusicPlaylistItem, ID);
             var item = new WwiseMusicPlaylistItem(tempObj);
             await item.SetPlaylistItemTypeAsync(Option_PlaylistItemType.Group);
             return item;
@@ -225,7 +225,7 @@ namespace WwiseTools.Objects
         {
             if (PlaylistItemType == Option_PlaylistItemType.Segment) return null;
 
-            var tempObj = await WwiseUtility.Instance.CreateObjectAsync("", ObjectType.MusicPlaylistItem, ID);
+            var tempObj = await WwiseUtility.Instance.CreateObjectAtPathAsync("", ObjectType.MusicPlaylistItem, ID);
             var item = new WwiseMusicPlaylistItem(tempObj);
             await item.SetPlaylistItemTypeAsync(Option_PlaylistItemType.Segment);
             await item.SetSegmentRefAsync(segment);

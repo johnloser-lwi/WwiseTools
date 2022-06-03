@@ -114,7 +114,7 @@ namespace WwiseTools.Components
             var att = await WwiseUtility.Instance.GetWwiseObjectByNameAsync($"Attenuation:{attenuationName}");
             if (att == null)
             {
-                att = await WwiseUtility.Instance.CreateObjectAsync(attenuationName, WwiseObject.ObjectType.Attenuation, @"\Attenuations\Default Work Unit");
+                att = await WwiseUtility.Instance.CreateObjectAtPathAsync(attenuationName, WwiseObject.ObjectType.Attenuation, @"\Attenuations\Default Work Unit");
             }
             if (att == null) return;
             await WwiseUtility.Instance.SetObjectPropertyAsync(WwiseObject, WwiseProperty.Prop_OverridePositioning(true));

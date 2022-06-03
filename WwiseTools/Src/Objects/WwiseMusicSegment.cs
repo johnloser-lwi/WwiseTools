@@ -56,7 +56,7 @@ namespace WwiseTools.Objects
         public static async Task<WwiseMusicSegment> CreateMusicSegmentAsync(string name, string filePath,
             string subFolder = "", string parentPath = @"\Interactive Music Hierarchy\Default Work Unit")
         {
-            var segment = await WwiseUtility.Instance.CreateObjectAsync(name, ObjectType.MusicSegment, parentPath);
+            var segment = await WwiseUtility.Instance.CreateObjectAtPathAsync(name, ObjectType.MusicSegment, parentPath);
             parentPath = System.IO.Path.Combine(parentPath, name);
             await WwiseUtility.Instance.ImportSoundAsync(filePath, "SFX", subFolder, parentPath);
 
