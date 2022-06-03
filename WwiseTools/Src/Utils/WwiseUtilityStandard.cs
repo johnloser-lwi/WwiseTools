@@ -11,7 +11,6 @@ using WwiseTools.Models;
 using WwiseTools.Objects;
 using WwiseTools.Properties;
 using WwiseTools.References;
-using WwiseTools.Utils.Feature2021;
 
 namespace WwiseTools.Utils
 {
@@ -742,33 +741,12 @@ namespace WwiseTools.Utils
         /// <returns></returns>
         public async Task<List<WwiseObject>> GetWwiseObjectsOfTypeAsync(string targetType)
         {
-            if (!await TryConnectWaapiAsync() || String.IsNullOrWhiteSpace(targetType)) return null;
+            List<WwiseObject> result = new List<WwiseObject>();
 
-            if (ConnectionInfo.Version >= VersionHelper.V2021_1_0_7575)
-            {
-                try
-                {
-                    var waql = new Waql($"where type = \"{targetType}\"");
-                    if (await waql.RunAsync())
-                    {
-                        return waql.Result;
-                    }
-                    else
-                    {
-                        throw new Exception("waql failed");
-                    }
-                }
-                catch (Exception e)
-                {
-                    WaapiLog.Log($"Failed to return WwiseObject list of type {targetType} ======> {e.Message}");
-                    return null;
-                }
-            }
+            if (!await TryConnectWaapiAsync() || String.IsNullOrWhiteSpace(targetType)) return result;
 
             try
             {
-
-
 
                 // ak.wwise.core.@object.get 指令
                 var query = new
@@ -793,7 +771,7 @@ namespace WwiseTools.Utils
 
                 JObject jresult = await _client.Call(func, query, options, TimeOut);
 
-                List<WwiseObject> objList = new List<WwiseObject>();
+                
                 if (jresult["return"] == null) throw new Exception();
                 foreach (var obj in jresult["return"])
                 {
@@ -801,20 +779,21 @@ namespace WwiseTools.Utils
                     string id = obj["id"]?.ToString();
                     string type = obj["type"]?.ToString();
 
-                    objList.Add(new WwiseObject(name, id, type));
+                    result.Add(new WwiseObject(name, id, type));
                 }
 
 
 
                 WaapiLog.Log($"WwiseObject list or type {targetType} successfully fetched!");
 
-                return objList;
+                
             }
             catch (Exception e)
             {
                 WaapiLog.Log($"Failed to return WwiseObject list of type : {targetType}! ======> {e.Message}");
-                return null;
             }
+
+            return result;
         }
 
         
