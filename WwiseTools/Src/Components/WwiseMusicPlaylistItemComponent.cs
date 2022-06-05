@@ -71,7 +71,7 @@ namespace WwiseTools.Components
                 = await WwiseUtility.Instance.CreateObjectAtPathAsync("", 
                     WwiseObject.ObjectType.MusicPlaylistItem, 
                     WwiseObject.ID);
-            await playlistItem.MusicPlaylistItem.SetPlaylistItemTypeAsync(WwiseProperty.Option_PlaylistItemType.Group);
+            await playlistItem.GetMusicPlaylistItem().SetPlaylistItemTypeAsync(WwiseProperty.Option_PlaylistItemType.Group);
             return playlistItem;
         }
 
@@ -81,8 +81,8 @@ namespace WwiseTools.Components
 
             var item = await WwiseUtility.Instance.CreateObjectAtPathAsync("", WwiseObject.ObjectType.MusicPlaylistItem, WwiseObject.ID);
             //var item = new WwiseMusicPlaylistItem(tempObj);
-            await item.MusicPlaylistItem.SetPlaylistItemTypeAsync(WwiseProperty.Option_PlaylistItemType.Segment);
-            await item.MusicPlaylistItem.SetSegmentRefAsync(segment);
+            await item.GetMusicPlaylistItem().SetPlaylistItemTypeAsync(WwiseProperty.Option_PlaylistItemType.Segment);
+            await item.GetMusicPlaylistItem().SetSegmentRefAsync(segment);
 
             await WwiseUtility.Instance.ReloadWwiseProjectAsync();
 

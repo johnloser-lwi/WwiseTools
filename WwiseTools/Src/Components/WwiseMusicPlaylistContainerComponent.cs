@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using WwiseTools.Objects;
-using WwiseTools.Properties;
 using WwiseTools.Utils;
 
 namespace WwiseTools.Components
@@ -16,7 +15,7 @@ namespace WwiseTools.Components
 
             if (rootItem != null) // && segment != null)
             {
-                return await rootItem.MusicPlaylistItem.AddChildGroupAsync();
+                return await rootItem.GetMusicPlaylistItem().AddChildGroupAsync();
             }
 
             return null;
@@ -31,7 +30,7 @@ namespace WwiseTools.Components
             if (rootItem != null) // && segment != null)
             {
 
-                return await rootItem.MusicPlaylistItem.AddChildSegmentAsync(segment);
+                return await rootItem.GetMusicPlaylistItem().AddChildSegmentAsync(segment);
             }
 
             return null;

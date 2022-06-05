@@ -107,7 +107,7 @@
     <Compile Include="Src\Models\Profiler\ProfilerRTPC.cs" />
     <Compile Include="Src\Models\Profiler\ProfilerVoice.cs" />
     <Compile Include="Src\Models\Profiler\ProfilerRemoteInfo.cs" />
-    <Compile Include="Src\Objects\WwiseObjectComponents.cs" />
+    <Compile Include="Src\Objects\WwiseObjectStandardExtensions.cs" />
     <Compile Include="Src\Utils\Feature2021\WwiseUtility2021Extension.cs" />
     <Compile Include="Src\Utils\WwiseFactory.cs" />
     <Compile Include="Src\Utils\WwiseUtilityObsolete.cs" />

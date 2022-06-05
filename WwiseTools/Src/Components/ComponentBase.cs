@@ -4,9 +4,9 @@ namespace WwiseTools.Components
 {
     public abstract class ComponentBase
     {
-        protected WwiseObject WwiseObject;
+        public WwiseObject WwiseObject { get; protected set; }
 
-        public ComponentBase(WwiseObject wwiseObject)
+        protected ComponentBase(WwiseObject wwiseObject)
         {
             WwiseObject = wwiseObject;
         }
