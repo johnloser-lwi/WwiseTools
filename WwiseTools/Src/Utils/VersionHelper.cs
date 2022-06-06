@@ -11,6 +11,9 @@ namespace WwiseTools.Utils
 {
     public class VersionHelper
     {
+        // 2019
+        public static readonly WwiseVersion V2019_2_11_7512 = new(2019, 2, 11, 7512);
+
         // 2021
         public static readonly WwiseVersion V2021_1_0_7575 = new(2021, 1, 0, 7575);
 

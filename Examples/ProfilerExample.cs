@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using WwiseTools.Models.Profiler;
 using WwiseTools.Utils;
 using WwiseTools.Utils.Profiler;
 
@@ -20,16 +16,18 @@ namespace Examples
             if (result == null) return;
             foreach (var info in result)
             {
-                Console.WriteLine(String.Format("{0} {1}", info.AppName, info.Platform));
+                Console.WriteLine($"{info.AppName} {info.Platform}");
             }
 
             var remote = result[0];
 
+            await Waapi.ProfilerSubscribeCaptureLogAsync(new ProfilerCaptureLogOption() { Event = true, Bank = true},
+                item => { Console.WriteLine(item.Description); });
             await Waapi.ProfilerConnectToRemoteAsync(remote);
 
             Console.WriteLine(await Waapi.ProfilerGetRemoteConnectionStatusAsync());
             await Waapi.ProfilerStartCaptureAsync();
-            for (int i = 0; i < 50; i++)
+            /*for (int i = 0; i < 50; i++)
             {
                 // 获取时间
                 WaapiLog.Log(await Waapi.ProfilerGetCursorTimeMsAsync());
@@ -41,10 +39,13 @@ namespace Examples
                 await GetRTPCs();
 
                 await Task.Delay(100);
-            }
+            }*/
+            await Task.Delay(10000);
+
             int time = await Waapi.ProfilerStopCaptureAsync();
             WaapiLog.Log(time);
             await Waapi.ProfilerDisconnectRemoteAsync();
+            await Waapi.ProfilerUnsubscribeCaptureLogAsync();
             Console.WriteLine(await Waapi.ProfilerGetRemoteConnectionStatusAsync());
         }
 

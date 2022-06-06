@@ -21,6 +21,8 @@ namespace WwiseTools.Utils
 
         internal WaapiFunction Function { get; set; }
 
+        internal WaapiTopic Topic { get; set; }
+
         private readonly Dictionary<string, int> _subscriptions = new Dictionary<string, int>();
 
         public event Action Disconnected;
@@ -35,6 +37,8 @@ namespace WwiseTools.Utils
                 return _instance;
             }
         }
+
+        
 
         private static WwiseUtility _instance;
 
@@ -122,6 +126,7 @@ namespace WwiseTools.Utils
                 _client = new JsonClient();
                 await _client.Connect($"ws://localhost:{wampPort}/waapi", TimeOut); // 尝试创建Wwise连接
                 await GetFunctionsAsync();
+                await GetTopicsAsync();
                 WaapiLog.Log("Connected successfully!");
 
                 _client.Disconnected += () =>

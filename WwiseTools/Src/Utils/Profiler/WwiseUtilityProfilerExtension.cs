@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using WaapiClient;
 using WwiseTools.Models.Profiler;
 
 namespace WwiseTools.Utils.Profiler
@@ -86,6 +87,76 @@ namespace WwiseTools.Utils.Profiler
             catch (Exception e)
             {
                 WaapiLog.Log($"Failed to connect to remote {remoteInfo}! ======> {e.Message}");
+            }
+        }
+
+        public static async Task ProfilerSubscribeCaptureLogAsync(this WwiseUtility util, ProfilerCaptureLogOption captureLogOption, Action<ProfilerCaptureLogItem> handler)
+        {
+            if (!VersionHelper.VersionVerify(VersionHelper.V2019_2_11_7512)) return;
+
+            try
+            {
+                var  topic = util.Topic.Verify("ak.wwise.core.profiler.captureLog.itemAdded");
+
+                var options = new
+                {
+                    types = captureLogOption.GetOptions()
+                };
+                
+                JsonClient.PublishHandler publishHandler = json =>
+                {
+                    string type = json["type"]?.ToString();
+                    string objectId = json["objectId"]?.ToString();
+                    string objectName = json["objectName"]?.ToString();
+                    string gameObjectName = json["gameObjectName"]?.ToString();
+                    string description = json["description"]?.ToString();
+                    string severity = json["severity"]?.ToString();
+                    int.TryParse(json["playingId"]?.ToString(), out int playingId);
+                    int.TryParse(json["objectShortId"]?.ToString(), out int objectShortId);
+                    int.TryParse(json["gameObjectId"]?.ToString(), out int gameObjectId);
+                    int.TryParse(json["time"]?.ToString(), out int time);
+
+                    var item = new ProfilerCaptureLogItem()
+                    {
+                        Type = type,
+                        ObjectID = objectId,
+                        ObjectName = objectName,
+                        Description = description,
+                        GameObjectID = gameObjectId,
+                        GameObjectName = gameObjectName,
+                        ObjectShortID = objectShortId,
+                        PlayingID = playingId,
+                        Severity = severity,
+                        Time = time
+                    };
+
+                    handler?.Invoke(item);
+                };
+
+                if (!(await util.SubscribeAsync(topic, options, publishHandler, util.TimeOut)))
+                    throw new Exception("Failed to subscribe capture log!");
+            }
+            catch (Exception e)
+            {
+                WaapiLog.Log(e);
+            }
+        }
+
+        public static async Task ProfilerUnsubscribeCaptureLogAsync(this WwiseUtility util)
+        {
+            if (!VersionHelper.VersionVerify(VersionHelper.V2019_2_11_7512)) return;
+
+
+            try
+            {
+                var topic = util.Topic.Verify("ak.wwise.core.profiler.captureLog.itemAdded");
+
+                var result = await util.UnsubscribeAsync(topic, util.TimeOut);
+                if (!result) throw new Exception("Failed to unsubscribe capture log!");
+            }
+            catch (Exception e)
+            {
+                WaapiLog.Log(e);
             }
         }
 

@@ -1688,6 +1688,24 @@ namespace WwiseTools.Utils
             }
         }
 
+        private async Task GetTopicsAsync()
+        {
+            if (!await TryConnectWaapiAsync()) return;
+            Topic = new WaapiTopic();
+            try
+            {
+                var result = await _client.Call("ak.wwise.waapi.getTopics", null, null, TimeOut);
+                if (result["topics"] == null) throw new Exception();
+                foreach (var topic in result["topics"])
+                {
+                    Topic.AddTopic(topic.ToString());
+                }
+            }
+            catch (Exception e)
+            {
+                WaapiLog.Log(e);
+            }
+        }
 
         /// <summary>
         /// 保存工程，异步执行
