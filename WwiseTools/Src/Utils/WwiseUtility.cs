@@ -21,7 +21,7 @@ namespace WwiseTools.Utils
 
         internal WaapiFunction Function { get; set; }
 
-        private Dictionary<string, int> _subscriptions = new Dictionary<string, int>();
+        private readonly Dictionary<string, int> _subscriptions = new Dictionary<string, int>();
 
         public event Action Disconnected;
 
@@ -98,14 +98,14 @@ namespace WwiseTools.Utils
             return await _client.Call(uri, args, options, timeOut);
         }
 
-        public async Task SubscribeAsync(string topic, JObject options, JsonClient.PublishHandler publishHandler, int timeOut = Int32.MaxValue)
+        public async Task<bool> SubscribeAsync(string topic, JObject options, JsonClient.PublishHandler publishHandler, int timeOut = Int32.MaxValue)
         {
-            await SubscribeAsync(topic, (object)options, publishHandler, timeOut);
+            return await SubscribeAsync(topic, (object)options, publishHandler, timeOut);
         }
 
-        public async Task SubscribeAsync(string topic, object options, JsonClient.PublishHandler publishHandler, int timeOut = Int32.MaxValue)
+        public async Task<bool> SubscribeAsync(string topic, object options, JsonClient.PublishHandler publishHandler, int timeOut = Int32.MaxValue)
         {
-            await UnsubscribeAsync(topic, timeOut);
+            if (!await UnsubscribeAsync(topic, timeOut)) return false;
 
             try
             {
@@ -116,19 +116,32 @@ namespace WwiseTools.Utils
             catch (Exception e)
             {
                 WaapiLog.Log($"Failed to subscribe {topic} ======> {e.Message}");
+
+                return false;
             }
+
+            return true;
         }
 
-        public async Task UnsubscribeAsync(string topic, int timeOut = Int32.MaxValue)
+        public async Task<bool> UnsubscribeAsync(string topic, int timeOut = Int32.MaxValue)
         {
+            if (!_subscriptions.ContainsKey(topic)) return true;
 
-            if (_subscriptions.ContainsKey(topic))
+            try
             {
                 await _client.Unsubscribe(_subscriptions[topic], timeOut);
 
                 _subscriptions.Remove(topic);
             }
-            
+            catch (Exception e)
+            {
+                WaapiLog.Log($"Failed to unsubscribe {topic} ======> {e.Message}");
+
+                return true;
+            }
+
+            return true;
+
         }
 
         public async Task<bool> ConnectAsync(int wampPort = 8080) // 初始化，返回连接状态
