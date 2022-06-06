@@ -21,6 +21,8 @@ namespace WwiseTools.Utils
 
         internal WaapiFunction Function { get; set; }
 
+        public event Action Disconnected;
+
         public int TimeOut => 5000;
 
         public static WwiseUtility Instance
@@ -67,6 +69,7 @@ namespace WwiseTools.Utils
                 _client.Disconnected += () =>
                 {
                     _client = null;
+                    Disconnected?.Invoke();
                     WaapiLog.Log("Connection closed!"); // 丢失连接提示
                 };
                 return true;

@@ -11,6 +11,13 @@ namespace WwiseTools.Properties
         public string Name { get; set; }
         public object Value { get; set; }
 
+
+        public override string ToString()
+        {
+            return Value.ToString();
+        }
+
+
         public WwiseProperty(string name, object value)
         {
             Name = name;
