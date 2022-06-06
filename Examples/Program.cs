@@ -1,10 +1,5 @@
 ﻿// See https://aka.ms/new-console-template for more information
-
-using System.Reflection.Metadata.Ecma335;
 using Examples;
-using WwiseTools.Components;
-using WwiseTools.Objects;
-using WwiseTools.Properties;
 using WwiseTools.Utils;
 
 try

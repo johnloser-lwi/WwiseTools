@@ -103,7 +103,9 @@
     <Compile Include="Src\Components\WwiseSwitchContainerComponent.cs" />
     <Compile Include="Src\Components\WwiseSwitchGroupComponent.cs" />
     <Compile Include="Src\Components\WwiseMusicPlaylistContainerComponent.cs" />
+    <Compile Include="Src\Models\IWwiseOption.cs" />
     <Compile Include="Src\Models\Profiler\ProfilerBus.cs" />
+    <Compile Include="Src\Models\Profiler\ProfilerCaptureLogOption.cs" />
     <Compile Include="Src\Models\Profiler\ProfilerRTPC.cs" />
     <Compile Include="Src\Models\Profiler\ProfilerVoice.cs" />
     <Compile Include="Src\Models\Profiler\ProfilerRemoteInfo.cs" />
