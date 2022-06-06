@@ -21,6 +21,8 @@ namespace WwiseTools.Utils
 
         internal WaapiFunction Function { get; set; }
 
+        private Dictionary<string, int> _subscriptions = new Dictionary<string, int>();
+
         public event Action Disconnected;
 
         public int TimeOut => 5000;
@@ -96,19 +98,37 @@ namespace WwiseTools.Utils
             return await _client.Call(uri, args, options, timeOut);
         }
 
-        public async Task<int> SubscribeAsync(string uri, JObject options, JsonClient.PublishHandler publishHandler, int timeOut = Int32.MaxValue)
+        public async Task SubscribeAsync(string topic, JObject options, JsonClient.PublishHandler publishHandler, int timeOut = Int32.MaxValue)
         {
-            return await _client.Subscribe(uri, options, publishHandler, timeOut);
+            await SubscribeAsync(topic, (object)options, publishHandler, timeOut);
         }
 
-        public async Task<int> SubscribeAsync(string uri, object options, JsonClient.PublishHandler publishHandler, int timeOut = Int32.MaxValue)
+        public async Task SubscribeAsync(string topic, object options, JsonClient.PublishHandler publishHandler, int timeOut = Int32.MaxValue)
         {
-            return await _client.Subscribe(uri, options, publishHandler, timeOut);
+            await UnsubscribeAsync(topic, timeOut);
+
+            try
+            {
+                int id = await _client.Subscribe(topic, options, publishHandler, timeOut);
+
+                _subscriptions.Add(topic, id);
+            }
+            catch (Exception e)
+            {
+                WaapiLog.Log($"Failed to subscribe {topic} ======> {e.Message}");
+            }
         }
 
-        public async Task UnsubscribeAsync(int subsciptionId, int timeOut = Int32.MaxValue)
+        public async Task UnsubscribeAsync(string topic, int timeOut = Int32.MaxValue)
         {
-            await _client.Unsubscribe(subsciptionId, timeOut);
+
+            if (_subscriptions.ContainsKey(topic))
+            {
+                await _client.Unsubscribe(_subscriptions[topic], timeOut);
+
+                _subscriptions.Remove(topic);
+            }
+            
         }
 
         public async Task<bool> ConnectAsync(int wampPort = 8080) // 初始化，返回连接状态
