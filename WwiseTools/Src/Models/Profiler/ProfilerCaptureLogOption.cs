@@ -28,14 +28,14 @@ namespace WwiseTools.Models.Profiler
 
         public string[] GetOptions()
         {
-            var types = GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
+            var properties = GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
 
             var result = new List<string>();
 
-            foreach (var type in types)
+            foreach (var property in properties)
             {
-                if (type.GetValue(this).ToString() != "True") continue;
-                result.Add(type.Name);
+                if (property.GetValue(this).ToString() != "True") continue;
+                result.Add(property.Name);
             }
 
             return result.ToArray();
