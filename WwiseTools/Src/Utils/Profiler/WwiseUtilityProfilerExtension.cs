@@ -77,7 +77,10 @@ namespace WwiseTools.Utils.Profiler
 
                 var query = new
                 {
-                    host = remoteInfo.Host
+                    host = remoteInfo.Host,
+                    commandPort = remoteInfo.CommandPort,
+                    notificationPort = remoteInfo.NotificationPort,
+                    appName = remoteInfo.AppName
                 };
 
                 await util.CallAsync(func, query, null, util.TimeOut);

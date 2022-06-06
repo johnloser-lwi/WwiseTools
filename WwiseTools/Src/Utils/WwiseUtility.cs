@@ -27,7 +27,7 @@ namespace WwiseTools.Utils
 
         public event Action Disconnected;
 
-        public int TimeOut => 5000;
+        public int TimeOut => 10000;
 
         public static WwiseUtility Instance
         {
