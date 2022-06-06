@@ -90,9 +90,20 @@ namespace WwiseTools.Utils
         {
             return await _client.Call(uri, args, options, timeOut);
         }
+
         public async Task<JObject> CallAsync(string uri, object args, object options, int timeOut = Int32.MaxValue)
         {
             return await _client.Call(uri, args, options, timeOut);
+        }
+
+        public async Task<int> SubscribeAsync(string uri, JObject options, JsonClient.PublishHandler publishHandler, int timeOut = Int32.MaxValue)
+        {
+            return await _client.Subscribe(uri, options, publishHandler, timeOut);
+        }
+
+        public async Task<int> SubscribeAsync(string uri, object options, JsonClient.PublishHandler publishHandler, int timeOut = Int32.MaxValue)
+        {
+            return await _client.Subscribe(uri, options, publishHandler, timeOut);
         }
 
         public async Task<bool> ConnectAsync(int wampPort = 8080) // 初始化，返回连接状态
