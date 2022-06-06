@@ -106,6 +106,11 @@ namespace WwiseTools.Utils
             return await _client.Subscribe(uri, options, publishHandler, timeOut);
         }
 
+        public async Task UnsubscribeAsync(int subsciptionId, int timeOut = Int32.MaxValue)
+        {
+            await _client.Unsubscribe(subsciptionId, timeOut);
+        }
+
         public async Task<bool> ConnectAsync(int wampPort = 8080) // 初始化，返回连接状态
         {
             if (_client != null && _client.IsConnected()) return true;
