@@ -17,6 +17,8 @@ namespace WwiseTools.Utils
     {
         private JsonClient _client;
 
+        private bool _initializing = false;
+
         public WwiseInfo ConnectionInfo { get; private set; }
 
         internal WaapiFunction Function { get; set; }
@@ -28,6 +30,7 @@ namespace WwiseTools.Utils
         public event Action Disconnected;
 
         public int TimeOut => 10000;
+
 
         public static WwiseUtility Instance
         {
@@ -120,8 +123,11 @@ namespace WwiseTools.Utils
         {
             if (_client != null && _client.IsConnected()) return true;
 
+
+            if (_initializing) return false;
             try
             {
+                _initializing = true;
                 WaapiLog.Log("Initializing...");
                 _client = new JsonClient();
                 await _client.Connect($"ws://localhost:{wampPort}/waapi", TimeOut); // 尝试创建Wwise连接
@@ -137,7 +143,7 @@ namespace WwiseTools.Utils
                 };
 
 
-               
+
 
                 for (int i = 0; i < 5; i++)
                 {
@@ -166,6 +172,10 @@ namespace WwiseTools.Utils
             {
                 WaapiLog.Log($"Failed to connect! ======> {e.Message}");
                 return false;
+            }
+            finally
+            {
+                _initializing = false;
             }
         }
 
