@@ -10,6 +10,13 @@ using WwiseTools.Models;
 
 namespace WwiseTools.Utils
 {
+    public enum GlobalImportSettings
+    {
+        useExisting,
+        replaceExisting,
+        createNew
+    }
+
     /// <summary>
     /// 用于实现基础功能
     /// </summary>
@@ -45,12 +52,7 @@ namespace WwiseTools.Utils
 
         private static WwiseUtility _instance;
 
-        public enum GlobalImportSettings
-        {
-            useExisting,
-            replaceExisting,
-            createNew
-        }
+        
 
         public GlobalImportSettings ImportSettings = GlobalImportSettings.useExisting;
 
