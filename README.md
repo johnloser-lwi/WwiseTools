@@ -24,9 +24,9 @@ static async Task Main(string[] args)
 
 ### 创建与移动对象
 ```csharp
-var testFolder = await CreateObjectAsync("TestFolder", WwiseObject.ObjectType.Folder); // 创建一个名称为"TestFolder"的文件夹，默认路径为"\Actor-Mixer Hierarchy\Default Work Unit"。
-var testSound = await CreateObjectAsync("TestSound", WwiseObject.ObjectType.Sound); // 创建一个名称为"TestSound"的音频对象，默认路径为"\Actor-Mixer Hierarchy\Default Work Unit"。
-await testFolder.AddChildAsync(testSound); // 将"testSound"移动至"testFolder"下。
+var testFolder = await CreateObjectAtPathAsync("TestFolder", WwiseObject.ObjectType.Folder); // 创建一个名称为"TestFolder"的文件夹，默认路径为"\Actor-Mixer Hierarchy\Default Work Unit"。
+var testSound = await CreateObjectAtPathAsync("TestSound", WwiseObject.ObjectType.Sound); // 创建一个名称为"TestSound"的音频对象，默认路径为"\Actor-Mixer Hierarchy\Default Work Unit"。
+await testFolder.GetHierarchy().AddChildAsync(testSound); // 将"testSound"移动至"testFolder"下。
 ```
 
 运行程序后Wwise工程中将会有一个名为"TestFolder"的文件夹，其中包含一个名为"TestSound"的音频对象。
@@ -50,7 +50,7 @@ var randomContainer = await CreateObjectAsync("TestRandomContainer", WwiseObject
 该函数会自动启用"Attenuation"选项，
 如果无法找到"TestAttenuation"将会在"\Attenuations\Default Work Unit"下创建"TestAttenuation"。
 */
-await randomContainer.SetAttenuationAsync("TestAttenuation"); 
+await randomContainer.GetVoice().SetAttenuationAsync("TestAttenuation"); 
 ```
 
 运行程序后Wwise工程中将会有一个名为"TestRandomContainer"的RandomContainer，"Positioning"菜单中的"Attenuation"参数被勾选，引用设置为"TestAttenuation"。
