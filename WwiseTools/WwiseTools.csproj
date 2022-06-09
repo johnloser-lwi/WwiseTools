@@ -103,7 +103,7 @@
     <Compile Include="Src\Components\WwiseSwitchContainerComponent.cs" />
     <Compile Include="Src\Components\WwiseSwitchGroupComponent.cs" />
     <Compile Include="Src\Components\WwiseMusicPlaylistContainerComponent.cs" />
-    <Compile Include="Src\Models\IWwiseOption.cs" />
+    <Compile Include="Src\Models\WwiseOption.cs" />
     <Compile Include="Src\Models\Profiler\ProfilerBus.cs" />
     <Compile Include="Src\Models\Profiler\ProfilerCaptureLogItem.cs" />
     <Compile Include="Src\Models\Profiler\ProfilerCaptureLogOption.cs" />
