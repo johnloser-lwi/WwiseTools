@@ -101,7 +101,7 @@ static async Task Main(string[] args)
 
 
     // 获取对应container的xml节点
-    var containerNode = parser.XML.SelectSingleNode("//*[@ID='" + container.ID + "']");
+    var containerNode = parser.etNodeByID(container.ID);
 
     // 清空现有Playlist
     if (playlistNode != null)
