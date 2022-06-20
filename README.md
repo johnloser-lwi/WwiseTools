@@ -24,8 +24,8 @@ static async Task Main(string[] args)
 
 ### 创建与移动对象
 ```csharp
-var testFolder = await CreateObjectAtPathAsync("TestFolder", WwiseObject.ObjectType.Folder); // 创建一个名称为"TestFolder"的文件夹，默认路径为"\Actor-Mixer Hierarchy\Default Work Unit"。
-var testSound = await CreateObjectAtPathAsync("TestSound", WwiseObject.ObjectType.Sound); // 创建一个名称为"TestSound"的音频对象，默认路径为"\Actor-Mixer Hierarchy\Default Work Unit"。
+var testFolder = await WwiseUtility.Instance.CreateObjectAtPathAsync("TestFolder", WwiseObject.ObjectType.Folder); // 创建一个名称为"TestFolder"的文件夹，默认路径为"\Actor-Mixer Hierarchy\Default Work Unit"。
+var testSound = await WwiseUtility.Instance.CreateObjectAtPathAsync("TestSound", WwiseObject.ObjectType.Sound); // 创建一个名称为"TestSound"的音频对象，默认路径为"\Actor-Mixer Hierarchy\Default Work Unit"。
 await testFolder.GetHierarchy().AddChildAsync(testSound); // 将"testSound"移动至"testFolder"下。
 ```
 
@@ -34,7 +34,7 @@ await testFolder.GetHierarchy().AddChildAsync(testSound); // 将"testSound"移�
 ### 生成事件
 延续上一个案例，我们可以为"testSound"创建一个播放事件。
 ```csharp
-await CreatePlayEventAsync("TestEvent", await testSound.GetPathAsync()); // 生成一个名为"TestEvent"的事件播放"testSound"，默认路径为"\Events\Default Work Unit"
+await  WwiseUtility.Instance.CreatePlayEventAsync("TestEvent", await testSound.GetPathAsync()); // 生成一个名为"TestEvent"的事件播放"testSound"，默认路径为"\Events\Default Work Unit"
 ```
 
 运行程序后Wwise工程中将会有一个名为"TestEvent"的事件，其中的"Play Action"包含一个名为"TestSound"的引用。
@@ -43,7 +43,7 @@ ___
 ## 设置属性以及引用
 ### 设置衰减(Attenuation)引用
 ```csharp
-var randomContainer = await CreateObjectAtPathAsync("TestRandomContainer", WwiseObject.ObjectType.RandomSequenceContainer); // 创建一个名为"TestRandomContainer"的RandomContainer，保存在"randomContainer"中。
+var randomContainer = await  WwiseUtility.Instance.CreateObjectAtPathAsync("TestRandomContainer", WwiseObject.ObjectType.RandomSequenceContainer); // 创建一个名为"TestRandomContainer"的RandomContainer，保存在"randomContainer"中。
 
 /* 
 设置"randomContainer"的"Attenuation"引用为"TestAttenuation"，
@@ -72,12 +72,13 @@ await WwiseUtility.Instance.SetObjectReferenceAsync(randomContainer, WwiseRefere
 ### 自定义属性以及引用内容
 虽然目前的"WwiseProperty"和"WwiseReference"类已经包含了大部分属性、引用的静态创建函数，有的时候我们仍然会需要手动设置属性、应用的内容。
 ```csharp
-var randomContainer = await CreateObjectAtPathAsync("TestRandomContainer"); // 创建一个名为"TestRandomContainer"的RandomContainer。
+var randomContainer = await WwiseFactory.CreateRandomSequenceContainer("TestRandomContainer", true,
+    await WwiseUtility.Instance.GetWwiseObjectByPathAsync("\\Actor-Mixer Hierarchy\\Default Work Unit")); // 创建一个名为"TestRandomContainer"的RandomContainer。
 
 var testProperty = new WwiseProperty("EnableAttenuation", true); // 创建一个属性对象，属性名称为"EnableAttenuation"，值为"true"。
 
 var attenuation = await WwiseUtility.Instance.GetWwiseObjectByNameAsync("Attenuation:TestAttenuation"); // 从Wwise工程中获取名为"TestAttenuation"的"Attenuation"
-var testReference = new WwiseReference(attenuation); // 创建一个引用对象，引用"attenuation"
+var testReference = WwiseReference.Ref_Attenuation(attenuation); // 创建一个引用对象，引用"attenuation"
 
 await WwiseUtility.Instance.SetObjectPropertyAsync(randomContainer, testProperty); // 为"randomContainer设置属性"testProperty""。
 await WwiseUtility.Instance.SetObjectReferenceAsync(randomContainer, testReference); // 为"randomContainer"添加引用"testReference"。
@@ -89,9 +90,9 @@ await WwiseUtility.Instance.SetObjectReferenceAsync(randomContainer, testReferen
 ```csharp
 static async Task Main(string[] args)
 {
-    WwiseObject container = await CreateObjectAtPathAsync("TestContainer", WwiseObject.ObjectType.RandomSequenceContainer); // 创建一个Sequence Container
-    WwiseObject sound = await CreateObjectAtPathAsync("TestSound", WwiseObject.ObjectType.Sound, await container.GetPathAsync()); // 创建一个空音频
-    
+    WwiseObject container = await WwiseUtility.Instance.CreateObjectAtPathAsync("TestContainer", WwiseObject.ObjectType.RandomSequenceContainer); // 创建一个Sequence Container
+    WwiseObject sound = await WwiseUtility.Instance.CreateObjectAtPathAsync("TestSound", WwiseObject.ObjectType.Sound, await container.GetPathAsync()); // 创建一个空音频
+
     await WwiseUtility.Instance.SaveWwiseProjectAsync(); // 保存工程
     WwiseWorkUnitParser parser = new WwiseWorkUnitParser(await WwiseUtility.Instance.GetWorkUnitFilePathAsync(container)); // 创建WwiseWorkUnitParser，并获取container的WorkUnit文件
 
@@ -101,7 +102,7 @@ static async Task Main(string[] args)
 
 
     // 获取对应container的xml节点
-    var containerNode = parser.etNodeByID(container.ID);
+    var containerNode = parser.GetNodeByID(container.ID);
 
     // 清空现有Playlist
     if (playlistNode != null)
@@ -109,8 +110,8 @@ static async Task Main(string[] args)
         containerNode.RemoveChild(playlistNode);
         parser.SaveFile();
     }
-    
-    
+
+
     var new_playlist = parser.XML.CreateElement("Playlist");
 
 
@@ -122,11 +123,10 @@ static async Task Main(string[] args)
     containerNode.AppendChild(parser.XML.ImportNode(new_playlist, true));
 
     parser.SaveFile();
-    
+
     await WwiseUtility.Instance.ReloadWwiseProjectAsync();// 为了使修改生效，避免错误，需要重新加载工程
-    
+
     await WwiseUtility.Instance.DisconnectAsync();
 }
-
 ```
 运行程序后，工程中将会有一个名为"TestContainer"的"SequenceContainer"，其中包含一个名为"TestSound"的空音频，"TestContainer"的Playlist中回包含"TestSound"。
