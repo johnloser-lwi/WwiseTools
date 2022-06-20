@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Diagnostics.SymbolStore;
+using System.Threading.Tasks;
 using WwiseTools.Components;
 using WwiseTools.Objects;
 using WwiseTools.Properties;
@@ -7,6 +8,24 @@ namespace WwiseTools.Utils
 {
     public class WwiseFactory
     {
+        // Actor Mixer Hierarchy
+        public static async Task<WwiseObject> CreateRandomSequenceContainer(string objectName, bool isRandomContainer,
+            WwiseObject parent)
+        {
+            var result = await WwiseUtility.Instance.CreateObjectAsync(objectName, WwiseObject.ObjectType.RandomSequenceContainer,
+                parent);
+
+            if (result == null) return result;
+
+            WwiseProperty.Option_RandomOrSequence type = isRandomContainer
+                ? WwiseProperty.Option_RandomOrSequence.Random
+                : WwiseProperty.Option_RandomOrSequence.Sequence;
+
+            await WwiseUtility.Instance.SetObjectPropertyAsync(result, WwiseProperty.Prop_RandomOrSequence(type));
+            return result;
+        }
+
+        // Interactive Music
         public static async Task<WwiseObject> CreateMusicSegmentAsync(string name, string filePath,
             string subFolder, WwiseObject parent)
         {
