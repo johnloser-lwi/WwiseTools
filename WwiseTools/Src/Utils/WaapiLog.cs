@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -35,10 +36,9 @@ namespace WwiseTools.Utils
             Console.WriteLine(msg);
         }
 
-        public static void Log(object message)
+        public static void Log(object message, [CallerMemberName]string caller = "")
         {
-            
-            if (Instance._enabled) Instance.Logger?.Invoke(message?.ToString(), Instance._firstLog);
+            if (Instance._enabled) Instance.Logger?.Invoke($"[{caller}] " + message?.ToString(), Instance._firstLog);
             if (Instance._firstLog) Instance._firstLog = false;
         }
 
