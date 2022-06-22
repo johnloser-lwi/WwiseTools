@@ -56,9 +56,9 @@ namespace WwiseTools.Utils
         /// <param name="wwiseObject"></param>
         /// <param name="wwiseReference"></param>
         /// <returns></returns>
-        public async Task SetObjectReferenceAsync(WwiseObject wwiseObject, WwiseReference wwiseReference)
+        public async Task<bool> SetObjectReferenceAsync(WwiseObject wwiseObject, WwiseReference wwiseReference)
         {
-            if (!await TryConnectWaapiAsync() || wwiseObject == null || wwiseReference == null) return;
+            if (!await TryConnectWaapiAsync() || wwiseObject == null || wwiseReference == null) return false;
 
             try
             {
@@ -76,11 +76,15 @@ namespace WwiseTools.Utils
                     null);
 
                 WaapiLog.Log("Reference set successfully!");
+
+                return true;
             }
             catch (Exception e)
             {
                 WaapiLog.Log($"Failed to set reference \"{wwiseReference.Name}\" to object {wwiseObject.Name} ======> {e.Message}");
             }
+
+            return false;
         }
         
         /// <summary>
@@ -90,9 +94,9 @@ namespace WwiseTools.Utils
         /// <param name="property"></param>
         /// <param name="value"></param>
         /// <returns></returns>
-        public async Task SetObjectPropertyAsync(WwiseObject wwiseObject, WwiseProperty wwiseProperty)
+        public async Task<bool> SetObjectPropertyAsync(WwiseObject wwiseObject, WwiseProperty wwiseProperty)
         {
-            if (!await TryConnectWaapiAsync() || wwiseObject == null || wwiseProperty == null) return;
+            if (!await TryConnectWaapiAsync() || wwiseObject == null || wwiseProperty == null) return false;
 
             try
             {
@@ -110,11 +114,15 @@ namespace WwiseTools.Utils
                     null);
 
                 WaapiLog.Log($"Property {wwiseProperty.Name} successfully changed to {wwiseProperty.Value}!");
+
+                return true;
             }
             catch (Exception e)
             {
                 WaapiLog.Log($"Failed to set property \"{wwiseProperty.Name}\" of object {wwiseObject.Name} ======> {e.Message}");
             }
+
+            return false;
         }
         
 
@@ -124,9 +132,9 @@ namespace WwiseTools.Utils
         /// <param name="renameObject"></param>
         /// <param name="newName"></param>
         /// <returns></returns>
-        public async Task ChangeObjectNameAsync(WwiseObject renameObject, string newName)
+        public async Task<bool> ChangeObjectNameAsync(WwiseObject renameObject, string newName)
         {
-            if (!await TryConnectWaapiAsync() || renameObject == null || String.IsNullOrEmpty(newName)) return;
+            if (!await TryConnectWaapiAsync() || renameObject == null || String.IsNullOrEmpty(newName)) return false;
 
             string oldName = renameObject.Name;
             try
@@ -143,12 +151,15 @@ namespace WwiseTools.Utils
                 renameObject.Name = newName;
 
                 WaapiLog.Log($"Object {oldName} successfully renamed to {newName}!");
+                return true;
             }
 
             catch (Exception e)
             {
                 WaapiLog.Log($"Failed to rename object : {oldName} ======> {e.Message}");
             }
+
+            return false;
         }
         
         /// <summary>
@@ -157,9 +168,9 @@ namespace WwiseTools.Utils
         /// <param name="child"></param>
         /// <param name="parent"></param>
         /// <returns></returns>
-        public async Task CopyToParentAsync(WwiseObject child, WwiseObject parent)
+        public async Task<bool> CopyToParentAsync(WwiseObject child, WwiseObject parent)
         {
-            if (!await TryConnectWaapiAsync() || child == null || parent == null) return;
+            if (!await TryConnectWaapiAsync() || child == null || parent == null) return false;
 
             try
             {
@@ -178,13 +189,15 @@ namespace WwiseTools.Utils
 
                 WaapiLog.Log($"Copied {child.Name} to {parent.Name}!");
 
+
+                return true;
             }
             catch (Exception e)
             {
                 WaapiLog.Log($"Failed to copy {child.Name} to {parent.Name}! ======> {e.Message}");
             }
 
-            //return null;
+            return false;
         }
 
         
@@ -195,9 +208,9 @@ namespace WwiseTools.Utils
         /// <param name="child"></param>
         /// <param name="parent"></param>
         /// <returns></returns>
-        public async Task MoveToParentAsync(WwiseObject child, WwiseObject parent)
+        public async Task<bool> MoveToParentAsync(WwiseObject child, WwiseObject parent)
         {
-            if (!await TryConnectWaapiAsync() || child == null || parent == null) return;
+            if (!await TryConnectWaapiAsync() || child == null || parent == null) return false;
 
             try
             {
@@ -215,17 +228,21 @@ namespace WwiseTools.Utils
                     );
 
                 WaapiLog.Log($"Moved {child.Name} to {parent.Name}!");
+
+                return true;
             }
             catch (Exception e)
             {
                 WaapiLog.Log($"Failed to move {child.Name} to {parent.Name}! ======> {e.Message}");
             }
+
+            return false;
         }
         
 
-        public async Task SetNoteAsync(WwiseObject target, string note)
+        public async Task<bool> SetNoteAsync(WwiseObject target, string note)
         {
-            if (!await TryConnectWaapiAsync() || target == null) return;
+            if (!await TryConnectWaapiAsync() || target == null) return false;
 
             try
             {
@@ -242,11 +259,15 @@ namespace WwiseTools.Utils
                     );
 
                 WaapiLog.Log($"Successfully set {target.Name} note to \"{note}\"!");
+
+                return true;
             }
             catch (Exception e)
             {
                 WaapiLog.Log($"Failed to set note for {target.Name}! ======> {e.Message}");
             }
+
+            return false;
         }
         
 
@@ -313,9 +334,9 @@ namespace WwiseTools.Utils
             }
         }
 
-        public async Task AddEventToBankAsync(WwiseObject soundBank, string eventId)
+        public async Task<bool> AddEventToBankAsync(WwiseObject soundBank, string eventId)
         {
-            if (!await TryConnectWaapiAsync()) return;
+            if (!await TryConnectWaapiAsync()) return false;
 
             try
             {
@@ -340,11 +361,15 @@ namespace WwiseTools.Utils
                     null,
                     TimeOut
                 );
+
+                return true;
             }
             catch (Exception e)
             {
                 WaapiLog.Log($"Failed to Add Event to Bank ======> {e.Message}");
             }
+
+            return false;
         }
 
         public async Task<WwiseObject> CreateObjectAsync(string objectName, WwiseObject.ObjectType objectType, WwiseObject parent)
@@ -463,14 +488,14 @@ namespace WwiseTools.Utils
 
 
 
-        public async Task DeleteObjectAsync(WwiseObject wwiseObject)
+        public async Task<bool> DeleteObjectAsync(WwiseObject wwiseObject)
         {
-            await DeleteObjectAsync(await wwiseObject.GetPathAsync());
+            return await DeleteObjectAsync(await wwiseObject.GetPathAsync());
         }
 
-        public async Task DeleteObjectAsync(string path)
+        public async Task<bool> DeleteObjectAsync(string path)
         {
-            if (!await TryConnectWaapiAsync()) return;
+            if (!await TryConnectWaapiAsync()) return false;
 
             try
             {
@@ -488,13 +513,15 @@ namespace WwiseTools.Utils
                     );
 
                 WaapiLog.Log($"Object {path} deleted successfully!");
-                return;
+                return true;
             }
             catch (Exception e)
             {
                 WaapiLog.Log($"Failed to delete object : {path}! ======> {e.Message}");
-                return;
+                
             }
+
+            return false;
         }
 
         
@@ -1061,12 +1088,12 @@ namespace WwiseTools.Utils
             }
         }
         
-        public async Task ReloadWwiseProjectAsync()
+        public async Task<bool> ReloadWwiseProjectAsync()
         {
             await LoadWwiseProjectAsync(await GetWwiseProjectPathAsync(), true);
             await DisconnectAsync();
             _client = null;
-            await ConnectAsync();
+            return await ConnectAsync();
         }
         
         /// <summary>
@@ -1075,9 +1102,9 @@ namespace WwiseTools.Utils
         /// <param name="path"></param>
         /// <param name="saveCurrent"></param>
         /// <returns></returns>
-        public async Task LoadWwiseProjectAsync(string path, bool saveCurrent = true)
+        public async Task<bool> LoadWwiseProjectAsync(string path, bool saveCurrent = true)
         {
-            if (!await TryConnectWaapiAsync()) return;
+            if (!await TryConnectWaapiAsync()) return false;
 
             if (saveCurrent) await SaveWwiseProjectAsync();
 
@@ -1095,11 +1122,15 @@ namespace WwiseTools.Utils
                 await _client.Call(func, query, null, TimeOut);
 
                 WaapiLog.Log("Project loaded successfully!");
+
+                return true;
             }
             catch (Exception e)
             {
                 WaapiLog.Log($"Failed to load project! =======> {e.Message}");
             }
+
+            return false;
         }
         
         /// <summary>
@@ -1241,9 +1272,9 @@ namespace WwiseTools.Utils
         /// </summary>
         /// <param name="command"></param>
         /// <returns></returns>
-        public async Task ExecuteUICommandAsync(string command, string[] objectIDs = null)
+        public async Task<bool> ExecuteUICommandAsync(string command, string[] objectIDs = null)
         {
-            if (!await TryConnectWaapiAsync()) return;
+            if (!await TryConnectWaapiAsync()) return false;
 
             try
             {
@@ -1265,11 +1296,15 @@ namespace WwiseTools.Utils
                     await _client.Call(func, query, null, TimeOut);
                 }
 
+                return true;
+
             }
             catch (Exception e)
             {
                 WaapiLog.Log($"Failed to execute command {command}! ======> {e.Message}");
             }
+
+            return false;
         }
 
         public async Task<List<WwiseObject>> GetReferencesToWwiseObjectAsync(WwiseObject wwiseObject)
@@ -1642,9 +1677,9 @@ namespace WwiseTools.Utils
             return result;
         }
 
-        public async Task GenerateSelectedSoundBanksAllPlatformAsync(string[] soundBanks)
+        public async Task<bool> GenerateSelectedSoundBanksAllPlatformAsync(string[] soundBanks)
         {
-            if (!await TryConnectWaapiAsync() || soundBanks == null) return;
+            if (!await TryConnectWaapiAsync() || soundBanks == null) return false;
 
             try
             {
@@ -1662,16 +1697,21 @@ namespace WwiseTools.Utils
                 var func = Function.Verify("ak.wwise.core.soundbank.generate");
 
                 await _client.Call(func, query, null, TimeOut);
+
+
+                return true;
             }
             catch (Exception e)
             {
                 WaapiLog.Log($"Failed to generate sound bank! ======> {e.Message}");
             }
+
+            return false;
         }
 
-        private async Task GetFunctionsAsync()
+        private async Task<bool> GetFunctionsAsync()
         {
-            if (!await TryConnectWaapiAsync() || Function != null) return;
+            if (!await TryConnectWaapiAsync() || Function != null) return false;
             Function = new WaapiFunction();
             try
             {
@@ -1681,16 +1721,20 @@ namespace WwiseTools.Utils
                 {
                     Function.AddFunction(func.ToString());
                 }
+
+                return true;
             }
             catch (Exception e)
             {
                 WaapiLog.Log(e);
             }
+
+            return false;
         }
 
-        private async Task GetTopicsAsync()
+        private async Task<bool> GetTopicsAsync()
         {
-            if (!await TryConnectWaapiAsync()) return;
+            if (!await TryConnectWaapiAsync()) return false;
             Topic = new WaapiTopic();
             try
             {
@@ -1700,31 +1744,39 @@ namespace WwiseTools.Utils
                 {
                     Topic.AddTopic(topic.ToString());
                 }
+
+                return true;
             }
             catch (Exception e)
             {
                 WaapiLog.Log(e);
             }
+
+            return false;
         }
 
         /// <summary>
         /// 保存工程，异步执行
         /// </summary>
         /// <returns></returns>
-        public async Task SaveWwiseProjectAsync()
+        public async Task<bool> SaveWwiseProjectAsync()
         {
-            if (!await TryConnectWaapiAsync()) return;
+            if (!await TryConnectWaapiAsync()) return false;
             try
             {
                 var func = Function.Verify("ak.wwise.core.project.save");
 
                 await _client.Call(func, null, null, TimeOut);
                 WaapiLog.Log("Project saved successfully!");
+
+                return true;
             }
             catch (Exception e)
             {
                 WaapiLog.Log($"Failed to save project! =======> {e.Message}");
             }
+
+            return false;
         }
     }
 }
