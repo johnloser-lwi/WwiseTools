@@ -46,7 +46,9 @@ namespace WwiseTools.Utils
                 try
                 {
                     var mth = new StackTrace()?.GetFrame(1)?.GetMethod()?.ReflectedType;
-                    if (mth != null && mth.Namespace.StartsWith("WwiseTools")) return;
+                    if (mth != null && 
+                        mth.Namespace != null && 
+                        mth.Namespace.StartsWith("WwiseTools")) return;
                 }
                 catch
                 {
