@@ -22,7 +22,7 @@ namespace WwiseTools.Utils
 
         private bool _enabled = true;
 
-        private bool _enableStandardLog = true;
+        private bool _enableInternalLog = true;
 
         private WaapiLog()
         {
@@ -43,7 +43,7 @@ namespace WwiseTools.Utils
 
         internal static void InternalLog(object message, [CallerMemberName] string caller = "")
         {
-            if (!Instance._enableStandardLog) return;
+            if (!Instance._enableInternalLog) return;
             string msg = message?.ToString();
             msg = !string.IsNullOrEmpty(msg) ? $"[{caller}] " + msg : "";
 
@@ -61,9 +61,9 @@ namespace WwiseTools.Utils
             Instance._enabled = enabled;
         }
 
-        public static void SetEnableStandardLog(bool enable)
+        public static void SetEnableInternalLog(bool enable)
         {
-            Instance._enableStandardLog = enable;
+            Instance._enableInternalLog = enable;
         }
     }
 }
