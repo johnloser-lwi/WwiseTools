@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -26,6 +27,8 @@ namespace WwiseTools.Utils
 
         private bool _enabled = true;
 
+        private bool _enableStandardLog = true;
+
         private WaapiLog()
         {
             Logger = DefaultLog;
@@ -36,9 +39,22 @@ namespace WwiseTools.Utils
             Console.WriteLine(msg);
         }
 
-        public static void Log(object message, [CallerMemberName]string caller = "")
+        public static void Log(object message)
         {
-            if (Instance._enabled) Instance.Logger?.Invoke($"[{caller}] " + message?.ToString(), Instance._firstLog);
+            if (!Instance._enableStandardLog)
+            {
+                try
+                {
+                    var mth = new StackTrace()?.GetFrame(1)?.GetMethod()?.ReflectedType;
+                    if (mth != null && mth.Namespace.StartsWith("WwiseTools")) return;
+                }
+                catch
+                {
+                }
+                
+            }
+
+            if (Instance._enabled) Instance.Logger?.Invoke(message?.ToString(), Instance._firstLog);
             if (Instance._firstLog) Instance._firstLog = false;
         }
 
@@ -50,6 +66,11 @@ namespace WwiseTools.Utils
         public static void SetEnabled(bool enabled)
         {
             Instance._enabled = enabled;
+        }
+
+        public static void SetEnableStandardLog(bool enable)
+        {
+            Instance._enableStandardLog = enable;
         }
     }
 }
