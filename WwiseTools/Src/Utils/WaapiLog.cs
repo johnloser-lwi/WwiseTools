@@ -36,18 +36,19 @@ namespace WwiseTools.Utils
 
         public static void Log(object message)
         {
+            if (!Instance._enabled) return;
 
-            if (Instance._enabled) Instance.Logger?.Invoke(message?.ToString(), Instance._firstLog);
+            Instance.Logger?.Invoke(message?.ToString(), Instance._firstLog);
             if (Instance._firstLog) Instance._firstLog = false;
         }
 
         internal static void InternalLog(object message, [CallerMemberName] string caller = "")
         {
-            if (!Instance._enableInternalLog) return;
+            if (!Instance._enableInternalLog || !Instance._enabled) return;
             string msg = message?.ToString();
             msg = !string.IsNullOrEmpty(msg) ? $"[{caller}] " + msg : "";
 
-            if (Instance._enabled) Instance.Logger?.Invoke(msg, Instance._firstLog);
+            Instance.Logger?.Invoke(msg, Instance._firstLog);
             if (Instance._firstLog) Instance._firstLog = false;
         }
 
