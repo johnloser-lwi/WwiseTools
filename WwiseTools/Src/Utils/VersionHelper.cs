@@ -25,7 +25,7 @@ namespace WwiseTools.Utils
             if (WwiseUtility.Instance.ConnectionInfo.Version < minimumVersion)
             {
                 //var caller = (new System.Diagnostics.StackTrace()).GetFrame(0).GetMethod().Name;
-                WaapiLog.Log($"Warning: {caller} required minimum Wwise version {minimumVersion.ToString()}! " +
+                WaapiLog.InternalLog($"Warning: {caller} required minimum Wwise version {minimumVersion.ToString()}! " +
                              $"Current Wwise minimumVersion is {WwiseUtility.Instance.ConnectionInfo.Version.ToString()}.");
                 return false;
             }

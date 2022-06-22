@@ -72,7 +72,7 @@ namespace WwiseTools.Utils.Feature2021
             }
             catch (Exception e)
             {
-                WaapiLog.Log($"Failed to run query {_waqlCommand}! ======> {e.Message}");
+                WaapiLog.InternalLog($"Failed to run query {_waqlCommand}! ======> {e.Message}");
                 Result = new List<WwiseObject>();
                 return false;
             }

@@ -166,13 +166,13 @@ namespace WwiseTools.Objects
                 }
                 catch
                 {
-                    WaapiLog.Log($"Failed to return WaveFilePath from ID : {ID}!");
+                    WaapiLog.InternalLog($"Failed to return WaveFilePath from ID : {ID}!");
                     return null;
                 }
             }
             catch (Exception e)
             {
-                WaapiLog.Log($"Failed to return WaveFilePath from ID : {ID}! ======> {e.Message}");
+                WaapiLog.InternalLog($"Failed to return WaveFilePath from ID : {ID}! ======> {e.Message}");
                 return null;
             }
 

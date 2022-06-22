@@ -37,14 +37,14 @@ namespace WwiseTools.Utils
                         new JProperty("object", wwiseObject.ID)),
 
                     null);
-                WaapiLog.Log("Property and References fetched successfully!");
+                WaapiLog.InternalLog("Property and References fetched successfully!");
                 return result.ToString();
 
 
             }
             catch (Exception e)
             {
-                WaapiLog.Log($"Failed to fetch Property and References! ======> {e.Message}");
+                WaapiLog.InternalLog($"Failed to fetch Property and References! ======> {e.Message}");
                 return "";
             }
         }
@@ -75,13 +75,13 @@ namespace WwiseTools.Utils
 
                     null);
 
-                WaapiLog.Log("Reference set successfully!");
+                WaapiLog.InternalLog("Reference set successfully!");
 
                 return true;
             }
             catch (Exception e)
             {
-                WaapiLog.Log($"Failed to set reference \"{wwiseReference.Name}\" to object {wwiseObject.Name} ======> {e.Message}");
+                WaapiLog.InternalLog($"Failed to set reference \"{wwiseReference.Name}\" to object {wwiseObject.Name} ======> {e.Message}");
             }
 
             return false;
@@ -113,13 +113,13 @@ namespace WwiseTools.Utils
 
                     null);
 
-                WaapiLog.Log($"Property {wwiseProperty.Name} successfully changed to {wwiseProperty.Value}!");
+                WaapiLog.InternalLog($"Property {wwiseProperty.Name} successfully changed to {wwiseProperty.Value}!");
 
                 return true;
             }
             catch (Exception e)
             {
-                WaapiLog.Log($"Failed to set property \"{wwiseProperty.Name}\" of object {wwiseObject.Name} ======> {e.Message}");
+                WaapiLog.InternalLog($"Failed to set property \"{wwiseProperty.Name}\" of object {wwiseObject.Name} ======> {e.Message}");
             }
 
             return false;
@@ -150,13 +150,13 @@ namespace WwiseTools.Utils
 
                 renameObject.Name = newName;
 
-                WaapiLog.Log($"Object {oldName} successfully renamed to {newName}!");
+                WaapiLog.InternalLog($"Object {oldName} successfully renamed to {newName}!");
                 return true;
             }
 
             catch (Exception e)
             {
-                WaapiLog.Log($"Failed to rename object : {oldName} ======> {e.Message}");
+                WaapiLog.InternalLog($"Failed to rename object : {oldName} ======> {e.Message}");
             }
 
             return false;
@@ -187,14 +187,14 @@ namespace WwiseTools.Utils
                     ,null, TimeOut);
 
 
-                WaapiLog.Log($"Copied {child.Name} to {parent.Name}!");
+                WaapiLog.InternalLog($"Copied {child.Name} to {parent.Name}!");
 
 
                 return true;
             }
             catch (Exception e)
             {
-                WaapiLog.Log($"Failed to copy {child.Name} to {parent.Name}! ======> {e.Message}");
+                WaapiLog.InternalLog($"Failed to copy {child.Name} to {parent.Name}! ======> {e.Message}");
             }
 
             return false;
@@ -227,13 +227,13 @@ namespace WwiseTools.Utils
                     TimeOut
                     );
 
-                WaapiLog.Log($"Moved {child.Name} to {parent.Name}!");
+                WaapiLog.InternalLog($"Moved {child.Name} to {parent.Name}!");
 
                 return true;
             }
             catch (Exception e)
             {
-                WaapiLog.Log($"Failed to move {child.Name} to {parent.Name}! ======> {e.Message}");
+                WaapiLog.InternalLog($"Failed to move {child.Name} to {parent.Name}! ======> {e.Message}");
             }
 
             return false;
@@ -258,13 +258,13 @@ namespace WwiseTools.Utils
                     TimeOut
                     );
 
-                WaapiLog.Log($"Successfully set {target.Name} note to \"{note}\"!");
+                WaapiLog.InternalLog($"Successfully set {target.Name} note to \"{note}\"!");
 
                 return true;
             }
             catch (Exception e)
             {
-                WaapiLog.Log($"Failed to set note for {target.Name}! ======> {e.Message}");
+                WaapiLog.InternalLog($"Failed to set note for {target.Name}! ======> {e.Message}");
             }
 
             return false;
@@ -323,13 +323,13 @@ namespace WwiseTools.Utils
                         TimeOut
                     );
 
-                WaapiLog.Log($"Event {eventName} created successfully!");
+                WaapiLog.InternalLog($"Event {eventName} created successfully!");
                 if (result["id"] == null) throw new Exception();
                 return await GetWwiseObjectByIDAsync(result["id"].ToString());
             }
             catch (Exception e)
             {
-                WaapiLog.Log($"Failed to created play event : {eventName}! ======> {e.Message} ");
+                WaapiLog.InternalLog($"Failed to created play event : {eventName}! ======> {e.Message} ");
                 return null;
             }
         }
@@ -366,7 +366,7 @@ namespace WwiseTools.Utils
             }
             catch (Exception e)
             {
-                WaapiLog.Log($"Failed to Add Event to Bank ======> {e.Message}");
+                WaapiLog.InternalLog($"Failed to Add Event to Bank ======> {e.Message}");
             }
 
             return false;
@@ -394,13 +394,13 @@ namespace WwiseTools.Utils
                     null
                 );
 
-                WaapiLog.Log($"Object {objectName} created successfully!");
+                WaapiLog.InternalLog($"Object {objectName} created successfully!");
                 if (result["id"] == null) throw new Exception();
                 return await GetWwiseObjectByIDAsync(result["id"].ToString());
             }
             catch (Exception e)
             {
-                WaapiLog.Log($"Failed to create object : {objectName}! ======> {e.Message}");
+                WaapiLog.InternalLog($"Failed to create object : {objectName}! ======> {e.Message}");
                 return null;
             }
         }
@@ -434,13 +434,13 @@ namespace WwiseTools.Utils
                     null
                     );
 
-                WaapiLog.Log($"Object {objectName} created successfully!");
+                WaapiLog.InternalLog($"Object {objectName} created successfully!");
                 if (result["id"] == null) throw new Exception();
                 return await GetWwiseObjectByIDAsync(result["id"].ToString());
             }
             catch (Exception e)
             {
-                WaapiLog.Log($"Failed to create object : {objectName}! ======> {e.Message}");
+                WaapiLog.InternalLog($"Failed to create object : {objectName}! ======> {e.Message}");
                 return null;
             }
         }
@@ -475,13 +475,13 @@ namespace WwiseTools.Utils
                     null
                 );
 
-                WaapiLog.Log($"Object {objectName} created successfully!");
+                WaapiLog.InternalLog($"Object {objectName} created successfully!");
                 if (result["id"] == null) throw new Exception();
                 return await GetWwiseObjectByIDAsync(result["id"].ToString());
             }
             catch (Exception e)
             {
-                WaapiLog.Log($"Failed to create object : {objectName}! ======> {e.Message}");
+                WaapiLog.InternalLog($"Failed to create object : {objectName}! ======> {e.Message}");
                 return null;
             }
         }
@@ -512,12 +512,12 @@ namespace WwiseTools.Utils
                     null
                     );
 
-                WaapiLog.Log($"Object {path} deleted successfully!");
+                WaapiLog.InternalLog($"Object {path} deleted successfully!");
                 return true;
             }
             catch (Exception e)
             {
-                WaapiLog.Log($"Failed to delete object : {path}! ======> {e.Message}");
+                WaapiLog.InternalLog($"Failed to delete object : {path}! ======> {e.Message}");
                 
             }
 
@@ -561,13 +561,13 @@ namespace WwiseTools.Utils
                 string id = jresult["return"].Last["id"]?.ToString();
                 string type = jresult["return"].Last["type"]?.ToString();
 
-                WaapiLog.Log($"WwiseObject {name} successfully fetched!");
+                WaapiLog.InternalLog($"WwiseObject {name} successfully fetched!");
 
                 return new WwiseObject(name, id, type);
             }
             catch (Exception e)
             {
-                WaapiLog.Log($"Failed to return WwiseObject from ID : {targetId}! ======> {e.Message}");
+                WaapiLog.InternalLog($"Failed to return WwiseObject from ID : {targetId}! ======> {e.Message}");
                 return null;
             }
 
@@ -603,12 +603,12 @@ namespace WwiseTools.Utils
 
                 if (jresult["return"] == null) throw new Exception();
 
-                WaapiLog.Log($"WwiseProperty {wwiseProperty} successfully fetched!");
+                WaapiLog.InternalLog($"WwiseProperty {wwiseProperty} successfully fetched!");
                 return jresult["return"].Last?["@" + wwiseProperty];
             }
             catch (Exception e)
             {
-                WaapiLog.Log($"Failed to return WwiseObject Property : {targetId}! ======> {e.Message}");
+                WaapiLog.InternalLog($"Failed to return WwiseObject Property : {targetId}! ======> {e.Message}");
                 return null;
             }
 
@@ -644,14 +644,14 @@ namespace WwiseTools.Utils
 
                 if (jresult["return"] == null) throw new Exception();
 
-                WaapiLog.Log($"WwiseProperty {wwiseProperty} successfully fetched!");
+                WaapiLog.InternalLog($"WwiseProperty {wwiseProperty} successfully fetched!");
                 var r = jresult["return"].Last?["@" + wwiseProperty];
                 if (r == null) return null;
                 return new WwiseProperty(wwiseProperty, r.ToString());
             }
             catch (Exception e)
             {
-                WaapiLog.Log($"Failed to return WwiseObject Property : {wwiseObject.Name}! ======> {e.Message}");
+                WaapiLog.InternalLog($"Failed to return WwiseObject Property : {wwiseObject.Name}! ======> {e.Message}");
                 return null;
             }
 
@@ -693,7 +693,7 @@ namespace WwiseTools.Utils
             }
             catch (Exception e)
             {
-                WaapiLog.Log($"Failed to get path of object : {ID}! =======> {e.Message}");
+                WaapiLog.InternalLog($"Failed to get path of object : {ID}! =======> {e.Message}");
                 return null;
             }
 
@@ -739,13 +739,13 @@ namespace WwiseTools.Utils
                 string id = obj["id"]?.ToString();
                 string type = obj["type"]?.ToString();
 
-                WaapiLog.Log($"WwiseObject {name} successfully fetched!");
+                WaapiLog.InternalLog($"WwiseObject {name} successfully fetched!");
 
                 return new WwiseObject(name, id, type);
             }
             catch (Exception e)
             {
-                WaapiLog.Log($"Failed to return WwiseObject by name : {targetName}! ======> {e.Message}");
+                WaapiLog.InternalLog($"Failed to return WwiseObject by name : {targetName}! ======> {e.Message}");
                 return null;
             }
 
@@ -789,13 +789,13 @@ namespace WwiseTools.Utils
                 string id = obj["id"]?.ToString();
                 string type = obj["type"]?.ToString();
 
-                WaapiLog.Log($"WwiseObject {name} successfully fetched!");
+                WaapiLog.InternalLog($"WwiseObject {name} successfully fetched!");
 
                 return new WwiseObject(name, id, type);
             }
             catch (Exception e)
             {
-                WaapiLog.Log($"Failed to return WwiseObject by path : {path}! ======> {e.Message}");
+                WaapiLog.InternalLog($"Failed to return WwiseObject by path : {path}! ======> {e.Message}");
                 return null;
             }
 
@@ -851,13 +851,13 @@ namespace WwiseTools.Utils
 
 
 
-                WaapiLog.Log($"WwiseObject list or type {targetType} successfully fetched!");
+                WaapiLog.InternalLog($"WwiseObject list or type {targetType} successfully fetched!");
 
                 
             }
             catch (Exception e)
             {
-                WaapiLog.Log($"Failed to return WwiseObject list of type : {targetType}! ======> {e.Message}");
+                WaapiLog.InternalLog($"Failed to return WwiseObject list of type : {targetType}! ======> {e.Message}");
             }
 
             return result;
@@ -896,13 +896,13 @@ namespace WwiseTools.Utils
                     result.Add(new WwiseObject(name, id, type));
                 }
 
-                WaapiLog.Log($"Selected WwiseObject list successfully fetched!");
+                WaapiLog.InternalLog($"Selected WwiseObject list successfully fetched!");
 
                
             }
             catch (Exception e)
             {
-                WaapiLog.Log($"Failed to return Selected WwiseObject list! ======> {e.Message}");
+                WaapiLog.InternalLog($"Failed to return Selected WwiseObject list! ======> {e.Message}");
             }
 
             return result;
@@ -946,12 +946,12 @@ namespace WwiseTools.Utils
                         resultList.Add(name);
                 }
 
-                WaapiLog.Log($"Language list fetched successfully!");
+                WaapiLog.InternalLog($"Language list fetched successfully!");
 
             }
             catch (Exception e)
             {
-                WaapiLog.Log($"Failed to return language list! ======> {e.Message}");
+                WaapiLog.InternalLog($"Failed to return language list! ======> {e.Message}");
             }
 
             return resultList;
@@ -987,7 +987,7 @@ namespace WwiseTools.Utils
                 }
                 catch (IOException e)
                 {
-                    WaapiLog.Log($"Failed to get file name from {filePath} ======> {e.Message}");
+                    WaapiLog.InternalLog($"Failed to get file name from {filePath} ======> {e.Message}");
                     return null;
                 }
             }
@@ -1027,13 +1027,13 @@ namespace WwiseTools.Utils
                 if (result == null || result["objects"] == null || 
                     result["objects"].Last == null || result["objects"].Last["id"] == null) return null;
 
-                WaapiLog.Log($"File {filePath} imported successfully!");
+                WaapiLog.InternalLog($"File {filePath} imported successfully!");
 
                 return await GetWwiseObjectByIDAsync(result["objects"].Last["id"].ToString());
             }
             catch (Exception e)
             {
-                WaapiLog.Log($"Failed to import file : {filePath} ======> {e.Message}");
+                WaapiLog.InternalLog($"Failed to import file : {filePath} ======> {e.Message}");
                 return null;
             }
         }
@@ -1077,13 +1077,13 @@ namespace WwiseTools.Utils
                     filePath = obj["filePath"]?.ToString();
                 }
 
-                WaapiLog.Log($"Work Unit file path of object {@object.Name} successfully fetched!");
+                WaapiLog.InternalLog($"Work Unit file path of object {@object.Name} successfully fetched!");
 
                 return filePath;
             }
             catch (Exception e)
             {
-                WaapiLog.Log($"Failed to return Work Unit file path of object : {@object.Name}! ======> {e.Message}");
+                WaapiLog.InternalLog($"Failed to return Work Unit file path of object : {@object.Name}! ======> {e.Message}");
                 return null;
             }
         }
@@ -1121,13 +1121,13 @@ namespace WwiseTools.Utils
                 var func = Function.Verify("ak.wwise.ui.project.open");
                 await _client.Call(func, query, null, TimeOut);
 
-                WaapiLog.Log("Project loaded successfully!");
+                WaapiLog.InternalLog("Project loaded successfully!");
 
                 return true;
             }
             catch (Exception e)
             {
-                WaapiLog.Log($"Failed to load project! =======> {e.Message}");
+                WaapiLog.InternalLog($"Failed to load project! =======> {e.Message}");
             }
 
             return false;
@@ -1171,13 +1171,13 @@ namespace WwiseTools.Utils
                     name = obj["name"]?.ToString();
                 }
 
-                WaapiLog.Log($"Project name successfully fetched!");
+                WaapiLog.InternalLog($"Project name successfully fetched!");
 
                 return name;
             }
             catch (Exception e)
             {
-                WaapiLog.Log($"Failed to return project name! ======> {e.Message}");
+                WaapiLog.InternalLog($"Failed to return project name! ======> {e.Message}");
                 return null;
             }
         }
@@ -1220,13 +1220,13 @@ namespace WwiseTools.Utils
                     filePath = obj["filePath"]?.ToString();
                 }
 
-                WaapiLog.Log($"Project path successfully fetched!");
+                WaapiLog.InternalLog($"Project path successfully fetched!");
 
                 return filePath;
             }
             catch (Exception e)
             {
-                WaapiLog.Log($"Failed to return project path! ======> {e.Message}");
+                WaapiLog.InternalLog($"Failed to return project path! ======> {e.Message}");
                 return null;
             }
         }
@@ -1260,7 +1260,7 @@ namespace WwiseTools.Utils
             }
             catch (Exception e)
             {
-                WaapiLog.Log($"Failed to get Wwise info! ======> {e.Message}");
+                WaapiLog.InternalLog($"Failed to get Wwise info! ======> {e.Message}");
             }
 
             return null;
@@ -1301,7 +1301,7 @@ namespace WwiseTools.Utils
             }
             catch (Exception e)
             {
-                WaapiLog.Log($"Failed to execute command {command}! ======> {e.Message}");
+                WaapiLog.InternalLog($"Failed to execute command {command}! ======> {e.Message}");
             }
 
             return false;
@@ -1354,7 +1354,7 @@ namespace WwiseTools.Utils
             }
             catch (Exception e)
             {
-                WaapiLog.Log($"Failed to get references of {wwiseObject.Name} ======> {e.Message}");
+                WaapiLog.InternalLog($"Failed to get references of {wwiseObject.Name} ======> {e.Message}");
             }
 
             return result;
@@ -1407,7 +1407,7 @@ namespace WwiseTools.Utils
             }
             catch (Exception e)
             {
-                WaapiLog.Log($"Failed to get children ======> {e.Message}");
+                WaapiLog.InternalLog($"Failed to get children ======> {e.Message}");
             }
 
             return result;
@@ -1459,7 +1459,7 @@ namespace WwiseTools.Utils
             }
             catch (Exception e)
             {
-                WaapiLog.Log($"Failed to get children of {wwiseObject.Name} ======> {e.Message}");
+                WaapiLog.InternalLog($"Failed to get children of {wwiseObject.Name} ======> {e.Message}");
             }
 
             return null;
@@ -1512,7 +1512,7 @@ namespace WwiseTools.Utils
             }
             catch (Exception e)
             {
-                WaapiLog.Log($"Failed to get children ======> {e.Message}");
+                WaapiLog.InternalLog($"Failed to get children ======> {e.Message}");
             }
 
             return result;
@@ -1565,7 +1565,7 @@ namespace WwiseTools.Utils
             }
             catch (Exception e)
             {
-                WaapiLog.Log($"Failed to get children of {wwiseObject.Name} ======> {e.Message}");
+                WaapiLog.InternalLog($"Failed to get children of {wwiseObject.Name} ======> {e.Message}");
             }
 
             return result;
@@ -1618,7 +1618,7 @@ namespace WwiseTools.Utils
             }
             catch (Exception e)
             {
-                WaapiLog.Log($"Failed to get children of {wwiseObject.Name} ======> {e.Message}");
+                WaapiLog.InternalLog($"Failed to get children of {wwiseObject.Name} ======> {e.Message}");
             }
 
             return result;
@@ -1671,7 +1671,7 @@ namespace WwiseTools.Utils
             }
             catch (Exception e)
             {
-                WaapiLog.Log($"Failed to get children of {wwiseObject.Name} ======> {e.Message}");
+                WaapiLog.InternalLog($"Failed to get children of {wwiseObject.Name} ======> {e.Message}");
             }
 
             return result;
@@ -1703,7 +1703,7 @@ namespace WwiseTools.Utils
             }
             catch (Exception e)
             {
-                WaapiLog.Log($"Failed to generate sound bank! ======> {e.Message}");
+                WaapiLog.InternalLog($"Failed to generate sound bank! ======> {e.Message}");
             }
 
             return false;
@@ -1726,7 +1726,7 @@ namespace WwiseTools.Utils
             }
             catch (Exception e)
             {
-                WaapiLog.Log(e);
+                WaapiLog.InternalLog(e);
             }
 
             return false;
@@ -1749,7 +1749,7 @@ namespace WwiseTools.Utils
             }
             catch (Exception e)
             {
-                WaapiLog.Log(e);
+                WaapiLog.InternalLog(e);
             }
 
             return false;
@@ -1767,13 +1767,13 @@ namespace WwiseTools.Utils
                 var func = Function.Verify("ak.wwise.core.project.save");
 
                 await _client.Call(func, null, null, TimeOut);
-                WaapiLog.Log("Project saved successfully!");
+                WaapiLog.InternalLog("Project saved successfully!");
 
                 return true;
             }
             catch (Exception e)
             {
-                WaapiLog.Log($"Failed to save project! =======> {e.Message}");
+                WaapiLog.InternalLog($"Failed to save project! =======> {e.Message}");
             }
 
             return false;

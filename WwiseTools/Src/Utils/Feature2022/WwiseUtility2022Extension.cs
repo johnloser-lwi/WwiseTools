@@ -51,14 +51,14 @@ namespace WwiseTools.Utils.Feature2022
 
                 for (int i = 0; i < wwiseProperties.Length; i++)
                 {
-                    WaapiLog.Log($"Property {wwiseProperties[i].Name} successfully changed to {wwiseProperties[i].Value}!");
+                    WaapiLog.InternalLog($"Property {wwiseProperties[i].Name} successfully changed to {wwiseProperties[i].Value}!");
                 }
                 
             }
             catch (Exception e)
             {
                 for (int i = 0; i < wwiseProperties.Length; i++)
-                    WaapiLog.Log($"Failed to set property \"{wwiseProperties[i].Name}\" for {wwiseObjects.Count} object(s) ======> {e.Message}");
+                    WaapiLog.InternalLog($"Failed to set property \"{wwiseProperties[i].Name}\" for {wwiseObjects.Count} object(s) ======> {e.Message}");
             }
         }
 
@@ -102,12 +102,12 @@ namespace WwiseTools.Utils.Feature2022
                     null, utility.TimeOut);
 
                 for (int i = 0; i < wwiseReferences.Length; i++)
-                    WaapiLog.Log($"Reference {wwiseReferences[i].Name} successfully set to {wwiseReferences[i].Object.Name}!");
+                    WaapiLog.InternalLog($"Reference {wwiseReferences[i].Name} successfully set to {wwiseReferences[i].Object.Name}!");
             }
             catch (Exception e)
             {
                 for (int i = 0; i < wwiseReferences.Length; i++)
-                    WaapiLog.Log($"Failed to set reference \"{wwiseReferences[i].Name}\" " +
+                    WaapiLog.InternalLog($"Failed to set reference \"{wwiseReferences[i].Name}\" " +
                                  $"for {wwiseObjects.Count} object(s)  ======> {e.Message}");
             }
         }

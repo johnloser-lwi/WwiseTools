@@ -77,7 +77,7 @@ namespace WwiseTools.Objects
             }
             catch (Exception e)
             {
-                WaapiLog.Log($"Failed to get property and reference names from {Name}! ======> {e.Message}");
+                WaapiLog.InternalLog($"Failed to get property and reference names from {Name}! ======> {e.Message}");
                 return null;
             }
         }

@@ -92,11 +92,11 @@ namespace WwiseTools.Components
                         WwiseUtility.Instance.TimeOut
                     );
 
-                WaapiLog.Log($"Music Cue {name} created successfully!");
+                WaapiLog.InternalLog($"Music Cue {name} created successfully!");
             }
             catch (Exception e)
             {
-                WaapiLog.Log($"Failed to create Cue : {name}! ======> {e.Message}");
+                WaapiLog.InternalLog($"Failed to create Cue : {name}! ======> {e.Message}");
             }
         }
 

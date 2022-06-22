@@ -61,7 +61,7 @@ namespace WwiseTools.Utils.Profiler
             }
             catch (Exception e)
             {
-                WaapiLog.Log($"Failed to get consoles! ======> {e.Message}");
+                WaapiLog.InternalLog($"Failed to get consoles! ======> {e.Message}");
             }
 
             return result;
@@ -85,11 +85,11 @@ namespace WwiseTools.Utils.Profiler
 
                 await util.CallAsync(func, query, null, util.TimeOut);
 
-                WaapiLog.Log($"Successfully connected to remote {remoteInfo}!");
+                WaapiLog.InternalLog($"Successfully connected to remote {remoteInfo}!");
             }
             catch (Exception e)
             {
-                WaapiLog.Log($"Failed to connect to remote {remoteInfo}! ======> {e.Message}");
+                WaapiLog.InternalLog($"Failed to connect to remote {remoteInfo}! ======> {e.Message}");
             }
         }
 
@@ -141,7 +141,7 @@ namespace WwiseTools.Utils.Profiler
             }
             catch (Exception e)
             {
-                WaapiLog.Log(e);
+                WaapiLog.InternalLog(e);
             }
         }
 
@@ -159,7 +159,7 @@ namespace WwiseTools.Utils.Profiler
             }
             catch (Exception e)
             {
-                WaapiLog.Log(e);
+                WaapiLog.InternalLog(e);
             }
         }
 
@@ -173,11 +173,11 @@ namespace WwiseTools.Utils.Profiler
 
                 await util.CallAsync(func, null, null, util.TimeOut);
 
-                WaapiLog.Log("Remote disconnected!");
+                WaapiLog.InternalLog("Remote disconnected!");
             }
             catch (Exception e)
             {
-                WaapiLog.Log($"Failed to disconnect to remote! ======> {e.Message}");
+                WaapiLog.InternalLog($"Failed to disconnect to remote! ======> {e.Message}");
             }
         }
 
@@ -196,7 +196,7 @@ namespace WwiseTools.Utils.Profiler
             }
             catch (Exception e)
             {
-                WaapiLog.Log($"Failed get connection status! ======> {e.Message}");
+                WaapiLog.InternalLog($"Failed get connection status! ======> {e.Message}");
             }
 
             return false;
@@ -210,11 +210,11 @@ namespace WwiseTools.Utils.Profiler
             {
                 var func = util.Function.Verify("ak.wwise.core.profiler.startCapture");
                 await util.CallAsync(func, null, null, util.TimeOut);
-                WaapiLog.Log("Profiler capture started!");
+                WaapiLog.InternalLog("Profiler capture started!");
             }
             catch (Exception e)
             {
-                WaapiLog.Log($"Profiler failed to start capture! ======> {e.Message}");
+                WaapiLog.InternalLog($"Profiler failed to start capture! ======> {e.Message}");
             }
         }
 
@@ -228,13 +228,13 @@ namespace WwiseTools.Utils.Profiler
                 var jresult = await util.CallAsync(func, null, null, util.TimeOut);
                 int.TryParse(jresult["return"]?.ToString(), out int cursorTime);
 
-                WaapiLog.Log("Profiler capture stop!");
+                WaapiLog.InternalLog("Profiler capture stop!");
 
                 return cursorTime;
             }
             catch (Exception e)
             {
-                WaapiLog.Log($"Profiler failed to stop capture! ======> {e.Message}");
+                WaapiLog.InternalLog($"Profiler failed to stop capture! ======> {e.Message}");
             }
 
             return -1;
@@ -261,7 +261,7 @@ namespace WwiseTools.Utils.Profiler
             }
             catch (Exception e)
             {
-                WaapiLog.Log($"Profiler failed to get cursor time! ======> {e.Message}");
+                WaapiLog.InternalLog($"Profiler failed to get cursor time! ======> {e.Message}");
             }
 
             return -1;
@@ -306,7 +306,7 @@ namespace WwiseTools.Utils.Profiler
             }
             catch (Exception e)
             {
-                WaapiLog.Log($"Profiler failed to get RTPCs! ======> {e.Message}");
+                WaapiLog.InternalLog($"Profiler failed to get RTPCs! ======> {e.Message}");
             }
 
             return result;
@@ -412,7 +412,7 @@ namespace WwiseTools.Utils.Profiler
             }
             catch (Exception e)
             {
-                WaapiLog.Log($"Profiler failed to get voices! ======> {e.Message}");
+                WaapiLog.InternalLog($"Profiler failed to get voices! ======> {e.Message}");
             }
 
             return result;
@@ -492,7 +492,7 @@ namespace WwiseTools.Utils.Profiler
             }
             catch (Exception e)
             {
-                WaapiLog.Log($"Profiler failed to get busses! ======> {e.Message}");
+                WaapiLog.InternalLog($"Profiler failed to get busses! ======> {e.Message}");
             }
 
             return result;

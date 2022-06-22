@@ -45,7 +45,7 @@ namespace WwiseTools.Utils
             }
             catch (Exception e)
             {
-                WaapiLog.Log($"Failed to parse file {filePath}! ======> {e.Message}");
+                WaapiLog.InternalLog($"Failed to parse file {filePath}! ======> {e.Message}");
             }
         }
 

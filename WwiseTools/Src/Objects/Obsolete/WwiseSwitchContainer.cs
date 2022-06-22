@@ -120,7 +120,7 @@ namespace WwiseTools.Objects
             {
                 if (assignment.AssignedSwitch == stateOrSwitch && assignment.Child == child)
                 {
-                    WaapiLog.Log($"Child {child.Name} has already been assigned to {stateOrSwitch.Type} : {stateOrSwitch.Name}!");
+                    WaapiLog.InternalLog($"Child {child.Name} has already been assigned to {stateOrSwitch.Type} : {stateOrSwitch.Name}!");
                     return;
                 }
             }
@@ -143,7 +143,7 @@ namespace WwiseTools.Objects
             }
             catch (Exception e)
             {
-                WaapiLog.Log($"Failed to assign {child.Name} to {stateOrSwitch}! ======> {e.Message}");
+                WaapiLog.InternalLog($"Failed to assign {child.Name} to {stateOrSwitch}! ======> {e.Message}");
             }
         }
 
@@ -190,7 +190,7 @@ namespace WwiseTools.Objects
             }
             catch (Exception e)
             {
-                WaapiLog.Log($"Failed to assign {child.Name} to {stateOrSwitch}! ======> {e.Message}");
+                WaapiLog.InternalLog($"Failed to assign {child.Name} to {stateOrSwitch}! ======> {e.Message}");
             }
         }
 
@@ -235,7 +235,7 @@ namespace WwiseTools.Objects
             }
             catch (Exception e)
             {
-                WaapiLog.Log($"Failed to get assignment of {Name}! ======> {e.Message}");
+                WaapiLog.InternalLog($"Failed to get assignment of {Name}! ======> {e.Message}");
                 return null;
             }
         }
@@ -283,7 +283,7 @@ namespace WwiseTools.Objects
             }
             catch (Exception e)
             {
-                WaapiLog.Log($"Failed to get assignment of {Name}! ======> {e.Message}");
+                WaapiLog.InternalLog($"Failed to get assignment of {Name}! ======> {e.Message}");
 
             }
 

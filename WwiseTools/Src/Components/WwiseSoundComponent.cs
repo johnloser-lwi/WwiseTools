@@ -73,7 +73,7 @@ namespace WwiseTools.Components
             }
             catch (Exception e)
             {
-                WaapiLog.Log($"Failed to return WaveFilePath from ID : {WwiseObject.ID}! ======> {e.Message}");
+                WaapiLog.InternalLog($"Failed to return WaveFilePath from ID : {WwiseObject.ID}! ======> {e.Message}");
                 return null;
             }
 

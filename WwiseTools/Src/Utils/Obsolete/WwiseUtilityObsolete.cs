@@ -30,19 +30,19 @@ namespace WwiseTools.Utils
                 _client = new JsonClient();
                 await _client.Connect(); // 尝试创建Wwise连接
 
-                WaapiLog.Log("Connected successfully!");
+                WaapiLog.InternalLog("Connected successfully!");
 
                 _client.Disconnected += () =>
                 {
                     _client = null;
                     Disconnected?.Invoke();
-                    WaapiLog.Log("Connection closed!"); // 丢失连接提示
+                    WaapiLog.InternalLog("Connection closed!"); // 丢失连接提示
                 };
                 return true;
             }
             catch (Exception e)
             {
-                WaapiLog.Log($"Failed to connect! ======> {e.Message}");
+                WaapiLog.InternalLog($"Failed to connect! ======> {e.Message}");
                 return false;
             }
         }
@@ -62,7 +62,7 @@ namespace WwiseTools.Utils
             }
             catch (Exception e)
             {
-                WaapiLog.Log($"Error while closing! ======> {e.Message}");
+                WaapiLog.InternalLog($"Error while closing! ======> {e.Message}");
             }
         }
 
@@ -392,12 +392,12 @@ namespace WwiseTools.Utils
                     var r = ImportSound(f, language, subFolder, parentPath);
                     results.Add(r);
                 }
-                WaapiLog.Log($"File(s) in folder {folderPath} imported successfully!");
+                WaapiLog.InternalLog($"File(s) in folder {folderPath} imported successfully!");
                 return results;
             }
             catch (Exception e)
             {
-                WaapiLog.Log($"Failed to import from folder : {folderPath}! ======> {e.Message}");
+                WaapiLog.InternalLog($"Failed to import from folder : {folderPath}! ======> {e.Message}");
                 return null;
             }
         }

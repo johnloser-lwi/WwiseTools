@@ -46,7 +46,7 @@ namespace WwiseTools.Utils
                     }
                 }
                 if (result)
-                    WaapiLog.Log($"Warning: No matching function for {func}! Using {final} instead!");
+                    WaapiLog.InternalLog($"Warning: No matching function for {func}! Using {final} instead!");
             }
 
             if (!result) 

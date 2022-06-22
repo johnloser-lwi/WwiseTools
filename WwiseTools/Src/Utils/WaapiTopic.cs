@@ -43,7 +43,7 @@ namespace WwiseTools.Utils
                     }
                 }
                 if (result)
-                    WaapiLog.Log($"Warning: No matching topic for {topic}! Using {final} instead!");
+                    WaapiLog.InternalLog($"Warning: No matching topic for {topic}! Using {final} instead!");
             }
 
             if (!result)

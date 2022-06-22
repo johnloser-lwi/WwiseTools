@@ -76,7 +76,7 @@ namespace WwiseTools.Components
             }
             catch (Exception e)
             {
-                WaapiLog.Log($"Failed to get PlaylistRoot of object : {WwiseObject.Name}! =======> {e.Message}");
+                WaapiLog.InternalLog($"Failed to get PlaylistRoot of object : {WwiseObject.Name}! =======> {e.Message}");
                 return null;
             }
 

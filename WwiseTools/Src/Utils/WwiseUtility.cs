@@ -92,7 +92,7 @@ namespace WwiseTools.Utils
             }
             catch (Exception e)
             {
-                WaapiLog.Log($"Failed to subscribe {topic} ======> {e.Message}");
+                WaapiLog.InternalLog($"Failed to subscribe {topic} ======> {e.Message}");
 
                 return false;
             }
@@ -112,7 +112,7 @@ namespace WwiseTools.Utils
             }
             catch (Exception e)
             {
-                WaapiLog.Log($"Failed to unsubscribe {topic} ======> {e.Message}");
+                WaapiLog.InternalLog($"Failed to unsubscribe {topic} ======> {e.Message}");
 
                 return true;
             }
@@ -130,18 +130,18 @@ namespace WwiseTools.Utils
             try
             {
                 _initializing = true;
-                WaapiLog.Log("Initializing...");
+                WaapiLog.InternalLog("Initializing...");
                 _client = new JsonClient();
                 await _client.Connect($"ws://localhost:{wampPort}/waapi", TimeOut); // 尝试创建Wwise连接
                 await GetFunctionsAsync();
                 await GetTopicsAsync();
-                WaapiLog.Log("Connected successfully!");
+                WaapiLog.InternalLog("Connected successfully!");
 
                 _client.Disconnected += () =>
                 {
                     _client = null;
                     ConnectionInfo = null;
-                    WaapiLog.Log("Connection closed!"); // 丢失连接提示
+                    WaapiLog.InternalLog("Connection closed!"); // 丢失连接提示
                 };
 
 
@@ -149,7 +149,7 @@ namespace WwiseTools.Utils
 
                 for (int i = 0; i < 5; i++)
                 {
-                    WaapiLog.Log("Trying to fetch connection info ...");
+                    WaapiLog.InternalLog("Trying to fetch connection info ...");
 
                     ConnectionInfo = await GetWwiseInfoAsync();
 
@@ -160,19 +160,19 @@ namespace WwiseTools.Utils
 
                 if (ConnectionInfo == null)
                 {
-                    WaapiLog.Log("Failed to fetch connection info!");
+                    WaapiLog.InternalLog("Failed to fetch connection info!");
 
                     await DisconnectAsync();
                     return false;
                 }
 
 
-                WaapiLog.Log(ConnectionInfo);
+                WaapiLog.InternalLog(ConnectionInfo);
                 return true;
             }
             catch (Exception e)
             {
-                WaapiLog.Log($"Failed to connect! ======> {e.Message}");
+                WaapiLog.InternalLog($"Failed to connect! ======> {e.Message}");
                 return false;
             }
             finally
@@ -195,7 +195,7 @@ namespace WwiseTools.Utils
             }
             catch (Exception e)
             {
-                WaapiLog.Log($"Error while closing! ======> {e.Message}");
+                WaapiLog.InternalLog($"Error while closing! ======> {e.Message}");
             }
         }
 

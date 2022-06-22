@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace WwiseTools.Utils
 {
@@ -41,22 +36,18 @@ namespace WwiseTools.Utils
 
         public static void Log(object message)
         {
-            if (!Instance._enableStandardLog)
-            {
-                try
-                {
-                    var mth = new StackTrace()?.GetFrame(1)?.GetMethod()?.ReflectedType;
-                    if (mth != null && 
-                        mth.Namespace != null && 
-                        mth.Namespace.StartsWith("WwiseTools")) return;
-                }
-                catch
-                {
-                }
-                
-            }
 
             if (Instance._enabled) Instance.Logger?.Invoke(message?.ToString(), Instance._firstLog);
+            if (Instance._firstLog) Instance._firstLog = false;
+        }
+
+        internal static void InternalLog(object message, [CallerMemberName] string caller = "")
+        {
+            if (!Instance._enableStandardLog) return;
+            string msg = message?.ToString();
+            msg = !string.IsNullOrEmpty(msg) ? $"[{caller}] " + msg : "";
+
+            if (Instance._enabled) Instance.Logger?.Invoke(msg, Instance._firstLog);
             if (Instance._firstLog) Instance._firstLog = false;
         }
 

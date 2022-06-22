@@ -49,13 +49,13 @@ namespace WwiseTools.Components
                 float.TryParse(jresult["return"].Last["audioSource:maxDurationSource"]["trimmedDuration"]?.ToString(),
                     out float duration);
 
-                WaapiLog.Log($"Duration of WwiseObject {WwiseObject.Name} is {duration}s");
+                WaapiLog.InternalLog($"Duration of WwiseObject {WwiseObject.Name} is {duration}s");
 
                 return duration;
             }
             catch (Exception e)
             {
-                WaapiLog.Log($"Failed to return file path of Object : {WwiseObject.Name}! ======> {e.Message}");
+                WaapiLog.InternalLog($"Failed to return file path of Object : {WwiseObject.Name}! ======> {e.Message}");
                 return -1;
             }
         }
