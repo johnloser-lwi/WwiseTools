@@ -6,6 +6,8 @@
 ___
 
 ## 使用说明
+### 配置工程
+新建工程，将WwiseTools.dll添加至依赖，并**通过Nuget Package Manager获取NewtonSoft.Json**。
 ### 导入单个音频
 ```csharp
 // 所有非异步执行的函数将会被逐步删除，请尽可能使用异步执行函数
