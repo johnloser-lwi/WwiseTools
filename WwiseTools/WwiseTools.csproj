@@ -112,6 +112,9 @@
     <Compile Include="Src\Models\Profiler\ProfilerRemoteInfo.cs" />
     <Compile Include="Src\Objects\WwiseObjectStandardExtensions.cs" />
     <Compile Include="Src\Utils\Feature2021\WwiseUtility2021Extension.cs" />
+    <Compile Include="Src\Utils\SoundBank\GeneratedSoundBankExtension.cs" />
+    <Compile Include="Src\Models\SoundBank\GeneratedSoundBankInfo.cs" />
+    <Compile Include="Src\Models\SoundBank\GeneratedSoundBankPath.cs" />
     <Compile Include="Src\Utils\WaapiTopic.cs" />
     <Compile Include="Src\Utils\WwiseFactory.cs" />
     <Compile Include="Src\Utils\Obsolete\WwiseUtilityObsolete.cs" />
