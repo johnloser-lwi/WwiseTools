@@ -22,10 +22,16 @@ namespace Examples
             var info = result.Where(i => i.Platform == "Android" && (i.Language == "English(US)" || i.Language == "SFX")).ToList();
             info.Sort((a, b) => a.SoundBankSize().CompareTo(b.SoundBankSize()) * -1);
 
+            long total = 0;
+
             foreach (var generatedSoundBankInfo in info)
             {
                 WaapiLog.Log($"{generatedSoundBankInfo.Name} : {generatedSoundBankInfo.SoundBankSize()}");
+
+                total += generatedSoundBankInfo.SoundBankSize();
             }
+
+            WaapiLog.Log($"Total size : {total}");
         }
     }
 }
