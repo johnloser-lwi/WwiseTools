@@ -11,32 +11,32 @@ public class GeneratedSoundBankInfo
     public string Path { get; set; }
     public List<string> ReferencedStreamedFiles { get; set; } = new List<string>();
 
-    public long SoundBankSize(bool includeStreamedMedia = true)
+    public long SoundBankSizeWithStreamedMedia => SoundBankSize + StreamedMediaSize;
+
+
+    public long SoundBankSize
     {
-
-        if (!File.Exists(Path)) return 0;
-
-        long total = 0;
-        long bankSize = (new FileInfo(Path)).Length;
-
-        total += bankSize;
-
-        if (!includeStreamedMedia) return total;
-
-        total += StreamedMediaSize();
-
-        return total;
-    }
-
-    public long StreamedMediaSize()
-    {
-        long total = 0;
-        foreach (var referencedStreamedFile in ReferencedStreamedFiles)
+        get
         {
-            if (!File.Exists(referencedStreamedFile)) continue;
-            total += (new FileInfo(referencedStreamedFile).Length);
+            if (!File.Exists(Path)) return 0;
+            return (new FileInfo(Path)).Length;
         }
-
-        return total;
     }
+
+
+    public long StreamedMediaSize
+    {
+        get
+        {
+            long total = 0;
+            foreach (var referencedStreamedFile in ReferencedStreamedFiles)
+            {
+                if (!File.Exists(referencedStreamedFile)) continue;
+                total += (new FileInfo(referencedStreamedFile).Length);
+            }
+
+            return total;
+        }
+    }
+
 }
