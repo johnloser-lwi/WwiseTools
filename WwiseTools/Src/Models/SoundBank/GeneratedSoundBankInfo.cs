@@ -9,10 +9,10 @@ public class GeneratedSoundBankInfo
     public string Language { get; set; }
     public string Name { get; set; }
     public string Path { get; set; }
-    public List<string> ReferencedStreamedFiles { get; set; } = new List<string>();
+    public List<string> ReferencedStreamedFiles { get; } = new List<string>();
+    public List<string> LooseMediaFiles { get; } = new List<string>();
 
-    public long SoundBankSizeWithStreamedMedia => SoundBankSize + StreamedMediaSize;
-
+    public long TotalSoundBankSize => SoundBankSize + StreamedMediaSize + LooseMediaSize;
 
     public long SoundBankSize
     {
@@ -33,6 +33,21 @@ public class GeneratedSoundBankInfo
             {
                 if (!File.Exists(referencedStreamedFile)) continue;
                 total += (new FileInfo(referencedStreamedFile).Length);
+            }
+
+            return total;
+        }
+    }
+
+    public long LooseMediaSize
+    {
+        get
+        {
+            long total = 0;
+            foreach (var looseMediaFile in LooseMediaFiles)
+            {
+                if (!File.Exists(looseMediaFile)) continue;
+                total += (new FileInfo(looseMediaFile).Length);
             }
 
             return total;

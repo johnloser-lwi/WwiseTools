@@ -71,17 +71,34 @@ namespace WwiseTools.Utils.SoundBank
 
                     var streamedFiles = soundBankNode.SelectNodes(".//ReferencedStreamedFiles/File");
 
-                    if (streamedFiles == null || streamedFiles.Count <= 0) continue;
-
-                    foreach (XmlElement streamedFile in streamedFiles)
+                    if (streamedFiles != null && streamedFiles.Count > 0)
                     {
-                        var fileRelativePath = info.Language == "SFX"? "" : info.Language + "\\";
-                        fileRelativePath += streamedFile.GetAttribute("Id") + ".wem";
+                        foreach (XmlElement streamedFile in streamedFiles)
+                        {
+                            var fileRelativePath = info.Language == "SFX" ? "" : info.Language + "\\";
+                            fileRelativePath += streamedFile.GetAttribute("Id") + ".wem";
 
-                        var filePath = Path.Combine(path, fileRelativePath);
+                            var filePath = Path.Combine(path, fileRelativePath);
 
-                        info.ReferencedStreamedFiles.Add(filePath);
+                            info.ReferencedStreamedFiles.Add(filePath);
 
+                        }
+                    }
+
+                    var looseMedias = soundBankNode.SelectNodes(".//ExcludedMemoryFiles/File");
+
+                    if (looseMedias != null && looseMedias.Count > 0)
+                    {
+                        foreach (XmlElement looseMedia in looseMedias)
+                        {
+                            var fileRelativePath = info.Language == "SFX" ? "" : info.Language + "\\";
+                            fileRelativePath += looseMedia.GetAttribute("Id") + ".wem";
+
+                            var filePath = Path.Combine(path, fileRelativePath);
+
+                            info.LooseMediaFiles.Add(filePath);
+
+                        }
                     }
 
 

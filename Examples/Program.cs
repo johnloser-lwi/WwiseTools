@@ -8,7 +8,7 @@ try
 
     if (await WwiseUtility.Instance.TryConnectWaapiAsync())
     {
-        await SoundBankExamples.GetSoundBankInclusions(); // 尝试不同的方法
+        await SoundBankExamples.GetGeneratedSoundBankInfos(); // 尝试不同的方法
     }
     else
     {

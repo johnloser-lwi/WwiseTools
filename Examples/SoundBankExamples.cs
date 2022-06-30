@@ -21,15 +21,15 @@ namespace Examples
             var result = await WwiseUtility.Instance.GetGeneratedSoundBankInfos();
 
             var info = result.Where(i => i.Platform == "Android" && (i.Language == "English(US)" || i.Language == "SFX")).ToList();
-            info.Sort((a, b) => a.SoundBankSizeWithStreamedMedia.CompareTo(b.SoundBankSizeWithStreamedMedia) * -1);
+            info.Sort((a, b) => a.TotalSoundBankSize.CompareTo(b.TotalSoundBankSize) * -1);
 
             long total = 0;
 
             foreach (var generatedSoundBankInfo in info)
             {
-                WaapiLog.Log($"{generatedSoundBankInfo.Name} : {generatedSoundBankInfo.SoundBankSizeWithStreamedMedia}");
+                WaapiLog.Log($"{generatedSoundBankInfo.Name} : {generatedSoundBankInfo.TotalSoundBankSize}");
 
-                total += generatedSoundBankInfo.SoundBankSizeWithStreamedMedia;
+                total += generatedSoundBankInfo.TotalSoundBankSize;
             }
 
             WaapiLog.Log($"Total size : {total}");
