@@ -951,12 +951,41 @@ namespace WwiseTools.Utils
 
             return result;
         }
+
+        public async Task<List<string>> GetPlatformsAsync()
+        {
+            var result = new List<string>();
+
+            if (!await TryConnectWaapiAsync()) return result;
+
+            try
+            {
+                var targets = await GetWwiseObjectsOfTypeAsync("Platform");
+
+                string[] ignoreList = { "WwiseAuthoringPlayback" };
+
+                foreach (var wwiseObject in targets)
+                {
+                    if (ignoreList.Contains(wwiseObject.Name)) continue;
+
+                    result.Add(wwiseObject.Name);
+                }
+            }
+            catch (Exception e)
+            {
+                WaapiLog.InternalLog($"Failed to get platforms! ======> {e.Message}");
+            }
+
+            return result;
+        }
         
         public async Task<List<string>> GetLanguagesAsync()
         {
-            if (!await TryConnectWaapiAsync()) return null;
-
             List<string> resultList = new List<string>();
+
+            if (!await TryConnectWaapiAsync()) return resultList;
+
+            
 
             try // 尝试返回物体数据
             {
