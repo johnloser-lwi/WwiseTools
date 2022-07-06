@@ -13,6 +13,7 @@
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <Version>2.2.2</Version>
     <PackageTags>Wwise,Waapi,WwiseTools,Audio,Sound,Game</PackageTags>
+    <AssemblyName>WwiseTools</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
