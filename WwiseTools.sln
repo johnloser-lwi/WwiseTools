@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WwiseTools", "WwiseTools\Ww
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Examples", "Examples\Examples.csproj", "{74F480CC-A6B2-409D-BFE4-D39334200BF3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WwiseTools_DoNet6", "WwiseTools_DoNet6\WwiseTools_DoNet6.csproj", "{A0D9F2B9-15FB-45E4-8697-EC16065F18FB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WwiseTools_DotNet6", "WwiseTools_DotNet6\WwiseTools_DotNet6.csproj", "{A0D9F2B9-15FB-45E4-8697-EC16065F18FB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
