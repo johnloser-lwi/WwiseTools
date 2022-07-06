@@ -6,7 +6,7 @@
     <authors>John Yang</authors>
     <license type="expression">MIT</license>
     <licenseUrl>https://licenses.nuget.org/MIT</licenseUrl>
-    <readme>README.md</readme>
+    <readme>docs\README.md</readme>
     <description>A library of Waapi operations written in C#.</description>
     <tags>Wwise,Waapi,WwiseTools,Audio,Sound,Game</tags>
     <repository url="https://github.com/johnloser-lwi/WwiseTools.git" />
@@ -15,5 +15,8 @@
         <dependency id="Newtonsoft.Json" version="13.0.1" exclude="Build,Analyzers" />
       </group>
     </dependencies>
+    <files>
+      <file source="..\README.md" target="docs\"/>
+    </files>
   </metadata>
 </package>
