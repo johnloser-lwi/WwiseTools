@@ -15,8 +15,8 @@
         <dependency id="Newtonsoft.Json" version="13.0.1" exclude="Build,Analyzers" />
       </group>
     </dependencies>
-    <files>
-      <file source="..\README.md" target="docs\"/>
-    </files>
   </metadata>
+  <files>
+    <file source="..\README.md" target="docs\"/>
+  </files>
 </package>
