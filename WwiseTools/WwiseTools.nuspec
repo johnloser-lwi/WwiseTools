@@ -10,8 +10,13 @@
     <description>A library of Waapi operations written in C#.</description>
     <tags>Wwise,Waapi,WwiseTools,Audio,Sound,Game</tags>
     <repository url="https://github.com/johnloser-lwi/WwiseTools.git" />
+    <dependencies>
+      <dependency id="Newtonsoft.Json" version="13.0.1" exclude="Build,Analyzers" />
+    </dependencies>
   </metadata>
   <files>
     <file src="..\README.md" target="README.md"/>
+    <file src="bin\Release\WwiseTools.dll" target="lib\net48\WwiseTools.dll"/>
+    <file src="..\WwiseTools_DotNet6\bin\Release\net6.0\WwiseTools.dll" target="lib\net6.0\WwiseTools.dll"/>
   </files>
 </package>
