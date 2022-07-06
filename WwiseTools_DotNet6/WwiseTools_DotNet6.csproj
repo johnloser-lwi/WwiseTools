@@ -12,6 +12,7 @@
     <RepositoryUrl>https://github.com/johnloser-lwi/WwiseTools.git</RepositoryUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <Version>2.2.1</Version>
+    <PackageTags>Wwise,Waapi,WwiseTools,Audio,Sound,Game</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
