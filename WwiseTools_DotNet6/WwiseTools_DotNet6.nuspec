@@ -18,5 +18,6 @@
   </metadata>
   <files>
     <file src="..\README.md" target="docs\"/>
+    <file src="bin\Release\net6.0" target="lib\net6.0"/>
   </files>
 </package>
