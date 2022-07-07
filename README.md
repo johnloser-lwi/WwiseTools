@@ -1,5 +1,5 @@
 
-[![Nuget](https://img.shields.io/nuget/v/LWI.WwistTools)](https://www.nuget.org/packages/LWI.WwistTools/)
+[![Nuget](https://img.shields.io/nuget/v/LWI.WwiseTools)](https://www.nuget.org/packages/LWI.WwiseTools/)
 
 # Wwise Tools
 正在开发的基于C# Waapi的Wwise生产力工具，可以快速生成、编辑Wwise的Object，达到批量添加的效果，提升工作效率。
