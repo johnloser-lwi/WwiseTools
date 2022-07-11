@@ -8,7 +8,7 @@ try
 
     if (await WwiseUtility.Instance.TryConnectWaapiAsync())
     {
-        await ExampleFunctions.GetReferencedEventsAsync(); // 尝试不同的方法
+        await ExampleFunctions.GetReferencedSoundBanksAsync(); // 尝试不同的方法
     }
     else
     {

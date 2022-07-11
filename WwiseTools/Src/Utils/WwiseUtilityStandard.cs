@@ -1380,12 +1380,36 @@ namespace WwiseTools.Utils
             return false;
         }
 
+        public async Task<List<WwiseObject>> GetSoundBankReferencesToWwiseObjectAsync(WwiseObject wwiseObject)
+        {
+            List<WwiseObject> result = new List<WwiseObject>();
+
+            var references = await GetEventReferencesToWwiseObjectAndParentsAsync(wwiseObject);
+
+            foreach (var reference in references)
+            {
+
+                var soundBankRefs = (await GetReferencesToWwiseObjectAndParentsAsync(reference)).Where(b => b.Type == "SoundBank")
+                    .Distinct().ToList();
+
+                result.AddRange(soundBankRefs);
+            }
+
+            var directRefs = await GetReferencesToWwiseObjectAndParentsAsync(wwiseObject);
+
+            result.AddRange(directRefs.Where(r => r.Type == "SoundBank").Distinct().ToList());
+
+            return result.Distinct().ToList();
+        }
+
+
 
         public async Task<List<WwiseObject>> GetEventReferencesToWwiseObjectAsync(WwiseObject wwiseObject)
         {
             List<WwiseObject> result = new List<WwiseObject>();
 
             var references = await GetReferencesToWwiseObjectAsync(wwiseObject);
+
             if (references.Count == 0) return result;
 
             foreach (var reference in references.Where(r => r.Type == "Action"))
@@ -1393,14 +1417,15 @@ namespace WwiseTools.Utils
                 var e = await GetWwiseObjectParentAsync(reference);
                 if (e == null || e.Type != "Event") continue;
 
-                result.Add(e);
+                if (!result.Contains(e)) result.Add(e);
             }
 
-            return result;
+            return result.Distinct().ToList();
         }
 
         public async Task<List<WwiseObject>> GetEventReferencesToWwiseObjectAndParentsAsync(WwiseObject wwiseObject)
         {
+
             List<WwiseObject> result = new List<WwiseObject>();
 
             WwiseObject current = wwiseObject;
@@ -1416,7 +1441,28 @@ namespace WwiseTools.Utils
                 if (current == null) runFlag = false;
             }
 
-            return result;
+            return result.Distinct().ToList();
+        }
+
+
+        public async Task<List<WwiseObject>> GetReferencesToWwiseObjectAndParentsAsync(WwiseObject wwiseObject)
+        {
+            List<WwiseObject> result = new List<WwiseObject>();
+
+            WwiseObject current = wwiseObject;
+
+            bool runFlag = true;
+
+            while (runFlag)
+            {
+                result.AddRange(await GetReferencesToWwiseObjectAsync(current));
+
+                current = await GetWwiseObjectParentAsync(current);
+
+                if (current == null) runFlag = false;
+            }
+
+            return result.Distinct().ToList();
         }
 
         public async Task<List<WwiseObject>> GetReferencesToWwiseObjectAsync(WwiseObject wwiseObject)

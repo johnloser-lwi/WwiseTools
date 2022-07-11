@@ -40,6 +40,19 @@ namespace Examples
             }
         }
 
+        public static async Task GetReferencedSoundBanksAsync()
+        {
+            var selection = await Waapi.GetWwiseObjectsBySelectionAsync();
+            foreach (var wwiseObject in selection)
+            {
+                var references = await Waapi.GetSoundBankReferencesToWwiseObjectAsync(wwiseObject);
+                foreach (var reference in references)
+                {
+                    WaapiLog.Log(reference);
+                }
+            }
+        }
+
 
 
         public static async Task BatchSetTestAsync()
