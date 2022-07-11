@@ -1380,6 +1380,45 @@ namespace WwiseTools.Utils
             return false;
         }
 
+
+        public async Task<List<WwiseObject>> GetEventReferencesToWwiseObjectAsync(WwiseObject wwiseObject)
+        {
+            List<WwiseObject> result = new List<WwiseObject>();
+
+            var references = await GetReferencesToWwiseObjectAsync(wwiseObject);
+            if (references.Count == 0) return result;
+
+            foreach (var reference in references.Where(r => r.Type == "Action"))
+            {
+                var e = await GetWwiseObjectParentAsync(reference);
+                if (e == null || e.Type != "Event") continue;
+
+                result.Add(e);
+            }
+
+            return result;
+        }
+
+        public async Task<List<WwiseObject>> GetEventReferencesToWwiseObjectAndParentsAsync(WwiseObject wwiseObject)
+        {
+            List<WwiseObject> result = new List<WwiseObject>();
+
+            WwiseObject current = wwiseObject;
+
+            bool runFlag = true;
+
+            while (runFlag)
+            {
+                result.AddRange(await GetEventReferencesToWwiseObjectAsync(current));
+
+                current = await GetWwiseObjectParentAsync(current);
+
+                if (current == null) runFlag = false;
+            }
+
+            return result;
+        }
+
         public async Task<List<WwiseObject>> GetReferencesToWwiseObjectAsync(WwiseObject wwiseObject)
         {
             List<WwiseObject> result = new List<WwiseObject>();

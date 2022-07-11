@@ -1,17 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml;
-using Microsoft.VisualBasic.CompilerServices;
+﻿using System.Xml;
 using WwiseTools.Objects;
 using WwiseTools.Properties;
 using WwiseTools.References;
 using WwiseTools.Utils;
 using WwiseTools.Utils.Feature2021;
 using WwiseTools.Utils.Feature2022;
-using WwiseTools.Utils.Profiler;
 
 namespace Examples
 {
@@ -34,7 +27,20 @@ namespace Examples
             }
         }
 
-        
+        public static async Task GetReferencedEventsAsync()
+        {
+            var selection = await Waapi.GetWwiseObjectsBySelectionAsync();
+            foreach (var wwiseObject in selection)
+            {
+                var references = await Waapi.GetEventReferencesToWwiseObjectAndParentsAsync(wwiseObject);
+                foreach (var reference in references)
+                {
+                    WaapiLog.Log(reference);
+                }
+            }
+        }
+
+
 
         public static async Task BatchSetTestAsync()
         {
