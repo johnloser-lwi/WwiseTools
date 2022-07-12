@@ -1322,8 +1322,11 @@ namespace WwiseTools.Utils
                 int.TryParse(result["processId"]?.ToString(), out int processId);
                 bool.TryParse(result["isCommandLine"]?.ToString(), out bool isCommandLine);
 
+                var projectName = await GetWwiseProjectNameAsync();
+
                 WwiseInfo wwiseInfo = new WwiseInfo()
                 {
+                    ProjectName = projectName,
                     Version = new WwiseVersion(year, major, minor, build, schema),
                     ProcessID = processId,
                     IsCommandLine = isCommandLine

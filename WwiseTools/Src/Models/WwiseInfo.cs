@@ -14,9 +14,12 @@ namespace WwiseTools.Models
 
         public bool IsCommandLine { get; set; }
 
+        public string ProjectName { get; set; }
+
         public override string ToString()
         {
             string result = "";
+            result += "Project Name: " + ProjectName + "\n";
             result += "Wwise Version: " + Version.VersionString + "\n";
             result += "Schema Version: " + Version.Schema.ToString() + "\n";
             result += "Process ID: " + ProcessID + "\n";
