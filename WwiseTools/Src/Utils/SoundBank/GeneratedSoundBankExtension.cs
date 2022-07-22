@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -33,6 +34,13 @@ namespace WwiseTools.Utils.SoundBank
             }
 
             
+
+            return result;
+        }
+
+        public static double BytesToMB(this WwiseUtility util, long bytes)
+        {
+            double result = (double)bytes / Math.Pow(1024.0, 2);
 
             return result;
         }
