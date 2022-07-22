@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Xml;
 using WwiseTools.Models.SoundBank;
@@ -11,6 +12,8 @@ namespace WwiseTools.Utils.SoundBank
         public static async Task<List<GeneratedSoundBankPath>> GetGeneratedSoundBankPaths(this WwiseUtility util)
         {
             var result = new List<GeneratedSoundBankPath>();
+
+            if (!(await util.TryConnectWaapiAsync())) return result;
 
             var projectPath = await util.GetWwiseProjectPathAsync();
             XmlDocument doc = new XmlDocument();
@@ -34,11 +37,46 @@ namespace WwiseTools.Utils.SoundBank
             return result;
         }
 
+        public static async Task<long> GetTotalSoundBankSize(this WwiseUtility util, string platform = "")
+        {
+            if (!(await util.TryConnectWaapiAsync())) return 0;
+
+            var infos = await util.GetGeneratedSoundBankInfos();
+
+            List<string> files = new List<string>();
+
+            var items = platform == "" ? infos : infos.Where(s => s.Platform == platform);
+
+            foreach (var info in items)
+            {
+                files.Add(info.Path);
+                files.AddRange(info.ReferencedStreamedFiles);
+                files.AddRange(info.LooseMediaFiles);
+            }
+
+            long sum = 0;
+
+            foreach (var file in files.Distinct())
+            {
+                if (File.Exists(file))
+                {
+                    sum += (new FileInfo(file)).Length;
+                }
+            }
+
+            return sum;
+        }
+
         public static async Task<List<GeneratedSoundBankInfo>> GetGeneratedSoundBankInfos(this WwiseUtility util)
         {
+            var result = new List<GeneratedSoundBankInfo>();
+
+            if (!(await util.TryConnectWaapiAsync())) return result;
+
+
             var platformPaths = await util.GetGeneratedSoundBankPaths();
 
-            var result = new List<GeneratedSoundBankInfo>();
+            
 
             foreach (var generatedSoundBankPath in platformPaths)
             {

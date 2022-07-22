@@ -32,6 +32,8 @@ namespace WwiseTools.Utils
 
         internal WaapiTopic Topic { get; set; }
 
+        internal int WampPort { get; set; } = -1;
+
         private readonly Dictionary<string, int> _subscriptions = new Dictionary<string, int>();
 
         public event Action Disconnected;
@@ -167,6 +169,7 @@ namespace WwiseTools.Utils
                 }
 
 
+                WampPort = wampPort;
                 WaapiLog.InternalLog(ConnectionInfo);
                 return true;
             }
@@ -197,10 +200,16 @@ namespace WwiseTools.Utils
             {
                 WaapiLog.InternalLog($"Error while closing! ======> {e.Message}");
             }
+            finally
+            {
+                WampPort = -1;
+            }
         }
 
-        public async Task<bool> TryConnectWaapiAsync(int wampPort = 8080) 
+        public async Task<bool> TryConnectWaapiAsync(int wampPort = 8080)
         {
+            if (WampPort != -1) wampPort = WampPort;
+
             var connected = await ConnectAsync(wampPort);
 
             return connected && _client.IsConnected();
