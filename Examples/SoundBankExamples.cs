@@ -18,7 +18,7 @@ namespace Examples
 
         public static async Task GetGeneratedSoundBankInfos()
         {
-            var result = await WwiseUtility.Instance.GetGeneratedSoundBankInfos();
+            var result = await WwiseUtility.Instance.GetGeneratedSoundBankInfosAsync();
 
             var info = result.Where(i => i.Platform == "Android" && (i.Language == "English(US)" || i.Language == "SFX")).ToList();
             info.Sort((a, b) => a.TotalSoundBankSize.CompareTo(b.TotalSoundBankSize) * -1);

@@ -26,7 +26,7 @@ namespace WwiseTools.Utils.SoundBank
             {
                 var bankPath = new GeneratedSoundBankPath() {
                     Platform = value.GetAttribute("Platform"), 
-                    Path = Path.Combine(Path.GetDirectoryName(projectPath), value.InnerText) 
+                    Path = Path.Combine(Path.GetDirectoryName(projectPath) ?? string.Empty, value.InnerText) 
 
                 };
 
@@ -45,11 +45,14 @@ namespace WwiseTools.Utils.SoundBank
             return result;
         }
 
-        public static async Task<long> GetTotalSoundBankSize(this WwiseUtility util, string platform = "")
+        
+        
+        
+        public static async Task<long> GetTotalSoundBankSizeAsync(this WwiseUtility util, string platform = "")
         {
             if (!(await util.TryConnectWaapiAsync())) return 0;
 
-            var infos = await util.GetGeneratedSoundBankInfos();
+            var infos = await util.GetGeneratedSoundBankInfosAsync();
 
             List<string> files = new List<string>();
 
@@ -75,7 +78,8 @@ namespace WwiseTools.Utils.SoundBank
             return sum;
         }
 
-        public static async Task<List<GeneratedSoundBankInfo>> GetGeneratedSoundBankInfos(this WwiseUtility util)
+
+        public static async Task<List<GeneratedSoundBankInfo>> GetGeneratedSoundBankInfosAsync(this WwiseUtility util)
         {
             var result = new List<GeneratedSoundBankInfo>();
 
@@ -152,6 +156,21 @@ namespace WwiseTools.Utils.SoundBank
             }
 
             return result;
+        }
+        
+        
+        
+                
+        [Obsolete("Use GetTotalSoundBankSizeAsync instead!")]
+        public static async Task<long> GetTotalSoundBankSize(this WwiseUtility util, string platform = "")
+        {
+            return await GetTotalSoundBankSizeAsync(util, platform);
+        }
+
+        [Obsolete("Use GetGeneratedSoundBankInfosAsync instead!")]
+        public static async Task<List<GeneratedSoundBankInfo>> GetGeneratedSoundBankInfos(this WwiseUtility util)
+        {
+            return await GetGeneratedSoundBankInfosAsync(util);
         }
     }
 }
