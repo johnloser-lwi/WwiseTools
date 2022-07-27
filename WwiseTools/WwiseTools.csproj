@@ -93,6 +93,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Src\Components\ComponentBase.cs" />
     <Compile Include="Src\Components\HierarchyComponent.cs" />
+    <Compile Include="Src\Components\SoundBankComponent.cs" />
     <Compile Include="Src\Components\VoiceComponent.cs" />
     <Compile Include="Src\Components\WwiseMusicPlaylistItemComponent.cs" />
     <Compile Include="Src\Components\WwiseMusicSegmentComponent.cs" />
@@ -111,11 +112,13 @@
     <Compile Include="Src\Models\Profiler\ProfilerRTPC.cs" />
     <Compile Include="Src\Models\Profiler\ProfilerVoice.cs" />
     <Compile Include="Src\Models\Profiler\ProfilerRemoteInfo.cs" />
+    <Compile Include="Src\Objects\WwiseObjectSoundBankExtensions.cs" />
     <Compile Include="Src\Objects\WwiseObjectStandardExtensions.cs" />
     <Compile Include="Src\Utils\Feature2021\WwiseUtility2021Extension.cs" />
     <Compile Include="Src\Utils\SoundBank\GeneratedSoundBankExtension.cs" />
     <Compile Include="Src\Models\SoundBank\GeneratedSoundBankInfo.cs" />
     <Compile Include="Src\Models\SoundBank\GeneratedSoundBankPath.cs" />
+    <Compile Include="Src\Utils\SoundBank\SoundBankExtension.cs" />
     <Compile Include="Src\Utils\WaapiTopic.cs" />
     <Compile Include="Src\Utils\WwiseFactory.cs" />
     <Compile Include="Src\Utils\Obsolete\WwiseUtilityObsolete.cs" />

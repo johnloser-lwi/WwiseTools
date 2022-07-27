@@ -9,7 +9,8 @@ namespace WwiseTools.Src.Models.SoundBank
         None = 0,
         Events = 1,
         Structures = 2,
-        Media = 4
+        Media = 4,
+        Everything = ~0
     }
 
     public class SoundBankInclusion

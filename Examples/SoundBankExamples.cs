@@ -1,4 +1,5 @@
 ﻿using WwiseTools.Objects;
+using WwiseTools.Src.Models.SoundBank;
 using WwiseTools.Utils;
 using WwiseTools.Utils.SoundBank;
 
@@ -46,6 +47,27 @@ namespace Examples
                 foreach (var inclusionObject in inclusionObjects)
                 {
                     WaapiLog.Log(inclusionObject);
+                }
+            }
+        }
+
+        public static async Task SetSoundBankInclusion()
+        {
+            var selection = await WwiseUtility.Instance.GetWwiseObjectsBySelectionAsync();
+
+            var soundBanks = await WwiseUtility.Instance.GetWwiseObjectsOfTypeAsync("SoundBank");
+            
+            foreach (var s in selection)
+            {
+                SoundBankInclusion inclusion = new SoundBankInclusion()
+                {
+                    Filter = SoundBankInclusionFilter.Events,
+                    Object = s
+                };
+
+                foreach (var wwiseObject in soundBanks)
+                {
+                    await wwiseObject.GetSoundBank().AddInclutionAsync(inclusion);
                 }
             }
         }

@@ -335,49 +335,6 @@ namespace WwiseTools.Utils
             }
         }
 
-
-        public async Task<List<SoundBankInclusion>> GetSoundBankInclusion(WwiseObject soundBank)
-        {
-            var result = new List<SoundBankInclusion>();
-            if (!await TryConnectWaapiAsync()) return result;
-
-            try
-            {
-                var func = Function.Verify("ak.wwise.core.soundbank.getInclusions");
-                var args = new
-                {
-                    soundbank = soundBank.ID
-                };
-
-                var jresult = await _client.Call(func, args, null, TimeOut);
-                if (jresult == null || jresult["inclusions"] == null) return result;
-                foreach (var inclusion in jresult["inclusions"])
-                {
-                    var id = inclusion["object"]?.ToString();
-                    if (string.IsNullOrEmpty(id)) continue;
-
-                    var filter = inclusion["filter"]?.ToString();
-                    if (filter == null) continue;
-
-                    var soundBankInclusion = new SoundBankInclusion();
-                    soundBankInclusion.Object = await WwiseUtility.Instance.GetWwiseObjectByIDAsync(id);
-
-                    if (filter.Contains("events")) soundBankInclusion.Filter |= SoundBankInclusionFilter.Events;
-                    if (filter.Contains("structures")) soundBankInclusion.Filter |= SoundBankInclusionFilter.Structures;
-                    if (filter.Contains("media")) soundBankInclusion.Filter |= SoundBankInclusionFilter.Media;
-
-
-                    result.Add(soundBankInclusion);
-                }
-            }
-            catch (Exception e)
-            {
-                WaapiLog.InternalLog($"Failed to retrieve soundbank inclusions! ======> {e.Message}");
-            }
-
-            return result;
-        }
-
         public async Task<bool> AddEventToBankAsync(WwiseObject soundBank, string eventId)
         {
             if (!await TryConnectWaapiAsync()) return false;
