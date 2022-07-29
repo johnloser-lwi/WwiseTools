@@ -7,7 +7,7 @@ using WwiseTools.Utils;
 
 namespace WwiseTools.Components
 {
-    public class VoiceComponent : ComponentBase
+    public class Voice : ComponentBase
     {
         public async Task SetVolumeAsync(float value)
         {
@@ -160,7 +160,8 @@ namespace WwiseTools.Components
             await WwiseUtility.Instance.SetObjectPropertyAsync(WwiseObject, WwiseProperty.Prop_OverLimitBehavior(behavior));
         }
 
-        public VoiceComponent(WwiseObject wwiseObject) : base(wwiseObject)
+        public Voice(WwiseObject wwiseObject) : base(wwiseObject, 
+            "Sound,ActorMixer,BlendContainer,SwitchContainer,RandomSequenceContainer,MusicTrack,MusicSwitchContainer,MusicPlaylistContainer,MusicSegment")
         {
         }
     }

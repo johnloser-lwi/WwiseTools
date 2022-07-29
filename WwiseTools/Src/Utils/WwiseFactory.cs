@@ -43,7 +43,7 @@ namespace WwiseTools.Utils
                 WwiseObject.ObjectType.MusicPlaylistItem, 
                 parentPlaylistItem);
 
-            await playlistItem.GetMusicPlaylistItem().SetPlaylistItemTypeAsync(playlistItemType);
+            await playlistItem.AsMusicPlaylistItem().SetPlaylistItemTypeAsync(playlistItemType);
             return playlistItem;
         }
 
@@ -52,8 +52,8 @@ namespace WwiseTools.Utils
             WwiseObject segment, WwiseObject parentPlaylistItem)
         {
             var playlistItem = await WwiseUtility.Instance.CreateObjectAsync("", WwiseObject.ObjectType.MusicPlaylistItem, parentPlaylistItem);
-            await playlistItem.GetMusicPlaylistItem().SetPlaylistItemTypeAsync(WwiseProperty.Option_PlaylistItemType.Segment);
-            await playlistItem.GetMusicPlaylistItem().SetSegmentRefAsync(segment);
+            await playlistItem.AsMusicPlaylistItem().SetPlaylistItemTypeAsync(WwiseProperty.Option_PlaylistItemType.Segment);
+            await playlistItem.AsMusicPlaylistItem().SetSegmentRefAsync(segment);
             return playlistItem;
         }
     }

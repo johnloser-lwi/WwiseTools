@@ -5,7 +5,7 @@ using WwiseTools.Utils;
 
 namespace WwiseTools.Components
 {
-    public class HierarchyComponent : ComponentBase
+    public class Hierarchy : ComponentBase
     {
         public async Task<List<WwiseObject>> GetChildrenAsync()
         {
@@ -18,7 +18,7 @@ namespace WwiseTools.Components
             await WwiseUtility.Instance.MoveToParentAsync(wwiseObject, WwiseObject);
         }
 
-        public HierarchyComponent(WwiseObject wwiseObject) : base(wwiseObject)
+        public Hierarchy(WwiseObject wwiseObject) : base(wwiseObject, "!Sound,!MusicTrack,!SoundBank")
         {
         }
     }

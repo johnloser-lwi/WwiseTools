@@ -8,7 +8,7 @@ using WwiseTools.Utils;
 
 namespace WwiseTools.Components
 {
-    public class WwiseSwitchContainerComponent : WwiseSwitchGroupComponent
+    public class SwitchContainer : SwitchGroup
     {
         public async Task SetPlayModeAsync(WwiseProperty.Option_SwitchBehavior behavior)
         {
@@ -138,7 +138,7 @@ namespace WwiseTools.Components
             }
         }
 
-        public WwiseSwitchContainerComponent(WwiseObject wwiseObject) : base(wwiseObject)
+        public SwitchContainer(WwiseObject wwiseObject) : base(wwiseObject)
         {
         }
 
@@ -148,9 +148,9 @@ namespace WwiseTools.Components
         public WwiseObject Child { get; set; }
         public WwiseObject AssignedSwitch { get; set; }
 
-        public async Task<WwiseSwitchGroup> GetSwitchGroupAsync()
+        public async Task<SwitchGroup> GetSwitchGroupAsync()
         {
-            return new WwiseSwitchGroup(await AssignedSwitch.GetParentAsync());
+            return new SwitchGroup(await AssignedSwitch.GetParentAsync());
         }
     }
 }

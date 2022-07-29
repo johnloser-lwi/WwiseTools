@@ -6,7 +6,7 @@ using WwiseTools.Utils;
 
 namespace WwiseTools.Components
 {
-    public class WwiseMusicPlaylistItemComponent : ComponentBase
+    public class MusicPlaylistItem : ComponentBase
     {
 
         public async Task SetLoopCountAsync(int count = -1)
@@ -71,7 +71,7 @@ namespace WwiseTools.Components
                 = await WwiseUtility.Instance.CreateObjectAtPathAsync("", 
                     WwiseObject.ObjectType.MusicPlaylistItem, 
                     WwiseObject.ID);
-            await playlistItem.GetMusicPlaylistItem().SetPlaylistItemTypeAsync(WwiseProperty.Option_PlaylistItemType.Group);
+            await playlistItem.AsMusicPlaylistItem().SetPlaylistItemTypeAsync(WwiseProperty.Option_PlaylistItemType.Group);
             return playlistItem;
         }
 
@@ -81,15 +81,15 @@ namespace WwiseTools.Components
 
             var item = await WwiseUtility.Instance.CreateObjectAtPathAsync("", WwiseObject.ObjectType.MusicPlaylistItem, WwiseObject.ID);
             //var item = new WwiseMusicPlaylistItem(tempObj);
-            await item.GetMusicPlaylistItem().SetPlaylistItemTypeAsync(WwiseProperty.Option_PlaylistItemType.Segment);
-            await item.GetMusicPlaylistItem().SetSegmentRefAsync(segment);
+            await item.AsMusicPlaylistItem().SetPlaylistItemTypeAsync(WwiseProperty.Option_PlaylistItemType.Segment);
+            await item.AsMusicPlaylistItem().SetSegmentRefAsync(segment);
 
             await WwiseUtility.Instance.ReloadWwiseProjectAsync();
 
             return item;
         }
 
-        public WwiseMusicPlaylistItemComponent(WwiseObject wwiseObject) : base(wwiseObject)
+        public MusicPlaylistItem(WwiseObject wwiseObject) : base(wwiseObject, "MusicPlaylistItem")
         {
         }
     }

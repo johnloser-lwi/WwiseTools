@@ -6,7 +6,7 @@ using WwiseTools.Utils;
 
 namespace WwiseTools.Components
 {
-    public class WwiseMusicPlaylistContainerComponent : ComponentBase
+    public class MusicPlaylistContainer : ComponentBase
     {
 
         public async Task<WwiseObject> AddPlaylistItemGroupAsync()
@@ -15,7 +15,7 @@ namespace WwiseTools.Components
 
             if (rootItem != null) // && segment != null)
             {
-                return await rootItem.GetMusicPlaylistItem().AddChildGroupAsync();
+                return await rootItem.AsMusicPlaylistItem().AddChildGroupAsync();
             }
 
             return null;
@@ -30,7 +30,7 @@ namespace WwiseTools.Components
             if (rootItem != null) // && segment != null)
             {
 
-                return await rootItem.GetMusicPlaylistItem().AddChildSegmentAsync(segment);
+                return await rootItem.AsMusicPlaylistItem().AddChildSegmentAsync(segment);
             }
 
             return null;
@@ -82,7 +82,7 @@ namespace WwiseTools.Components
 
         }
 
-        public WwiseMusicPlaylistContainerComponent(WwiseObject wwiseObject) : base(wwiseObject)
+        public MusicPlaylistContainer(WwiseObject wwiseObject) : base(wwiseObject, "MusicPlaylistContainer")
         {
         }
     }

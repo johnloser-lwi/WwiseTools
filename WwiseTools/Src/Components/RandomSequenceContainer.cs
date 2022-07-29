@@ -6,7 +6,7 @@ using WwiseTools.Utils;
 
 namespace WwiseTools.Components
 {
-    public class WwiseRandomSequenceContainerComponent : ComponentBase
+    public class RandomSequenceContainer : ComponentBase
     {
         // RandomSequenceContainer
 
@@ -109,7 +109,7 @@ namespace WwiseTools.Components
             await WwiseUtility.Instance.SetObjectPropertyAsync(WwiseObject, WwiseProperty.Prop_NormalOrShuffle(option));
         }
 
-        public WwiseRandomSequenceContainerComponent(WwiseObject wwiseObject) : base(wwiseObject)
+        public RandomSequenceContainer(WwiseObject wwiseObject) : base(wwiseObject, "RandomSequenceContainer")
         {
         }
     }

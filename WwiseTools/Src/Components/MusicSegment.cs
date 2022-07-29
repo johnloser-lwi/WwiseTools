@@ -8,7 +8,7 @@ using WwiseTools.Utils;
 
 namespace WwiseTools.Components
 {
-    public class WwiseMusicSegmentComponent : ComponentBase
+    public class MusicSegment : ComponentBase
     {
 
         public async Task SetTempoAndTimeSignatureAsync(float tempo, WwiseProperty.Option_TimeSignatureLower timeSignatureLower, uint timeSignatureUpper)
@@ -100,7 +100,7 @@ namespace WwiseTools.Components
             }
         }
 
-        public WwiseMusicSegmentComponent(WwiseObject wwiseObject) : base(wwiseObject)
+        public MusicSegment(WwiseObject wwiseObject) : base(wwiseObject, "MusicSegment")
         {
         }
     }

@@ -8,7 +8,7 @@ using WwiseTools.Utils;
 
 namespace WwiseTools.Components
 {
-    public class WwiseSoundComponent : ComponentBase
+    public class Sound : ComponentBase
     {
         public async Task SetInitialDelayAsync(float delay)
         {
@@ -80,7 +80,7 @@ namespace WwiseTools.Components
         }
 
 
-        public WwiseSoundComponent(WwiseObject wwiseObject) : base(wwiseObject)
+        public Sound(WwiseObject wwiseObject) : base(wwiseObject, "Sound, MusicTrack")
         {
         }
     }

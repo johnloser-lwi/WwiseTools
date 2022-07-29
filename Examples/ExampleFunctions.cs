@@ -106,7 +106,7 @@ namespace Examples
                 WaapiLog.Log(node.Name);
             }
 
-            foreach (var child in await obj.GetHierarchy().GetChildrenAsync())
+            foreach (var child in await obj.AsHierarchy().GetChildrenAsync())
             {
                 WaapiLog.Log(child.Name);
             }

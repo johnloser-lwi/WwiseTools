@@ -67,7 +67,7 @@ namespace Examples
 
                 foreach (var wwiseObject in soundBanks)
                 {
-                    await wwiseObject.GetSoundBank().AddInclutionAsync(inclusion);
+                    await wwiseObject.AsSoundBank().AddInclutionAsync(inclusion);
                 }
             }
         }

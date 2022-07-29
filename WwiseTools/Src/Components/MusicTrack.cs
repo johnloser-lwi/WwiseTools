@@ -8,7 +8,7 @@ using WwiseTools.Utils;
 
 namespace WwiseTools.Components
 {
-    public class WwiseMusicTrackComponent : ComponentBase
+    public class MusicTrack : ComponentBase
     {
 
         /// <summary>
@@ -82,7 +82,7 @@ namespace WwiseTools.Components
             await WwiseUtility.Instance.SetObjectReferenceAsync(WwiseObject, switchOrState);
         }
 
-        public WwiseMusicTrackComponent(WwiseObject wwiseObject) : base(wwiseObject)
+        public MusicTrack(WwiseObject wwiseObject) : base(wwiseObject, "MusicTrack")
         {
         }
     }

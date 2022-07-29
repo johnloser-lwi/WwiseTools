@@ -7,7 +7,7 @@ using WwiseTools.Utils.SoundBank;
 
 namespace WwiseTools.Components;
 
-public class SoundBankComponent : ComponentBase
+public class SoundBank : ComponentBase
 {
     public async Task<bool> AddInclutionAsync(SoundBankInclusion inclusion)
     {
@@ -19,7 +19,7 @@ public class SoundBankComponent : ComponentBase
         return await WwiseUtility.Instance.GetSoundBankInclusion(WwiseObject);
     }
     
-    public SoundBankComponent(WwiseObject wwiseObject) : base(wwiseObject)
+    public SoundBank(WwiseObject wwiseObject) : base(wwiseObject, "SoundBank")
     {
     }
 }
