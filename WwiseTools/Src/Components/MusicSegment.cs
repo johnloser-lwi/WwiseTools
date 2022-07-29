@@ -100,7 +100,7 @@ namespace WwiseTools.Components
             }
         }
 
-        public MusicSegment(WwiseObject wwiseObject) : base(wwiseObject, "MusicSegment")
+        public MusicSegment(WwiseObject wwiseObject) : base(wwiseObject, nameof(MusicSegment))
         {
         }
     }

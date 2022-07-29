@@ -5,7 +5,7 @@ using WwiseTools.Utils;
 
 namespace WwiseTools.Components
 {
-    public class SwitchGroup : ComponentBase
+    public abstract class SwitchContainerBase : ComponentBase
     {
 
         public async Task SetSwitchGroupOrStateGroupAsync(WwiseReference group)
@@ -18,7 +18,7 @@ namespace WwiseTools.Components
             await WwiseUtility.Instance.SetObjectReferenceAsync(WwiseObject, switchOrState);
         }
 
-        public SwitchGroup(WwiseObject wwiseObject) : base(wwiseObject, "SwitchGroup")
+        public SwitchContainerBase(WwiseObject wwiseObject, string typeFilter) : base(wwiseObject, typeFilter)
         {
         }
     }

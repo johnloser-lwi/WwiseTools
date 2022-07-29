@@ -27,6 +27,16 @@ namespace Examples
             }
         }
 
+        public static async Task HierarchyCastAsync()
+        {
+            var selection = await Waapi.GetWwiseObjectsBySelectionAsync();
+            foreach (var wwiseObject in selection)
+            {
+                wwiseObject.AsHierarchy();
+            }
+        }
+        
+
         public static async Task GetReferencedEventsAsync()
         {
             var selection = await Waapi.GetWwiseObjectsBySelectionAsync();

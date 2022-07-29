@@ -18,7 +18,7 @@ namespace WwiseTools.Components
             await WwiseUtility.Instance.MoveToParentAsync(wwiseObject, WwiseObject);
         }
 
-        public Hierarchy(WwiseObject wwiseObject) : base(wwiseObject, "!Sound,!MusicTrack,!SoundBank")
+        public Hierarchy(WwiseObject wwiseObject) : base(wwiseObject, "!Sound,MusicTrack,SoundBank")
         {
         }
     }

@@ -7,6 +7,7 @@ namespace WwiseTools.Objects
         public static Voice AsVoice(this WwiseObject obj) => new Voice(obj);
 
         public static SwitchContainer AsSwitchContainer(this WwiseObject obj) => new SwitchContainer(obj);
+
         public static Hierarchy AsHierarchy(this WwiseObject obj) => new Hierarchy(obj);
 
         public static Sound AsSound(this WwiseObject obj) => new Sound(obj);

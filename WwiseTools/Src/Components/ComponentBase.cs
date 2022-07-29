@@ -23,11 +23,21 @@ namespace WwiseTools.Components
 
         private bool CanCastToType(string typeFilter, string type)
         {
+            bool excludeMode = false;
+            if (typeFilter.StartsWith("!"))
+            {
+                typeFilter = typeFilter.Substring(1, typeFilter.Length - 1);
+                excludeMode = true;
+            }
             var types = typeFilter.Split(',')?.Select(t => t.Trim()).Distinct();
             var enumerable = types as string[] ?? types.ToArray();
-            if (enumerable.Contains(type) || type == typeFilter) return true;
+            if (type == typeFilter) return true;
+            
+            
+            
+            if (excludeMode && !enumerable.Contains(type)) return true;
 
-            if (enumerable.Contains("!" + type)) return false;
+            if (!excludeMode && enumerable.Contains(type)) return true;
 
             return false;
         }

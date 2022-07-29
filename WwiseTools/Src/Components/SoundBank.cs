@@ -19,7 +19,7 @@ public class SoundBank : ComponentBase
         return await WwiseUtility.Instance.GetSoundBankInclusion(WwiseObject);
     }
     
-    public SoundBank(WwiseObject wwiseObject) : base(wwiseObject, "SoundBank")
+    public SoundBank(WwiseObject wwiseObject) : base(wwiseObject, nameof(SoundBank))
     {
     }
 }

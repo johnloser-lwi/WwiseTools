@@ -82,7 +82,7 @@ namespace WwiseTools.Components
             await WwiseUtility.Instance.SetObjectReferenceAsync(WwiseObject, switchOrState);
         }
 
-        public MusicTrack(WwiseObject wwiseObject) : base(wwiseObject, "MusicTrack")
+        public MusicTrack(WwiseObject wwiseObject) : base(wwiseObject, nameof(MusicTrack))
         {
         }
     }

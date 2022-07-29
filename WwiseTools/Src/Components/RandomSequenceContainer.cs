@@ -109,7 +109,7 @@ namespace WwiseTools.Components
             await WwiseUtility.Instance.SetObjectPropertyAsync(WwiseObject, WwiseProperty.Prop_NormalOrShuffle(option));
         }
 
-        public RandomSequenceContainer(WwiseObject wwiseObject) : base(wwiseObject, "RandomSequenceContainer")
+        public RandomSequenceContainer(WwiseObject wwiseObject) : base(wwiseObject, nameof(RandomSequenceContainer))
         {
         }
     }

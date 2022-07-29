@@ -5,14 +5,14 @@ using WwiseTools.Utils;
 
 namespace WwiseTools.Components
 {
-    public class MusicSwitchContainer : SwitchGroup
+    public class MusicSwitchContainer : SwitchContainerBase
     {
         public async Task SetContinuePlayAsync(bool value)
         {
             await WwiseUtility.Instance.SetObjectPropertyAsync(WwiseObject, WwiseProperty.Prop_ContinuePlay(value));
         }
 
-        public MusicSwitchContainer(WwiseObject wwiseObject) : base(wwiseObject)
+        public MusicSwitchContainer(WwiseObject wwiseObject) : base(wwiseObject, nameof(MusicSwitchContainer))
         {
         }
     }

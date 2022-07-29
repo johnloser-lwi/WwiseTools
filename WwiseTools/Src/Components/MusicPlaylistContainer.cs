@@ -82,7 +82,7 @@ namespace WwiseTools.Components
 
         }
 
-        public MusicPlaylistContainer(WwiseObject wwiseObject) : base(wwiseObject, "MusicPlaylistContainer")
+        public MusicPlaylistContainer(WwiseObject wwiseObject) : base(wwiseObject, nameof(MusicPlaylistContainer))
         {
         }
     }

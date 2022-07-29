@@ -102,7 +102,7 @@
     <Compile Include="Src\Components\RandomSequenceContainer.cs" />
     <Compile Include="Src\Components\Sound.cs" />
     <Compile Include="Src\Components\SwitchContainer.cs" />
-    <Compile Include="Src\Components\SwitchGroup.cs" />
+    <Compile Include="Src\Components\SwitchContainerBase.cs" />
     <Compile Include="Src\Components\MusicPlaylistContainer.cs" />
     <Compile Include="Src\Models\SoundBank\SoundBankInclusion.cs" />
     <Compile Include="Src\Models\WwiseOption.cs" />

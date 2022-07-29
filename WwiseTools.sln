@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Examples", "Examples\Exampl
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WwiseTools_DotNet6", "WwiseTools_DotNet6\WwiseTools_DotNet6.csproj", "{A0D9F2B9-15FB-45E4-8697-EC16065F18FB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{A21787BD-A92A-40D3-A985-F1746E00B748}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -55,6 +57,18 @@ Global
 		{A0D9F2B9-15FB-45E4-8697-EC16065F18FB}.Release|x64.Build.0 = Release|Any CPU
 		{A0D9F2B9-15FB-45E4-8697-EC16065F18FB}.Release|x86.ActiveCfg = Release|Any CPU
 		{A0D9F2B9-15FB-45E4-8697-EC16065F18FB}.Release|x86.Build.0 = Release|Any CPU
+		{A21787BD-A92A-40D3-A985-F1746E00B748}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A21787BD-A92A-40D3-A985-F1746E00B748}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A21787BD-A92A-40D3-A985-F1746E00B748}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{A21787BD-A92A-40D3-A985-F1746E00B748}.Debug|x64.Build.0 = Debug|Any CPU
+		{A21787BD-A92A-40D3-A985-F1746E00B748}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{A21787BD-A92A-40D3-A985-F1746E00B748}.Debug|x86.Build.0 = Debug|Any CPU
+		{A21787BD-A92A-40D3-A985-F1746E00B748}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A21787BD-A92A-40D3-A985-F1746E00B748}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A21787BD-A92A-40D3-A985-F1746E00B748}.Release|x64.ActiveCfg = Release|Any CPU
+		{A21787BD-A92A-40D3-A985-F1746E00B748}.Release|x64.Build.0 = Release|Any CPU
+		{A21787BD-A92A-40D3-A985-F1746E00B748}.Release|x86.ActiveCfg = Release|Any CPU
+		{A21787BD-A92A-40D3-A985-F1746E00B748}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

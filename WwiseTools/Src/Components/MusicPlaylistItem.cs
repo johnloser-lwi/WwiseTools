@@ -89,7 +89,7 @@ namespace WwiseTools.Components
             return item;
         }
 
-        public MusicPlaylistItem(WwiseObject wwiseObject) : base(wwiseObject, "MusicPlaylistItem")
+        public MusicPlaylistItem(WwiseObject wwiseObject) : base(wwiseObject, nameof(MusicPlaylistItem))
         {
         }
     }
