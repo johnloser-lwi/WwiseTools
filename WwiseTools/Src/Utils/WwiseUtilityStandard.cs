@@ -801,6 +801,11 @@ namespace WwiseTools.Utils
             }
 
         }
+
+        public async Task<List<WwiseObject>> GetWwiseObjectsOfTypeAsync(WwiseObject.ObjectType targetType)
+        {
+            return await GetWwiseObjectsOfTypeAsync(targetType.ToString());
+        }
         
         /// <summary>
         /// 获取指定类型的对象，异步执行
