@@ -10,7 +10,7 @@ namespace WwiseTools.Utils.SoundBank
 {
     public static class GeneratedSoundBankExtension
     {
-        public static async Task<List<GeneratedSoundBankPath>> GetGeneratedSoundBankPaths(this WwiseUtility util)
+        public static async Task<List<GeneratedSoundBankPath>> GetGeneratedSoundBankPathsAsync(this WwiseUtility util)
         {
             var result = new List<GeneratedSoundBankPath>();
 
@@ -86,7 +86,7 @@ namespace WwiseTools.Utils.SoundBank
             if (!(await util.TryConnectWaapiAsync())) return result;
 
 
-            var platformPaths = await util.GetGeneratedSoundBankPaths();
+            var platformPaths = await util.GetGeneratedSoundBankPathsAsync();
 
             
 

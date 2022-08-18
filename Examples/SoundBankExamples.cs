@@ -9,7 +9,7 @@ namespace Examples
     {
         public static async Task GetGeneratedSoundBankPaths()
         {
-            var paths =  await WwiseUtility.Instance.GetGeneratedSoundBankPaths();
+            var paths =  await WwiseUtility.Instance.GetGeneratedSoundBankPathsAsync();
             foreach (var generatedSoundBankPath in paths)
             {
                 WaapiLog.Log($"{generatedSoundBankPath.Platform} : {generatedSoundBankPath.Path}");
