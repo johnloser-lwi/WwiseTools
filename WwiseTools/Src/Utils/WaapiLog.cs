@@ -5,6 +5,8 @@ namespace WwiseTools.Utils
 {
     public class WaapiLog
     {
+        public delegate void LoggerDelegate(object msg);
+        
         private static WaapiLog _instance;
 
         private static WaapiLog Instance
@@ -15,7 +17,7 @@ namespace WwiseTools.Utils
                 return _instance;
             }
         }
-        private event Action<object, bool> Logger;
+        private event LoggerDelegate Logger;
 
 
         private bool _firstLog = true;
@@ -29,7 +31,7 @@ namespace WwiseTools.Utils
             Logger = DefaultLog;
         }
 
-        private static void DefaultLog(object msg, bool firstLog)
+        private static void DefaultLog(object msg)
         {
             Console.WriteLine(msg);
         }
@@ -38,8 +40,7 @@ namespace WwiseTools.Utils
         {
             if (!Instance._enabled) return;
 
-            Instance.Logger?.Invoke(message?.ToString(), Instance._firstLog);
-            if (Instance._firstLog) Instance._firstLog = false;
+            Instance.Logger?.Invoke(message?.ToString());
         }
 
         internal static void InternalLog(object message, [CallerMemberName] string caller = "")
@@ -48,11 +49,11 @@ namespace WwiseTools.Utils
             string msg = message?.ToString();
             msg = !string.IsNullOrEmpty(msg) ? $"[{caller}] " + msg : "";
 
-            Instance.Logger?.Invoke(msg, Instance._firstLog);
+            Instance.Logger?.Invoke(msg);
             if (Instance._firstLog) Instance._firstLog = false;
         }
 
-        public static void AddCustomLogger(Action<object, bool> logger)
+        public static void AddCustomLogger(LoggerDelegate logger)
         {
             Instance.Logger += logger;
         }

@@ -12,14 +12,9 @@ namespace Examples
     {
         static WwiseUtility Waapi = WwiseTools.Utils.WwiseUtility.Instance;
 
-        public static void CustomLogger(object message, bool firstLog)
+        public static void CustomLogger(object message)
         {
             string msg = DateTime.Now.ToString() + " => " + message.ToString();
-
-
-            if (firstLog)
-                msg = "\n\n\n\n" + $"Session Started On {DateTime.Now.ToString()}>\n" +
-                      msg;
 
             using (var writer = new StreamWriter("log", true))
             {
