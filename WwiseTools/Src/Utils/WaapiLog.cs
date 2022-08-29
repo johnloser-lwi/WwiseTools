@@ -19,9 +19,6 @@ namespace WwiseTools.Utils
         }
         private event LoggerDelegate Logger;
 
-
-        private bool _firstLog = true;
-
         private bool _enabled = true;
 
         private bool _enableInternalLog = true;
@@ -50,7 +47,6 @@ namespace WwiseTools.Utils
             msg = !string.IsNullOrEmpty(msg) ? $"[{caller}] " + msg : "";
 
             Instance.Logger?.Invoke(msg);
-            if (Instance._firstLog) Instance._firstLog = false;
         }
 
         public static void AddCustomLogger(LoggerDelegate logger)
