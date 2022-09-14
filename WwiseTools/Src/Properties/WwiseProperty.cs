@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using WwiseTools.Utils;
 
 namespace WwiseTools.Properties
 {
@@ -200,9 +196,18 @@ namespace WwiseTools.Properties
             return new WwiseProperty("IsVoice", isVoice);
         }
 
-        public static WwiseProperty Prop_IsZeroLantency(bool zeroLatency)
+        public static WwiseProperty Prop_IsZeroLatency(bool zeroLatency)
         {
-            return new WwiseProperty("IsZeroLantency", zeroLatency);
+            string name = "IsZeroLantency";
+            if (!WwiseUtility.Instance.IsConnected()) 
+                return new WwiseProperty(name, zeroLatency);
+
+            if (WwiseUtility.Instance.ConnectionInfo.Version.Year >= 2022)
+            {
+                name = "IsZeroLatency";
+            }
+
+            return new WwiseProperty(name);
         }
 
         public static WwiseProperty Prop_ListenerRelativeRouting(bool isListenerRelativeRouting)

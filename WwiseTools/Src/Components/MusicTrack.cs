@@ -65,7 +65,7 @@ namespace WwiseTools.Components
         {
             await WwiseUtility.Instance.SetObjectPropertyAsync(WwiseObject, WwiseProperty.Prop_IsStreamingEnabled(stream));
             await WwiseUtility.Instance.SetObjectPropertyAsync(WwiseObject, WwiseProperty.Prop_IsNonCachable(nonCachable));
-            await WwiseUtility.Instance.SetObjectPropertyAsync(WwiseObject, WwiseProperty.Prop_IsZeroLantency(zeroLatency));
+            await WwiseUtility.Instance.SetObjectPropertyAsync(WwiseObject, WwiseProperty.Prop_IsZeroLatency(zeroLatency));
 
             await WwiseUtility.Instance.SetObjectPropertyAsync(WwiseObject, WwiseProperty.Prop_LookAheadTime(lookAheadTime));
             await WwiseUtility.Instance.SetObjectPropertyAsync(WwiseObject, WwiseProperty.Prop_PreFetchLength(prefetchLength));

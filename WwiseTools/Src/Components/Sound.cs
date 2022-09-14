@@ -26,7 +26,7 @@ namespace WwiseTools.Components
         {
             await WwiseUtility.Instance.SetObjectPropertyAsync(WwiseObject, WwiseProperty.Prop_IsStreamingEnabled(stream));
             await WwiseUtility.Instance.SetObjectPropertyAsync(WwiseObject, WwiseProperty.Prop_IsNonCachable(nonCachable));
-            await WwiseUtility.Instance.SetObjectPropertyAsync(WwiseObject, WwiseProperty.Prop_IsZeroLantency(zeroLatency));
+            await WwiseUtility.Instance.SetObjectPropertyAsync(WwiseObject, WwiseProperty.Prop_IsZeroLatency(zeroLatency));
         }
 
         public async Task<string[]> GetWavSourceFilePathAsync()
@@ -57,11 +57,17 @@ namespace WwiseTools.Components
                     }
                 };
 
+                
+                // Wwise 2022 兼容
+                string originalWavFilePath = "sound:originalWavFilePath";
+                if (WwiseUtility.Instance.ConnectionInfo.Version.Year >= 2022) 
+                    originalWavFilePath = "sound:originalFilePath";
+                
                 // ak.wwise.core.@object.get 返回参数设置
                 var options = new
                 {
 
-                    @return = new string[] { "sound:originalWavFilePath" }
+                    @return = new string[] { originalWavFilePath }
 
                 };
 

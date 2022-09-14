@@ -5,7 +5,7 @@ namespace WwiseTools.Models
 {
     public abstract class WwiseOption
     {
-        public string[] GetOptions()
+        public virtual string[] GetOptions()
         {
             var properties = GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
 
