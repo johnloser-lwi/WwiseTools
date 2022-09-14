@@ -8,6 +8,12 @@
 
 ___
 
+## 兼容性说明
+目前该已将WwiseTools应用在2019.1，2019.2以及2021.1版本的工程中，但是并未完整测试所有功能对这些版本的兼容性。
+<br/>
+已经根据[Wwise 2022.1重要迁移说明](https://www.audiokinetic.com/zh/library/2022.1.0_7985/?source=SDK&id=whatsnew_2022_1_migration.html)
+对现有接口进行调整，大部分功能在Wwise2022可用。
+
 ## 使用说明
 ### 配置工程
 新建工程，将WwiseTools.dll添加至依赖，并**通过Nuget Package Manager获取NewtonSoft.Json**。
