@@ -1901,5 +1901,38 @@ namespace WwiseTools.Utils
 
             return false;
         }
+        
+        
+        public async Task BeginUndoGroup()
+        {
+            if (!await WwiseUtility.Instance.TryConnectWaapiAsync()) return;
+
+            var func = Function.Verify("ak.wwise.core.undo.beginGroup");
+
+            var res = await CallAsync(func, null, null);
+        }
+        
+        public async Task CancelUndoGroup()
+        {
+            if (!await WwiseUtility.Instance.TryConnectWaapiAsync()) return;
+
+            var func = Function.Verify("ak.wwise.core.undo.cancelGroup");
+
+            var res = await CallAsync(func, null, null);
+        }
+        
+        public async Task EndUndoGroup(string undoGroupName)
+        {
+            if (!await WwiseUtility.Instance.TryConnectWaapiAsync()) return;
+
+            var func = Function.Verify("ak.wwise.core.undo.endGroup");
+
+            var arg = new
+            {
+                displayName = undoGroupName
+            };
+            
+            await CallAsync(func, arg, null);
+        }
     }
 }
