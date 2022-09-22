@@ -857,7 +857,7 @@ namespace WwiseTools.Utils
 
 
 
-                WaapiLog.InternalLog($"WwiseObject list or type {targetType} successfully fetched!");
+                WaapiLog.InternalLog($"WwiseObject list of type {targetType} successfully fetched!");
 
                 
             }
