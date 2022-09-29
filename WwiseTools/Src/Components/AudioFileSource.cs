@@ -60,7 +60,7 @@ public class AudioFileSource : ComponentBase
 
         if (r is null) return null;
         
-        return r["return"]?.Last?.Last?.ToString();
+        return r["return"]?.Last?.Last?.Last?.ToString();
     }
 
     private async Task<JObject?> GetWavFilePathAsync()
