@@ -28,7 +28,7 @@ namespace WwiseTools.Utils
 
         public WwiseInfo ConnectionInfo { get; private set; }
 
-        internal WaapiFunction Function { get; set; }
+        internal WaapiFunction? Function { get; set; }
 
         internal WaapiTopic Topic { get; set; }
 
