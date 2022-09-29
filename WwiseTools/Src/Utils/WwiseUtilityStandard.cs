@@ -1038,12 +1038,24 @@ namespace WwiseTools.Utils
 
                 var func = Function.Verify("ak.wwise.core.audio.import");
 
-                await _client.Call(func, importQ, options); // 执行导入
+                var result = await _client.Call(func, importQ, options); // 执行导入
 
-                var ret = await GetWwiseObjectByPathAsync(parentPath + "\\" + soundName);
+                var  idealRet = await GetWwiseObjectByPathAsync(parentPath + "\\" + soundName);
 
-                if (ret is null) WaapiLog.InternalLog($"File {filePath} imported successfully!");
-                return ret;
+                WwiseObject? realRet = null;
+
+                if (result == null || result["objects"] == null ||
+                    result["objects"].Last == null || result["objects"].Last["id"] == null)
+                {
+                    realRet = idealRet;
+                }
+                else
+                {
+                    realRet = await GetWwiseObjectByIDAsync(result["objects"].Last["id"].ToString());
+                }
+
+                if (realRet is not null) WaapiLog.InternalLog($"File {filePath} imported successfully!");
+                return realRet;
             }
             catch (Exception e)
             {
