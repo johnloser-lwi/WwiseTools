@@ -18,7 +18,7 @@ namespace WwiseTools.Utils
     public  partial class WwiseUtility
     {
         /// <summary>
-        /// 获取属性、引用名称，异步执行
+        /// 获取属性、引用名称
         /// </summary>
         /// <param name="wwiseObject"></param>
         /// <returns></returns>
@@ -52,7 +52,7 @@ namespace WwiseTools.Utils
         
 
         /// <summary>
-        /// 设置物体的引用，异步执行
+        /// 设置物体的引用
         /// </summary>
         /// <param name="wwiseObject"></param>
         /// <param name="wwiseReference"></param>
@@ -89,7 +89,7 @@ namespace WwiseTools.Utils
         }
         
         /// <summary>
-        /// 设置参数，异步执行
+        /// 设置参数
         /// </summary>
         /// <param name="wwiseObject"></param>
         /// <param name="property"></param>
@@ -128,7 +128,7 @@ namespace WwiseTools.Utils
         
 
         /// <summary>
-        /// 修改名称，异步执行
+        /// 修改名称
         /// </summary>
         /// <param name="renameObject"></param>
         /// <param name="newName"></param>
@@ -164,7 +164,7 @@ namespace WwiseTools.Utils
         }
         
         /// <summary>
-        /// 将物体移动至指定父物体，异步执行
+        /// 将物体移动至指定父物体
         /// </summary>
         /// <param name="child"></param>
         /// <param name="parent"></param>
@@ -204,7 +204,7 @@ namespace WwiseTools.Utils
         
 
         /// <summary>
-        /// 将物体复制至指定父物体，异步执行
+        /// 将物体复制至指定父物体
         /// </summary>
         /// <param name="child"></param>
         /// <param name="parent"></param>
@@ -287,7 +287,7 @@ namespace WwiseTools.Utils
         
 
         /// <summary>
-        /// 生成播放事件，异步执行
+        /// 生成播放事件
         /// </summary>
         /// <param name="eventName"></param>
         /// <param name="objectPath"></param>
@@ -407,7 +407,7 @@ namespace WwiseTools.Utils
         }
 
         /// <summary>
-        /// 创建物体，异步执行
+        /// 创建物体
         /// </summary>
         /// <param name="objectName"></param>
         /// <param name="objectType"></param>
@@ -447,7 +447,7 @@ namespace WwiseTools.Utils
         }
 
         /// <summary>
-        /// 创建物体，异步执行
+        /// 创建物体
         /// </summary>
         /// <param name="objectName"></param>
         /// <param name="objectType"></param>
@@ -527,7 +527,7 @@ namespace WwiseTools.Utils
 
         
         /// <summary>
-        /// 通过ID搜索物体，异步执行
+        /// 通过ID搜索物体
         /// </summary>
         /// <param name="targetId"></param>
         /// <returns></returns>
@@ -701,7 +701,7 @@ namespace WwiseTools.Utils
         }
         
         /// <summary>
-        /// 通过名称搜索唯一命名对象，异步执行，格式必须为"type:name"
+        /// 通过名称搜索唯一命名对象，格式必须为"type:name"
         /// </summary>
         /// <param name="targetName"></param>
         /// <returns></returns>
@@ -753,7 +753,7 @@ namespace WwiseTools.Utils
         }
         
         /// <summary>
-        /// 通过路径获取对象，异步执行
+        /// 通过路径获取对象
         /// </summary>
         /// <param name="path"></param>
         /// <returns></returns>
@@ -808,7 +808,7 @@ namespace WwiseTools.Utils
         }
         
         /// <summary>
-        /// 获取指定类型的对象，异步执行
+        /// 获取指定类型的对象
         /// </summary>
         /// <param name="targetType"></param>
         /// <returns></returns>
@@ -994,7 +994,7 @@ namespace WwiseTools.Utils
         
         
         /// <summary>
-        /// 从指定路径导入音频，异步执行
+        /// 从指定路径导入音频
         /// </summary>
         /// <param name="filePath"></param>
         /// <param name="language"></param>
@@ -1065,7 +1065,7 @@ namespace WwiseTools.Utils
         }
         
         /// <summary>
-        /// 获取工作单元文件路径，异步执行
+        /// 获取工作单元文件路径
         /// </summary>
         /// <param name="wwiseObject"></param>
         /// <returns></returns>
@@ -1125,7 +1125,7 @@ namespace WwiseTools.Utils
         }
         
         /// <summary>
-        /// 加载工程，异步执行
+        /// 加载工程
         /// </summary>
         /// <param name="path"></param>
         /// <param name="saveCurrent"></param>
@@ -1162,7 +1162,7 @@ namespace WwiseTools.Utils
         }
         
         /// <summary>
-        /// 获取工程路径，异步执行
+        /// 获取工程路径
         /// </summary>
         /// <returns></returns>
         public async Task<string?> GetWwiseProjectNameAsync()
@@ -1211,7 +1211,7 @@ namespace WwiseTools.Utils
         }
         
         /// <summary>
-        /// 获取工程路径，异步执行
+        /// 获取工程路径
         /// </summary>
         /// <returns></returns>
         public async Task<string?> GetWwiseProjectPathAsync()
@@ -1867,7 +1867,7 @@ namespace WwiseTools.Utils
         }
 
         /// <summary>
-        /// 保存工程，异步执行
+        /// 保存工程
         /// </summary>
         /// <returns></returns>
         public async Task<bool> SaveWwiseProjectAsync()
