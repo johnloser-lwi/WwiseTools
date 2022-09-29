@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using WwiseTools.Objects;
@@ -29,62 +30,29 @@ namespace WwiseTools.Components
             await WwiseUtility.Instance.SetObjectPropertyAsync(WwiseObject, WwiseProperty.Prop_IsZeroLatency(zeroLatency));
         }
 
-        public async Task<string[]> GetWavSourceFilePathAsync()
+        public async Task<List<AudioFileSource>> GetAudioFileSourcesAsync()
         {
-            var r = await GetWavFilePathAsync();
-            List<string> paths = new List<string>();
-            if (r["return"]?.Last == null) return paths.ToArray();
-            foreach (var result in r["return"].Last)
-            {
-                if (result.Last == null) continue;
-                paths.Add(result.Last?.ToString());
-            }
-            return paths.ToArray();
+            var children = await WwiseUtility.Instance.GetWwiseObjectChildrenAsync(WwiseObject);
+
+            var ret = children.Select(c => c.AsAudioFileSource()).ToList();
+
+            return ret;
         }
 
-        private async Task<JObject> GetWavFilePathAsync()
+        public async Task<string[]> GetOriginalFilePathsAsync()
         {
-            if (!await WwiseUtility.Instance.TryConnectWaapiAsync()) return null;
+            var fileSources = await GetAudioFileSourcesAsync();
 
-            try
+            var result = new List<string>();
+            
+            foreach (var audioFileSource in fileSources)
             {
-                // ak.wwise.core.@object.get 指令
-                var query = new
-                {
-                    from = new
-                    {
-                        id = new string[] { WwiseObject.ID }
-                    }
-                };
-
-                
-                // Wwise 2022 兼容
-                string originalWavFilePath = "sound:originalWavFilePath";
-                if (WwiseUtility.Instance.ConnectionInfo.Version.Year >= 2022) 
-                    originalWavFilePath = "sound:originalFilePath";
-                
-                // ak.wwise.core.@object.get 返回参数设置
-                var options = new
-                {
-
-                    @return = new string[] { originalWavFilePath }
-
-                };
-
-                var func = WaapiFunction.CoreObjectGet;
-
-                JObject jresult = await WwiseUtility.Instance.CallAsync(func, query, options, WwiseUtility.Instance.TimeOut);
-
-                return jresult;
-            }
-            catch (Exception e)
-            {
-                WaapiLog.InternalLog($"Failed to return WaveFilePath from ID : {WwiseObject.ID}! ======> {e.Message}");
-                return null;
+                var source = await audioFileSource.GetAudioFilePathAsync();
+                if (source is not null) result.Add(source);
             }
 
+            return result.ToArray();
         }
-
 
         public Sound(WwiseObject wwiseObject) : base(wwiseObject, "Sound, MusicTrack")
         {
