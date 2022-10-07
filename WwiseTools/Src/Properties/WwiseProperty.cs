@@ -207,7 +207,7 @@ namespace WwiseTools.Properties
                 name = "IsZeroLatency";
             }
 
-            return new WwiseProperty(name);
+            return new WwiseProperty(name, zeroLatency);
         }
 
         public static WwiseProperty Prop_ListenerRelativeRouting(bool isListenerRelativeRouting)
