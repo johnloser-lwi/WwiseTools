@@ -993,12 +993,6 @@ namespace WwiseTools.Utils
             return resultList;
         }
 
-        public async Task<WwiseObject?> ImportSoundAsync(WwiseObject parent, string filePath, string language = "SFX", string subFolder = "", string soundName = "", ImportAction importAction = ImportAction.useExisting)
-        {
-            return await ImportSoundAsync(filePath, language, subFolder, await parent.GetPathAsync(), soundName, importAction);
-        }
-        
-        
         /// <summary>
         /// 从指定路径导入音频
         /// </summary>
@@ -1010,15 +1004,26 @@ namespace WwiseTools.Utils
         /// <returns></returns>
         public async Task<WwiseObject?> ImportSoundAsync(string filePath, string language = "SFX", string subFolder = "", string parentPath = @"\Actor-Mixer Hierarchy\Default Work Unit", string soundName = "", ImportAction importAction = ImportAction.useExisting) // Async版本
         {
+            return await ImportSoundAsync(await GetWwiseObjectByPathAsync(parentPath), filePath, language, subFolder, soundName, importAction);
+        }
+        
+        public async Task<WwiseObject?> ImportSoundAsync(WwiseObject parent, string filePath, string language = "SFX", string subFolder = "", string soundName = "", ImportAction importAction = ImportAction.useExisting)
+        {
             if (string.IsNullOrEmpty(soundName))
             {
                 soundName = Path.GetFileName(filePath).Replace(".wav", ""); // 尝试获取文件名
             }
 
-            var objectPath = new WwisePathBuilder(parentPath);
-            objectPath.AppendHierarchy(WwiseObject.ObjectType.Sound, soundName);
+            var objectPath = new WwisePathBuilder(parent);
+            var res = objectPath.AppendHierarchy(WwiseObject.ObjectType.Sound, soundName);
+
+            if (!res)
+            {
+                WaapiLog.InternalLog($"Failed to import {filePath}! Invalid parent!");
+                return null;
+            }
             
-            ImportInfo info = new ImportInfo(filePath, objectPath.ToString(), language, subFolder);
+            ImportInfo info = new ImportInfo(filePath, objectPath, language, subFolder);
 
             return await ImportSoundAsync(info, importAction);
         }
@@ -1036,7 +1041,7 @@ namespace WwiseTools.Utils
                     
                     new JProperty("imports", new JArray
                     {
-                        info.ToJObjectImportProperty()
+                        await info.ToJObjectImportProperty()
                     })
                 };
 
@@ -1046,7 +1051,7 @@ namespace WwiseTools.Utils
 
                 var result = await _client.Call(func, importQ, options); // 执行导入
 
-                var  idealRet = await GetWwiseObjectByPathAsync(info.ObjectPath);
+                var  idealRet = await GetWwiseObjectByPathAsync(await info.ObjectPath.GetPurePathAsync());
 
                 WwiseObject? realRet = null;
 
@@ -1082,7 +1087,7 @@ namespace WwiseTools.Utils
                     var info = infos[i];
                     if (!info.IsValid) continue;
                     
-                    importArray.Add(info.ToJObjectImportProperty());
+                    importArray.Add(await info.ToJObjectImportProperty());
                 }
                 
                 var importQ = new JObject // 导入配置
