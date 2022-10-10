@@ -54,6 +54,25 @@ namespace WwiseTools.Components
             return result.ToArray();
         }
 
+        public async Task<bool> IsVoiceAsync()
+        {
+            var sources = await GetAudioFileSourcesAsync();
+
+            bool isValid = true;
+            
+            foreach (var audioFileSource in sources)
+            {
+                var lan = await audioFileSource.GetLanguageAsync();
+                if (lan == "SFX")
+                {
+                    isValid = false;
+                    continue;
+                }
+            }
+
+            return isValid;
+        }
+
         public Sound(WwiseObject wwiseObject) : base(wwiseObject, "Sound, MusicTrack")
         {
         }

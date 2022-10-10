@@ -115,6 +115,7 @@
     <Compile Include="Src\Models\Profiler\ProfilerRemoteInfo.cs" />
     <Compile Include="Src\Objects\WwiseObjectSoundBankExtensions.cs" />
     <Compile Include="Src\Objects\WwiseObjectStandardExtensions.cs" />
+    <Compile Include="Src\Utils\Experimental\WwiseUtilityExperimentalExtension.cs" />
     <Compile Include="Src\Utils\Feature2021\WwiseUtility2021Extension.cs" />
     <Compile Include="Src\Utils\SoundBank\GeneratedSoundBankExtension.cs" />
     <Compile Include="Src\Models\SoundBank\GeneratedSoundBankInfo.cs" />
@@ -144,6 +145,5 @@
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

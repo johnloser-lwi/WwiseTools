@@ -10,7 +10,7 @@ using WwiseTools.Models;
 
 namespace WwiseTools.Utils
 {
-    public enum GlobalImportSettings
+    public enum ImportAction
     {
         useExisting,
         replaceExisting,
@@ -53,10 +53,6 @@ namespace WwiseTools.Utils
         
 
         private static WwiseUtility _instance;
-
-        
-
-        public GlobalImportSettings ImportSettings = GlobalImportSettings.useExisting;
 
         private WwiseUtility()
         {
