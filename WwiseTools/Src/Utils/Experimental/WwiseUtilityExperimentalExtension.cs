@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using WwiseTools.Models.Import;
 using WwiseTools.Objects;
 
 namespace WwiseTools.Utils.Experimental;
@@ -52,6 +53,8 @@ public static class WwiseUtilityExperimentalExtension
 
         try
         {
+            List<ImportInfo> infos = new List<ImportInfo>();
+            
             foreach (var soundTarget in soundTargets)
             {
                 var sound = soundTarget.AsSound();
@@ -90,10 +93,16 @@ public static class WwiseUtilityExperimentalExtension
                 if (string.IsNullOrEmpty(validWavFile) || string.IsNullOrEmpty(audioFilePath)) continue;
 
                 var subFolder = Path.GetDirectoryName(audioFilePath);
+
+                var pathBuilder = new WwisePathBuilder(parent);
+                pathBuilder.AppendHierarchy(WwiseObject.ObjectType.Sound, soundTarget.Name);
+
+                var importInfo = new ImportInfo(validWavFile, pathBuilder, language, subFolder);
                 
-                await util.ImportSoundAsync(validWavFile, language, subFolder,
-                    await parent.GetPathAsync(), soundTarget.Name, importAction);
+                infos.Add(importInfo);
             }
+
+            await util.BatchImportSoundAsync(infos.ToArray(), importAction);
         }
         catch (Exception e)
         {
