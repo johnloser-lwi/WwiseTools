@@ -991,6 +991,11 @@ namespace WwiseTools.Utils
 
             return resultList;
         }
+
+        public async Task<WwiseObject?> ImportSoundAsync(WwiseObject parent, string filePath, string language = "SFX", string subFolder = "", string soundName = "", ImportAction importAction = ImportAction.useExisting)
+        {
+            return await ImportSoundAsync(filePath, language, subFolder, await parent.GetPathAsync(), soundName, importAction);
+        }
         
         
         /// <summary>
