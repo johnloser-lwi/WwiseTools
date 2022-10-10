@@ -23,6 +23,13 @@ public class WwisePathBuilder
         _hierarchy = new List<WwiseObject>();
     }
 
+    
+    /// <summary>
+    /// 添加路径
+    /// </summary>
+    /// <param name="type">Wwise对象类型</param>
+    /// <param name="name">Wwise对象名称</param>
+    /// <returns>返回路径是否成功添加</returns>
     public bool AppendHierarchy(WwiseObject.ObjectType type, string name)
     {
         WwiseObject last = null;
@@ -53,6 +60,10 @@ public class WwisePathBuilder
         _hierarchy.Clear();
     }
 
+    /// <summary>
+    /// 获取不包含wwise类型的路径
+    /// </summary>
+    /// <returns></returns>
     public async Task<string> GetPurePathAsync()
     {
         var rootPath = await _root.GetPathAsync();
@@ -73,6 +84,10 @@ public class WwisePathBuilder
         return rootPath + "\\" + hierarchy;
     }
 
+    /// <summary>
+    /// 获取包含wwise类型的路径
+    /// </summary>
+    /// <returns></returns>
     public async Task<string> GetImportPathAsync()
     {
         var rootPath = await _root.GetPathAsync();
