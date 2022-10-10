@@ -1002,7 +1002,7 @@ namespace WwiseTools.Utils
         /// <param name="parentPath"></param>
         /// <param name="soundName"></param>
         /// <returns></returns>
-        public async Task<WwiseObject?> ImportSoundAsync(string filePath, string language = "SFX", string subFolder = "", string parentPath = @"\Actor-Mixer Hierarchy\Default Work Unit", string soundName = "") // Async版本
+        public async Task<WwiseObject?> ImportSoundAsync(string filePath, string language = "SFX", string subFolder = "", string parentPath = @"\Actor-Mixer Hierarchy\Default Work Unit", string soundName = "", ImportAction importAction = ImportAction.useExisting) // Async版本
         {
             if (!filePath.EndsWith(".wav") || !await TryConnectWaapiAsync() || string.IsNullOrEmpty(filePath) || string.IsNullOrEmpty(parentPath)) return null; // 目标不是文件或者没有成功连接时返回空的WwiseObject
 
@@ -1014,25 +1014,29 @@ namespace WwiseTools.Utils
 
             try
             {
+
+                var properties = new JObject
+                {
+                    new JProperty("importLanguage", language),
+                    new JProperty("audioFile", filePath),
+                    new JProperty("objectPath", $"{parentPath}\\<Sound>{soundName}")
+                };
+                if (!string.IsNullOrEmpty(subFolder))
+                {
+                    properties.Add(new JProperty("originalsSubFolder", subFolder));
+                }
+                
                 var importQ = new JObject // 导入配置
                 {
-                    new JProperty("importOperation", ImportSettings.ToString()),
+                    new JProperty("importOperation", importAction.ToString()),
                     
                     new JProperty("imports", new JArray
                     {
-                        new JObject
-                        {
-                            new JProperty("importLanguage", language),
-                            new JProperty("audioFile", filePath),
-                            new JProperty("objectPath", $"{parentPath}\\<Sound>{soundName}")
-                        }
+                        properties
                     })
                 };
 
-                if (!String.IsNullOrEmpty(subFolder))
-                {
-                    (importQ["default"] as JObject)?.Add(new JProperty("originalsSubFolder", subFolder));
-                }
+                
 
                 var options = new JObject(new JProperty("return", new object[] { "name", "id", "type", "path" })); // 设置返回参数
 
