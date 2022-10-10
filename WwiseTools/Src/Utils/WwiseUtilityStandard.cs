@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Xml;
 using Newtonsoft.Json.Linq;
 using WwiseTools.Models;
+using WwiseTools.Models.Import;
 using WwiseTools.Objects;
 using WwiseTools.Properties;
 using WwiseTools.References;
@@ -1009,39 +1010,35 @@ namespace WwiseTools.Utils
         /// <returns></returns>
         public async Task<WwiseObject?> ImportSoundAsync(string filePath, string language = "SFX", string subFolder = "", string parentPath = @"\Actor-Mixer Hierarchy\Default Work Unit", string soundName = "", ImportAction importAction = ImportAction.useExisting) // Async版本
         {
-            if (!filePath.EndsWith(".wav") || !await TryConnectWaapiAsync() || string.IsNullOrEmpty(filePath) || string.IsNullOrEmpty(parentPath)) return null; // 目标不是文件或者没有成功连接时返回空的WwiseObject
-
-            
             if (string.IsNullOrEmpty(soundName))
             {
                 soundName = Path.GetFileName(filePath).Replace(".wav", ""); // 尝试获取文件名
             }
 
+            var objectPath = new WwisePathBuilder(parentPath);
+            objectPath.AppendHierarchy(WwiseObject.ObjectType.Sound, soundName);
+            
+            ImportInfo info = new ImportInfo(filePath, objectPath.ToString(), language, subFolder);
+
+            return await ImportSoundAsync(info, importAction);
+        }
+        
+        public async Task<WwiseObject?> ImportSoundAsync(ImportInfo info, ImportAction importAction = ImportAction.useExisting) // Async版本
+        {
+            if (!info.IsValid) return null; // 目标不是文件或者没有成功连接时返回空的WwiseObject
+            
+
             try
             {
-
-                var properties = new JObject
-                {
-                    new JProperty("importLanguage", language),
-                    new JProperty("audioFile", filePath),
-                    new JProperty("objectPath", $"{parentPath}\\<Sound>{soundName}")
-                };
-                if (!string.IsNullOrEmpty(subFolder))
-                {
-                    properties.Add(new JProperty("originalsSubFolder", subFolder));
-                }
-                
                 var importQ = new JObject // 导入配置
                 {
                     new JProperty("importOperation", importAction.ToString()),
                     
                     new JProperty("imports", new JArray
                     {
-                        properties
+                        info.ToJObjectImportProperty()
                     })
                 };
-
-                
 
                 var options = new JObject(new JProperty("return", new object[] { "name", "id", "type", "path" })); // 设置返回参数
 
@@ -1049,7 +1046,7 @@ namespace WwiseTools.Utils
 
                 var result = await _client.Call(func, importQ, options); // 执行导入
 
-                var  idealRet = await GetWwiseObjectByPathAsync(parentPath + "\\" + soundName);
+                var  idealRet = await GetWwiseObjectByPathAsync(info.ObjectPath);
 
                 WwiseObject? realRet = null;
 
@@ -1063,13 +1060,51 @@ namespace WwiseTools.Utils
                     realRet = await GetWwiseObjectByIDAsync(result["objects"].Last["id"].ToString());
                 }
 
-                if (realRet is not null) WaapiLog.InternalLog($"File {filePath} imported successfully!");
+                if (realRet is not null) WaapiLog.InternalLog($"File {info.AudioFile} imported successfully!");
                 return realRet;
             }
             catch (Exception e)
             {
-                WaapiLog.InternalLog($"Failed to import file : {filePath} ======> {e.Message}");
+                WaapiLog.InternalLog($"Failed to import file : {info.AudioFile} ======> {e.Message}");
                 return null;
+            }
+        }
+        
+        public async Task<bool> BatchImportSoundAsync(ImportInfo[] infos, ImportAction importAction = ImportAction.useExisting) // Async版本
+        {
+
+            try
+            {
+                JArray importArray = new JArray();
+                
+                for (var i = 0; i < infos.Length; i++)
+                {
+                    var info = infos[i];
+                    if (!info.IsValid) continue;
+                    
+                    importArray.Add(info.ToJObjectImportProperty());
+                }
+                
+                var importQ = new JObject // 导入配置
+                {
+                    new JProperty("importOperation", importAction.ToString()),
+                    
+                    new JProperty("imports", importArray)
+                };
+
+                var options = new JObject(new JProperty("return", new object[] { "name", "id", "type", "path" })); // 设置返回参数
+
+                var func = Function.Verify("ak.wwise.core.audio.import");
+
+                var result = await _client.Call(func, importQ, options); // 执行导入
+
+                return true;
+
+            }
+            catch (Exception e)
+            {
+                WaapiLog.InternalLog($"Batch import failed! ======> {e.Message}");
+                return false;
             }
         }
         

@@ -105,6 +105,7 @@
     <Compile Include="Src\Components\SwitchContainer.cs" />
     <Compile Include="Src\Components\SwitchContainerBase.cs" />
     <Compile Include="Src\Components\MusicPlaylistContainer.cs" />
+    <Compile Include="Src\Models\Import\ImportInfo.cs" />
     <Compile Include="Src\Models\SoundBank\SoundBankInclusion.cs" />
     <Compile Include="Src\Models\WwiseOption.cs" />
     <Compile Include="Src\Models\Profiler\ProfilerBus.cs" />
@@ -125,6 +126,7 @@
     <Compile Include="Src\Utils\WwiseFactory.cs" />
     <Compile Include="Src\Utils\Obsolete\WwiseUtilityObsolete.cs" />
     <Compile Include="Src\Utils\Profiler\WwiseUtilityProfilerExtension.cs" />
+    <Compile Include="Src\Utils\WwisePathBuilder.cs" />
     <Compile Include="Src\Utils\WwiseUtilityStandard.cs" />
     <Compile Include="Src\Utils\VersionHelper.cs" />
     <Compile Include="Src\Utils\WaapiLog.cs" />
