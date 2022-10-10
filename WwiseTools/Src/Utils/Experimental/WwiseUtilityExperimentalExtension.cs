@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -8,6 +9,32 @@ namespace WwiseTools.Utils.Experimental;
 
 public static class WwiseUtilityExperimentalExtension
 {
+    public static async Task<bool> ImportLocalizedLanguage(this WwiseUtility util, WwiseObject root, string wavFilesFolder,
+        string language,
+        ImportAction importAction = ImportAction.useExisting)
+    {
+        List<string> GetFilesRecursively(string folder)
+        {
+            List<string> results = new List<string>();
+
+            foreach (var file in Directory.GetFiles(folder))
+            {
+                if (!file.EndsWith(".wav")) continue;
+                
+                results.Add(file);
+            }
+
+            foreach (var directory in Directory.GetDirectories(folder))
+            {
+                results.AddRange(GetFilesRecursively(directory));
+            }
+
+            return results;
+        }
+
+        return await util.ImportLocalizedLanguage(root, GetFilesRecursively(wavFilesFolder).ToArray(), language, importAction);
+    }
+
     public static async Task<bool> ImportLocalizedLanguage(this WwiseUtility util, WwiseObject root, string[] wavFiles, string language,
         ImportAction importAction = ImportAction.useExisting)
     {
