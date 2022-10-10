@@ -9,7 +9,7 @@ namespace WwiseTools.Utils.Experimental;
 
 public static class WwiseUtilityExperimentalExtension
 {
-    public static async Task<bool> ImportLocalizedLanguage(this WwiseUtility util, WwiseObject root, string wavFilesFolder,
+    public static async Task<bool> ImportLocalizedLanguageAsync(this WwiseUtility util, WwiseObject root, string wavFilesFolder,
         string language,
         ImportAction importAction = ImportAction.useExisting)
     {
@@ -32,10 +32,10 @@ public static class WwiseUtilityExperimentalExtension
             return results;
         }
 
-        return await util.ImportLocalizedLanguage(root, GetFilesRecursively(wavFilesFolder).ToArray(), language, importAction);
+        return await util.ImportLocalizedLanguageAsync(root, GetFilesRecursively(wavFilesFolder).ToArray(), language, importAction);
     }
 
-    public static async Task<bool> ImportLocalizedLanguage(this WwiseUtility util, WwiseObject root, string[] wavFiles, string language,
+    public static async Task<bool> ImportLocalizedLanguageAsync(this WwiseUtility util, WwiseObject root, string[] wavFiles, string language,
         ImportAction importAction = ImportAction.useExisting)
     {
         if (!await util.TryConnectWaapiAsync()) return false;
@@ -81,6 +81,8 @@ public static class WwiseUtilityExperimentalExtension
                             validWavFile = wavFile;
 
                             audioFilePath = sourcePath.Replace(voicePath, "").Replace(sourceLanguage, "").Trim('\\').Trim('/');
+
+                            break;
                         }
                     }
                 }
