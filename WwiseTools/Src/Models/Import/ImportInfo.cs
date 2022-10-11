@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using WwiseTools.Objects;
@@ -34,28 +33,38 @@ public class ImportInfo
 
         WwisePathBuilder builder = null;
 
+        void ThrowException()
+        {
+            var exceptionMsg = $"Object path {path} not valid!";
+            throw new Exception(exceptionMsg);
+        }
+        
+        
         foreach (var s in split)
         {
-            if (!s.StartsWith("<") && isRoot) root += s + "\\";
-            else
+            if (!s.StartsWith("<") && isRoot)
             {
-                if (isRoot)
-                {
-                    root = root.Trim('\\');
-                    builder = new WwisePathBuilder("\\" + root);
-                    isRoot = false;
-                }
-                if (!s.StartsWith("<")) throw new Exception($"Object path {path} not valid!");
-
-                var typeNameSplit = s.Split('>');
-                if (typeNameSplit.Length != 2) throw new Exception($"Object path {path} not valid!");
-
-                var res = Enum.TryParse(typeNameSplit[0].Trim('<'), out WwiseObject.ObjectType type);
-                
-                if (!res) throw new Exception($"Object path {path} not valid!");
-
-                builder.AppendHierarchy(type, typeNameSplit[1]);
+                root += s + "\\";
+                continue;
             }
+            
+            if (isRoot)
+            {
+                root = root.Trim('\\');
+                builder = new WwisePathBuilder("\\" + root);
+                isRoot = false;
+            }
+
+            if (!s.StartsWith("<")) ThrowException();
+
+            var typeNameSplit = s.Split('>');
+            if (typeNameSplit.Length != 2) ThrowException();
+
+            var res = Enum.TryParse(typeNameSplit[0].Trim('<'), out WwiseObject.ObjectType type);
+
+            if (!res) ThrowException();
+
+            builder.AppendHierarchy(type, typeNameSplit[1]);
         }
 
         return builder;

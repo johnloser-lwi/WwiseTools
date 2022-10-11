@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿#nullable enable
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -8,7 +9,7 @@ namespace WwiseTools.Utils;
 
 public class WwisePathBuilder
 {
-    private WwiseObject _root = null;
+    private WwiseObject? _root = null;
 
     private string _rootPath;
 
@@ -22,6 +23,7 @@ public class WwisePathBuilder
     public WwisePathBuilder(WwiseObject root)
     {
         _root = root;
+        _rootPath = "";
         _hierarchy = new List<WwiseObject>();
     }
 
@@ -40,7 +42,7 @@ public class WwisePathBuilder
     /// <returns>返回路径是否成功添加</returns>
     public bool AppendHierarchy(WwiseObject.ObjectType type, string name)
     {
-        WwiseObject last = null;
+        WwiseObject last;
 
         if (_hierarchy.Count == 0) last = _root;
         else
@@ -50,7 +52,7 @@ public class WwisePathBuilder
 
         if (type == WwiseObject.ObjectType.WorkUnit || type == WwiseObject.ObjectType.ActorMixer || type == WwiseObject.ObjectType.Folder)
         {
-            if (last.Type == WwiseObject.ObjectType.RandomSequenceContainer.ToString() ||
+            if (last!.Type == WwiseObject.ObjectType.RandomSequenceContainer.ToString() ||
                 last.Type == WwiseObject.ObjectType.SwitchContainer.ToString() ||
                 last.Type == WwiseObject.ObjectType.BlendContainer.ToString())
             {
@@ -74,9 +76,9 @@ public class WwisePathBuilder
     /// <returns></returns>
     public async Task<string> GetPurePathAsync()
     {
-        if (_root == null) _root = await WwiseUtility.Instance.GetWwiseObjectByPathAsync(_rootPath);
+        if (_root is null && !string.IsNullOrEmpty(_rootPath)) _root = await WwiseUtility.Instance.GetWwiseObjectByPathAsync(_rootPath);
         
-        var rootPath = _root == null ? null : await _root.GetPathAsync();
+        var rootPath = _root is null ? null : await _root.GetPathAsync();
         
 #if DEBUG
         if (rootPath == null && !WwiseUtility.Instance.IsConnected()) rootPath = "\\Actor-Mixer Hierarchy";
@@ -100,9 +102,9 @@ public class WwisePathBuilder
     /// <returns></returns>
     public async Task<string> GetImportPathAsync()
     {
-        if (_root == null) _root = await WwiseUtility.Instance.GetWwiseObjectByPathAsync(_rootPath);
+        if (_root is null&& !string.IsNullOrEmpty(_rootPath)) _root = await WwiseUtility.Instance.GetWwiseObjectByPathAsync(_rootPath);
         
-        var rootPath = _root == null ? null : await _root.GetPathAsync();
+        var rootPath = _root is null ? null : await _root.GetPathAsync();
         
 #if DEBUG
         if (rootPath == null && !WwiseUtility.Instance.IsConnected()) rootPath = "\\Actor-Mixer Hierarchy";
