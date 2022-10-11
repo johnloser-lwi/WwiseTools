@@ -1,4 +1,5 @@
 ﻿#nullable enable
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -40,27 +41,20 @@ public class WwisePathBuilder
     /// <param name="type">Wwise对象类型</param>
     /// <param name="name">Wwise对象名称</param>
     /// <returns>返回路径是否成功添加</returns>
-    public bool AppendHierarchy(WwiseObject.ObjectType type, string name)
+    public async Task<bool> AppendHierarchy(WwiseObject.ObjectType type, string name)
     {
-        WwiseObject last;
+        WwiseObject? last;
 
-        if (_hierarchy.Count == 0) last = _root;
-        else
+        var initializedWithPath = !string.IsNullOrEmpty(_rootPath);
+
+        if (initializedWithPath) _root = await WwiseUtility.Instance.GetWwiseObjectByPathAsync(_rootPath);
+
+        if (_root == null)
         {
-            last = _hierarchy.Last();
+            WaapiLog.InternalLog($"Failed to append {name}:{type} to hierarchy! Invalid root!");
+            return false;
         }
 
-        if (type == WwiseObject.ObjectType.WorkUnit || type == WwiseObject.ObjectType.ActorMixer || type == WwiseObject.ObjectType.Folder)
-        {
-            if (last!.Type == WwiseObject.ObjectType.RandomSequenceContainer.ToString() ||
-                last.Type == WwiseObject.ObjectType.SwitchContainer.ToString() ||
-                last.Type == WwiseObject.ObjectType.BlendContainer.ToString())
-            {
-                WaapiLog.InternalLog($"Failed to append {name}:{type} to hierarchy!");
-                return false;
-            }
-        }
-        
         _hierarchy.Add(new WwiseObject(name, "", type.ToString()));
         return true;
     }
@@ -83,6 +77,8 @@ public class WwisePathBuilder
 #if DEBUG
         if (rootPath == null && !WwiseUtility.Instance.IsConnected()) rootPath = "\\Actor-Mixer Hierarchy";
 #endif
+
+        if (string.IsNullOrEmpty(rootPath)) throw new Exception("Invalid root!");
         
         string hierarchy = "";
 
@@ -109,6 +105,8 @@ public class WwisePathBuilder
 #if DEBUG
         if (rootPath == null && !WwiseUtility.Instance.IsConnected()) rootPath = "\\Actor-Mixer Hierarchy";
 #endif
+        
+        if (string.IsNullOrEmpty(rootPath)) throw new Exception("Invalid root!");
         
         string hierarchy = "";
 

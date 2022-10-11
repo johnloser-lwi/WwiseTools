@@ -32,7 +32,7 @@ namespace WwiseTools.Utils
 
             try
             {
-                var func = Function.Verify("ak.wwise.core.object.getPropertyAndReferenceNames");
+                var func = Function?.Verify("ak.wwise.core.object.getPropertyAndReferenceNames");
                 var result = await _client.Call(func,
 
                     new JObject(
@@ -65,7 +65,7 @@ namespace WwiseTools.Utils
 
             try
             {
-                var func = Function.Verify("ak.wwise.core.object.setReference");
+                var func = Function?.Verify("ak.wwise.core.object.setReference");
                 await _client.Call(func,
 
                     new JObject(
@@ -103,7 +103,7 @@ namespace WwiseTools.Utils
 
             try
             {
-                var func = Function.Verify("ak.wwise.core.object.setProperty");
+                var func = Function?.Verify("ak.wwise.core.object.setProperty");
                 await _client.Call(func,
 
                     new JObject(
@@ -142,7 +142,7 @@ namespace WwiseTools.Utils
             string oldName = renameObject.Name;
             try
             {
-                var func = Function.Verify("ak.wwise.core.object.setName");
+                var func = Function?.Verify("ak.wwise.core.object.setName");
                 await _client.Call(func
                     ,
                     new
@@ -177,7 +177,7 @@ namespace WwiseTools.Utils
 
             try
             {
-                var func = Function.Verify("ak.wwise.core.object.copy");
+                var func = Function?.Verify("ak.wwise.core.object.copy");
                 // 移动物体
                 await _client.Call(func
                     ,
@@ -217,7 +217,7 @@ namespace WwiseTools.Utils
 
             try
             {
-                var func = Function.Verify("ak.wwise.core.object.move");
+                var func = Function?.Verify("ak.wwise.core.object.move");
                 // 移动物体
                 await _client.Call(func,
                     new JObject
@@ -249,7 +249,7 @@ namespace WwiseTools.Utils
 
             try
             {
-                var func = Function.Verify("ak.wwise.core.object.setNotes");
+                var func = Function?.Verify("ak.wwise.core.object.setNotes");
                 // 移动物体
                 await _client.Call(func,
                     new JObject
@@ -301,7 +301,7 @@ namespace WwiseTools.Utils
 
             try
             {
-                var func = Function.Verify("ak.wwise.core.object.create");
+                var func = Function?.Verify("ak.wwise.core.object.create");
                 var result = await _client.Call
                     (
                         func,
@@ -344,7 +344,7 @@ namespace WwiseTools.Utils
             try
             {
 
-                var func = Function.Verify("ak.wwise.core.soundbank.setInclusions");
+                var func = Function?.Verify("ak.wwise.core.soundbank.setInclusions");
                 await _client.Call
                 (
                     func,
@@ -381,7 +381,7 @@ namespace WwiseTools.Utils
 
             try
             {
-                var func = Function.Verify("ak.wwise.core.object.create");
+                var func = Function?.Verify("ak.wwise.core.object.create");
 
                 // 创建物体
                 var result = await _client.Call
@@ -399,7 +399,7 @@ namespace WwiseTools.Utils
 
                 WaapiLog.InternalLog($"Object {objectName} created successfully!");
                 if (result["id"] == null) throw new Exception();
-                return await GetWwiseObjectByIDAsync(result["id"].ToString());
+                return await GetWwiseObjectByIDAsync(result["id"]?.ToString());
             }
             catch (Exception e)
             {
@@ -421,7 +421,7 @@ namespace WwiseTools.Utils
 
             try
             {
-                var func = Function.Verify("ak.wwise.core.object.create");
+                var func = Function?.Verify("ak.wwise.core.object.create");
 
                 // 创建物体
                 var result = await _client.Call
@@ -439,7 +439,7 @@ namespace WwiseTools.Utils
 
                 WaapiLog.InternalLog($"Object {objectName} created successfully!");
                 if (result["id"] == null) throw new Exception();
-                return await GetWwiseObjectByIDAsync(result["id"].ToString());
+                return await GetWwiseObjectByIDAsync(result["id"]?.ToString());
             }
             catch (Exception e)
             {
@@ -462,7 +462,7 @@ namespace WwiseTools.Utils
 
             try
             {
-                var func = Function.Verify("ak.wwise.core.object.create");
+                var func = Function?.Verify("ak.wwise.core.object.create");
 
                 // 创建物体
                 var result = await _client.Call
@@ -480,7 +480,7 @@ namespace WwiseTools.Utils
 
                 WaapiLog.InternalLog($"Object {objectName} created successfully!");
                 if (result["id"] == null) throw new Exception();
-                return await GetWwiseObjectByIDAsync(result["id"].ToString());
+                return await GetWwiseObjectByIDAsync(result["id"]?.ToString());
             }
             catch (Exception e)
             {
@@ -502,7 +502,7 @@ namespace WwiseTools.Utils
 
             try
             {
-                var func = Function.Verify("ak.wwise.core.object.delete");
+                var func = Function?.Verify("ak.wwise.core.object.delete");
 
                 // 创建物体
                 var result = await _client.Call
@@ -560,13 +560,17 @@ namespace WwiseTools.Utils
 
                 JObject jresult = await _client.Call(func, query, options, TimeOut);
                 if (jresult["return"]?.Last == null) throw new Exception();
-                string name = jresult["return"].Last["name"]?.ToString();
-                string id = jresult["return"].Last["id"]?.ToString();
-                string type = jresult["return"].Last["type"]?.ToString();
+                string? name = jresult["return"]?.Last?["name"]?.ToString();
+                string? id = jresult["return"]?.Last?["id"]?.ToString();
+                string? type = jresult["return"]?.Last?["type"]?.ToString();
 
-                WaapiLog.InternalLog($"WwiseObject {name} successfully fetched!");
+                if (!string.IsNullOrEmpty(name) && !string.IsNullOrEmpty(id) && !string.IsNullOrEmpty(type))
+                {
+                    WaapiLog.InternalLog($"WwiseObject {name} successfully fetched!");
 
-                return new WwiseObject(name, id, type);
+                    return new WwiseObject(name, id, type);
+                }
+                
             }
             catch (Exception e)
             {
@@ -574,6 +578,7 @@ namespace WwiseTools.Utils
                 return null;
             }
 
+            return null;
         }
 
         public async Task<JToken?> GetWwiseObjectPropertyAsync(string targetId, string wwiseProperty)
@@ -607,7 +612,7 @@ namespace WwiseTools.Utils
                 if (jresult["return"] == null) throw new Exception();
 
                 WaapiLog.InternalLog($"WwiseProperty {wwiseProperty} successfully fetched!");
-                return jresult["return"].Last?["@" + wwiseProperty];
+                return jresult["return"]!.Last?["@" + wwiseProperty];
             }
             catch (Exception e)
             {
@@ -648,7 +653,7 @@ namespace WwiseTools.Utils
                 if (jresult["return"] == null) throw new Exception();
 
                 WaapiLog.InternalLog($"WwiseProperty {wwiseProperty} successfully fetched!");
-                var r = jresult["return"].Last?["@" + wwiseProperty];
+                var r = jresult["return"]!.Last?["@" + wwiseProperty];
                 if (r == null) return null;
                 return new WwiseProperty(wwiseProperty, r.ToString());
             }
@@ -688,9 +693,9 @@ namespace WwiseTools.Utils
 
 
                 JObject jresult = await WwiseUtility.Instance._client.Call(func, query, options, TimeOut);
-                if (jresult["return"] == null || jresult["return"].Last == null || 
-                    jresult["return"].Last["path"] == null) throw new Exception();
-                string path = jresult["return"].Last["path"].ToString();
+                if (jresult["return"] == null || jresult["return"]!.Last == null || 
+                    jresult["return"]!.Last!["path"] == null) throw new Exception();
+                string? path = jresult["return"]?.Last!["path"]?.ToString();
 
                 return path;
             }
@@ -738,13 +743,15 @@ namespace WwiseTools.Utils
                 var obj = jresult["return"]?.Last;
                 if (obj == null) throw new Exception("Object not found!");
 
-                string name = obj["name"]?.ToString();
-                string id = obj["id"]?.ToString();
-                string type = obj["type"]?.ToString();
-
-                WaapiLog.InternalLog($"WwiseObject {name} successfully fetched!");
-
-                return new WwiseObject(name, id, type);
+                string? name = obj["name"]?.ToString();
+                string? id = obj["id"]?.ToString();
+                string? type = obj["type"]?.ToString();
+                
+                if (!string.IsNullOrEmpty(name) && !string.IsNullOrEmpty(id) && !string.IsNullOrEmpty(type))
+                {
+                    WaapiLog.InternalLog($"WwiseObject {name} successfully fetched!");
+                    return new WwiseObject(name, id, type);
+                }
             }
             catch (Exception e)
             {
@@ -752,6 +759,7 @@ namespace WwiseTools.Utils
                 return null;
             }
 
+            return null;
         }
         
         /// <summary>
@@ -788,19 +796,23 @@ namespace WwiseTools.Utils
                 var obj = jresult["return"]?.Last;
                 if (obj == null) throw new Exception("Object not found!");
 
-                string name = obj["name"]?.ToString();
-                string id = obj["id"]?.ToString();
-                string type = obj["type"]?.ToString();
-
-                WaapiLog.InternalLog($"WwiseObject {name} successfully fetched!");
-
-                return new WwiseObject(name, id, type);
+                string? name = obj["name"]?.ToString();
+                string? id = obj["id"]?.ToString();
+                string? type = obj["type"]?.ToString();
+                
+                if (!string.IsNullOrEmpty(name) && !string.IsNullOrEmpty(id) && !string.IsNullOrEmpty(type))
+                {
+                    WaapiLog.InternalLog($"WwiseObject {name} successfully fetched!");
+                    return new WwiseObject(name, id, type);
+                }
             }
             catch (Exception e)
             {
                 WaapiLog.InternalLog($"Failed to return WwiseObject by path : {path}! ======> {e.Message}");
                 return null;
             }
+
+            return null;
 
         }
 
@@ -848,13 +860,14 @@ namespace WwiseTools.Utils
 
                 
                 if (jresult["return"] == null) throw new Exception();
-                foreach (var obj in jresult["return"])
+                foreach (var obj in jresult["return"]!)
                 {
-                    string name = obj["name"]?.ToString();
-                    string id = obj["id"]?.ToString();
-                    string type = obj["type"]?.ToString();
+                    string? name = obj["name"]?.ToString();
+                    string? id = obj["id"]?.ToString();
+                    string? type = obj["type"]?.ToString();
 
-                    result.Add(new WwiseObject(name, id, type));
+                    if (!string.IsNullOrEmpty(name) && !string.IsNullOrEmpty(id) && !string.IsNullOrEmpty(type)) 
+                        result.Add(new WwiseObject(name, id, type));
                 }
 
 
@@ -887,7 +900,7 @@ namespace WwiseTools.Utils
 
                 };
 
-                var func = Function.Verify("ak.wwise.ui.getSelectedObjects");
+                var func = Function?.Verify("ak.wwise.ui.getSelectedObjects");
 
                 JObject jresult = await _client.Call(func, null, options, TimeOut);
 
@@ -895,13 +908,14 @@ namespace WwiseTools.Utils
 
 
                 if (jresult["objects"] == null) throw new Exception();
-                foreach (var obj in jresult["objects"])
+                foreach (var obj in jresult["return"]!)
                 {
-                    string name = obj["name"]?.ToString();
-                    string id = obj["id"]?.ToString();
-                    string type = obj["type"]?.ToString();
+                    string? name = obj["name"]?.ToString();
+                    string? id = obj["id"]?.ToString();
+                    string? type = obj["type"]?.ToString();
 
-                    result.Add(new WwiseObject(name, id, type));
+                    if (!string.IsNullOrEmpty(name) && !string.IsNullOrEmpty(id) && !string.IsNullOrEmpty(type)) 
+                        result.Add(new WwiseObject(name, id, type));
                 }
 
                 WaapiLog.InternalLog($"Selected WwiseObject list successfully fetched!");
@@ -975,9 +989,10 @@ namespace WwiseTools.Utils
 
                 var result = await _client.Call(func, query, options, TimeOut);
                 if (result["return"] == null) throw new Exception();
-                foreach (var r in result["return"])
+                foreach (var r in result["return"]!)
                 {
-                    string name = r["name"]?.ToString();
+                    if (r["name"] == null) continue;
+                    string name = r["name"]!.ToString();
                     var ignoreList = new string[] { "Mixed", "SFX", "External", "SoundSeed Grain" };
                     if (!ignoreList.Contains(name))
                         resultList.Add(name);
@@ -1020,7 +1035,7 @@ namespace WwiseTools.Utils
             }
 
             var objectPath = new WwisePathBuilder(parent);
-            var res = objectPath.AppendHierarchy(WwiseObject.ObjectType.Sound, soundName);
+            var res = await objectPath.AppendHierarchy(WwiseObject.ObjectType.Sound, soundName);
 
             if (!res)
             {
@@ -1052,7 +1067,7 @@ namespace WwiseTools.Utils
 
                 var options = new JObject(new JProperty("return", new object[] { "name", "id", "type", "path" })); // 设置返回参数
 
-                var func = Function.Verify("ak.wwise.core.audio.import");
+                var func = Function?.Verify("ak.wwise.core.audio.import");
 
                 var result = await _client.Call(func, importQ, options); // 执行导入
 
@@ -1105,7 +1120,7 @@ namespace WwiseTools.Utils
 
                 var options = new JObject(new JProperty("return", new object[] { "name", "id", "type", "path" })); // 设置返回参数
 
-                var func = Function.Verify("ak.wwise.core.audio.import");
+                var func = Function?.Verify("ak.wwise.core.audio.import");
 
                 var result = await _client.Call(func, importQ, options); // 执行导入
 
@@ -1167,11 +1182,12 @@ namespace WwiseTools.Utils
 
                 JObject jresult = await _client.Call(func, query, options, TimeOut);
 
-                string filePath = "";
+                string? filePath = "";
                 if (jresult["return"] == null) throw new Exception();
-                foreach (var obj in jresult["return"])
+                foreach (var obj in jresult["return"]!)
                 {
-                    filePath = obj["filePath"]?.ToString();
+                    if (obj["filePath"] == null) continue;
+                    filePath = obj["filePath"]!.ToString();
                 }
 
                 WaapiLog.InternalLog($"Work Unit file path of object {wwiseObject.Name} successfully fetched!");
@@ -1189,7 +1205,7 @@ namespace WwiseTools.Utils
         {
             var projectPath = await GetWwiseProjectPathAsync();
             if (string.IsNullOrEmpty(projectPath)) return false;
-            await LoadWwiseProjectAsync(projectPath, true);
+            await LoadWwiseProjectAsync(projectPath!, true);
             await DisconnectAsync();
             _client = null;
             return await ConnectAsync();
@@ -1217,7 +1233,7 @@ namespace WwiseTools.Utils
                     path = projectPath
                 };
 
-                var func = Function.Verify("ak.wwise.ui.project.open");
+                var func = Function?.Verify("ak.wwise.ui.project.open");
                 await _client.Call(func, query, null, TimeOut);
 
                 WaapiLog.InternalLog("Project loaded successfully!");
@@ -1263,11 +1279,12 @@ namespace WwiseTools.Utils
 
                 JObject jresult = await _client.Call(func, query, options, TimeOut);
 
-                string name = "";
+                string? name = null;
                 if (jresult["return"] == null) throw new Exception();
-                foreach (var obj in jresult["return"])
+                foreach (var obj in jresult["return"]!)
                 {
-                    name = obj["name"]?.ToString();
+                    if (obj["name"] == null) continue;
+                    name = obj["name"]!.ToString();
                 }
 
                 WaapiLog.InternalLog($"Project name successfully fetched!");
@@ -1312,10 +1329,11 @@ namespace WwiseTools.Utils
 
                 JObject jresult = await _client.Call(func, query, options, TimeOut);
 
-                string filePath = "";
+                string? filePath = "";
                 if (jresult["return"] == null) throw new Exception();
-                foreach (var obj in jresult["return"])
+                foreach (var obj in jresult["return"]!)
                 {
+                    if (obj["filePath"] == null) continue;
                     filePath = obj["filePath"]?.ToString();
                 }
 
@@ -1336,15 +1354,15 @@ namespace WwiseTools.Utils
 
             try
             {
-                var func = Function.Verify("ak.wwise.core.getInfo");
+                var func = Function?.Verify("ak.wwise.core.getInfo");
 
                 JObject result = await _client.Call(func, null, null);
                 if (result["version"] == null) throw new Exception("Failed to fetch version info!");
-                int.TryParse(result["version"]["major"]?.ToString(), out int major);
-                int.TryParse(result["version"]["minor"]?.ToString(), out int minor);
-                int.TryParse(result["version"]["build"]?.ToString(), out int build);
-                int.TryParse(result["version"]["year"]?.ToString(), out int year);
-                int.TryParse(result["version"]["schema"]?.ToString(), out int schema);
+                int.TryParse(result["version"]!["major"]?.ToString(), out int major);
+                int.TryParse(result["version"]!["minor"]?.ToString(), out int minor);
+                int.TryParse(result["version"]!["build"]?.ToString(), out int build);
+                int.TryParse(result["version"]!["year"]?.ToString(), out int year);
+                int.TryParse(result["version"]!["schema"]?.ToString(), out int schema);
                 int.TryParse(result["processId"]?.ToString(), out int processId);
                 bool.TryParse(result["isCommandLine"]?.ToString(), out bool isCommandLine);
 
@@ -1374,15 +1392,15 @@ namespace WwiseTools.Utils
         /// </summary>
         /// <param name="command"></param>
         /// <returns></returns>
-        public async Task<bool> ExecuteUICommandAsync(string command, string[] objectIDs = null)
+        public async Task<bool> ExecuteUICommandAsync(string command, string[]? objectIDs = null)
         {
             if (!await TryConnectWaapiAsync()) return false;
 
             try
             {
-                var func = Function.Verify("ak.wwise.ui.commands.execute");
+                var func = Function!.Verify("ak.wwise.ui.commands.execute");
 
-                if (objectIDs != null)
+                if (objectIDs is not null)
                 {
                     var query = new
                     {
@@ -1489,10 +1507,10 @@ namespace WwiseTools.Utils
             return result.Distinct().ToList();
         }
 
-        public async Task<List<WwiseObject>> GetReferencesToWwiseObjectAsync(WwiseObject wwiseObject)
+        public async Task<List<WwiseObject>> GetReferencesToWwiseObjectAsync(WwiseObject? wwiseObject)
         {
             List<WwiseObject> result = new List<WwiseObject>();
-            if (wwiseObject == null || !await TryConnectWaapiAsync()) return result;
+            if (wwiseObject is null || !await TryConnectWaapiAsync()) return result;
             try
             {
                 var query = new
@@ -1523,13 +1541,14 @@ namespace WwiseTools.Utils
 
                 var jresult = await _client.Call(func, query, options, TimeOut);
                 if (jresult == null || jresult["return"] == null) return result;
-                foreach (var obj in jresult["return"])
+                foreach (var obj in jresult["return"]!)
                 {
-                    string name = obj["name"]?.ToString();
-                    string id = obj["id"]?.ToString();
-                    string type = obj["type"]?.ToString();
-
-                    result.Add(new WwiseObject(name, id, type));
+                    string? name = obj["name"]?.ToString();
+                    string? id = obj["id"]?.ToString();
+                    string? type = obj["type"]?.ToString();
+                    
+                    if (!string.IsNullOrEmpty(name) && !string.IsNullOrEmpty(id) && !string.IsNullOrEmpty(type)) 
+                        result.Add(new WwiseObject(name, id, type));
                 }
 
 
@@ -1545,7 +1564,7 @@ namespace WwiseTools.Utils
         public async Task<List<WwiseObject>> BatchGetWwiseObjectParentAsync(List<WwiseObject> wwiseObjects)
         {
             var result = new List<WwiseObject>();
-            if (wwiseObjects == null || !await TryConnectWaapiAsync()) return result;
+            if (wwiseObjects.Count == 0 || !await TryConnectWaapiAsync()) return result;
             try
             {
                 var query = new
@@ -1576,13 +1595,14 @@ namespace WwiseTools.Utils
 
                 var jresult = await _client.Call(func, query, options, TimeOut);
                 if (jresult == null || jresult["return"] == null) return result;
-                foreach (var obj in jresult["return"])
+                foreach (var obj in jresult["return"]!)
                 {
-                    string name = obj["name"]?.ToString();
-                    string id = obj["id"]?.ToString();
-                    string type = obj["type"]?.ToString();
+                    string? name = obj["name"]?.ToString();
+                    string? id = obj["id"]?.ToString();
+                    string? type = obj["type"]?.ToString();
 
-                    result.Add(new WwiseObject(name, id, type));
+                    if (!string.IsNullOrEmpty(name) && !string.IsNullOrEmpty(id) && !string.IsNullOrEmpty(type)) 
+                        result.Add(new WwiseObject(name, id, type));
                 }
 
 
@@ -1595,9 +1615,9 @@ namespace WwiseTools.Utils
             return result;
         }
 
-        public async Task<WwiseObject?> GetWwiseObjectParentAsync(WwiseObject wwiseObject)
+        public async Task<WwiseObject?> GetWwiseObjectParentAsync(WwiseObject? wwiseObject)
         {
-            if (wwiseObject == null || !await TryConnectWaapiAsync()) return null;
+            if (wwiseObject is null || !await TryConnectWaapiAsync()) return null;
             try
             {
                 var query = new
@@ -1628,13 +1648,14 @@ namespace WwiseTools.Utils
 
                 var jresult = await _client.Call(func, query, options, TimeOut);
                 if (jresult == null || jresult["return"] == null) return null;
-                foreach (var obj in jresult["return"])
+                foreach (var obj in jresult["return"]!)
                 {
-                    string name = obj["name"]?.ToString();
-                    string id = obj["id"]?.ToString();
-                    string type = obj["type"]?.ToString();
-
-                    return new WwiseObject(name, id, type);
+                    string? name = obj["name"]?.ToString();
+                    string? id = obj["id"]?.ToString();
+                    string? type = obj["type"]?.ToString();
+                    
+                    if (!string.IsNullOrEmpty(name) && !string.IsNullOrEmpty(id) && !string.IsNullOrEmpty(type)) 
+                        return new WwiseObject(name, id, type);
                 }
 
 
@@ -1650,7 +1671,7 @@ namespace WwiseTools.Utils
         public async Task<List<WwiseObject>> BatchGetWwiseObjectChildrenAsync(List<WwiseObject> wwiseObjects)
         {
             List<WwiseObject> result = new List<WwiseObject>();
-            if (wwiseObjects == null || !await TryConnectWaapiAsync()) return result;
+            if (wwiseObjects.Count == 0 || !await TryConnectWaapiAsync()) return result;
             try
             {
                 var query = new
@@ -1681,13 +1702,14 @@ namespace WwiseTools.Utils
 
                 var jresult = await _client.Call(func, query, options, TimeOut);
                 if (jresult == null || jresult["return"] == null) return result;
-                foreach (var obj in jresult["return"])
+                foreach (var obj in jresult["return"]!)
                 {
-                    string name = obj["name"]?.ToString();
-                    string id = obj["id"]?.ToString();
-                    string type = obj["type"]?.ToString();
+                    string? name = obj["name"]?.ToString();
+                    string? id = obj["id"]?.ToString();
+                    string? type = obj["type"]?.ToString();
 
-                    result.Add(new WwiseObject(name, id, type));
+                    if (!string.IsNullOrEmpty(name) && !string.IsNullOrEmpty(id) && !string.IsNullOrEmpty(type)) 
+                        result.Add(new WwiseObject(name, id, type));
                 }
 
 
@@ -1700,10 +1722,10 @@ namespace WwiseTools.Utils
             return result;
         }
 
-        public async Task<List<WwiseObject>> GetWwiseObjectChildrenAsync(WwiseObject wwiseObject)
+        public async Task<List<WwiseObject>> GetWwiseObjectChildrenAsync(WwiseObject? wwiseObject)
         {
             List<WwiseObject> result = new List<WwiseObject>();
-            if (wwiseObject == null || !await TryConnectWaapiAsync()) return result;
+            if (wwiseObject is null || !await TryConnectWaapiAsync()) return result;
             try
             {
                 var query = new
@@ -1734,13 +1756,14 @@ namespace WwiseTools.Utils
 
                 var jresult = await _client.Call(func, query, options, TimeOut);
                 if (jresult == null || jresult["return"] == null) return result;
-                foreach (var obj in jresult["return"])
+                foreach (var obj in jresult["return"]!)
                 {
-                    string name = obj["name"]?.ToString();
-                    string id = obj["id"]?.ToString();
-                    string type = obj["type"]?.ToString();
+                    string? name = obj["name"]?.ToString();
+                    string? id = obj["id"]?.ToString();
+                    string? type = obj["type"]?.ToString();
 
-                    result.Add(new WwiseObject(name, id, type));
+                    if (!string.IsNullOrEmpty(name) && !string.IsNullOrEmpty(id) && !string.IsNullOrEmpty(type)) 
+                        result.Add(new WwiseObject(name, id, type));
                 }
 
 
@@ -1753,10 +1776,10 @@ namespace WwiseTools.Utils
             return result;
         }
 
-        public async Task<List<WwiseObject>> GetWwiseObjectAncestorsAsync(WwiseObject wwiseObject)
+        public async Task<List<WwiseObject>> GetWwiseObjectAncestorsAsync(WwiseObject? wwiseObject)
         {
             List<WwiseObject> result = new List<WwiseObject>();
-            if (wwiseObject == null || !await TryConnectWaapiAsync()) return result;
+            if (wwiseObject is null || !await TryConnectWaapiAsync()) return result;
             try
             {
                 var query = new
@@ -1787,13 +1810,14 @@ namespace WwiseTools.Utils
 
                 var jresult = await _client.Call(func, query, options, TimeOut);
                 if (jresult == null || jresult["return"] == null) return result;
-                foreach (var obj in jresult["return"])
+                foreach (var obj in jresult["return"]!)
                 {
-                    string name = obj["name"]?.ToString();
-                    string id = obj["id"]?.ToString();
-                    string type = obj["type"]?.ToString();
+                    string? name = obj["name"]?.ToString();
+                    string? id = obj["id"]?.ToString();
+                    string? type = obj["type"]?.ToString();
 
-                    result.Add(new WwiseObject(name, id, type));
+                    if (!string.IsNullOrEmpty(name) && !string.IsNullOrEmpty(id) && !string.IsNullOrEmpty(type)) 
+                        result.Add(new WwiseObject(name, id, type));
                 }
 
 
@@ -1806,10 +1830,10 @@ namespace WwiseTools.Utils
             return result;
         }
 
-        public async Task<List<WwiseObject>> GetWwiseObjectDescendantsAsync(WwiseObject wwiseObject)
+        public async Task<List<WwiseObject>> GetWwiseObjectDescendantsAsync(WwiseObject? wwiseObject)
         {
             List<WwiseObject> result = new List<WwiseObject>();
-            if (wwiseObject == null || !await TryConnectWaapiAsync()) return result;
+            if (wwiseObject is null || !await TryConnectWaapiAsync()) return result;
             try
             {
                 var query = new
@@ -1840,13 +1864,14 @@ namespace WwiseTools.Utils
 
                 var jresult = await _client.Call(func, query, options, TimeOut);
                 if (jresult == null || jresult["return"] == null) return result;
-                foreach (var obj in jresult["return"])
+                foreach (var obj in jresult["return"]!)
                 {
-                    string name = obj["name"]?.ToString();
-                    string id = obj["id"]?.ToString();
-                    string type = obj["type"]?.ToString();
+                    string? name = obj["name"]?.ToString();
+                    string? id = obj["id"]?.ToString();
+                    string? type = obj["type"]?.ToString();
 
-                    result.Add(new WwiseObject(name, id, type));
+                    if (!string.IsNullOrEmpty(name) && !string.IsNullOrEmpty(id) && !string.IsNullOrEmpty(type)) 
+                        result.Add(new WwiseObject(name, id, type));
                 }
 
 
@@ -1876,7 +1901,7 @@ namespace WwiseTools.Utils
                     query.soundbanks.Add(new { name = soundbank });
                 }
 
-                var func = Function.Verify("ak.wwise.core.soundbank.generate");
+                var func = Function?.Verify("ak.wwise.core.soundbank.generate");
 
                 await _client.Call(func, query, null, TimeOut);
 
@@ -1899,7 +1924,7 @@ namespace WwiseTools.Utils
             {
                 var result = await _client.Call("ak.wwise.waapi.getFunctions", null, null, TimeOut);
                 if (result["functions"] == null) throw new Exception();
-                foreach (var func in result["functions"])
+                foreach (var func in result["functions"]!)
                 {
                     Function.AddFunction(func.ToString());
                 }
@@ -1922,7 +1947,7 @@ namespace WwiseTools.Utils
             {
                 var result = await _client.Call("ak.wwise.waapi.getTopics", null, null, TimeOut);
                 if (result["topics"] == null) throw new Exception();
-                foreach (var topic in result["topics"])
+                foreach (var topic in result["topics"]!)
                 {
                     Topic.AddTopic(topic.ToString());
                 }
@@ -1946,7 +1971,7 @@ namespace WwiseTools.Utils
             if (!await TryConnectWaapiAsync()) return false;
             try
             {
-                var func = Function.Verify("ak.wwise.core.project.save");
+                var func = Function?.Verify("ak.wwise.core.project.save");
 
                 await _client.Call(func, null, null, TimeOut);
                 WaapiLog.InternalLog("Project saved successfully!");
@@ -1966,7 +1991,7 @@ namespace WwiseTools.Utils
         {
             if (!await WwiseUtility.Instance.TryConnectWaapiAsync()) return;
 
-            var func = Function.Verify("ak.wwise.core.undo.beginGroup");
+            var func = Function?.Verify("ak.wwise.core.undo.beginGroup");
 
             var res = await CallAsync(func, null, null);
         }
@@ -1975,7 +2000,7 @@ namespace WwiseTools.Utils
         {
             if (!await WwiseUtility.Instance.TryConnectWaapiAsync()) return;
 
-            var func = Function.Verify("ak.wwise.core.undo.cancelGroup");
+            var func = Function?.Verify("ak.wwise.core.undo.cancelGroup");
 
             var res = await CallAsync(func, null, null);
         }
@@ -1984,7 +2009,7 @@ namespace WwiseTools.Utils
         {
             if (!await WwiseUtility.Instance.TryConnectWaapiAsync()) return;
 
-            var func = Function.Verify("ak.wwise.core.undo.endGroup");
+            var func = Function?.Verify("ak.wwise.core.undo.endGroup");
 
             var arg = new
             {

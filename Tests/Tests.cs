@@ -27,31 +27,6 @@ namespace Tests
             Assert.That(musicSwitchContainer.AsMusicSwitchContainer().Valid);
             Assert.That(musicSwitchContainer.AsHierarchy().Valid);
         }
-
-        [Test]
-        public async Task WwisePathBuilderTest()
-        {
-            WaapiLog.SetEnableInternalLog(false);
-            
-            var result = "\\Actor-Mixer Hierarchy\\<ActorMixer>TestMixer\\<SwitchContainer>TestSwitch\\<Sound>TestSound";
-            var pureResult = "\\Actor-Mixer Hierarchy\\TestMixer\\TestSwitch\\TestSound";
-
-            var builder = new WwisePathBuilder(new WwiseObject("", "", ""));
-            
-            builder.AppendHierarchy(WwiseObject.ObjectType.ActorMixer, "TestMixer");
-            builder.AppendHierarchy(WwiseObject.ObjectType.SwitchContainer, "TestSwitch");
-            
-            // ActorMixer不能添加至SwitchContainer，期望值为false
-            var res = builder.AppendHierarchy(WwiseObject.ObjectType.ActorMixer, "TestMixer2");
-            
-            builder.AppendHierarchy(WwiseObject.ObjectType.Sound, "TestSound");
-
-            string builderResult = await builder.GetImportPathAsync();
-            string builderPureResult = await builder.GetPurePathAsync();
-            
-            Assert.That(!res);
-            Assert.That(builderResult == result);
-            Assert.That(builderPureResult == pureResult);
-        }
+        
     }
 }
