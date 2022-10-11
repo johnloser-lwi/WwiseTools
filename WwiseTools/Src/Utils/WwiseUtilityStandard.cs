@@ -1,4 +1,5 @@
-﻿using System;
+﻿#nullable enable
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -1004,7 +1005,11 @@ namespace WwiseTools.Utils
         /// <returns></returns>
         public async Task<WwiseObject?> ImportSoundAsync(string filePath, string language = "SFX", string subFolder = "", string parentPath = @"\Actor-Mixer Hierarchy\Default Work Unit", string soundName = "", ImportAction importAction = ImportAction.useExisting) // Async版本
         {
-            return await ImportSoundAsync(await GetWwiseObjectByPathAsync(parentPath), filePath, language, subFolder, soundName, importAction);
+            var parent = await GetWwiseObjectByPathAsync(parentPath);
+
+            if (parent == null) return null;
+            
+            return await ImportSoundAsync(parent, filePath, language, subFolder, soundName, importAction);
         }
         
         public async Task<WwiseObject?> ImportSoundAsync(WwiseObject parent, string filePath, string language = "SFX", string subFolder = "", string soundName = "", ImportAction importAction = ImportAction.useExisting)
@@ -1051,22 +1056,23 @@ namespace WwiseTools.Utils
 
                 var result = await _client.Call(func, importQ, options); // 执行导入
 
-                var  idealRet = await GetWwiseObjectByPathAsync(await info.ObjectPath.GetPurePathAsync());
 
-                WwiseObject? realRet = null;
-
-                if (result == null || result["objects"] == null ||
-                    result["objects"].Last == null || result["objects"].Last["id"] == null)
+                if (result == null || result["objects"] == null) return null;
+                foreach (var token in result["objects"]!)
                 {
-                    realRet = idealRet;
-                }
-                else
-                {
-                    realRet = await GetWwiseObjectByIDAsync(result["objects"].Last["id"].ToString());
+                    if (token["id"] == null) continue;
+
+                    var id = token["id"]?.ToString();
+                    
+                    if (string.IsNullOrEmpty(id)) continue;
+
+                    var wwiseObject = await WwiseUtility.Instance.GetWwiseObjectByIDAsync(id!);
+
+                    if (wwiseObject != null && wwiseObject.Type == "Sound") return wwiseObject;
+
                 }
 
-                if (realRet is not null) WaapiLog.InternalLog($"File {info.AudioFile} imported successfully!");
-                return realRet;
+                return null;
             }
             catch (Exception e)
             {
@@ -1075,9 +1081,9 @@ namespace WwiseTools.Utils
             }
         }
         
-        public async Task<bool> BatchImportSoundAsync(ImportInfo[] infos, ImportAction importAction = ImportAction.useExisting) // Async版本
+        public async Task<List<WwiseObject>> BatchImportSoundAsync(ImportInfo[] infos, ImportAction importAction = ImportAction.useExisting) // Async版本
         {
-
+            var ret = new List<WwiseObject>();
             try
             {
                 JArray importArray = new JArray();
@@ -1103,13 +1109,29 @@ namespace WwiseTools.Utils
 
                 var result = await _client.Call(func, importQ, options); // 执行导入
 
-                return true;
+                if (result == null || result["objects"] == null) return ret;
+
+                foreach (var token in result["objects"]!)
+                {
+                    if (token["id"] == null) continue;
+
+                    var id = token["id"]?.ToString();
+                    
+                    if (string.IsNullOrEmpty(id)) continue;
+
+                    var wwiseObject = await WwiseUtility.Instance.GetWwiseObjectByIDAsync(id!);
+
+                    if (wwiseObject != null && wwiseObject.Type == "Sound") ret.Add(wwiseObject);
+                }
+                
+                return ret;
 
             }
             catch (Exception e)
             {
                 WaapiLog.InternalLog($"Batch import failed! ======> {e.Message}");
-                return false;
+                ret.Clear();
+                return ret;
             }
         }
         

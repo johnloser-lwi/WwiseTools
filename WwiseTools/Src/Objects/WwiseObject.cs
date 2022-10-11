@@ -36,8 +36,6 @@ namespace WwiseTools.Objects
             this.Name = name;
             this.ID = id;
             this.Type = type;
-            //this.Path = WwiseUtility.Instance.GetWwiseObjectPath(id);
-           // this.Parent = WwiseUtility.Instance.GetWwiseObjectByPath(this.Path.Replace(Name, ""));
         }
         
         public static WwiseObject Empty(ObjectType type)

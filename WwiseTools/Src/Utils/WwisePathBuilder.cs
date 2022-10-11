@@ -8,7 +8,9 @@ namespace WwiseTools.Utils;
 
 public class WwisePathBuilder
 {
-    private WwiseObject _root;
+    private WwiseObject _root = null;
+
+    private string _rootPath;
 
     private List<WwiseObject> _hierarchy;
     
@@ -23,7 +25,13 @@ public class WwisePathBuilder
         _hierarchy = new List<WwiseObject>();
     }
 
-    
+    public WwisePathBuilder(string rootPath = "\\Actor-Mixer Hierarchy")
+    {
+        _rootPath = rootPath;
+        _hierarchy = new List<WwiseObject>();
+    }
+
+
     /// <summary>
     /// 添加路径
     /// </summary>
@@ -66,7 +74,9 @@ public class WwisePathBuilder
     /// <returns></returns>
     public async Task<string> GetPurePathAsync()
     {
-        var rootPath = await _root.GetPathAsync();
+        if (_root == null) _root = await WwiseUtility.Instance.GetWwiseObjectByPathAsync(_rootPath);
+        
+        var rootPath = _root == null ? null : await _root.GetPathAsync();
         
 #if DEBUG
         if (rootPath == null && !WwiseUtility.Instance.IsConnected()) rootPath = "\\Actor-Mixer Hierarchy";
@@ -90,7 +100,9 @@ public class WwisePathBuilder
     /// <returns></returns>
     public async Task<string> GetImportPathAsync()
     {
-        var rootPath = await _root.GetPathAsync();
+        if (_root == null) _root = await WwiseUtility.Instance.GetWwiseObjectByPathAsync(_rootPath);
+        
+        var rootPath = _root == null ? null : await _root.GetPathAsync();
         
 #if DEBUG
         if (rootPath == null && !WwiseUtility.Instance.IsConnected()) rootPath = "\\Actor-Mixer Hierarchy";
