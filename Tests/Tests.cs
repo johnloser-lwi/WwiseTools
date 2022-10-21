@@ -16,7 +16,7 @@ namespace Tests
             WwiseObject musicSwitchContainer = new WwiseObject("TestObject", "null", "MusicSwitchContainer");
 
 
-            Assert.That(!sound.AsHierarchy().Valid);
+            Assert.That(sound.AsHierarchy().Valid);
             Assert.That(sound.AsVoice().Valid);
             Assert.That(soundBank.AsSoundBank().Valid);
             Assert.That(switchContainer.AsHierarchy().Valid);
