@@ -12,6 +12,8 @@ namespace WwiseTools.Objects
 
         public static Sound AsSound(this WwiseObject obj) => new Sound(obj);
 
+        public static AudioFileSource AsAudioFileSource(this WwiseObject obj) => new AudioFileSource(obj);
+
         public static RandomSequenceContainer AsRandomSequenceContainer(this WwiseObject obj) =>
             new RandomSequenceContainer(obj);
 

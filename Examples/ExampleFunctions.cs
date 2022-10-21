@@ -1,4 +1,6 @@
-﻿using System.Xml;
+﻿using System.Diagnostics;
+using System.Xml;
+using WwiseTools.Components;
 using WwiseTools.Objects;
 using WwiseTools.Properties;
 using WwiseTools.References;
@@ -19,6 +21,23 @@ namespace Examples
             using (var writer = new StreamWriter("log", true))
             {
                 writer.WriteLine(msg);
+            }
+        }
+
+        public static async Task GetSourceLanguageAsync()
+        {
+            var selection = await Waapi.GetWwiseObjectsBySelectionAsync();
+            foreach (var wwiseObject in selection)
+            {
+                var sound = wwiseObject.AsHierarchy();
+                var sources = await sound.GetChildrenAsync();
+
+                foreach (var source in sources)
+                {
+                    var language = await (new AudioFileSource(source)).GetLanguageAsync();
+                    
+                    Console.WriteLine(language);
+                }
             }
         }
 

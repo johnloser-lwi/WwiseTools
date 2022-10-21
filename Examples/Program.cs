@@ -8,7 +8,7 @@ try
 
     if (await WwiseUtility.Instance.TryConnectWaapiAsync())
     {
-        await ExampleFunctions.HierarchyCastAsync(); // 尝试不同的方法
+        await ExampleFunctions.GetSourceLanguageAsync(); // 尝试不同的方法
     }
     else
     {

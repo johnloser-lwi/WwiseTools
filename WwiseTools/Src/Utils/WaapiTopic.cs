@@ -6,8 +6,6 @@ namespace WwiseTools.Utils
 {
     internal class WaapiTopic : IEnumerable<string>
     {
-        public static string CoreObjectGet => "ak.wwise.core.object.get";
-
         private List<string> _topics;
 
         public WaapiTopic()
