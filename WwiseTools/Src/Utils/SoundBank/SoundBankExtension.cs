@@ -9,7 +9,7 @@ namespace WwiseTools.Utils.SoundBank;
 
 public static class SoundBankExtension
 {
-    public static async Task<bool> AddSoundBankInclusion(this WwiseUtility util, WwiseObject soundBank, SoundBankInclusion inclusion)
+    public static async Task<bool> AddSoundBankInclusionAsync(this WwiseUtility util, WwiseObject soundBank, SoundBankInclusion inclusion)
     {
         if (!await util.TryConnectWaapiAsync() || soundBank.Type != "SoundBank") return false;
 
@@ -57,9 +57,42 @@ public static class SoundBankExtension
 
         return false;
     }
+
+
+    public static async Task<bool> CleanSoundBankInclusionAsync(this WwiseUtility util, WwiseObject soundBank)
+    {
+        if (!await util.TryConnectWaapiAsync()) return false;
+
+        try
+        {
+            var func = util.Function.Verify("ak.wwise.core.soundbank.setInclusions");
+            await util.CallAsync
+            (
+                func,
+                new JObject
+                {
+                    new JProperty("soundbank", soundBank.ID),
+                    new JProperty("operation", "replace"),
+                    new JProperty("inclusions", new JArray
+                    {
+                    })
+                },
+                null,
+                util.TimeOut
+            );
+
+            return true;
+        }
+        catch (Exception e)
+        {
+            WaapiLog.InternalLog($"Failed to Add Event to Bank ======> {e.Message}");
+        }
+
+        return false;
+    }
     
     
-    public static async Task<List<SoundBankInclusion>> GetSoundBankInclusion(this WwiseUtility util, WwiseObject soundBank)
+    public static async Task<List<SoundBankInclusion>> GetSoundBankInclusionAsync(this WwiseUtility util, WwiseObject soundBank)
     {
         var result = new List<SoundBankInclusion>();
         if (!await util.TryConnectWaapiAsync() || soundBank.Type != "SoundBank") return result;

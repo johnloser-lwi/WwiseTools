@@ -43,7 +43,7 @@ namespace Examples
             {
                 if (wwiseObject.Type != WwiseObject.ObjectType.SoundBank.ToString()) continue;
 
-                var inclusionObjects = await WwiseUtility.Instance.GetSoundBankInclusion(wwiseObject);
+                var inclusionObjects = await WwiseUtility.Instance.GetSoundBankInclusionAsync(wwiseObject);
                 foreach (var inclusionObject in inclusionObjects)
                 {
                     WaapiLog.Log(inclusionObject);
