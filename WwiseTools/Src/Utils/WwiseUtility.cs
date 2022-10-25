@@ -139,6 +139,7 @@ namespace WwiseTools.Utils
                 {
                     _client = null;
                     ConnectionInfo = null;
+                    Disconnected?.Invoke();
                     WaapiLog.InternalLog("Connection closed!"); // 丢失连接提示
                 };
 
