@@ -908,7 +908,7 @@ namespace WwiseTools.Utils
 
 
                 if (jresult["objects"] == null) throw new Exception();
-                foreach (var obj in jresult["return"]!)
+                foreach (var obj in jresult["objects"])
                 {
                     string? name = obj["name"]?.ToString();
                     string? id = obj["id"]?.ToString();
