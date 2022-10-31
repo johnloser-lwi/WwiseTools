@@ -21,4 +21,29 @@ public class Action : ComponentBase
     {
         await WwiseUtility.Instance.SetObjectPropertyAsync(WwiseObject, WwiseProperty.Prop_ActionType(type));
     }
+
+    public async Task SetScopeAsync(WwiseProperty.Option_Scope scope)
+    {
+        await WwiseUtility.Instance.SetObjectPropertyAsync(WwiseObject, WwiseProperty.Prop_Scope(scope));
+    }
+
+    public async Task SetDelayAsync(float value)
+    {
+        await WwiseUtility.Instance.SetObjectPropertyAsync(WwiseObject, WwiseProperty.Prop_ActionDelay(value));
+    }
+    
+    public async Task SetFadeTimeAsync(float value)
+    {
+        await WwiseUtility.Instance.SetObjectPropertyAsync(WwiseObject, WwiseProperty.Prop_FadeTime(value));
+    }
+
+    public async Task SetFadeInCurveAsync(WwiseProperty.Option_Curve curve)
+    {
+        await WwiseUtility.Instance.SetObjectPropertyAsync(WwiseObject, WwiseProperty.Prop_FadeInCurve(curve));
+    }
+    
+    public async Task SetFadeOutCurveAsync(WwiseProperty.Option_Curve curve)
+    {
+        await WwiseUtility.Instance.SetObjectPropertyAsync(WwiseObject, WwiseProperty.Prop_FadeOutCurve(curve));
+    }
 }
