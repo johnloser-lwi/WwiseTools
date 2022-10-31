@@ -1401,11 +1401,11 @@ namespace WwiseTools.Utils
             return false;
         }
 
-        public async Task<List<WwiseObject>> GetSoundBankReferencesToWwiseObjectAsync(WwiseObject wwiseObject)
+        public async Task<List<WwiseObject>> GetSoundBanksReferencingWwiseObjectAsync(WwiseObject wwiseObject)
         {
             List<WwiseObject> result = new List<WwiseObject>();
 
-            var references = await GetEventReferencesToWwiseObjectAndParentsAsync(wwiseObject);
+            var references = await GetEventsReferencingWwiseObjectAndParentsAsync(wwiseObject);
 
             foreach (var reference in references)
             {
@@ -1425,7 +1425,7 @@ namespace WwiseTools.Utils
 
 
 
-        public async Task<List<WwiseObject>> GetEventReferencesToWwiseObjectAsync(WwiseObject wwiseObject)
+        public async Task<List<WwiseObject>> GetEventsReferencingWwiseObjectAsync(WwiseObject wwiseObject)
         {
             List<WwiseObject> result = new List<WwiseObject>();
 
@@ -1444,7 +1444,7 @@ namespace WwiseTools.Utils
             return result.Distinct().ToList();
         }
 
-        public async Task<List<WwiseObject>> GetEventReferencesToWwiseObjectAndParentsAsync(WwiseObject wwiseObject)
+        public async Task<List<WwiseObject>> GetEventsReferencingWwiseObjectAndParentsAsync(WwiseObject wwiseObject)
         {
 
             List<WwiseObject> result = new List<WwiseObject>();
@@ -1454,7 +1454,7 @@ namespace WwiseTools.Utils
             while (true)
             {
                 if (current is null) break;
-                result.AddRange(await GetEventReferencesToWwiseObjectAsync(current));
+                result.AddRange(await GetEventsReferencingWwiseObjectAsync(current));
 
                 current = await GetWwiseObjectParentAsync(current);
             }

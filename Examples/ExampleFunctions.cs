@@ -56,7 +56,7 @@ namespace Examples
             var selection = await Waapi.GetWwiseObjectsBySelectionAsync();
             foreach (var wwiseObject in selection)
             {
-                var references = await Waapi.GetEventReferencesToWwiseObjectAndParentsAsync(wwiseObject);
+                var references = await Waapi.GetEventsReferencingWwiseObjectAndParentsAsync(wwiseObject);
                 foreach (var reference in references)
                 {
                     WaapiLog.Log(reference);
@@ -69,7 +69,7 @@ namespace Examples
             var selection = await Waapi.GetWwiseObjectsBySelectionAsync();
             foreach (var wwiseObject in selection)
             {
-                var references = await Waapi.GetSoundBankReferencesToWwiseObjectAsync(wwiseObject);
+                var references = await Waapi.GetSoundBanksReferencingWwiseObjectAsync(wwiseObject);
                 foreach (var reference in references)
                 {
                     WaapiLog.Log(reference);
