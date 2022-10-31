@@ -14,6 +14,32 @@ public class Event : ComponentBase
     {
     }
 
+    public async Task<Components.Action> AddSetSwitchActionAsync(WwiseObject target,
+        float delay = 0f)
+    {
+        if (target.Type != WwiseObject.ObjectType.Switch.ToString()) return null;
+        
+        var properties = new WwiseProperty[]
+        {
+            WwiseProperty.Prop_ActionDelay(delay)
+        };
+
+        return await AddActionAsync(target, WwiseProperty.Option_ActionType.SetSwitch, properties);
+    }
+    
+    public async Task<Components.Action> AddSetStateActionAsync(WwiseObject target,
+        float delay = 0f)
+    {
+        if (target.Type != WwiseObject.ObjectType.State.ToString()) return null;
+        
+        var properties = new WwiseProperty[]
+        {
+            WwiseProperty.Prop_ActionDelay(delay)
+        };
+
+        return await AddActionAsync(target, WwiseProperty.Option_ActionType.SetState, properties);
+    }
+
     public async Task<Components.Action> AddPlayActionAsync(WwiseObject target, 
         float delay = 0f, 
         float probability = 100f, 
