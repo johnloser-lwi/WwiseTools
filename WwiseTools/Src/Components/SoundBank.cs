@@ -9,9 +9,14 @@ namespace WwiseTools.Components;
 
 public class SoundBank : ComponentBase
 {
-    public async Task<bool> AddInclutionAsync(SoundBankInclusion inclusion)
+    public async Task<bool> AddInclusionAsync(SoundBankInclusion inclusion)
     {
         return await WwiseUtility.Instance.AddSoundBankInclusionAsync(WwiseObject, inclusion);
+    }
+
+    public async Task<bool> RemoveInclusionAsync(WwiseObject reference)
+    {
+        return await WwiseUtility.Instance.RemoveSoundBankInclusionAsync(WwiseObject, reference);
     }
 
     public async Task<List<SoundBankInclusion>> GetInclusionsAsync()

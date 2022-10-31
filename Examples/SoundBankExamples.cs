@@ -67,7 +67,22 @@ namespace Examples
 
                 foreach (var wwiseObject in soundBanks)
                 {
-                    await wwiseObject.AsSoundBank().AddInclutionAsync(inclusion);
+                    await wwiseObject.AsSoundBank().AddInclusionAsync(inclusion);
+                }
+            }
+        }
+        
+        public static async Task RemoveSoundBankInclusion()
+        {
+            var selection = await WwiseUtility.Instance.GetWwiseObjectsBySelectionAsync();
+
+            var soundBanks = await WwiseUtility.Instance.GetWwiseObjectsOfTypeAsync("SoundBank");
+            
+            foreach (var s in selection)
+            {
+                foreach (var wwiseObject in soundBanks)
+                {
+                    await wwiseObject.AsSoundBank().RemoveInclusionAsync(s);
                 }
             }
         }

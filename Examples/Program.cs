@@ -8,7 +8,7 @@ try
 
     if (await WwiseUtility.Instance.TryConnectWaapiAsync())
     {
-        await UndoGroupExample.RunUndoGroupExampleAsync(); // 尝试不同的方法
+        await SoundBankExamples.RemoveSoundBankInclusion(); // 尝试不同的方法
     }
     else
     {
