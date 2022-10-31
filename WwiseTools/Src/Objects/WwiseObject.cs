@@ -13,12 +13,6 @@ namespace WwiseTools.Objects
         public string Name { get; set; }
         public string ID { get; set; }
         public string Type { get; set; }
-        
-        [Obsolete("Use GetPathAsync instead")]
-        public string Path { get { return WwiseUtility.Instance.GetWwiseObjectPath(ID); } }
-
-        [Obsolete("Use GetParentAsync() instead")]
-        public WwiseObject Parent { get { return WwiseUtility.Instance.GetWwiseObjectByPath(Path.TrimEnd(Name.ToCharArray())); } }
 
         public async Task<WwiseObject> GetParentAsync()
         {

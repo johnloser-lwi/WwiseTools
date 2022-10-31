@@ -124,7 +124,6 @@
     <Compile Include="Src\Utils\SoundBank\SoundBankExtension.cs" />
     <Compile Include="Src\Utils\WaapiTopic.cs" />
     <Compile Include="Src\Utils\WwiseFactory.cs" />
-    <Compile Include="Src\Utils\Obsolete\WwiseUtilityObsolete.cs" />
     <Compile Include="Src\Utils\Profiler\WwiseUtilityProfilerExtension.cs" />
     <Compile Include="Src\Utils\WwisePathBuilder.cs" />
     <Compile Include="Src\Utils\WwiseUtilityStandard.cs" />
