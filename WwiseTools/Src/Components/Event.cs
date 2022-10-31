@@ -12,7 +12,7 @@ public class Event : ComponentBase
     {
     }
     
-    public async Task<Components.Action> AddActionAsync(WwiseObject target, Action.ActionType type)
+    public async Task<Components.Action> AddActionAsync(WwiseObject target, WwiseProperty.Option_ActionType type)
     {
         var action = await WwiseUtility.Instance.CreateObjectAsync("", WwiseObject.ObjectType.Action, WwiseObject);
 

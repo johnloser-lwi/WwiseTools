@@ -1,4 +1,5 @@
-﻿using WwiseTools.Utils;
+﻿using WwiseTools.Objects;
+using WwiseTools.Utils;
 
 namespace WwiseTools.Properties
 {
@@ -663,6 +664,185 @@ namespace WwiseTools.Properties
         public static WwiseProperty Prop_PlayMode(Option_PlayMode mode)
         {
             return new WwiseProperty("PlayMode", (int)mode);
+        }
+        
+        
+        public enum Option_ActionType
+        {
+            Play = 1,
+            Stop = 2,
+            StopAll = 3,
+            Pause = 7,
+            PauseAll = 8,
+            Resume = 9,
+            ResumeAll = 10,
+            Break = 34,
+            Seek = 36,
+            SeekAll = 37,
+            PostEvent = 41,
+            SetBusVolume = 11,
+            ResetBusVolume = 14,
+            ResetBusVolumeAll = 15,
+            SetVoiceVolume = 12,
+            ResetVoiceVolume = 16,
+            ResetVoiceVolumeAll = 17,
+            SetVoicePitch = 13,
+            ResetPitch = 18,
+            ResetPitchAll = 19,
+            SetLPF = 26,
+            ResetLPF = 27,
+            ResetLFPAll = 28,
+            SetHPF = 29,
+            ResetHPF = 30,
+            ResetHPFAll = 31,
+            Mute = 4,
+            UnMute = 5,
+            UnMuteAll = 6,
+            SetGameParameter = 38,
+            ResetGameParameter = 39,
+            EnableState = 20,
+            DisableState = 21,
+            SetState = 22,
+            SetSwitch = 23,
+            Trigger = 35,
+            EnableBypass = 24,
+            DisableBypass = 25,
+            ResetBypassEffect = 32,
+            ResetBypassEffectAll = 33,
+            ReleaseEnvelope = 40,
+            ResetPlaylist = 42
+        
+        }
+        
+        public static WwiseProperty Prop_ActionType(Option_ActionType type)
+        {
+            return new WwiseProperty("ActionType", (int)type);
+        }
+
+        public enum Option_AbsoluteOrRelative { Absolute = 0, Relative = 1 }
+        public static WwiseProperty Prop_AbsoluteOrRelative(Option_AbsoluteOrRelative option)
+        {
+            return new WwiseProperty("AbsoluteOrRelative", (int) option);
+        }
+
+        public static WwiseProperty Prop_ApplyToDynamicSequence(bool value)
+        {
+            return new WwiseProperty("ApplyToDynamicSequence", value);
+        }
+        
+        public static WwiseProperty Prop_ApplyToStateTransition(bool value)
+        {
+            return new WwiseProperty("ApplyToStateTransition", value);
+        }
+        
+        public static WwiseProperty Prop_BypassGameParameterInternalTransition(bool value)
+        {
+            return new WwiseProperty("BypassGameParameterInternalTransition", value);
+        }
+        
+        public static WwiseProperty Prop_MasterResume(bool value)
+        {
+            return new WwiseProperty("MasterResume", value);
+        }
+        
+        public static WwiseProperty Prop_PauseDelayedResumeAction(bool value)
+        {
+            return new WwiseProperty("PauseDelayedResumeAction", value);
+        }
+        
+        public static WwiseProperty Prop_ResumeStateTransition(bool value)
+        {
+            return new WwiseProperty("ResumeStateTransition", value);
+        }
+        
+        public static WwiseProperty Prop_SeekToMarker(bool value)
+        {
+            return new WwiseProperty("SeekToMarker", value);
+        }
+
+        public static WwiseProperty Prop_ActionDelay(float value)
+        {
+            return new WwiseProperty("Delay", valueLimiter(value, 0f, 600f));
+        }
+
+        public enum Option_Curve
+        {
+            Logarithmic3 = 0,
+            Sine = 1,
+            Logarithmic141 = 2,
+            InvertedSCurve = 3,
+            Linear = 4,
+            SCurve = 5,
+            Exponential141 = 6,
+            Reciprocal = 7,
+            Exponential3 = 8
+        }
+
+        public static WwiseProperty Prop_FadeInCurve(Option_Curve curve)
+        {
+            return new WwiseProperty("FadeInCurve", (int) curve);
+        }
+        
+        public static WwiseProperty Prop_FadeOutCurve(Option_Curve curve)
+        {
+            return new WwiseProperty("FadeOutCurve", (int) curve);
+        }
+        
+        public static WwiseProperty Prop_Probability(float value)
+        {
+            return new WwiseProperty("Probability", valueLimiter(value, 0f, 100));
+        }
+        
+        public static WwiseProperty Prop_FadeTime(float value)
+        {
+            return new WwiseProperty("FadeTime", valueLimiter(value, 0f, 60f));
+        }
+        
+        public static WwiseProperty Prop_GameParameterValue(float value)
+        {
+            return new WwiseProperty("GameParameterValue", value);
+        }
+        
+        public static WwiseProperty Prop_SeekPercent(float value)
+        {
+            return new WwiseProperty("SeekPercent", valueLimiter(value, 0f, 100f));
+        }
+        
+        public static WwiseProperty Prop_SeekTime(float value)
+        {
+            return new WwiseProperty("SeekTime", valueLimiter(value, 0f, 3600f));
+        }
+        
+        public static WwiseProperty Prop_Highpass(int value)
+        {
+            return new WwiseProperty("Highpass", valueLimiter(value, -100, 100));
+        }
+        
+        public static WwiseProperty Prop_Lowpass(int value)
+        {
+            return new WwiseProperty("Lowpass", valueLimiter(value, -100, 100));
+        }
+
+        public enum Option_Scope
+        {
+            GameObject = 0,
+            Global = 1
+        }
+
+        public static WwiseProperty Prop_Scope(Option_Scope option)
+        {
+            return new WwiseProperty("Scope", (int) option);
+        }
+
+        public enum Option_SeekType
+        {
+            Percent = 0,
+            Time = 1
+        }
+        
+        public static WwiseProperty Prop_SeekType(Option_SeekType option)
+        {
+            return new WwiseProperty("SeekType", (int) option);
         }
 
 

@@ -158,5 +158,12 @@ namespace WwiseTools.References
             }
             return new WwiseReference("DefaultSwitchOrState", wwiseObject);
         }
+        
+        public static WwiseReference Ref_Target(WwiseObject wwiseObject)
+        {
+            if (wwiseObject == null) return null;
+
+            return new WwiseReference("Target", wwiseObject);
+        }
     }
 }
