@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using WwiseTools.Objects;
 using WwiseTools.Properties;
@@ -66,5 +67,30 @@ public class Event : ComponentBase
         }
         
         return comp;
+    }
+
+    public async Task<List<Action>> GetActionsAsync()
+    {
+        return (await WwiseObject.AsHierarchy().GetChildrenAsync()).Select(a => a.AsAction()).ToList();
+    }
+
+    public async Task<List<Action>> FindActionsByTarget(WwiseObject target)
+    {
+        return (await GetActionsAsync()).Where(a => a.WwiseObject == target).ToList();
+    }
+    
+    public async Task<List<Action>> FindActionsByActionType(WwiseProperty.Option_ActionType type)
+    {
+        var actions = await GetActionsAsync();
+
+
+        var res = new List<Action>();
+        foreach (var action in actions)
+        {
+            if (await action.GetActionTypeAsync() == type)
+                res.Add(action);
+        }
+
+        return res;
     }
 }

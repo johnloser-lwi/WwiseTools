@@ -272,7 +272,6 @@ namespace WwiseTools.Utils
 
             return false;
         }
-        
 
         /// <summary>
         /// 生成播放事件
@@ -281,6 +280,7 @@ namespace WwiseTools.Utils
         /// <param name="objectPath"></param>
         /// <param name="parentPath"></param>
         /// <returns></returns>
+        [Obsolete("Use Event component instead!")]
         public async Task<WwiseObject?> CreatePlayEventAsync(string eventName, string objectPath, string parentPath = @"\Events\Default Work Unit")
         {
             if (!await TryConnectWaapiAsync()) return null;
@@ -295,6 +295,7 @@ namespace WwiseTools.Utils
         /// <param name="objectPath"></param>
         /// <param name="parentPath"></param>
         /// <returns></returns>
+        [Obsolete("Use Event component instead!")]
         public async Task<WwiseObject?> AddEventActionAsync(string eventName, string objectPath, string parentPath = @"\Events\Default Work Unit", int actionType = 1)
         {
             if (!await TryConnectWaapiAsync()) return null;
@@ -376,7 +377,18 @@ namespace WwiseTools.Utils
             return false;
         }
 
-        public async Task<WwiseObject?> CreateObjectAsync(string objectName, WwiseObject.ObjectType objectType, WwiseObject parent)
+
+        public enum NameConflictBehaviour
+        {
+            fail,
+            replace,
+            merge,
+            rename
+        }
+        
+        public async Task<WwiseObject?> CreateObjectAsync(string objectName, WwiseObject.ObjectType objectType, WwiseObject parent, 
+            NameConflictBehaviour conflictBehaviour = NameConflictBehaviour.fail,
+            params WwiseProperty[] properties)
         {
             if(!await TryConnectWaapiAsync()) return null;
 
@@ -393,14 +405,26 @@ namespace WwiseTools.Utils
                         new JProperty("name", objectName),
                         new JProperty("type", objectType.ToString()),
                         new JProperty("parent", parent.ID),
-                        new JProperty("onNameConflict", "fail")
+                        new JProperty("onNameConflict", conflictBehaviour.ToString())
                     },
                     null
                 );
 
-                WaapiLog.InternalLog($"Object {objectName} created successfully!");
+                
                 if (result["id"] == null) throw new Exception();
-                return await GetWwiseObjectByIDAsync(result["id"]?.ToString());
+
+                var ret = await GetWwiseObjectByIDAsync(result["id"]?.ToString());
+
+                if (ret == null) return null;
+                
+                WaapiLog.InternalLog($"Object {ret.Name} created successfully!");
+                
+                foreach (var wwiseProperty in properties)
+                {
+                    await SetObjectPropertyAsync(ret, wwiseProperty);
+                }
+                
+                return ret;
             }
             catch (Exception e)
             {
@@ -416,88 +440,21 @@ namespace WwiseTools.Utils
         /// <param name="objectType"></param>
         /// <param name="parentPath"></param>
         /// <returns></returns>
-        public async Task<WwiseObject?> CreateObjectAtPathAsync(string objectName, WwiseObject.ObjectType objectType, string parentPath = @"\Actor-Mixer Hierarchy\Default Work Unit")
+        public async Task<WwiseObject?> CreateObjectAtPathAsync(string objectName, WwiseObject.ObjectType objectType, 
+            string parentPath = @"\Actor-Mixer Hierarchy\Default Work Unit", NameConflictBehaviour conflictBehaviour = NameConflictBehaviour.fail,
+            params WwiseProperty[] properties)
         {
             if (!await TryConnectWaapiAsync()) return null;
 
-            try
-            {
-                var func = Function?.Verify("ak.wwise.core.object.create");
+            var parent = await WwiseUtility.Instance.GetWwiseObjectByPathAsync(parentPath);
 
-                // 创建物体
-                var result = await _client.Call
-                    (
-                        func,
-                    new JObject
-                    {
-                        new JProperty("name", objectName),
-                        new JProperty("type", objectType.ToString()),
-                        new JProperty("parent", parentPath),
-                        new JProperty("onNameConflict", "merge")
-                    },
-                    null
-                    );
-
-                WaapiLog.InternalLog($"Object {objectName} created successfully!");
-                if (result["id"] == null) throw new Exception();
-                return await GetWwiseObjectByIDAsync(result["id"]?.ToString());
-            }
-            catch (Exception e)
-            {
-                WaapiLog.InternalLog($"Failed to create object : {objectName}! ======> {e.Message}");
-                return null;
-            }
+            if (parent == null) return null;
+            
+            return await CreateObjectAsync(objectName, objectType,
+                parent, conflictBehaviour, properties);
         }
-
-        /// <summary>
-        /// 创建物体
-        /// </summary>
-        /// <param name="objectName"></param>
-        /// <param name="objectType"></param>
-        /// <param name="parentPath"></param>
-        /// <returns></returns>
-        [Obsolete("Use CreateObjectAtPathAsync instead")]
-        public async Task<WwiseObject?> CreateObjectAsync(string objectName, WwiseObject.ObjectType objectType, string parentPath = @"\Actor-Mixer Hierarchy\Default Work Unit")
-        {
-            if (!await TryConnectWaapiAsync()) return null;
-
-            try
-            {
-                var func = Function?.Verify("ak.wwise.core.object.create");
-
-                // 创建物体
-                var result = await _client.Call
-                (
-                    func,
-                    new JObject
-                    {
-                        new JProperty("name", objectName),
-                        new JProperty("type", objectType.ToString()),
-                        new JProperty("parent", parentPath),
-                        new JProperty("onNameConflict", "fail")
-                    },
-                    null
-                );
-
-                WaapiLog.InternalLog($"Object {objectName} created successfully!");
-                if (result["id"] == null) throw new Exception();
-                return await GetWwiseObjectByIDAsync(result["id"]?.ToString());
-            }
-            catch (Exception e)
-            {
-                WaapiLog.InternalLog($"Failed to create object : {objectName}! ======> {e.Message}");
-                return null;
-            }
-        }
-
-
 
         public async Task<bool> DeleteObjectAsync(WwiseObject wwiseObject)
-        {
-            return await DeleteObjectAsync(await wwiseObject.GetPathAsync());
-        }
-
-        public async Task<bool> DeleteObjectAsync(string path)
         {
             if (!await TryConnectWaapiAsync()) return false;
 
@@ -511,17 +468,17 @@ namespace WwiseTools.Utils
                         func,
                     new JObject
                     {
-                        new JProperty("object", path)
+                        new JProperty("object", wwiseObject.ID)
                     },
                     null
                     );
 
-                WaapiLog.InternalLog($"Object {path} deleted successfully!");
+                WaapiLog.InternalLog($"Object {wwiseObject.Name} deleted successfully!");
                 return true;
             }
             catch (Exception e)
             {
-                WaapiLog.InternalLog($"Failed to delete object : {path}! ======> {e.Message}");
+                WaapiLog.InternalLog($"Failed to delete object : {wwiseObject.Name}! ======> {e.Message}");
                 
             }
 
