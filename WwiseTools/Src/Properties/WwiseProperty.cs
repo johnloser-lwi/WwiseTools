@@ -669,6 +669,7 @@ namespace WwiseTools.Properties
         
         public enum Option_ActionType
         {
+            None = 0,
             Play = 1,
             Stop = 2,
             StopAll = 3,

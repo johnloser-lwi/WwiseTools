@@ -18,7 +18,11 @@ public class Action : ComponentBase
     {
         var prop = await WwiseUtility.Instance.GetWwiseObjectPropertyAsync(WwiseObject, "ActionType");
 
+        if (prop == null) return 0;
+        
         var res = Enum.TryParse(prop.Value.ToString(), out WwiseProperty.Option_ActionType type);
+
+        if (!res) return 0;
         
         return type;
     }
