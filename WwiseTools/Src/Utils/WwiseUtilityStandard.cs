@@ -89,6 +89,22 @@ namespace WwiseTools.Utils
 
             return false;
         }
+
+        public async Task<bool> SetObjectPropertiesAsync(WwiseObject wwiseObject, params WwiseProperty[] properties)
+        {
+            if (!await TryConnectWaapiAsync()) return false;
+
+            var ret = true;
+            
+            foreach (var property in properties)
+            {
+                var res = await SetObjectPropertyAsync(wwiseObject, property);
+
+                if (!res) ret = res;
+            }
+
+            return ret;
+        }
         
         /// <summary>
         /// 设置参数
