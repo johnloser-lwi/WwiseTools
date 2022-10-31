@@ -337,6 +337,7 @@ namespace WwiseTools.Utils
             }
         }
 
+        [Obsolete("Use AddSoundBankInclusionAsync instead")]
         public async Task<bool> AddEventToBankAsync(WwiseObject soundBank, string eventId)
         {
             if (!await TryConnectWaapiAsync()) return false;
@@ -432,7 +433,7 @@ namespace WwiseTools.Utils
                         new JProperty("name", objectName),
                         new JProperty("type", objectType.ToString()),
                         new JProperty("parent", parentPath),
-                        new JProperty("onNameConflict", "fail")
+                        new JProperty("onNameConflict", "merge")
                     },
                     null
                     );
@@ -564,7 +565,7 @@ namespace WwiseTools.Utils
                 string? id = jresult["return"]?.Last?["id"]?.ToString();
                 string? type = jresult["return"]?.Last?["type"]?.ToString();
 
-                if (!string.IsNullOrEmpty(name) && !string.IsNullOrEmpty(id) && !string.IsNullOrEmpty(type))
+                if (!string.IsNullOrEmpty(id) && !string.IsNullOrEmpty(type))
                 {
                     WaapiLog.InternalLog($"WwiseObject {name} successfully fetched!");
 
@@ -747,7 +748,7 @@ namespace WwiseTools.Utils
                 string? id = obj["id"]?.ToString();
                 string? type = obj["type"]?.ToString();
                 
-                if (!string.IsNullOrEmpty(name) && !string.IsNullOrEmpty(id) && !string.IsNullOrEmpty(type))
+                if (!string.IsNullOrEmpty(id) && !string.IsNullOrEmpty(type))
                 {
                     WaapiLog.InternalLog($"WwiseObject {name} successfully fetched!");
                     return new WwiseObject(name, id, type);
@@ -800,7 +801,7 @@ namespace WwiseTools.Utils
                 string? id = obj["id"]?.ToString();
                 string? type = obj["type"]?.ToString();
                 
-                if (!string.IsNullOrEmpty(name) && !string.IsNullOrEmpty(id) && !string.IsNullOrEmpty(type))
+                if (!string.IsNullOrEmpty(id) && !string.IsNullOrEmpty(type))
                 {
                     WaapiLog.InternalLog($"WwiseObject {name} successfully fetched!");
                     return new WwiseObject(name, id, type);
@@ -866,7 +867,7 @@ namespace WwiseTools.Utils
                     string? id = obj["id"]?.ToString();
                     string? type = obj["type"]?.ToString();
 
-                    if (!string.IsNullOrEmpty(name) && !string.IsNullOrEmpty(id) && !string.IsNullOrEmpty(type)) 
+                    if (!string.IsNullOrEmpty(id) && !string.IsNullOrEmpty(type)) 
                         result.Add(new WwiseObject(name, id, type));
                 }
 
@@ -914,7 +915,7 @@ namespace WwiseTools.Utils
                     string? id = obj["id"]?.ToString();
                     string? type = obj["type"]?.ToString();
 
-                    if (!string.IsNullOrEmpty(name) && !string.IsNullOrEmpty(id) && !string.IsNullOrEmpty(type)) 
+                    if (!string.IsNullOrEmpty(id) && !string.IsNullOrEmpty(type)) 
                         result.Add(new WwiseObject(name, id, type));
                 }
 
@@ -1547,7 +1548,7 @@ namespace WwiseTools.Utils
                     string? id = obj["id"]?.ToString();
                     string? type = obj["type"]?.ToString();
                     
-                    if (!string.IsNullOrEmpty(name) && !string.IsNullOrEmpty(id) && !string.IsNullOrEmpty(type)) 
+                    if (!string.IsNullOrEmpty(id) && !string.IsNullOrEmpty(type)) 
                         result.Add(new WwiseObject(name, id, type));
                 }
 
@@ -1601,7 +1602,7 @@ namespace WwiseTools.Utils
                     string? id = obj["id"]?.ToString();
                     string? type = obj["type"]?.ToString();
 
-                    if (!string.IsNullOrEmpty(name) && !string.IsNullOrEmpty(id) && !string.IsNullOrEmpty(type)) 
+                    if (!string.IsNullOrEmpty(id) && !string.IsNullOrEmpty(type)) 
                         result.Add(new WwiseObject(name, id, type));
                 }
 
@@ -1654,7 +1655,7 @@ namespace WwiseTools.Utils
                     string? id = obj["id"]?.ToString();
                     string? type = obj["type"]?.ToString();
                     
-                    if (!string.IsNullOrEmpty(name) && !string.IsNullOrEmpty(id) && !string.IsNullOrEmpty(type)) 
+                    if (!string.IsNullOrEmpty(id) && !string.IsNullOrEmpty(type)) 
                         return new WwiseObject(name, id, type);
                 }
 
@@ -1708,7 +1709,7 @@ namespace WwiseTools.Utils
                     string? id = obj["id"]?.ToString();
                     string? type = obj["type"]?.ToString();
 
-                    if (!string.IsNullOrEmpty(name) && !string.IsNullOrEmpty(id) && !string.IsNullOrEmpty(type)) 
+                    if (!string.IsNullOrEmpty(id) && !string.IsNullOrEmpty(type)) 
                         result.Add(new WwiseObject(name, id, type));
                 }
 
@@ -1762,7 +1763,7 @@ namespace WwiseTools.Utils
                     string? id = obj["id"]?.ToString();
                     string? type = obj["type"]?.ToString();
 
-                    if (!string.IsNullOrEmpty(name) && !string.IsNullOrEmpty(id) && !string.IsNullOrEmpty(type)) 
+                    if (!string.IsNullOrEmpty(id) && !string.IsNullOrEmpty(type)) 
                         result.Add(new WwiseObject(name, id, type));
                 }
 
@@ -1816,7 +1817,7 @@ namespace WwiseTools.Utils
                     string? id = obj["id"]?.ToString();
                     string? type = obj["type"]?.ToString();
 
-                    if (!string.IsNullOrEmpty(name) && !string.IsNullOrEmpty(id) && !string.IsNullOrEmpty(type)) 
+                    if (!string.IsNullOrEmpty(id) && !string.IsNullOrEmpty(type)) 
                         result.Add(new WwiseObject(name, id, type));
                 }
 
@@ -1870,7 +1871,7 @@ namespace WwiseTools.Utils
                     string? id = obj["id"]?.ToString();
                     string? type = obj["type"]?.ToString();
 
-                    if (!string.IsNullOrEmpty(name) && !string.IsNullOrEmpty(id) && !string.IsNullOrEmpty(type)) 
+                    if (!string.IsNullOrEmpty(id) && !string.IsNullOrEmpty(type)) 
                         result.Add(new WwiseObject(name, id, type));
                 }
 

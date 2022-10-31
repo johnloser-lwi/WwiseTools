@@ -26,5 +26,8 @@ namespace WwiseTools.Objects
         public static  MusicPlaylistContainer AsMusicPlaylistContainer(this WwiseObject obj) => new MusicPlaylistContainer(obj);
 
         public static MusicSwitchContainer AsMusicSwitchContainer(this WwiseObject obj) => new MusicSwitchContainer(obj);
+
+        public static Event AsEvent(this WwiseObject obj) => new Event(obj);
+        public static Components.Action AsAction(this WwiseObject obj) => new Components.Action(obj);
     }
 }

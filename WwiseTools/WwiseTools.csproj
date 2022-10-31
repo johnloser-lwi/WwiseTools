@@ -91,8 +91,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Src\Components\Action.cs" />
     <Compile Include="Src\Components\AudioFileSource.cs" />
     <Compile Include="Src\Components\ComponentBase.cs" />
+    <Compile Include="Src\Components\Event.cs" />
     <Compile Include="Src\Components\Hierarchy.cs" />
     <Compile Include="Src\Components\SoundBank.cs" />
     <Compile Include="Src\Components\Voice.cs" />
