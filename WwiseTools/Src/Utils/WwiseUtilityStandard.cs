@@ -604,7 +604,7 @@ namespace WwiseTools.Utils
             {
                 var jresult = await GetWwiseObjectPropertyByIDAsync(wwiseObject.ID, wwiseProperty);
                 if (jresult is null) return null;
-                return new WwiseProperty(wwiseProperty, jresult);
+                return new WwiseProperty(wwiseProperty, jresult.ToString());
             }
             catch (Exception e)
             {
