@@ -555,7 +555,7 @@ namespace WwiseTools.Utils
             return null;
         }
 
-        public async Task<JToken?> GetWwiseObjectPropertyAsync(string targetId, string wwiseProperty)
+        public async Task<JToken?> GetWwiseObjectPropertyByIDAsync(string targetId, string wwiseProperty)
         {
             if (!await TryConnectWaapiAsync() || String.IsNullOrWhiteSpace(targetId)) return null;
 
@@ -602,34 +602,9 @@ namespace WwiseTools.Utils
 
             try
             {
-                var func = WaapiFunction.CoreObjectGet;
-
-                // ak.wwise.core.@object.get 指令
-                var query = new
-                {
-                    from = new
-                    {
-                        id = new string[] { wwiseObject.ID }
-                    }
-                };
-
-                // ak.wwise.core.@object.get 返回参数设置
-                var options = new
-                {
-
-                    @return = new string[] { "@" + wwiseProperty }
-
-                };
-
-                JObject jresult = await _client.Call(func, query, options, TimeOut);
-
-
-                if (jresult["return"] == null) throw new Exception();
-
-                WaapiLog.InternalLog($"WwiseProperty {wwiseProperty} successfully fetched!");
-                var r = jresult["return"]!.Last?["@" + wwiseProperty];
-                if (r == null) return null;
-                return new WwiseProperty(wwiseProperty, r.ToString());
+                var jresult = await GetWwiseObjectPropertyByIDAsync(wwiseObject.ID, wwiseProperty);
+                if (jresult is null) return null;
+                return new WwiseProperty(wwiseProperty, jresult);
             }
             catch (Exception e)
             {
