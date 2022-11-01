@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using WwiseTools.Objects;
+using WwiseTools.Properties;
+using WwiseTools.References;
 using WwiseTools.Utils;
 
 namespace WwiseTools.Components;
@@ -106,6 +108,93 @@ public class AudioFileSource : ComponentBase
 
     }
 
+    public async Task SetChannelConfigOverrideAsync(int config)
+    {
+        await WwiseUtility.Instance.SetObjectPropertyAsync(WwiseObject,
+            WwiseProperty.Prop_ChannelConfigOverride(config));
+    }
+
+    public async Task SetMakeUpGainAsync(float gain)
+    {
+        await WwiseUtility.Instance.SetObjectPropertyAsync(WwiseObject, WwiseProperty.Prop_VolumeOffset(gain));
+    }
+
+    public async Task SetTrimStartAsync(float trim)
+    {
+        await WwiseUtility.Instance.SetObjectPropertyAsync(WwiseObject, WwiseProperty.Prop_TrimBegin(trim));
+    }
+
+    public async Task SetTrimEndAsync(float trim)
+    {
+        await WwiseUtility.Instance.SetObjectPropertyAsync(WwiseObject, WwiseProperty.Prop_TrimEnd(trim));
+    }
+
+    public async Task SetOverrideWavLoopPointsAsync(bool option)
+    {
+        await WwiseUtility.Instance.SetObjectPropertyAsync(WwiseObject, WwiseProperty.Prop_OverrideWavLoop(option));
+    }
+
+    public async Task SetLoopStartAsync(float position)
+    {
+        await WwiseUtility.Instance.SetObjectPropertyAsync(WwiseObject, WwiseProperty.Prop_LoopBegin(position));
+    }
+
+    public async Task SetLoopEndAsync(float position)
+    {
+        await WwiseUtility.Instance.SetObjectPropertyAsync(WwiseObject, WwiseProperty.Prop_LoopEnd(position));
+    }
+
+    public async Task SetCrossfadeDurationAsync(float duration)
+    {
+        await WwiseUtility.Instance.SetObjectPropertyAsync(WwiseObject, WwiseProperty.Prop_CrossfadeDuration(duration));
+    }
+
+    public async Task SetCrossfadeShapeAsync(WwiseProperty.Option_Curve shape)
+    {
+        await WwiseUtility.Instance.SetObjectPropertyAsync(WwiseObject, WwiseProperty.Prop_CrossfadeShape(shape));
+    }
+
+    public async Task SetMarkerInputModeAsync(WwiseProperty.Option_MarkerInputMode mode)
+    {
+        await WwiseUtility.Instance.SetObjectPropertyAsync(WwiseObject, WwiseProperty.Prop_MarkerInputMode(mode));
+    }
+
+    public async Task SetMarkerSensitivityAsync(float sensitivity)
+    {
+        await WwiseUtility.Instance.SetObjectPropertyAsync(WwiseObject,
+            WwiseProperty.Prop_MarkerDetectionSensitivity(sensitivity));
+    }
+
+    public async Task SetFadeInDurationAsync(float duration)
+    {
+        await WwiseUtility.Instance.SetObjectPropertyAsync(WwiseObject, WwiseProperty.Prop_FadeInDuration(duration));
+    }
+
+    public async Task SetFadeInCurveAsync(WwiseProperty.Option_Curve curve)
+    {
+        await WwiseUtility.Instance.SetObjectPropertyAsync(WwiseObject, WwiseProperty.Prop_FadeInCurve(curve));
+    }
+    
+    public async Task SetFadeOutDurationAsync(float duration)
+    {
+        await WwiseUtility.Instance.SetObjectPropertyAsync(WwiseObject, WwiseProperty.Prop_FadeOutDuration(duration));
+    }
+
+    public async Task SetFadeOutCurveAsync(WwiseProperty.Option_Curve curve)
+    {
+        await WwiseUtility.Instance.SetObjectPropertyAsync(WwiseObject, WwiseProperty.Prop_FadeOutCurve(curve));
+    }
+
+    public async Task SetOverrideConversionSettingsAsync(bool option)
+    {
+        await WwiseUtility.Instance.SetObjectPropertyAsync(WwiseObject, WwiseProperty.Prop_OverrideConversion(option));
+    }
+
+    public async Task SetConversionSettingAsync(WwiseObject conversion)
+    {
+        await WwiseUtility.Instance.SetObjectReferenceAsync(WwiseObject, WwiseReference.Ref_Conversion(conversion));
+    }
+    
     public AudioFileSource(WwiseObject wwiseObject) : base(wwiseObject, nameof(AudioFileSource))
     {
     }

@@ -835,6 +835,95 @@ namespace WwiseTools.Properties
             return new WwiseProperty("Scope", (int) option);
         }
 
+        public static WwiseProperty Prop_ChannelConfigOverride(int value)
+        {
+            return new WwiseProperty("ChannelConfigurationOverride", value);
+        }
+        
+        public static WwiseProperty Prop_CrossfadeDuration(float value)
+        {
+            return new WwiseProperty("CrossfadeDuration", valueLimiter(value, 0f, 60000f));
+        }
+        
+        public static WwiseProperty Prop_FadeInDuration(float value)
+        {
+            return new WwiseProperty("FadeInDuration", valueLimiter(value, 0f, 3600f));
+        }
+        
+        public static WwiseProperty Prop_FadeOutDuration(float value)
+        {
+            return new WwiseProperty("FadeOutDuration", valueLimiter(value, 0f, 3600f));
+        }
+        
+        public static WwiseProperty Prop_HdrEnvelope(float value)
+        {
+            return new WwiseProperty("HdrEnvelope", valueLimiter(value, 0f, 1f));
+        }
+        
+        public static WwiseProperty Prop_LoopBegin(float value)
+        {
+            return new WwiseProperty("LoopBegin", value);
+        }
+        
+        public static WwiseProperty Prop_LoopEnd(float value)
+        {
+            return new WwiseProperty("LoopEnd", value);
+        }
+        
+        public static WwiseProperty Prop_MarkerDetectionSensitivity(float value)
+        {
+            return new WwiseProperty("MarkerDetectionSensitivity", valueLimiter(value, 0f, 100f));
+        }
+        
+        public static WwiseProperty Prop_TrimBegin(float value)
+        {
+            return new WwiseProperty("TrimBegin", value);
+        }
+        
+        public static WwiseProperty Prop_TrimEnd(float value)
+        {
+            return new WwiseProperty("TrimEnd", value);
+        }
+        
+        public static WwiseProperty Prop_VolumeOffset(float value)
+        {
+            return new WwiseProperty("VolumeOffset", valueLimiter(value, -24f, 24f));
+        }
+
+        public static WwiseProperty Prop_CrossfadeShape(Option_Curve curve)
+        {
+            return new WwiseProperty("CrossfadeShape", (int) curve);
+        }
+        
+        public static WwiseProperty Prop_FadeInShape(Option_Curve curve)
+        {
+            return new WwiseProperty("FadeInShape", (int) curve);
+        }
+        
+        public static WwiseProperty Prop_FadeOutShape(Option_Curve curve)
+        {
+            return new WwiseProperty("FadeOutShape", (int) curve);
+        }
+
+        public enum Option_MarkerInputMode
+        {
+            ImportFromFile = 0,
+            DetectFromTransients = 1,
+            ManualMarkers = 2
+        }
+
+        public static WwiseProperty Prop_MarkerInputMode(Option_MarkerInputMode mode)
+        {
+            return new WwiseProperty("MarkerInputMode", (int) mode);
+        }
+        
+        public static WwiseProperty Prop_OverrideWavLoop(bool value)
+        {
+            return new WwiseProperty("OverrideWavLoop", value);
+        }
+        
+        
+
         public enum Option_SeekType
         {
             Percent = 0,
