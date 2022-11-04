@@ -32,7 +32,7 @@ namespace WwiseTools.Utils
 
             try
             {
-                var func = Function?.Verify("ak.wwise.core.object.getPropertyAndReferenceNames");
+                var func = Function.Verify("ak.wwise.core.object.getPropertyAndReferenceNames");
                 var result = await _client.Call(func,
 
                     new JObject(
@@ -65,7 +65,7 @@ namespace WwiseTools.Utils
 
             try
             {
-                var func = Function?.Verify("ak.wwise.core.object.setReference");
+                var func = Function.Verify("ak.wwise.core.object.setReference");
                 await _client.Call(func,
 
                     new JObject(
@@ -119,7 +119,7 @@ namespace WwiseTools.Utils
 
             try
             {
-                var func = Function?.Verify("ak.wwise.core.object.setProperty");
+                var func = Function.Verify("ak.wwise.core.object.setProperty");
                 await _client.Call(func,
 
                     new JObject(
@@ -158,7 +158,7 @@ namespace WwiseTools.Utils
             string oldName = renameObject.Name;
             try
             {
-                var func = Function?.Verify("ak.wwise.core.object.setName");
+                var func = Function.Verify("ak.wwise.core.object.setName");
                 await _client.Call(func
                     ,
                     new
@@ -193,7 +193,7 @@ namespace WwiseTools.Utils
 
             try
             {
-                var func = Function?.Verify("ak.wwise.core.object.copy");
+                var func = Function.Verify("ak.wwise.core.object.copy");
                 // 移动物体
                 await _client.Call(func
                     ,
@@ -233,7 +233,7 @@ namespace WwiseTools.Utils
 
             try
             {
-                var func = Function?.Verify("ak.wwise.core.object.move");
+                var func = Function.Verify("ak.wwise.core.object.move");
                 // 移动物体
                 await _client.Call(func,
                     new JObject
@@ -265,7 +265,7 @@ namespace WwiseTools.Utils
 
             try
             {
-                var func = Function?.Verify("ak.wwise.core.object.setNotes");
+                var func = Function.Verify("ak.wwise.core.object.setNotes");
                 // 移动物体
                 await _client.Call(func,
                     new JObject
@@ -319,7 +319,7 @@ namespace WwiseTools.Utils
 
             try
             {
-                var func = Function?.Verify("ak.wwise.core.object.create");
+                var func = Function.Verify("ak.wwise.core.object.create");
                 var result = await _client.Call
                     (
                         func,
@@ -363,7 +363,7 @@ namespace WwiseTools.Utils
             try
             {
 
-                var func = Function?.Verify("ak.wwise.core.soundbank.setInclusions");
+                var func = Function.Verify("ak.wwise.core.soundbank.setInclusions");
                 await _client.Call
                 (
                     func,
@@ -411,7 +411,7 @@ namespace WwiseTools.Utils
 
             try
             {
-                var func = Function?.Verify("ak.wwise.core.object.create");
+                var func = Function.Verify("ak.wwise.core.object.create");
 
                 // 创建物体
                 var result = await _client.Call
@@ -477,7 +477,7 @@ namespace WwiseTools.Utils
 
             try
             {
-                var func = Function?.Verify("ak.wwise.core.object.delete");
+                var func = Function.Verify("ak.wwise.core.object.delete");
 
                 // 创建物体
                 var result = await _client.Call
@@ -850,7 +850,7 @@ namespace WwiseTools.Utils
 
                 };
 
-                var func = Function?.Verify("ak.wwise.ui.getSelectedObjects");
+                var func = Function.Verify("ak.wwise.ui.getSelectedObjects");
 
                 JObject jresult = await _client.Call(func, null, options, TimeOut);
 
@@ -1017,7 +1017,7 @@ namespace WwiseTools.Utils
 
                 var options = new JObject(new JProperty("return", new object[] { "name", "id", "type", "path" })); // 设置返回参数
 
-                var func = Function?.Verify("ak.wwise.core.audio.import");
+                var func = Function.Verify("ak.wwise.core.audio.import");
 
                 var result = await _client.Call(func, importQ, options); // 执行导入
 
@@ -1070,7 +1070,7 @@ namespace WwiseTools.Utils
 
                 var options = new JObject(new JProperty("return", new object[] { "name", "id", "type", "path" })); // 设置返回参数
 
-                var func = Function?.Verify("ak.wwise.core.audio.import");
+                var func = Function.Verify("ak.wwise.core.audio.import");
 
                 var result = await _client.Call(func, importQ, options); // 执行导入
 
@@ -1183,7 +1183,7 @@ namespace WwiseTools.Utils
                     path = projectPath
                 };
 
-                var func = Function?.Verify("ak.wwise.ui.project.open");
+                var func = Function.Verify("ak.wwise.ui.project.open");
                 await _client.Call(func, query, null, TimeOut);
 
                 WaapiLog.InternalLog("Project loaded successfully!");
@@ -1304,7 +1304,7 @@ namespace WwiseTools.Utils
 
             try
             {
-                var func = Function?.Verify("ak.wwise.core.getInfo");
+                var func = Function.Verify("ak.wwise.core.getInfo");
 
                 JObject result = await _client.Call(func, null, null);
                 if (result["version"] == null) throw new Exception("Failed to fetch version info!");
@@ -1348,7 +1348,7 @@ namespace WwiseTools.Utils
 
             try
             {
-                var func = Function!.Verify("ak.wwise.ui.commands.execute");
+                var func = Function.Verify("ak.wwise.ui.commands.execute");
 
                 if (objectIDs is not null)
                 {
@@ -1851,7 +1851,7 @@ namespace WwiseTools.Utils
                     query.soundbanks.Add(new { name = soundbank });
                 }
 
-                var func = Function?.Verify("ak.wwise.core.soundbank.generate");
+                var func = Function.Verify("ak.wwise.core.soundbank.generate");
 
                 await _client.Call(func, query, null, TimeOut);
 
@@ -1868,10 +1868,13 @@ namespace WwiseTools.Utils
 
         private async Task<bool> GetFunctionsAsync()
         {
-            if (!await TryConnectWaapiAsync() || Function is not null) return false;
-            Function = new WaapiFunction();
+            if (!await TryConnectWaapiAsync()) return false;
+            
+            Function.Clear();
+            
             try
             {
+                
                 var result = await _client.Call("ak.wwise.waapi.getFunctions", null, null, TimeOut);
                 if (result["functions"] == null) throw new Exception();
                 foreach (var func in result["functions"]!)
@@ -1892,7 +1895,9 @@ namespace WwiseTools.Utils
         private async Task<bool> GetTopicsAsync()
         {
             if (!await TryConnectWaapiAsync()) return false;
-            Topic = new WaapiTopic();
+            
+            Topic.Clear();
+            
             try
             {
                 var result = await _client.Call("ak.wwise.waapi.getTopics", null, null, TimeOut);
@@ -1921,7 +1926,7 @@ namespace WwiseTools.Utils
             if (!await TryConnectWaapiAsync()) return false;
             try
             {
-                var func = Function?.Verify("ak.wwise.core.project.save");
+                var func = Function.Verify("ak.wwise.core.project.save");
 
                 await _client.Call(func, null, null, TimeOut);
                 WaapiLog.InternalLog("Project saved successfully!");
@@ -1941,7 +1946,7 @@ namespace WwiseTools.Utils
         {
             if (!await WwiseUtility.Instance.TryConnectWaapiAsync()) return;
 
-            var func = Function?.Verify("ak.wwise.core.undo.beginGroup");
+            var func = Function.Verify("ak.wwise.core.undo.beginGroup");
 
             var res = await CallAsync(func, null, null);
         }
@@ -1950,7 +1955,7 @@ namespace WwiseTools.Utils
         {
             if (!await WwiseUtility.Instance.TryConnectWaapiAsync()) return;
 
-            var func = Function?.Verify("ak.wwise.core.undo.cancelGroup");
+            var func = Function.Verify("ak.wwise.core.undo.cancelGroup");
 
             var res = await CallAsync(func, null, null);
         }
@@ -1959,7 +1964,7 @@ namespace WwiseTools.Utils
         {
             if (!await WwiseUtility.Instance.TryConnectWaapiAsync()) return;
 
-            var func = Function?.Verify("ak.wwise.core.undo.endGroup");
+            var func = Function.Verify("ak.wwise.core.undo.endGroup");
 
             var arg = new
             {

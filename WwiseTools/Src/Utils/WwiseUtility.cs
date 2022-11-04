@@ -26,11 +26,29 @@ namespace WwiseTools.Utils
 
         private bool _initializing = false;
 
+        private WaapiFunction _function;
+
+        private WaapiTopic _topic;
+
         public WwiseInfo ConnectionInfo { get; private set; }
 
-        internal WaapiFunction? Function { get; set; }
+        internal WaapiFunction Function
+        {
+            get
+            {
+                if (_function is null) _function = new WaapiFunction();
+                return _function;
+            }
+        }
 
-        internal WaapiTopic Topic { get; set; }
+        internal WaapiTopic Topic
+        {
+            get
+            {
+                if (_topic is null) _topic = new WaapiTopic();
+                return _topic;
+            }
+        }
 
         internal int WampPort { get; set; } = -1;
 

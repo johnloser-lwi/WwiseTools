@@ -8,6 +8,8 @@ namespace WwiseTools.Utils
     {
         private List<string> _topics;
 
+        public int Count => _topics.Count;
+
         public WaapiTopic()
         {
             _topics = new List<string>();
@@ -48,6 +50,11 @@ namespace WwiseTools.Utils
                 throw new Exception($"Topic {topic} not available in wwise " +
                                     $"{WwiseUtility.Instance.ConnectionInfo.Version.ToString()}!");
             return final;
+        }
+
+        public void Clear()
+        {
+            _topics.Clear();
         }
 
         public IEnumerator<string> GetEnumerator()

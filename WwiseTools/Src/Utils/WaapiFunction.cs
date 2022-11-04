@@ -13,6 +13,8 @@ namespace WwiseTools.Utils
 
         private List<string> _functions;
 
+        public int Count => _functions.Count;
+        
         public WaapiFunction()
         {
             _functions = new List<string>();
@@ -53,6 +55,11 @@ namespace WwiseTools.Utils
                 throw new Exception($"Function {func} not available in wwise " +
                                     $"{WwiseUtility.Instance.ConnectionInfo.Version.ToString()}!");
             return final;
+        }
+
+        public void Clear()
+        {
+            _functions.Clear();
         }
 
         public IEnumerator<string> GetEnumerator()
