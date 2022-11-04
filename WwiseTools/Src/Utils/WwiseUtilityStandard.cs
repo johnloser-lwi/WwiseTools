@@ -187,7 +187,7 @@ namespace WwiseTools.Utils
         /// <param name="child"></param>
         /// <param name="parent"></param>
         /// <returns></returns>
-        public async Task<bool> CopyToParentAsync(WwiseObject child, WwiseObject parent)
+        public async Task<bool> CopyToParentAsync(WwiseObject child, WwiseObject parent, NameConflictBehaviour conflictBehaviour = NameConflictBehaviour.rename)
         {
             if (!await TryConnectWaapiAsync()) return false;
 
@@ -201,7 +201,7 @@ namespace WwiseTools.Utils
                     {
                         new JProperty("object", child.ID),
                         new JProperty("parent", parent.ID),
-                        new JProperty("onNameConflict", "rename")
+                        new JProperty("onNameConflict", conflictBehaviour.ToString())
                     }
                     ,null, TimeOut);
 
@@ -227,7 +227,7 @@ namespace WwiseTools.Utils
         /// <param name="child"></param>
         /// <param name="parent"></param>
         /// <returns></returns>
-        public async Task<bool> MoveToParentAsync(WwiseObject child, WwiseObject parent)
+        public async Task<bool> MoveToParentAsync(WwiseObject child, WwiseObject parent, NameConflictBehaviour conflictBehaviour = NameConflictBehaviour.rename)
         {
             if (!await TryConnectWaapiAsync()) return false;
 
@@ -240,7 +240,7 @@ namespace WwiseTools.Utils
                     {
                         new JProperty("object", child.ID),
                         new JProperty("parent", parent.ID),
-                        new JProperty("onNameConflict", "rename")
+                        new JProperty("onNameConflict", conflictBehaviour.ToString())
                     },
                     null,
                     TimeOut
@@ -312,7 +312,8 @@ namespace WwiseTools.Utils
         /// <param name="parentPath"></param>
         /// <returns></returns>
         [Obsolete("Use Event component instead!")]
-        public async Task<WwiseObject?> AddEventActionAsync(string eventName, string objectPath, string parentPath = @"\Events\Default Work Unit", int actionType = 1)
+        public async Task<WwiseObject?> AddEventActionAsync(string eventName, string objectPath, string parentPath = @"\Events\Default Work Unit", 
+            WwiseProperty.Option_ActionType actionType = WwiseProperty.Option_ActionType.Play, NameConflictBehaviour conflictBehaviour = NameConflictBehaviour.merge)
         {
             if (!await TryConnectWaapiAsync()) return null;
 
@@ -327,14 +328,14 @@ namespace WwiseTools.Utils
                             new JProperty("parent", parentPath),
                             new JProperty("type", "Event"),
                             new JProperty("name", eventName),
-                            new JProperty("onNameConflict", "merge"),
+                            new JProperty("onNameConflict", conflictBehaviour.ToString()),
                             new JProperty("children", new JArray
                             {
                                 new JObject
                                 {
                                     new JProperty("name", ""),
                                     new JProperty("type", "Action"),
-                                    new JProperty("@ActionType", actionType),
+                                    new JProperty("@ActionType", actionType.ToString()),
                                     new JProperty("@Target", objectPath)
                                 }
                             })

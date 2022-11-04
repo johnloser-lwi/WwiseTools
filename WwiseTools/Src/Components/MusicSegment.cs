@@ -66,7 +66,7 @@ namespace WwiseTools.Components
         /// <param name="name"></param>
         /// <param name="timeMs"></param>
         /// <returns></returns>
-        public async Task CreateCueAsync(string name, float timeMs)
+        public async Task CreateCueAsync(string name, float timeMs, WwiseUtility.NameConflictBehaviour conflictBehaviour = WwiseUtility.NameConflictBehaviour.replace)
         {
             if (!await WwiseUtility.Instance.TryConnectWaapiAsync()) return;
 
@@ -83,7 +83,7 @@ namespace WwiseTools.Components
                             new JProperty("name", name),
                             new JProperty("type", "MusicCue"),
                             new JProperty("parent", await WwiseObject.GetPathAsync()),
-                            new JProperty("onNameConflict", "replace"),
+                            new JProperty("onNameConflict", conflictBehaviour.ToString()),
                             new JProperty("list", "Cues"),
                             new JProperty("@TimeMs", timeMs),
                             new JProperty("@CueType", 2)
