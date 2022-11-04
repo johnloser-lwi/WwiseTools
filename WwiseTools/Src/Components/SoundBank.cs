@@ -28,6 +28,16 @@ public class SoundBank : ComponentBase
     {
         return await WwiseUtility.Instance.CleanSoundBankInclusionAsync(WwiseObject);
     }
+
+    public async Task<bool> Generate()
+    {
+        return await Generate(new string[] { }, new string[] { });
+    }
+    
+    public async Task<bool> Generate(string[] platforms, string[] languages)
+    {
+        return await WwiseUtility.Instance.GenerateSelectedSoundBanksAsync(new[] {WwiseObject.Name}, platforms, languages);
+    }
     
     public SoundBank(WwiseObject wwiseObject) : base(wwiseObject, nameof(SoundBank))
     {

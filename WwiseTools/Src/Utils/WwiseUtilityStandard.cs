@@ -1834,15 +1834,32 @@ namespace WwiseTools.Utils
             return result;
         }
 
-        public async Task<bool> GenerateSelectedSoundBanksAllPlatformAsync(string[] soundBanks)
+        public async Task<bool> GenerateSelectedSoundBanksAsync(string[] soundBanks)
+        {
+            return await GenerateSelectedSoundBanksAsync(soundBanks, new string[] { }, new string[] { });
+        }
+
+        public async Task<bool> GenerateSelectedSoundBanksAsync(string[] soundBanks, string[] platforms, string[] languages)
         {
             if (!await TryConnectWaapiAsync()) return false;
 
             try
             {
+                if (platforms.Length == 0)
+                {
+                    platforms = (await GetPlatformsAsync()).ToArray();
+                }
+
+                if (languages.Length == 0)
+                {
+                    languages = (await GetLanguagesAsync()).ToArray();
+                }
+                
                 var query = new
                 {
                     soundbanks = new List<object>(),
+                    platforms = platforms,
+                    languages = languages,
                     writeToDisk = true
                 };
 
