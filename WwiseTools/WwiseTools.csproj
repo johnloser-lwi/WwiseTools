@@ -124,6 +124,7 @@
     <Compile Include="Src\Models\SoundBank\GeneratedSoundBankInfo.cs" />
     <Compile Include="Src\Models\SoundBank\GeneratedSoundBankPath.cs" />
     <Compile Include="Src\Utils\SoundBank\SoundBankExtension.cs" />
+    <Compile Include="Src\Utils\UtilityEnums.cs" />
     <Compile Include="Src\Utils\WaapiTopic.cs" />
     <Compile Include="Src\Utils\WwiseFactory.cs" />
     <Compile Include="Src\Utils\Profiler\WwiseUtilityProfilerExtension.cs" />

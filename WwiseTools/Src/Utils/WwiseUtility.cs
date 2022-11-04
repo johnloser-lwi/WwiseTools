@@ -10,21 +10,6 @@ using WwiseTools.Models;
 
 namespace WwiseTools.Utils
 {
-    public enum ImportAction
-    {
-        useExisting,
-        replaceExisting,
-        createNew
-    }
-    
-    public enum NameConflictBehaviour
-    {
-        fail,
-        replace,
-        merge,
-        rename
-    }
-
     /// <summary>
     /// 用于实现基础功能
     /// </summary>
