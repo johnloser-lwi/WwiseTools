@@ -16,6 +16,14 @@ namespace WwiseTools.Utils
         replaceExisting,
         createNew
     }
+    
+    public enum NameConflictBehaviour
+    {
+        fail,
+        replace,
+        merge,
+        rename
+    }
 
     /// <summary>
     /// 用于实现基础功能

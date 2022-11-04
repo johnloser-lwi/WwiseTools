@@ -10,7 +10,7 @@ namespace WwiseTools.Utils
     {
         // Actor Mixer Hierarchy
         public static async Task<WwiseObject> CreateRandomSequenceContainer(string objectName, bool isRandomContainer,
-            WwiseObject parent, WwiseUtility.NameConflictBehaviour conflictBehaviour = WwiseUtility.NameConflictBehaviour.fail)
+            WwiseObject parent, NameConflictBehaviour conflictBehaviour = NameConflictBehaviour.fail)
         {
             var result = await WwiseUtility.Instance.CreateObjectAsync(objectName, WwiseObject.ObjectType.RandomSequenceContainer,
                 parent, conflictBehaviour, WwiseProperty.Prop_RandomOrSequence(isRandomContainer

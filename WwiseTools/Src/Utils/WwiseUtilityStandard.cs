@@ -394,15 +394,6 @@ namespace WwiseTools.Utils
             return false;
         }
 
-
-        public enum NameConflictBehaviour
-        {
-            fail,
-            replace,
-            merge,
-            rename
-        }
-        
         public async Task<WwiseObject?> CreateObjectAsync(string objectName, WwiseObject.ObjectType objectType, WwiseObject parent, 
             NameConflictBehaviour conflictBehaviour = NameConflictBehaviour.fail,
             params WwiseProperty[] properties)

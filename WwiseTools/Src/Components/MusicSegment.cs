@@ -66,7 +66,7 @@ namespace WwiseTools.Components
         /// <param name="name"></param>
         /// <param name="timeMs"></param>
         /// <returns></returns>
-        public async Task CreateCueAsync(string name, float timeMs, WwiseUtility.NameConflictBehaviour conflictBehaviour = WwiseUtility.NameConflictBehaviour.replace)
+        public async Task CreateCueAsync(string name, float timeMs, NameConflictBehaviour conflictBehaviour = NameConflictBehaviour.replace)
         {
             if (!await WwiseUtility.Instance.TryConnectWaapiAsync()) return;
 
