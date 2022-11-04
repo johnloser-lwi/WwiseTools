@@ -8,9 +8,9 @@ using WwiseTools.Properties;
 using WwiseTools.References;
 using WwiseTools.Utils;
 
-namespace WwiseTools.Components;
+namespace WwiseTools.WwiseTypes;
 
-public class AudioFileSource : ComponentBase
+public class AudioFileSource : WwiseTypeBase
 {
     public async Task<string> GetLanguageAsync()
     {

@@ -5,9 +5,9 @@ using WwiseTools.Src.Models.SoundBank;
 using WwiseTools.Utils;
 using WwiseTools.Utils.SoundBank;
 
-namespace WwiseTools.Components;
+namespace WwiseTools.WwiseTypes;
 
-public class SoundBank : ComponentBase
+public class SoundBank : WwiseTypeBase
 {
     public async Task<bool> AddInclusionAsync(SoundBankInclusion inclusion)
     {

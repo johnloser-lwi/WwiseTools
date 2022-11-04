@@ -6,9 +6,9 @@ using WwiseTools.Properties;
 using WwiseTools.References;
 using WwiseTools.Utils;
 
-namespace WwiseTools.Components
+namespace WwiseTools.WwiseTypes
 {
-    public class MusicTrack : ComponentBase
+    public class MusicTrack : WwiseTypeBase
     {
 
         /// <summary>

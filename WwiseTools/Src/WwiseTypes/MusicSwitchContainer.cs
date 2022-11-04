@@ -3,7 +3,7 @@ using WwiseTools.Objects;
 using WwiseTools.Properties;
 using WwiseTools.Utils;
 
-namespace WwiseTools.Components
+namespace WwiseTools.WwiseTypes
 {
     public class MusicSwitchContainer : SwitchContainerBase
     {

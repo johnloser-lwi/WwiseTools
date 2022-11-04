@@ -4,9 +4,9 @@ using Newtonsoft.Json.Linq;
 using WwiseTools.Objects;
 using WwiseTools.Utils;
 
-namespace WwiseTools.Components
+namespace WwiseTools.WwiseTypes
 {
-    public class MusicPlaylistContainer : ComponentBase
+    public class MusicPlaylistContainer : WwiseTypeBase
     {
 
         public async Task<WwiseObject> AddPlaylistItemGroupAsync()

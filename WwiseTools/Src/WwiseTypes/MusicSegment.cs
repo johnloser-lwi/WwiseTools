@@ -6,9 +6,9 @@ using WwiseTools.Objects;
 using WwiseTools.Properties;
 using WwiseTools.Utils;
 
-namespace WwiseTools.Components
+namespace WwiseTools.WwiseTypes
 {
-    public class MusicSegment : ComponentBase
+    public class MusicSegment : WwiseTypeBase
     {
 
         public async Task SetTempoAndTimeSignatureAsync(float tempo, WwiseProperty.Option_TimeSignatureLower timeSignatureLower, uint timeSignatureUpper)

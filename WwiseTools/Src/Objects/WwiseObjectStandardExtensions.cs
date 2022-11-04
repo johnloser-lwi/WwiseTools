@@ -1,4 +1,4 @@
-﻿using WwiseTools.Components;
+﻿using WwiseTools.WwiseTypes;
 
 namespace WwiseTools.Objects
 {
@@ -8,7 +8,7 @@ namespace WwiseTools.Objects
 
         public static SwitchContainer AsSwitchContainer(this WwiseObject obj) => new SwitchContainer(obj);
 
-        public static Hierarchy AsHierarchy(this WwiseObject obj) => new Hierarchy(obj);
+        public static Container AsContainer(this WwiseObject obj) => new Container(obj);
 
         public static Sound AsSound(this WwiseObject obj) => new Sound(obj);
 
@@ -28,6 +28,6 @@ namespace WwiseTools.Objects
         public static MusicSwitchContainer AsMusicSwitchContainer(this WwiseObject obj) => new MusicSwitchContainer(obj);
 
         public static Event AsEvent(this WwiseObject obj) => new Event(obj);
-        public static Components.Action AsAction(this WwiseObject obj) => new Components.Action(obj);
+        public static WwiseTypes.Action AsAction(this WwiseObject obj) => new WwiseTypes.Action(obj);
     }
 }

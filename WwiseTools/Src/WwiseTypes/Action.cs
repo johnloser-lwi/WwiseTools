@@ -6,9 +6,9 @@ using WwiseTools.Properties;
 using WwiseTools.References;
 using WwiseTools.Utils;
 
-namespace WwiseTools.Components;
+namespace WwiseTools.WwiseTypes;
 
-public class Action : ComponentBase
+public class Action : WwiseTypeBase
 {
     public Action(WwiseObject wwiseObject) : base(wwiseObject, "Action")
     {

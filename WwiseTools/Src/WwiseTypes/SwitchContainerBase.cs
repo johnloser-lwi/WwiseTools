@@ -3,9 +3,9 @@ using WwiseTools.Objects;
 using WwiseTools.References;
 using WwiseTools.Utils;
 
-namespace WwiseTools.Components
+namespace WwiseTools.WwiseTypes
 {
-    public abstract class SwitchContainerBase : ComponentBase
+    public abstract class SwitchContainerBase : WwiseTypeBase
     {
 
         public async Task SetSwitchGroupOrStateGroupAsync(WwiseReference group)

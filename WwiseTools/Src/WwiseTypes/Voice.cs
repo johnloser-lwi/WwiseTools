@@ -5,9 +5,9 @@ using WwiseTools.Properties;
 using WwiseTools.References;
 using WwiseTools.Utils;
 
-namespace WwiseTools.Components
+namespace WwiseTools.WwiseTypes
 {
-    public class Voice : ComponentBase
+    public class Voice : WwiseTypeBase
     {
         public async Task SetVolumeAsync(float value)
         {

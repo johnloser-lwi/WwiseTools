@@ -7,9 +7,9 @@ using WwiseTools.Objects;
 using WwiseTools.Properties;
 using WwiseTools.Utils;
 
-namespace WwiseTools.Components
+namespace WwiseTools.WwiseTypes
 {
-    public class Sound : ComponentBase
+    public class Sound : WwiseTypeBase
     {
         public async Task SetInitialDelayAsync(float delay)
         {

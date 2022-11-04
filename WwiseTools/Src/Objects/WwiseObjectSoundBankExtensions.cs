@@ -1,4 +1,4 @@
-﻿using WwiseTools.Components;
+﻿using WwiseTools.WwiseTypes;
 
 namespace WwiseTools.Objects;
 

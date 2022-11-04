@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Xml;
-using WwiseTools.Components;
+using WwiseTools.WwiseTypes;
 using WwiseTools.Objects;
 using WwiseTools.Properties;
 using WwiseTools.References;
@@ -29,7 +29,7 @@ namespace Examples
             var selection = await Waapi.GetWwiseObjectsBySelectionAsync();
             foreach (var wwiseObject in selection)
             {
-                var sound = wwiseObject.AsHierarchy();
+                var sound = wwiseObject.AsContainer();
                 var sources = await sound.GetChildrenAsync();
 
                 foreach (var source in sources)
@@ -46,7 +46,7 @@ namespace Examples
             var selection = await Waapi.GetWwiseObjectsBySelectionAsync();
             foreach (var wwiseObject in selection)
             {
-                wwiseObject.AsHierarchy();
+                wwiseObject.AsContainer();
             }
         }
         
@@ -130,7 +130,7 @@ namespace Examples
                 WaapiLog.Log(node.Name);
             }
 
-            foreach (var child in await obj.AsHierarchy().GetChildrenAsync())
+            foreach (var child in await obj.AsContainer().GetChildrenAsync())
             {
                 WaapiLog.Log(child.Name);
             }

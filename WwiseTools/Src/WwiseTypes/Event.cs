@@ -6,15 +6,15 @@ using WwiseTools.Properties;
 using WwiseTools.References;
 using WwiseTools.Utils;
 
-namespace WwiseTools.Components;
+namespace WwiseTools.WwiseTypes;
 
-public class Event : ComponentBase
+public class Event : WwiseTypeBase
 {
     public Event(WwiseObject wwiseObject) : base(wwiseObject, "Event")
     {
     }
 
-    public async Task<Components.Action> AddSetSwitchActionAsync(WwiseObject target,
+    public async Task<Action> AddSetSwitchActionAsync(WwiseObject target,
         float delay = 0f)
     {
         if (target.Type != WwiseObject.ObjectType.Switch.ToString()) return null;
@@ -27,7 +27,7 @@ public class Event : ComponentBase
         return await AddActionAsync(target, WwiseProperty.Option_ActionType.SetSwitch, properties);
     }
     
-    public async Task<Components.Action> AddSetStateActionAsync(WwiseObject target,
+    public async Task<Action> AddSetStateActionAsync(WwiseObject target,
         float delay = 0f)
     {
         if (target.Type != WwiseObject.ObjectType.State.ToString()) return null;
@@ -40,7 +40,7 @@ public class Event : ComponentBase
         return await AddActionAsync(target, WwiseProperty.Option_ActionType.SetState, properties);
     }
 
-    public async Task<Components.Action> AddPlayActionAsync(WwiseObject target, 
+    public async Task<Action> AddPlayActionAsync(WwiseObject target, 
         float delay = 0f, 
         float probability = 100f, 
         float fadeTime = 0f, 
@@ -57,7 +57,7 @@ public class Event : ComponentBase
         return await AddActionAsync(target, WwiseProperty.Option_ActionType.Play, properties);
     }
     
-    public async Task<Components.Action> AddStopActionAsync(WwiseObject target, 
+    public async Task<Action> AddStopActionAsync(WwiseObject target, 
         WwiseProperty.Option_Scope scope = WwiseProperty.Option_Scope.GameObject,
         float delay = 0f, 
         float probability = 100f, 
@@ -77,7 +77,7 @@ public class Event : ComponentBase
     }
 
     
-    public async Task<Components.Action> AddActionAsync(WwiseObject target, WwiseProperty.Option_ActionType type, params WwiseProperty[] properties)
+    public async Task<Action> AddActionAsync(WwiseObject target, WwiseProperty.Option_ActionType type, params WwiseProperty[] properties)
     {
         var action = await WwiseUtility.Instance.CreateObjectAsync("", WwiseObject.ObjectType.Action, WwiseObject);
 
@@ -97,7 +97,7 @@ public class Event : ComponentBase
 
     public async Task<List<Action>> GetActionsAsync()
     {
-        return (await WwiseObject.AsHierarchy().GetChildrenAsync()).Select(a => a.AsAction()).ToList();
+        return (await WwiseObject.AsContainer().GetChildrenAsync()).Select(a => a.AsAction()).ToList();
     }
 
     public async Task<List<Action>> FindActionsByTarget(WwiseObject target)

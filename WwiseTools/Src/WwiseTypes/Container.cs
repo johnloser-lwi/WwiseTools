@@ -3,9 +3,9 @@ using System.Threading.Tasks;
 using WwiseTools.Objects;
 using WwiseTools.Utils;
 
-namespace WwiseTools.Components
+namespace WwiseTools.WwiseTypes
 {
-    public class Hierarchy : ComponentBase
+    public class Container : WwiseTypeBase
     {
         public async Task<List<WwiseObject>> GetChildrenAsync()
         {
@@ -18,7 +18,7 @@ namespace WwiseTools.Components
             await WwiseUtility.Instance.MoveToParentAsync(wwiseObject, WwiseObject);
         }
 
-        public Hierarchy(WwiseObject wwiseObject) : base(wwiseObject, "!SoundBank")
+        public Container(WwiseObject wwiseObject) : base(wwiseObject, "!SoundBank")
         {
         }
     }

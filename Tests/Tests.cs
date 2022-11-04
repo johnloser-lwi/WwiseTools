@@ -18,14 +18,14 @@ namespace Tests
             WwiseObject musicSwitchContainer = new WwiseObject("TestObject", "null", "MusicSwitchContainer");
 
 
-            Assert.That(sound.AsHierarchy().Valid);
+            Assert.That(sound.AsContainer().Valid);
             Assert.That(sound.AsVoice().Valid);
             Assert.That(soundBank.AsSoundBank().Valid);
-            Assert.That(switchContainer.AsHierarchy().Valid);
+            Assert.That(switchContainer.AsContainer().Valid);
             Assert.That(switchContainer.AsSwitchContainer().Valid);
             Assert.That(!switchContainer.AsMusicSwitchContainer().Valid);
             Assert.That(musicSwitchContainer.AsMusicSwitchContainer().Valid);
-            Assert.That(musicSwitchContainer.AsHierarchy().Valid);
+            Assert.That(musicSwitchContainer.AsContainer().Valid);
         }
         
     }

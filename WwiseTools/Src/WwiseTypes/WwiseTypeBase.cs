@@ -2,14 +2,14 @@
 using WwiseTools.Objects;
 using WwiseTools.Utils;
 
-namespace WwiseTools.Components
+namespace WwiseTools.WwiseTypes
 {
-    public abstract class ComponentBase
+    public abstract class WwiseTypeBase
     {
         public bool Valid => WwiseObject != null;
         public WwiseObject WwiseObject { get; protected set; }
 
-        protected ComponentBase(WwiseObject wwiseObject, string typeFilter)
+        protected WwiseTypeBase(WwiseObject wwiseObject, string typeFilter)
         {
             
             if (string.IsNullOrEmpty(typeFilter) || CanCastToType(typeFilter, wwiseObject.Type))
