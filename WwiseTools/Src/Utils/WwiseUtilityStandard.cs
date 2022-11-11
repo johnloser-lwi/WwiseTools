@@ -1309,12 +1309,15 @@ namespace WwiseTools.Utils
 
                 var projectName = await GetWwiseProjectNameAsync();
 
+                var projectPath = await GetWwiseProjectPathAsync();
+
                 WwiseInfo wwiseInfo = new WwiseInfo()
                 {
                     ProjectName = projectName,
                     Version = new WwiseVersion(year, major, minor, build, schema),
                     ProcessID = processId,
-                    IsCommandLine = isCommandLine
+                    IsCommandLine = isCommandLine,
+                    ProjectPath = projectPath
                 };
 
                 return wwiseInfo;

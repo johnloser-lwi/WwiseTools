@@ -7,6 +7,7 @@ using WwiseTools.Objects;
 using WwiseTools.Properties;
 using WwiseTools.References;
 using WwiseTools.Utils;
+using System.IO;
 
 namespace WwiseTools.WwiseTypes;
 
@@ -63,6 +64,17 @@ public class AudioFileSource : WwiseTypeBase
         if (r is null) return null;
         
         return r["return"]?.Last?.Last?.Last?.ToString();
+    }
+
+    public async Task<string?> GetAudioFileRelativePath()
+    {
+        var projectFolder = WwiseUtility.Instance.ConnectionInfo.ProjectFolder;
+        var language = await GetLanguageAsync();
+        var voiceOriginalPath = Path.Combine(projectFolder, $"Originals\\Voices\\{language}");
+
+        var filePath = await GetAudioFilePathAsync();
+
+        return filePath?.Replace(voiceOriginalPath, "");
     }
 
     private async Task<JObject?> GetWavFilePathAsync()

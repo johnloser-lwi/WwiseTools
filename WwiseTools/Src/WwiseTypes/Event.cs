@@ -95,6 +95,34 @@ public class Event : WwiseTypeBase
         return comp;
     }
 
+    public async Task CleanAllActions()
+    {
+        var actions = await GetActionsAsync();
+
+        foreach (var action in actions)
+        {
+            await WwiseUtility.Instance.DeleteObjectAsync(action.WwiseObject);
+        }
+    }
+
+    public async Task<bool> RemoveActionAsync(WwiseObject target, WwiseProperty.Option_ActionType type)
+    {
+        var actions = await GetActionsAsync();
+
+        bool result = false;
+        
+        foreach (var action in actions)
+        {
+            if (await action.GetActionTypeAsync() == type && await action.GetTargetAsync() == target)
+            {
+                await WwiseUtility.Instance.DeleteObjectAsync(action.WwiseObject);
+                result = true;
+            }
+        }
+
+        return result;
+    }
+
     public async Task<List<Action>> GetActionsAsync()
     {
         return (await WwiseObject.AsContainer().GetChildrenAsync()).Select(a => a.AsAction()).ToList();
@@ -108,7 +136,6 @@ public class Event : WwiseTypeBase
     public async Task<List<Action>> FindActionsByActionType(WwiseProperty.Option_ActionType type)
     {
         var actions = await GetActionsAsync();
-
 
         var res = new List<Action>();
         foreach (var action in actions)

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
 
 namespace WwiseTools.Models
 {
@@ -15,11 +16,16 @@ namespace WwiseTools.Models
         public bool IsCommandLine { get; set; }
 
         public string ProjectName { get; set; }
+        
+        public string ProjectPath { get; set; }
+
+        public string ProjectFolder => Path.GetFileName(ProjectPath);
 
         public override string ToString()
         {
             string result = "";
             result += "Project Name: " + ProjectName + "\n";
+            result += "Project Path: " + ProjectPath + "\n";
             result += "Wwise Version: " + Version.VersionString + "\n";
             result += "Schema Version: " + Version.Schema.ToString() + "\n";
             result += "Process ID: " + ProcessID + "\n";
