@@ -74,7 +74,7 @@ public class AudioFileSource : WwiseTypeBase
 
         var filePath = await GetAudioFilePathAsync();
 
-        return filePath?.Replace(voiceOriginalPath, "");
+        return filePath?.Replace(voiceOriginalPath, "").Trim('\\');
     }
 
     private async Task<JObject?> GetWavFilePathAsync()
