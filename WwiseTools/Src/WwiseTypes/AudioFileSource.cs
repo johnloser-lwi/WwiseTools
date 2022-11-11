@@ -66,7 +66,7 @@ public class AudioFileSource : WwiseTypeBase
         return r["return"]?.Last?.Last?.Last?.ToString();
     }
 
-    public async Task<string?> GetAudioFileRelativePath()
+    public async Task<string?> GetAudioFileRelativePathAsync()
     {
         var projectFolder = WwiseUtility.Instance.ConnectionInfo.ProjectFolder;
         var language = await GetLanguageAsync();

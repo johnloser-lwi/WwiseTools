@@ -19,7 +19,7 @@ namespace WwiseTools.Models
         
         public string ProjectPath { get; set; }
 
-        public string ProjectFolder => Path.GetFileName(ProjectPath);
+        public string ProjectFolder => Path.GetDirectoryName(ProjectPath);
 
         public override string ToString()
         {
