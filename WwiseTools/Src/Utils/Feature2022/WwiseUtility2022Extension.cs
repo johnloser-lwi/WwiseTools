@@ -11,7 +11,14 @@ namespace WwiseTools.Utils.Feature2022
 {
     public static class WwiseUtility2022Extension
     {
-        
+        public static async Task UndoAsync(this WwiseUtility utility)
+        {
+            if (!await WwiseUtility.Instance.TryConnectWaapiAsync()) return;
+
+            var func = utility.Function.Verify("ak.wwise.core.undo.undo");
+
+            var res = await utility.CallAsync(func, null, null);
+        }
 
         /// <summary>
         /// 批量配置属性
