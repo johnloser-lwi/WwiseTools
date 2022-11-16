@@ -257,7 +257,51 @@ namespace WwiseTools.Utils
 
             return false;
         }
-        
+
+        public async Task<string> GetNotesAsync(WwiseObject target)
+        {
+            //ak.wwise.core.object.getPropertyAndReferenceNames
+
+            if (!await TryConnectWaapiAsync()) return "";
+
+            try
+            {
+                var func = Function.Verify(WaapiFunction.CoreObjectGet);
+
+                var query = new
+                {
+                    from = new
+                    {
+                        id = new string[]{ target.ID }
+                    }
+                };
+                
+                var options = new
+                {
+
+                    @return = new string[] { "notes" }
+
+                };
+                
+                var result = await _client.Call(func,
+
+                    query,
+
+                    options, TimeOut);
+                WaapiLog.InternalLog("Notes fetched successfully!");
+                
+                if (result["return"] is null) return "";
+                if (result["return"].Last?["notes"] is null) return "";
+                
+                return result["return"].Last["notes"].ToString();
+
+            }
+            catch (Exception e)
+            {
+                WaapiLog.InternalLog($"Failed to fetch notes! ======> {e.Message}");
+                return "";
+            }
+        }
 
         public async Task<bool> SetNoteAsync(WwiseObject target, string note)
         {

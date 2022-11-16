@@ -14,12 +14,8 @@ try
         var selection = await WwiseUtility.Instance.GetWwiseObjectsBySelectionAsync();
 
         var sound = selection[0];
-        var sources = await sound.AsSound().GetAudioFileSourcesAsync();
-
-        foreach (var audioFileSource in sources)
-        {
-            Console.WriteLine(await audioFileSource.GetAudioFileRelativePathAsync());
-        }
+        var note = await WwiseUtility.Instance.GetNotesAsync(sound);
+        Console.WriteLine(note);
     }
     else
     {
