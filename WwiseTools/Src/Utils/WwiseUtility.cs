@@ -49,6 +49,8 @@ namespace WwiseTools.Utils
 
         public event Action Disconnected;
 
+        public event Action<WwiseInfo> Connected;
+
         public int TimeOut => 10000;
 
 
@@ -145,6 +147,8 @@ namespace WwiseTools.Utils
                 await GetFunctionsAsync();
                 await GetTopicsAsync();
                 WaapiLog.InternalLog("Connected successfully!");
+                
+                
 
                 _client.Disconnected += () =>
                 {
@@ -165,7 +169,7 @@ namespace WwiseTools.Utils
 
                     if (ConnectionInfo != null) break;
 
-                    await Task.Delay(3000);
+                        await Task.Delay(3000);
                 }
 
                 if (ConnectionInfo == null)
@@ -179,6 +183,7 @@ namespace WwiseTools.Utils
 
                 WampPort = wampPort;
                 WaapiLog.InternalLog(ConnectionInfo);
+                Connected?.Invoke(ConnectionInfo);
                 return true;
             }
             catch (Exception e)
