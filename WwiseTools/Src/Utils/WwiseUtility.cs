@@ -19,27 +19,38 @@ namespace WwiseTools.Utils
 
         private bool _initializing = false;
 
-        private WaapiFunction _function;
+        private WaapiFunctionList _function;
 
-        private WaapiTopic _topic;
+        private WaapiTopicList _topic;
+
+        private WaapiUICommandList _uiCommand;
 
         public WwiseInfo ConnectionInfo { get; private set; }
 
-        internal WaapiFunction Function
+        public WaapiFunctionList Function
         {
             get
             {
-                if (_function is null) _function = new WaapiFunction();
+                if (_function is null) _function = new WaapiFunctionList();
                 return _function;
             }
         }
 
-        internal WaapiTopic Topic
+        public WaapiTopicList Topic
         {
             get
             {
-                if (_topic is null) _topic = new WaapiTopic();
+                if (_topic is null) _topic = new WaapiTopicList();
                 return _topic;
+            }
+        }
+
+        public WaapiUICommandList UICommand
+        {
+            get
+            {
+                if (_uiCommand is null) _uiCommand = new WaapiUICommandList();
+                return _uiCommand;
             }
         }
 
@@ -146,6 +157,7 @@ namespace WwiseTools.Utils
                 await _client.Connect($"ws://localhost:{wampPort}/waapi", TimeOut); // 尝试创建Wwise连接
                 await GetFunctionsAsync();
                 await GetTopicsAsync();
+                await GetCommandsAsync();
                 WaapiLog.InternalLog("Connected successfully!");
                 
                 
@@ -179,7 +191,6 @@ namespace WwiseTools.Utils
                     await DisconnectAsync();
                     return false;
                 }
-
 
                 WampPort = wampPort;
                 WaapiLog.InternalLog(ConnectionInfo);

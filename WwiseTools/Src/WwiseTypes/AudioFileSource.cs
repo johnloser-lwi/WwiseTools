@@ -37,7 +37,7 @@ public class AudioFileSource : WwiseTypeBase
 
             };
 
-            var func = WaapiFunction.CoreObjectGet;
+            var func = WaapiFunctionList.CoreObjectGet;
 
             JObject jresult =
                 await WwiseUtility.Instance.CallAsync(func, query, options, WwiseUtility.Instance.TimeOut);
@@ -106,7 +106,7 @@ public class AudioFileSource : WwiseTypeBase
 
             };
 
-            var func = WaapiFunction.CoreObjectGet;
+            var func = WaapiFunctionList.CoreObjectGet;
 
             JObject jresult = await WwiseUtility.Instance.CallAsync(func, query, options, WwiseUtility.Instance.TimeOut);
 

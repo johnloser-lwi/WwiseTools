@@ -266,7 +266,7 @@ namespace WwiseTools.Utils
 
             try
             {
-                var func = Function.Verify(WaapiFunction.CoreObjectGet);
+                var func = Function.Verify(WaapiFunctionList.CoreObjectGet);
 
                 var query = new
                 {
@@ -549,7 +549,7 @@ namespace WwiseTools.Utils
 
             try
             {
-                var func = WaapiFunction.CoreObjectGet;
+                var func = WaapiFunctionList.CoreObjectGet;
 
                 // ak.wwise.core.@object.get 指令
                 var query = new
@@ -597,7 +597,7 @@ namespace WwiseTools.Utils
 
             try
             {
-                var func = WaapiFunction.CoreObjectGet;
+                var func = WaapiFunctionList.CoreObjectGet;
 
                 // ak.wwise.core.@object.get 指令
                 var query = new
@@ -657,7 +657,7 @@ namespace WwiseTools.Utils
 
             try
             {
-                var func = WaapiFunction.CoreObjectGet;
+                var func = WaapiFunctionList.CoreObjectGet;
 
                 // ak.wwise.core.@object.get 指令
                 var query = new
@@ -703,7 +703,7 @@ namespace WwiseTools.Utils
 
             try
             {
-                var func = WaapiFunction.CoreObjectGet;
+                var func = WaapiFunctionList.CoreObjectGet;
 
                 // ak.wwise.core.@object.get 指令
                 var query = new
@@ -758,7 +758,7 @@ namespace WwiseTools.Utils
 
             try
             {
-                var func = WaapiFunction.CoreObjectGet;
+                var func = WaapiFunctionList.CoreObjectGet;
 
                 // ak.wwise.core.@object.get 指令
                 var query = new
@@ -839,7 +839,7 @@ namespace WwiseTools.Utils
 
 
 
-                var func = WaapiFunction.CoreObjectGet;
+                var func = WaapiFunctionList.CoreObjectGet;
 
                 JObject jresult = await _client.Call(func, query, options, TimeOut);
 
@@ -970,7 +970,7 @@ namespace WwiseTools.Utils
 
                 };
 
-                var func = WaapiFunction.CoreObjectGet;
+                var func = WaapiFunctionList.CoreObjectGet;
 
                 var result = await _client.Call(func, query, options, TimeOut);
                 if (result["return"] == null) throw new Exception();
@@ -1163,7 +1163,7 @@ namespace WwiseTools.Utils
 
                 };
 
-                var func = WaapiFunction.CoreObjectGet;
+                var func = WaapiFunctionList.CoreObjectGet;
 
                 JObject jresult = await _client.Call(func, query, options, TimeOut);
 
@@ -1260,7 +1260,7 @@ namespace WwiseTools.Utils
 
                 };
 
-                var func = WaapiFunction.CoreObjectGet;
+                var func = WaapiFunctionList.CoreObjectGet;
 
                 JObject jresult = await _client.Call(func, query, options, TimeOut);
 
@@ -1310,7 +1310,7 @@ namespace WwiseTools.Utils
 
                 };
 
-                var func = WaapiFunction.CoreObjectGet;
+                var func = WaapiFunctionList.CoreObjectGet;
 
                 JObject jresult = await _client.Call(func, query, options, TimeOut);
 
@@ -1387,12 +1387,13 @@ namespace WwiseTools.Utils
             try
             {
                 var func = Function.Verify("ak.wwise.ui.commands.execute");
+                var cmd = UICommand.Verify(command);
 
                 if (objectIDs is not null)
                 {
                     var query = new
                     {
-                        command = command,
+                        command = cmd,
                         objects = objectIDs
                     };
 
@@ -1525,7 +1526,7 @@ namespace WwiseTools.Utils
 
                 };
 
-                var func = WaapiFunction.CoreObjectGet;
+                var func = WaapiFunctionList.CoreObjectGet;
 
                 var jresult = await _client.Call(func, query, options, TimeOut);
                 if (jresult == null || jresult["return"] == null) return result;
@@ -1579,7 +1580,7 @@ namespace WwiseTools.Utils
 
                 };
 
-                var func = WaapiFunction.CoreObjectGet;
+                var func = WaapiFunctionList.CoreObjectGet;
 
                 var jresult = await _client.Call(func, query, options, TimeOut);
                 if (jresult == null || jresult["return"] == null) return result;
@@ -1632,7 +1633,7 @@ namespace WwiseTools.Utils
 
                 };
 
-                var func = WaapiFunction.CoreObjectGet;
+                var func = WaapiFunctionList.CoreObjectGet;
 
                 var jresult = await _client.Call(func, query, options, TimeOut);
                 if (jresult == null || jresult["return"] == null) return null;
@@ -1686,7 +1687,7 @@ namespace WwiseTools.Utils
 
                 };
 
-                var func = WaapiFunction.CoreObjectGet;
+                var func = WaapiFunctionList.CoreObjectGet;
 
                 var jresult = await _client.Call(func, query, options, TimeOut);
                 if (jresult == null || jresult["return"] == null) return result;
@@ -1740,7 +1741,7 @@ namespace WwiseTools.Utils
 
                 };
 
-                var func = WaapiFunction.CoreObjectGet;
+                var func = WaapiFunctionList.CoreObjectGet;
 
                 var jresult = await _client.Call(func, query, options, TimeOut);
                 if (jresult == null || jresult["return"] == null) return result;
@@ -1794,7 +1795,7 @@ namespace WwiseTools.Utils
 
                 };
 
-                var func = WaapiFunction.CoreObjectGet;
+                var func = WaapiFunctionList.CoreObjectGet;
 
                 var jresult = await _client.Call(func, query, options, TimeOut);
                 if (jresult == null || jresult["return"] == null) return result;
@@ -1848,7 +1849,7 @@ namespace WwiseTools.Utils
 
                 };
 
-                var func = WaapiFunction.CoreObjectGet;
+                var func = WaapiFunctionList.CoreObjectGet;
 
                 var jresult = await _client.Call(func, query, options, TimeOut);
                 if (jresult == null || jresult["return"] == null) return result;
@@ -1934,7 +1935,33 @@ namespace WwiseTools.Utils
                 if (result["functions"] == null) throw new Exception();
                 foreach (var func in result["functions"]!)
                 {
-                    Function.AddFunction(func.ToString());
+                    Function.Add(func.ToString());
+                }
+
+                return true;
+            }
+            catch (Exception e)
+            {
+                WaapiLog.InternalLog(e);
+            }
+
+            return false;
+        }
+        
+        private async Task<bool> GetCommandsAsync()
+        {
+            if (!await TryConnectWaapiAsync()) return false;
+            
+            UICommand.Clear();
+            
+            try
+            {
+                
+                var result = await _client.Call("ak.wwise.ui.commands.getCommands", null, null, TimeOut);
+                if (result["commands"] == null) throw new Exception();
+                foreach (var command in result["commands"]!)
+                {
+                    UICommand.Add(command.ToString());
                 }
 
                 return true;
@@ -1959,7 +1986,7 @@ namespace WwiseTools.Utils
                 if (result["topics"] == null) throw new Exception();
                 foreach (var topic in result["topics"]!)
                 {
-                    Topic.AddTopic(topic.ToString());
+                    Topic.Add(topic.ToString());
                 }
 
                 return true;

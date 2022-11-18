@@ -91,6 +91,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Src\Utils\Lists\WaapiFunctionList.cs" />
+    <Compile Include="Src\Utils\Lists\WaapiListBase.cs" />
+    <Compile Include="Src\Utils\Lists\WaapiStringListBase.cs" />
+    <Compile Include="Src\Utils\Lists\WaapiTopicList.cs" />
+    <Compile Include="Src\Utils\Lists\WaapiUICommandList.cs" />
     <Compile Include="Src\WwiseTypes\Action.cs" />
     <Compile Include="Src\WwiseTypes\AudioFileSource.cs" />
     <Compile Include="Src\WwiseTypes\WwiseTypeBase.cs" />
@@ -125,7 +130,6 @@
     <Compile Include="Src\Models\SoundBank\GeneratedSoundBankPath.cs" />
     <Compile Include="Src\Utils\SoundBank\SoundBankExtension.cs" />
     <Compile Include="Src\Utils\UtilityEnums.cs" />
-    <Compile Include="Src\Utils\WaapiTopic.cs" />
     <Compile Include="Src\Utils\WwiseFactory.cs" />
     <Compile Include="Src\Utils\Profiler\WwiseUtilityProfilerExtension.cs" />
     <Compile Include="Src\Utils\WwisePathBuilder.cs" />
@@ -135,7 +139,6 @@
     <Compile Include="Src\Utils\Feature2021\Waql.cs" />
     <Compile Include="Src\Utils\Feature2022\WwiseUtility2022Extension.cs" />
     <Compile Include="Src\Utils\WwiseWorkUnitParser.cs" />
-    <Compile Include="Src\Utils\WaapiFunction.cs" />
     <Compile Include="Src\WaapiClient\Client.cs" />
     <Compile Include="Src\WaapiClient\JsonClient.cs" />
     <Compile Include="Src\WaapiClient\Wamp.cs" />

@@ -9,13 +9,7 @@ try
 
     if (await WwiseUtility.Instance.TryConnectWaapiAsync())
     {
-        //await SoundBankExamples.RemoveSoundBankInclusion(); // 尝试不同的方法
-
-        var selection = await WwiseUtility.Instance.GetWwiseObjectsBySelectionAsync();
-
-        var sound = selection[0];
-        var note = await WwiseUtility.Instance.GetNotesAsync(sound);
-        Console.WriteLine(note);
+        await SoundBankExamples.RemoveSoundBankInclusion(); // 尝试不同的方法
     }
     else
     {
