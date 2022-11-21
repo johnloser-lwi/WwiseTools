@@ -61,17 +61,19 @@ namespace WwiseTools.Utils.Feature2022
                 };
                 
                 // Specify inclusion or exclusion according to inclusionMode.
-                // Skip this step if no property provided
+                // Skip this step if no property provided, all properties will be copied to targets
                 if (properties.Length != 0)
                 {
-                    var jInclusion = new JArray();
+                    var jProperties = new JArray();
 
                     foreach (var property in properties)
                     {
-                        jInclusion.Add(property);
+                        jProperties.Add(property);
                     }
+
+                    var jInclusion = new JProperty(inclusionMode ? "inclusion" : "exclusion", jProperties);
                     
-                    query.Add(new JProperty((inclusionMode? "inclusion" : "exclusion"), jInclusion));
+                    query.Add(jInclusion);
                 }
 
                 var func = utility.Function.Verify("ak.wwise.core.object.pasteProperties");
