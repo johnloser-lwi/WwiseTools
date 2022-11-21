@@ -166,7 +166,7 @@ namespace WwiseTools.Utils
             
             try
             {
-                if (VersionHelper.VersionVerify(VersionHelper.V2022_1_0_7929))
+                if (ConnectionInfo.Version >= VersionHelper.V2022_1_0_7929)
                     return await Instance.PastePropertiesAsync(source, targets, WwiseUtility2022Extension.PasteMode.replaceEntire, true, properties);
 
 
@@ -698,7 +698,7 @@ namespace WwiseTools.Utils
             {
                 var jresult = await GetWwiseObjectPropertyByIDAsync(wwiseObject.ID, wwiseProperty);
                 if (jresult is null) return null;
-                bool isRef = jresult["id"] != null;
+                bool isRef = jresult.HasValues && jresult["id"] != null;
                 
                 var ret = new WwiseProperty(wwiseProperty, isRef ? jresult["id"].ToString() : jresult.ToString());
                 
@@ -708,7 +708,7 @@ namespace WwiseTools.Utils
             }
             catch (Exception e)
             {
-                WaapiLog.InternalLog($"Failed to return WwiseObject Property : {wwiseObject.Name}! ======> {e.Message}");
+                WaapiLog.InternalLog($"Failed to return WwiseObject Property : {wwiseProperty}! ======> {e.Message}");
                 return null;
             }
 
