@@ -24,11 +24,11 @@ namespace WwiseTools.Utils
         /// </summary>
         /// <param name="wwiseObject"></param>
         /// <returns></returns>
-        public async Task<string> GetPropertyAndReferenceNamesAsync(WwiseObject wwiseObject)
+        public async Task<string[]> GetPropertyAndReferenceNamesAsync(WwiseObject wwiseObject)
         {
             //ak.wwise.core.object.getPropertyAndReferenceNames
 
-            if (!await TryConnectWaapiAsync()) return "";
+            if (!await TryConnectWaapiAsync()) return new string[]{};
 
             try
             {
@@ -41,14 +41,26 @@ namespace WwiseTools.Utils
 
                     null);
                 WaapiLog.InternalLog("Property and References fetched successfully!");
-                return result.ToString();
+
+                if (result == null) return new string[] { };
+                
+                if (result["return"] == null) return new string[] { };
+
+                List<string> ret = new List<string>();
+
+                foreach (var val in result["return"])
+                {
+                    ret.Add(val.ToString());
+                }
+                
+                return ret.ToArray();
 
 
             }
             catch (Exception e)
             {
                 WaapiLog.InternalLog($"Failed to fetch Property and References! ======> {e.Message}");
-                return "";
+                return new string[]{};
             }
         }
         
@@ -117,6 +129,10 @@ namespace WwiseTools.Utils
             
             try
             {
+                var list = await GetPropertyAndReferenceNamesAsync(wwiseObject);
+                if (!list.Contains(wwiseProperty.Name)) return false;
+                
+                
                 var func = Function.Verify("ak.wwise.core.object.setProperty");
                 await _client.Call(func,
 
@@ -152,7 +168,8 @@ namespace WwiseTools.Utils
             {
                 if (VersionHelper.VersionVerify(VersionHelper.V2022_1_0_7929))
                     return await Instance.PastePropertiesAsync(source, targets, WwiseUtility2022Extension.PasteMode.replaceEntire, true, properties);
-                
+
+
                 var propertyList = new List<WwiseProperty>();
                 for (var i = 0; i < properties.Length; i++)
                 {
@@ -167,7 +184,11 @@ namespace WwiseTools.Utils
                 
                 for (var i = 0; i < targets.Length; i++)
                 {
-                    var res = await SetObjectPropertiesAsync(targets[i], propertyList.ToArray());
+                    var target = targets[i];
+
+                    var availableProps = (await GetPropertyAndReferenceNamesAsync(target)).ToList();
+
+                    var res = await SetObjectPropertiesAsync(target, propertyList.Where(p => availableProps.Contains(p.Name)).ToArray());
 
                     if (!res) ret = false;
                 }
