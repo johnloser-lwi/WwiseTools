@@ -82,14 +82,14 @@ namespace Examples
         public static async Task BatchSetTestAsync()
         {
             var selection = await Waapi.GetWwiseObjectsBySelectionAsync();
-            await WwiseUtility.Instance.BatchSetObjectPropertyAsync(selection, 
+            await WwiseUtility.Instance.BatchSetObjectPropertyAsync(selection.ToArray(), 
                 WwiseProperty.Prop_Volume(-3),
                 WwiseProperty.Prop_OverrideOutput(true),
                 WwiseProperty.Prop_OutputBusVolume(-3));
 
             var bus = await Waapi.GetWwiseObjectByNameAsync("Bus:Test");
             if (bus == null) return;
-            await WwiseUtility.Instance.BatchSetObjectReferenceAsync(selection, 
+            await WwiseUtility.Instance.BatchSetObjectReferenceAsync(selection.ToArray(), 
                 WwiseReference.Ref_OutputBus(bus));
         }
 

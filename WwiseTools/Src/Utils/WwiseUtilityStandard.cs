@@ -14,6 +14,7 @@ using WwiseTools.Objects;
 using WwiseTools.Properties;
 using WwiseTools.References;
 using WwiseTools.Src.Models.SoundBank;
+using WwiseTools.Utils.Feature2022;
 
 namespace WwiseTools.Utils
 {
@@ -172,6 +173,9 @@ namespace WwiseTools.Utils
             {
                 await BeginUndoGroup();
 
+                if (VersionHelper.VersionVerify(VersionHelper.V2022_1_0_7929))
+                    return await Instance.PastePropertiesAsync(source, targets, references);
+                
                 var refList = new List<WwiseReference>();
                 for (var i = 0; i < references.Length; i++)
                 {
@@ -215,6 +219,9 @@ namespace WwiseTools.Utils
             {
                 await BeginUndoGroup();
 
+                if (VersionHelper.VersionVerify(VersionHelper.V2022_1_0_7929))
+                    return await Instance.PastePropertiesAsync(source, targets, properties);
+                
                 var propertyList = new List<WwiseProperty>();
                 for (var i = 0; i < properties.Length; i++)
                 {
