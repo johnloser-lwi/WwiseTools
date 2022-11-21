@@ -74,7 +74,7 @@ namespace WwiseTools.Utils
 
                         new JProperty("reference", wwiseReference.Name),
 
-                        new JProperty("value", wwiseReference.Object.ID)),
+                        new JProperty("value", wwiseReference.ID)),
 
                     null);
 
@@ -90,6 +90,23 @@ namespace WwiseTools.Utils
             return false;
         }
 
+        
+        public async Task<bool> SetObjectReferencesAsync(WwiseObject wwiseObject, params WwiseReference[] references)
+        {
+            if (!await TryConnectWaapiAsync()) return false;
+
+            var ret = true;
+            
+            foreach (var reference in references)
+            {
+                var res = await SetObjectReferenceAsync(wwiseObject, reference);
+
+                if (!res) ret = res;
+            }
+
+            return ret;
+        }
+        
         public async Task<bool> SetObjectPropertiesAsync(WwiseObject wwiseObject, params WwiseProperty[] properties)
         {
             if (!await TryConnectWaapiAsync()) return false;
@@ -142,6 +159,93 @@ namespace WwiseTools.Utils
             }
 
             return false;
+        }
+
+        public async Task<bool> CopyObjectReferencesAsync(WwiseObject source, WwiseObject[] targets,
+            params string[] references)
+        {
+            if (!await TryConnectWaapiAsync()) return false;
+
+            bool ret = true;
+            
+            try
+            {
+                await BeginUndoGroup();
+
+                var refList = new List<WwiseReference>();
+                for (var i = 0; i < references.Length; i++)
+                {
+                    var reference = references[i];
+
+                    var val = await GetWwiseObjectPropertyByIDAsync(source.ID, reference);
+                    
+                    if (val == null) continue;
+                    
+                    if (val["id"] == null) continue;
+
+                    refList.Add(new WwiseReference(reference, val["id"].ToString()));
+                }
+
+                for (var i = 0; i < targets.Length; i++)
+                {
+                    var res = await SetObjectReferencesAsync(targets[i], refList.ToArray());
+
+                    if (!res) ret = false;
+                }
+            }
+            catch (Exception e)
+            {
+                WaapiLog.InternalLog($"Failed to copy references from {source.Name} to {targets.Length} target(s) ======> {e.Message}");
+            }
+            finally
+            {
+                await EndUndoGroup("Copy References");
+            }
+
+            return ret;
+        }
+        
+        public async Task<bool> CopyObjectPropertiesAsync(WwiseObject source, WwiseObject[] targets, params string[] properties)
+        {
+            if (!await TryConnectWaapiAsync()) return false;
+
+            bool ret = true;
+            
+            try
+            {
+                await BeginUndoGroup();
+
+                var propertyList = new List<WwiseProperty>();
+                for (var i = 0; i < properties.Length; i++)
+                {
+                    var prop = properties[i];
+
+                    var val = await GetWwiseObjectPropertyAsync(source, prop);
+                    
+                    if (val == null) continue;
+                    
+                    propertyList.Add(val);
+                }
+                
+                for (var i = 0; i < targets.Length; i++)
+                {
+                    var res = await SetObjectPropertiesAsync(targets[i], propertyList.ToArray());
+
+                    if (!res) ret = false;
+                }
+
+            }
+            catch (Exception e)
+            {
+                WaapiLog.InternalLog($"Failed to copy properties from {source.Name} to {targets.Length} target(s) ======> {e.Message}");
+            }
+            finally
+            {
+                await EndUndoGroup("Copy Properties");
+            }
+            
+
+            return ret;
         }
         
 

@@ -11,12 +11,19 @@ namespace WwiseTools.References
     public class WwiseReference
     {
         public string Name { get; set; }
-        public WwiseObject Object { get; set; }
+        public string ID { get; set; }
+        
 
-        public WwiseReference(string name, WwiseObject @object)
+        public WwiseReference(string name, WwiseObject wwiseObject)
         {
             Name = name;
-            Object = @object;
+            ID = wwiseObject.ID;
+        }
+
+        public WwiseReference(string name, string id)
+        {
+            Name = name;
+            ID = id;
         }
 
         public static WwiseReference Ref_Attenuation(WwiseObject wwiseObject)

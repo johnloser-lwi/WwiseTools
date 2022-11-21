@@ -95,7 +95,7 @@ namespace WwiseTools.Utils.Feature2022
                     );
                     foreach (var wwiseReference in wwiseReferences)
                     {
-                        jObject.Add(new JProperty("@" + wwiseReference.Name, wwiseReference.Object.ID));
+                        jObject.Add(new JProperty("@" + wwiseReference.Name, wwiseReference.ID));
                     }
                     query.objects.Add(jObject);
                 }
@@ -109,7 +109,7 @@ namespace WwiseTools.Utils.Feature2022
                     null, utility.TimeOut);
 
                 for (int i = 0; i < wwiseReferences.Length; i++)
-                    WaapiLog.InternalLog($"Reference {wwiseReferences[i].Name} successfully set to {wwiseReferences[i].Object.Name}!");
+                    WaapiLog.InternalLog($"Reference {wwiseReferences[i].Name} successfully set!");
             }
             catch (Exception e)
             {
