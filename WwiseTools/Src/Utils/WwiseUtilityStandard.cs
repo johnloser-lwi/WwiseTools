@@ -171,8 +171,6 @@ namespace WwiseTools.Utils
             
             try
             {
-                await BeginUndoGroup();
-
                 if (VersionHelper.VersionVerify(VersionHelper.V2022_1_0_7929))
                     return await Instance.PastePropertiesAsync(source, targets, WwiseUtility2022Extension.PasteMode.replaceEntire, true, references);
                 
@@ -201,10 +199,6 @@ namespace WwiseTools.Utils
             {
                 WaapiLog.InternalLog($"Failed to copy references from {source.Name} to {targets.Length} target(s) ======> {e.Message}");
             }
-            finally
-            {
-                await EndUndoGroup("Copy References");
-            }
 
             return ret;
         }
@@ -217,8 +211,6 @@ namespace WwiseTools.Utils
             
             try
             {
-                await BeginUndoGroup();
-
                 if (VersionHelper.VersionVerify(VersionHelper.V2022_1_0_7929))
                     return await Instance.PastePropertiesAsync(source, targets, WwiseUtility2022Extension.PasteMode.replaceEntire, true, properties);
                 
@@ -246,11 +238,6 @@ namespace WwiseTools.Utils
             {
                 WaapiLog.InternalLog($"Failed to copy properties from {source.Name} to {targets.Length} target(s) ======> {e.Message}");
             }
-            finally
-            {
-                await EndUndoGroup("Copy Properties");
-            }
-            
 
             return ret;
         }
