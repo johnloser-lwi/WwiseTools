@@ -174,7 +174,7 @@ namespace WwiseTools.Utils
                 await BeginUndoGroup();
 
                 if (VersionHelper.VersionVerify(VersionHelper.V2022_1_0_7929))
-                    return await Instance.PastePropertiesAsync(source, targets, references);
+                    return await Instance.PastePropertiesAsync(source, targets, WwiseUtility2022Extension.PasteMode.replaceEntire, true, references);
                 
                 var refList = new List<WwiseReference>();
                 for (var i = 0; i < references.Length; i++)
@@ -220,7 +220,7 @@ namespace WwiseTools.Utils
                 await BeginUndoGroup();
 
                 if (VersionHelper.VersionVerify(VersionHelper.V2022_1_0_7929))
-                    return await Instance.PastePropertiesAsync(source, targets, properties);
+                    return await Instance.PastePropertiesAsync(source, targets, WwiseUtility2022Extension.PasteMode.replaceEntire, true, properties);
                 
                 var propertyList = new List<WwiseProperty>();
                 for (var i = 0; i < properties.Length; i++)

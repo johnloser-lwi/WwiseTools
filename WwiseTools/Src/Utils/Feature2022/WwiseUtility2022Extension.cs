@@ -21,7 +21,7 @@ namespace WwiseTools.Utils.Feature2022
             var res = await utility.CallAsync(func, null, null);
         }
 
-        public enum PastMode
+        public enum PasteMode
         {
             replaceEntire,
             addReplace,
@@ -35,18 +35,17 @@ namespace WwiseTools.Utils.Feature2022
         /// <param name="source"></param>
         /// <param name="targets"></param>
         /// <param name="properties"></param>
-        /// <param name="pastMode"></param>
+        /// <param name="pasteMode"></param>
         /// <param name="inclusionMode"></param>
         /// <returns></returns>
-        public static async Task<bool> PastePropertiesAsync(this WwiseUtility utility, WwiseObject source, WwiseObject[] targets, string[] properties,
-            PastMode pastMode = PastMode.replaceEntire, bool inclusionMode = true)
+        public static async Task<bool> PastePropertiesAsync(this WwiseUtility utility, WwiseObject source, WwiseObject[] targets,
+            PasteMode pasteMode = PasteMode.replaceEntire, bool inclusionMode = true, params string[] properties)
         {
-            if (!await utility.TryConnectWaapiAsync() || properties.Length == 0 || targets.Length == 0) return false;
+            if (!await utility.TryConnectWaapiAsync() || targets.Length == 0) return false;
             if (!VersionHelper.VersionVerify(VersionHelper.V2022_1_0_7929)) return false;
 
             try
             {
-
                 var jTargets = new JArray();
 
                 foreach (var wwiseObject in targets)
@@ -54,20 +53,26 @@ namespace WwiseTools.Utils.Feature2022
                     jTargets.Add(wwiseObject.ID);
                 }
 
-                var jInclusion = new JArray();
-
-                foreach (var property in properties)
-                {
-                    jInclusion.Add(property);
-                }
-                
                 var query = new JObject()
                 {
                     new JProperty("source", source.ID),
-                    new JProperty("pasteMode", pastMode.ToString()),
+                    new JProperty("pasteMode", pasteMode.ToString()),
                     new JProperty("targets", jTargets),
-                    new JProperty((inclusionMode? "inclusion" : "exclusion"), jInclusion)
                 };
+                
+                // Specify inclusion or exclusion according to inclusionMode.
+                // Skip this step if no property provided
+                if (properties.Length != 0)
+                {
+                    var jInclusion = new JArray();
+
+                    foreach (var property in properties)
+                    {
+                        jInclusion.Add(property);
+                    }
+                    
+                    query.Add(new JProperty((inclusionMode? "inclusion" : "exclusion"), jInclusion));
+                }
 
                 var func = utility.Function.Verify("ak.wwise.core.object.pasteProperties");
 
