@@ -3,7 +3,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using WwiseTools.Objects;
 using WwiseTools.Properties;
-using WwiseTools.References;
 using WwiseTools.Utils;
 
 namespace WwiseTools.WwiseTypes;

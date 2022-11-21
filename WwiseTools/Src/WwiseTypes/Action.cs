@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using WwiseTools.Objects;
 using WwiseTools.Properties;
-using WwiseTools.References;
 using WwiseTools.Utils;
 
 namespace WwiseTools.WwiseTypes;
@@ -44,7 +43,7 @@ public class Action : WwiseTypeBase
     
     public async Task SetTargetAsync(WwiseObject target)
     {
-        await WwiseUtility.Instance.SetObjectReferenceAsync(WwiseObject, WwiseReference.Ref_Target(target));
+        await WwiseUtility.Instance.SetObjectPropertyAsync(WwiseObject, WwiseProperty.Prop_Target(target));
     }
 
     public async Task SetActionTypeAsync(WwiseProperty.Option_ActionType type)

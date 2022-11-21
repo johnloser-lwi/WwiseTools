@@ -146,7 +146,6 @@
     <Compile Include="Src\Properties\WwiseProperty.cs" />
     <Compile Include="Src\Utils\WwiseUtility.cs" />
     <Compile Include="Src\Objects\WwiseObject.cs" />
-    <Compile Include="Src\References\WwiseReference.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

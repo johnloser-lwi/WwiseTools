@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using WwiseTools.Objects;
 using WwiseTools.Properties;
-using WwiseTools.References;
 using WwiseTools.Utils;
 using System.IO;
 
@@ -204,7 +203,7 @@ public class AudioFileSource : WwiseTypeBase
 
     public async Task SetConversionSettingAsync(WwiseObject conversion)
     {
-        await WwiseUtility.Instance.SetObjectReferenceAsync(WwiseObject, WwiseReference.Ref_Conversion(conversion));
+        await WwiseUtility.Instance.SetObjectPropertiesAsync(WwiseObject, WwiseProperty.Prop_Conversion(conversion));
     }
     
     public AudioFileSource(WwiseObject wwiseObject) : base(wwiseObject, nameof(AudioFileSource))

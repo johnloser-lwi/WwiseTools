@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using WwiseTools.Objects;
 using WwiseTools.Properties;
-using WwiseTools.References;
 using WwiseTools.Utils;
 
 namespace WwiseTools.WwiseTypes
@@ -72,14 +71,14 @@ namespace WwiseTools.WwiseTypes
 
         }
 
-        public async Task SetSwitchGroupOrStateGroupAsync(WwiseReference group)
+        public async Task SetSwitchGroupOrStateGroupAsync(WwiseProperty group)
         {
-            await WwiseUtility.Instance.SetObjectReferenceAsync(WwiseObject, group);
+            await WwiseUtility.Instance.SetObjectPropertiesAsync(WwiseObject, group);
         }
 
-        public async Task SetDefaultSwitchOrStateAsync(WwiseReference switchOrState)
+        public async Task SetDefaultSwitchOrStateAsync(WwiseProperty switchOrState)
         {
-            await WwiseUtility.Instance.SetObjectReferenceAsync(WwiseObject, switchOrState);
+            await WwiseUtility.Instance.SetObjectPropertiesAsync(WwiseObject, switchOrState);
         }
 
         public MusicTrack(WwiseObject wwiseObject) : base(wwiseObject, nameof(MusicTrack))

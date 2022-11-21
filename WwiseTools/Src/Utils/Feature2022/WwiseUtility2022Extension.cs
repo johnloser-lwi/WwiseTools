@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using WwiseTools.Objects;
 using WwiseTools.Properties;
-using WwiseTools.References;
 
 namespace WwiseTools.Utils.Feature2022
 {
@@ -136,56 +135,6 @@ namespace WwiseTools.Utils.Feature2022
             {
                 for (int i = 0; i < wwiseProperties.Length; i++)
                     WaapiLog.InternalLog($"Failed to set property \"{wwiseProperties[i].Name}\" for {wwiseObjects.Length} object(s) ======> {e.Message}");
-            }
-        }
-
-        /// <summary>
-        /// 批量配置引用
-        /// </summary>
-        /// <param name="utility"></param>
-        /// <param name="wwiseObjects"></param>
-        /// <param name="wwiseReferences"></param>
-        /// <returns></returns>
-        public static async Task BatchSetObjectReferenceAsync(this WwiseUtility utility, WwiseObject[] wwiseObjects, 
-            params WwiseReference[] wwiseReferences)
-        {
-            if (!await WwiseUtility.Instance.TryConnectWaapiAsync() || wwiseObjects.Length == 0 || wwiseReferences.Length == 0) return;
-            if (!VersionHelper.VersionVerify(VersionHelper.V2022_1_0_7929)) return;
-            try
-            {
-                var query = new
-                {
-                    objects = new List<object>()
-                };
-
-                foreach (WwiseObject wwiseObject in wwiseObjects)
-                {
-                    var jObject = new JObject(
-                        new JProperty("object", wwiseObject.ID)
-                    );
-                    foreach (var wwiseReference in wwiseReferences)
-                    {
-                        jObject.Add(new JProperty("@" + wwiseReference.Name, wwiseReference.ID));
-                    }
-                    query.objects.Add(jObject);
-                }
-
-                var func = WwiseUtility.Instance.Function.Verify("ak.wwise.core.object.set");
-                await WwiseUtility.Instance.CallAsync(
-                    func,
-
-                    query,
-
-                    null, utility.TimeOut);
-
-                for (int i = 0; i < wwiseReferences.Length; i++)
-                    WaapiLog.InternalLog($"Reference {wwiseReferences[i].Name} successfully set!");
-            }
-            catch (Exception e)
-            {
-                for (int i = 0; i < wwiseReferences.Length; i++)
-                    WaapiLog.InternalLog($"Failed to set reference \"{wwiseReferences[i].Name}\" " +
-                                 $"for {wwiseObjects.Length} object(s)  ======> {e.Message}");
             }
         }
     }

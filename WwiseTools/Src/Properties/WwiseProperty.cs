@@ -1,4 +1,5 @@
-﻿using WwiseTools.Objects;
+﻿#nullable enable
+using WwiseTools.Objects;
 using WwiseTools.Utils;
 
 namespace WwiseTools.Properties
@@ -7,23 +8,25 @@ namespace WwiseTools.Properties
     {
         public string Name { get; set; }
         public object Value { get; set; }
-
+        
+        public bool IsReference { get; set; }
 
         public override string ToString()
         {
             return Value.ToString();
         }
 
-
-        public WwiseProperty(string name, object value)
+        public WwiseProperty(string name, object value, bool isReference = false)
         {
             Name = name;
             Value = value;
+            IsReference = isReference;
         }
 
         public WwiseProperty(string name)
         {
             Name = name;
+            IsReference = false;
         }
 
         public enum Option_3DPosition { Emitter = 0, EmitterWithAutomation = 1, ListenerWithAutomation = 2 }
@@ -933,6 +936,153 @@ namespace WwiseTools.Properties
         public static WwiseProperty Prop_SeekType(Option_SeekType option)
         {
             return new WwiseProperty("SeekType", (int) option);
+        }
+        
+        public static WwiseProperty Prop_Attenuation(WwiseObject wwiseObject)
+        {
+            //if (wwiseObject == null) return null;
+
+            if (wwiseObject != null && wwiseObject.Type != WwiseObject.ObjectType.Attenuation.ToString())
+            {
+                return null;
+            }
+            return new WwiseProperty("Attenuation", wwiseObject.ID, true);
+        }
+
+        public static WwiseProperty Prop_Conversion(WwiseObject wwiseObject)
+        {
+            if (wwiseObject == null) return null;
+            if (wwiseObject.Type != WwiseObject.ObjectType.Conversion.ToString())
+            {
+                return null;
+            }
+            return new WwiseProperty("Conversion", wwiseObject.ID, true);
+        }
+
+        public static WwiseProperty Prop_Effect0(WwiseObject wwiseObject)
+        {
+            if (wwiseObject == null) return null;
+            if (wwiseObject.Type != "Effect")
+            {
+                return null;
+            }
+            return new WwiseProperty("Effect0", wwiseObject.ID, true);
+        }
+
+        public static WwiseProperty Prop_Effect1(WwiseObject wwiseObject)
+        {
+            if (wwiseObject == null) return null;
+            if (wwiseObject.Type != "Effect")
+            {
+                return null;
+            }
+            return new WwiseProperty("Effect1", wwiseObject.ID, true);
+        }
+
+        public static WwiseProperty Prop_Effect2(WwiseObject wwiseObject)
+        {
+            if (wwiseObject == null) return null;
+            if (wwiseObject.Type != "Effect")
+            {
+                return null;
+            }
+            return new WwiseProperty("Effect2", wwiseObject.ID, true);
+        }
+
+        public static WwiseProperty Prop_Effect3(WwiseObject wwiseObject)
+        {
+            if (wwiseObject == null) return null;
+            if (wwiseObject.Type != "Effect")
+            {
+                return null;
+            }
+            return new WwiseProperty("Effect3", wwiseObject.ID, true);
+        }
+
+        public static WwiseProperty Prop_OutputBus(WwiseObject wwiseObject)
+        {
+            if (wwiseObject == null) return null;
+            if (wwiseObject.Type != "Bus")
+            {
+                return null;
+            }
+            return new WwiseProperty("OutputBus", wwiseObject.ID, true);
+        }
+        public static WwiseProperty Prop_ReflectionsAuxSend(WwiseObject wwiseObject)
+        {
+            if (wwiseObject == null) return null;
+            if (wwiseObject.Type != "AuxBus")
+            {
+                return null;
+            }
+            return new WwiseProperty("ReflectionsAuxSend", wwiseObject.ID, true);
+        }
+
+        public static WwiseProperty Prop_UserAuxSend0(WwiseObject wwiseObject)
+        {
+            //if (wwiseObject == null) return null;
+            if (wwiseObject != null && wwiseObject.Type != "AuxBus")
+            {
+                return null;
+            }
+            return new WwiseProperty("UserAuxSend0", wwiseObject.ID, true);
+        }
+
+        public static WwiseProperty Prop_UserAuxSend1(WwiseObject wwiseObject)
+        {
+            //if (wwiseObject == null) return null;
+            if (wwiseObject != null && wwiseObject.Type != "AuxBus")
+            {
+                return null;
+            }
+            return new WwiseProperty("UserAuxSend1", wwiseObject.ID, true);
+        }
+
+        public static WwiseProperty Prop_UserAuxSend2(WwiseObject wwiseObject)
+        {
+            //if (wwiseObject == null) return null;
+            if (wwiseObject != null && wwiseObject.Type != "AuxBus")
+            {
+                return null;
+            }
+            return new WwiseProperty("UserAuxSend2", wwiseObject.ID, true);
+        }
+
+        public static WwiseProperty Prop_UserAuxSend3(WwiseObject wwiseObject)
+        {
+            //if (wwiseObject == null) return null;
+            if (wwiseObject != null && wwiseObject.Type != "AuxBus")
+            {
+                return null;
+            }
+            return new WwiseProperty("UserAuxSend3", wwiseObject.ID, true);
+        }
+
+        public static WwiseProperty Prop_SwitchGroupOrStateGroup(WwiseObject wwiseObject)
+        {
+            if (wwiseObject == null) return null;
+            if (wwiseObject.Type != "SwitchGroup" && wwiseObject.Type != "StateGroup")
+            {
+                return null;
+            }
+            return new WwiseProperty("SwitchGroupOrStateGroup", wwiseObject.ID, true);
+        }
+
+        public static WwiseProperty Prop_DefaultSwitchOrState(WwiseObject wwiseObject)
+        {
+            if (wwiseObject == null) return null;
+            if (wwiseObject.Type != "Switch" && wwiseObject.Type != "State")
+            {
+                return null;
+            }
+            return new WwiseProperty("DefaultSwitchOrState", wwiseObject.ID, true);
+        }
+        
+        public static WwiseProperty Prop_Target(WwiseObject wwiseObject)
+        {
+            if (wwiseObject == null) return null;
+
+            return new WwiseProperty("Target", wwiseObject.ID, true);
         }
 
 

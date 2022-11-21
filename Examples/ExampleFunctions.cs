@@ -3,7 +3,6 @@ using System.Xml;
 using WwiseTools.WwiseTypes;
 using WwiseTools.Objects;
 using WwiseTools.Properties;
-using WwiseTools.References;
 using WwiseTools.Utils;
 using WwiseTools.Utils.Feature2021;
 using WwiseTools.Utils.Feature2022;
@@ -89,8 +88,8 @@ namespace Examples
 
             var bus = await Waapi.GetWwiseObjectByNameAsync("Bus:Test");
             if (bus == null) return;
-            await WwiseUtility.Instance.BatchSetObjectReferenceAsync(selection.ToArray(), 
-                WwiseReference.Ref_OutputBus(bus));
+            await WwiseUtility.Instance.BatchSetObjectPropertyAsync(selection.ToArray(), 
+                WwiseProperty.Prop_OutputBus(bus));
         }
 
 

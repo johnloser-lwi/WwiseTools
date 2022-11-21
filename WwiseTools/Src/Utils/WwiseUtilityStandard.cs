@@ -12,7 +12,6 @@ using WwiseTools.Models;
 using WwiseTools.Models.Import;
 using WwiseTools.Objects;
 using WwiseTools.Properties;
-using WwiseTools.References;
 using WwiseTools.Src.Models.SoundBank;
 using WwiseTools.Utils.Feature2022;
 
@@ -54,16 +53,11 @@ namespace WwiseTools.Utils
         }
         
 
-        /// <summary>
-        /// 设置物体的引用
-        /// </summary>
-        /// <param name="wwiseObject"></param>
-        /// <param name="wwiseReference"></param>
-        /// <returns></returns>
-        public async Task<bool> SetObjectReferenceAsync(WwiseObject wwiseObject, WwiseReference wwiseReference)
+        private async Task<bool> SetObjectReferenceAsync(WwiseObject wwiseObject, WwiseProperty wwiseProperty)
         {
             if (!await TryConnectWaapiAsync()) return false;
-
+            if (!wwiseProperty.IsReference) return false;
+            
             try
             {
                 var func = Function.Verify("ak.wwise.core.object.setReference");
@@ -73,9 +67,9 @@ namespace WwiseTools.Utils
 
                         new JProperty("object", wwiseObject.ID),
 
-                        new JProperty("reference", wwiseReference.Name),
+                        new JProperty("reference", wwiseProperty.Name),
 
-                        new JProperty("value", wwiseReference.ID)),
+                        new JProperty("value", wwiseProperty.Value)),
 
                     null);
 
@@ -85,29 +79,13 @@ namespace WwiseTools.Utils
             }
             catch (Exception e)
             {
-                WaapiLog.InternalLog($"Failed to set reference \"{wwiseReference.Name}\" to object {wwiseObject.Name} ======> {e.Message}");
+                WaapiLog.InternalLog($"Failed to set reference \"{wwiseProperty.Name}\" to object {wwiseObject.Name} ======> {e.Message}");
             }
 
             return false;
         }
 
-        
-        public async Task<bool> SetObjectReferencesAsync(WwiseObject wwiseObject, params WwiseReference[] references)
-        {
-            if (!await TryConnectWaapiAsync()) return false;
 
-            var ret = true;
-            
-            foreach (var reference in references)
-            {
-                var res = await SetObjectReferenceAsync(wwiseObject, reference);
-
-                if (!res) ret = res;
-            }
-
-            return ret;
-        }
-        
         public async Task<bool> SetObjectPropertiesAsync(WwiseObject wwiseObject, params WwiseProperty[] properties)
         {
             if (!await TryConnectWaapiAsync()) return false;
@@ -135,6 +113,8 @@ namespace WwiseTools.Utils
         {
             if (!await TryConnectWaapiAsync()) return false;
 
+            if (wwiseProperty.IsReference) return await SetObjectReferenceAsync(wwiseObject, wwiseProperty);
+            
             try
             {
                 var func = Function.Verify("ak.wwise.core.object.setProperty");
@@ -162,47 +142,6 @@ namespace WwiseTools.Utils
             return false;
         }
 
-        public async Task<bool> CopyObjectReferencesAsync(WwiseObject source, WwiseObject[] targets,
-            params string[] references)
-        {
-            if (!await TryConnectWaapiAsync()) return false;
-
-            bool ret = true;
-            
-            try
-            {
-                if (VersionHelper.VersionVerify(VersionHelper.V2022_1_0_7929))
-                    return await Instance.PastePropertiesAsync(source, targets, WwiseUtility2022Extension.PasteMode.replaceEntire, true, references);
-                
-                var refList = new List<WwiseReference>();
-                for (var i = 0; i < references.Length; i++)
-                {
-                    var reference = references[i];
-
-                    var val = await GetWwiseObjectPropertyByIDAsync(source.ID, reference);
-                    
-                    if (val == null) continue;
-                    
-                    if (val["id"] == null) continue;
-
-                    refList.Add(new WwiseReference(reference, val["id"].ToString()));
-                }
-
-                for (var i = 0; i < targets.Length; i++)
-                {
-                    var res = await SetObjectReferencesAsync(targets[i], refList.ToArray());
-
-                    if (!res) ret = false;
-                }
-            }
-            catch (Exception e)
-            {
-                WaapiLog.InternalLog($"Failed to copy references from {source.Name} to {targets.Length} target(s) ======> {e.Message}");
-            }
-
-            return ret;
-        }
-        
         public async Task<bool> CopyObjectPropertiesAsync(WwiseObject source, WwiseObject[] targets, params string[] properties)
         {
             if (!await TryConnectWaapiAsync()) return false;
@@ -738,7 +677,13 @@ namespace WwiseTools.Utils
             {
                 var jresult = await GetWwiseObjectPropertyByIDAsync(wwiseObject.ID, wwiseProperty);
                 if (jresult is null) return null;
-                return new WwiseProperty(wwiseProperty, jresult.ToString());
+                bool isRef = jresult["id"] != null;
+                
+                var ret = new WwiseProperty(wwiseProperty, isRef ? jresult["id"].ToString() : jresult.ToString());
+                
+                ret.IsReference = isRef;
+                
+                return ret;
             }
             catch (Exception e)
             {
