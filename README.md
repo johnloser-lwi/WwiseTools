@@ -4,7 +4,7 @@
 # Wwise Tools
 正在开发的基于C# Waapi的Wwise生产力工具，可以快速生成、编辑Wwise的Object，达到批量添加的效果，提升工作效率。
 
-*作者 : [杨惟勤 (AKA John Loser)](https://losersworldindustries.com/john-yang)*
+*作者 : 杨惟勤 (AKA John Loser)*
 
 ___
 
