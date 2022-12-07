@@ -1055,6 +1055,8 @@ namespace WwiseTools.Utils
                 WaapiLog.InternalLog($"Failed to return language list! ======> {e.Message}");
             }
 
+            if (resultList.Count != 0 && ConnectionInfo != null) ConnectionInfo.Languages = resultList; 
+
             return resultList;
         }
 
@@ -1397,7 +1399,7 @@ namespace WwiseTools.Utils
             }
         }
 
-        public async Task<WwiseInfo?> GetWwiseInfoAsync()
+        private async Task<WwiseInfo?> GetWwiseInfoAsync()
         {
             if (!await TryConnectWaapiAsync()) return null;
 
@@ -1419,20 +1421,31 @@ namespace WwiseTools.Utils
 
                 var projectPath = await GetWwiseProjectPathAsync();
 
+                var languages = new List<string>();
+                
+                for (int i = 0; i < 4; i++)
+                {
+                    languages = await GetLanguagesAsync();
+                    if (languages.Count != 0) break;
+                }
+
+                if (languages.Count == 0) return null;
+
                 WwiseInfo wwiseInfo = new WwiseInfo()
                 {
                     ProjectName = projectName,
                     Version = new WwiseVersion(year, major, minor, build, schema),
                     ProcessID = processId,
                     IsCommandLine = isCommandLine,
-                    ProjectPath = projectPath
+                    ProjectPath = projectPath,
+                    Languages = languages
                 };
 
                 return wwiseInfo;
             }
             catch (Exception e)
             {
-                WaapiLog.InternalLog($"Failed to get Wwise info! ======> {e.Message}");
+                //WaapiLog.InternalLog($"Failed to get Wwise info! ======> {e.Message}");
             }
 
             return null;
@@ -2006,7 +2019,6 @@ namespace WwiseTools.Utils
             }
             catch (Exception e)
             {
-                WaapiLog.InternalLog(e);
             }
 
             return false;
@@ -2032,7 +2044,6 @@ namespace WwiseTools.Utils
             }
             catch (Exception e)
             {
-                WaapiLog.InternalLog(e);
             }
 
             return false;
@@ -2057,7 +2068,6 @@ namespace WwiseTools.Utils
             }
             catch (Exception e)
             {
-                WaapiLog.InternalLog(e);
             }
 
             return false;

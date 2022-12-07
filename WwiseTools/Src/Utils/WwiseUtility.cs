@@ -155,12 +155,12 @@ namespace WwiseTools.Utils
                 WaapiLog.InternalLog("Initializing...");
                 _client = new JsonClient();
                 await _client.Connect($"ws://localhost:{wampPort}/waapi", TimeOut); // 尝试创建Wwise连接
-                await GetFunctionsAsync();
-                await GetTopicsAsync();
-                await GetCommandsAsync();
+
                 WaapiLog.InternalLog("Connected successfully!");
                 
-                
+                Function.Clear();
+                UICommand.Clear();
+                Topic.Clear();
 
                 _client.Disconnected += () =>
                 {
@@ -170,18 +170,24 @@ namespace WwiseTools.Utils
                     WaapiLog.InternalLog("Connection closed!"); // 丢失连接提示
                 };
 
-
-
-
-                for (int i = 0; i < 5; i++)
+                // 由于工程加载可能会导致信息获取失败，这里进行5次重复检查
+                var retryCount = 5;
+                for (int i = 1; i <= retryCount; i++)
                 {
-                    WaapiLog.InternalLog("Trying to fetch connection info ...");
+                    WaapiLog.InternalLog($"Trying to fetch connection info ({i}/{retryCount}) ...");
 
-                    ConnectionInfo = await GetWwiseInfoAsync();
+                    if (Function.Count == 0) await GetFunctionsAsync();
+                    if (Topic.Count == 0) await GetTopicsAsync();
+                    if (UICommand.Count == 0) await GetCommandsAsync();
 
-                    if (ConnectionInfo != null) break;
+                    if (ConnectionInfo == null) ConnectionInfo = await GetWwiseInfoAsync();
 
-                        await Task.Delay(3000);
+                    if (ConnectionInfo != null && Function.Count != 0 && Topic.Count != 0 && UICommand.Count != 0) break;
+
+                    
+                    WaapiLog.InternalLog("Failed to fetch connection info! Retry in 3 seconds ...");
+                    
+                    await Task.Delay(3000);
                 }
 
                 if (ConnectionInfo == null)
@@ -191,6 +197,8 @@ namespace WwiseTools.Utils
                     await DisconnectAsync();
                     return false;
                 }
+                
+                WaapiLog.InternalLog("Connection info fetched successfully!");
 
                 WampPort = wampPort;
                 WaapiLog.InternalLog(ConnectionInfo);
