@@ -31,12 +31,8 @@ public class Action : WwiseTypeBase
         var reference = await WwiseUtility.Instance.GetWwiseObjectPropertyAsync(WwiseObject, "Target");
 
         if (reference == null) return null;
-        
-        JObject jres = JObject.Parse(reference.Value.ToString());
 
-        if (jres["id"] == null) return null;
-
-        var ret = await WwiseUtility.Instance.GetWwiseObjectByIDAsync(jres["id"].ToString());
+        var ret = await WwiseUtility.Instance.GetWwiseObjectByIDAsync(reference.Value.ToString());
 
         return ret;
     }
