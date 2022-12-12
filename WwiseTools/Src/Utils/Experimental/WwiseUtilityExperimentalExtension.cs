@@ -41,11 +41,13 @@ public static class WwiseUtilityExperimentalExtension
     {
         if (!await util.TryConnectWaapiAsync()) return false;
 
+        if (wavFiles.Length == 0) return false;
+
         var children = await util.GetWwiseObjectDescendantsAsync(root);
 
         var soundTargets = children.Where(s => s.Type == "Sound").ToList();
 
-        var projectPath = Path.GetDirectoryName(await util.GetWwiseProjectPathAsync());
+        var projectPath = util.ConnectionInfo.ProjectFolder;
         
         if (projectPath == null) return false;
 

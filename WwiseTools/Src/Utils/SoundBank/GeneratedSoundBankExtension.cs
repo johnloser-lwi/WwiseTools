@@ -16,7 +16,7 @@ namespace WwiseTools.Utils.SoundBank
 
             if (!(await util.TryConnectWaapiAsync())) return result;
 
-            var projectPath = await util.GetWwiseProjectPathAsync();
+            var projectPath = util.ConnectionInfo.ProjectPath;
             XmlDocument doc = new XmlDocument();
             doc.Load(projectPath);
             XmlElement pathValues = doc.SelectSingleNode("//*/PropertyList/Property[@Name='SoundBankPaths']/ValueList") as XmlElement;

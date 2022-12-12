@@ -1254,7 +1254,7 @@ namespace WwiseTools.Utils
         
         public async Task<bool> ReloadWwiseProjectAsync()
         {
-            var projectPath = await GetWwiseProjectPathAsync();
+            var projectPath = ConnectionInfo.ProjectPath;
             if (string.IsNullOrEmpty(projectPath)) return false;
             await LoadWwiseProjectAsync(projectPath!, true);
             await DisconnectAsync();
@@ -1274,7 +1274,7 @@ namespace WwiseTools.Utils
 
             if (saveCurrent) await SaveWwiseProjectAsync();
 
-            var projectPath = await GetWwiseProjectPathAsync();
+            var projectPath = path;
 
             try
             {
@@ -1968,7 +1968,7 @@ namespace WwiseTools.Utils
 
                 if (languages.Length == 0)
                 {
-                    languages = (await GetLanguagesAsync()).ToArray();
+                    languages = ConnectionInfo.Languages.ToArray();
                 }
                 
                 var query = new
