@@ -34,7 +34,10 @@ namespace WwiseTools.WwiseTypes
         {
             var children = await WwiseUtility.Instance.GetWwiseObjectChildrenAsync(WwiseObject);
 
-            var ret = children.Select(c => c.AsAudioFileSource()).ToList();
+            var ret = children
+                .Select(c => c.AsAudioFileSource())
+                .Where(c => c.Valid)
+                .ToList();
 
             return ret;
         }
