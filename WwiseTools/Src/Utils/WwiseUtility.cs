@@ -56,6 +56,8 @@ namespace WwiseTools.Utils
 
         internal int WampPort { get; set; } = -1;
 
+        internal string IP { get; set; } = string.Empty;
+
         private readonly Dictionary<string, int> _subscriptions = new Dictionary<string, int>();
 
         public event Action Disconnected;
@@ -143,7 +145,12 @@ namespace WwiseTools.Utils
 
         }
 
-        public async Task<bool> ConnectAsync(int wampPort = 8080) // 初始化，返回连接状态
+        public async Task<bool> ConnectAsync(int wampPort = 8080)
+        {
+            return await ConnectAsync("localhost", wampPort);
+        }
+
+        public async Task<bool> ConnectAsync(string ip ,int wampPort = 8080) // 初始化，返回连接状态
         {
             if (_client != null && _client.IsConnected()) return true;
 
@@ -154,9 +161,10 @@ namespace WwiseTools.Utils
                 _initializing = true;
                 WaapiLog.InternalLog("Initializing...");
                 _client = new JsonClient();
-                await _client.Connect($"ws://localhost:{wampPort}/waapi", TimeOut); // 尝试创建Wwise连接
+                var uri = $"ws://{ip}:{wampPort}/waapi";
+                await _client.Connect(uri, TimeOut); // 尝试创建Wwise连接
 
-                WaapiLog.InternalLog("Connected successfully!");
+                WaapiLog.InternalLog($"Connected successfully to {ip}:{wampPort}!");
                 
                 Function.Clear();
                 UICommand.Clear();
@@ -240,9 +248,15 @@ namespace WwiseTools.Utils
 
         public async Task<bool> TryConnectWaapiAsync(int wampPort = 8080)
         {
-            if (WampPort != -1) wampPort = WampPort;
+            return await TryConnectWaapiAsync("localhost", wampPort);
+        }
 
-            var connected = await ConnectAsync(wampPort);
+        public async Task<bool> TryConnectWaapiAsync(string ip, int wampPort = 8080)
+        {
+            if (WampPort != -1) wampPort = WampPort;
+            if (!string.IsNullOrEmpty(IP)) ip = IP;
+
+            var connected = await ConnectAsync(ip, wampPort);
 
             return connected && _client.IsConnected();
         }
