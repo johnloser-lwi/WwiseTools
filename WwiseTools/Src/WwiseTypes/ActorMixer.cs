@@ -6,8 +6,7 @@ using WwiseTools.Utils;
 
 namespace WwiseTools.WwiseTypes
 {
-    [Obsolete("Use ActorMixer instead")]
-    public class Voice : WwiseTypeBase
+    public class ActorMixer : WwiseTypeBase
     {
         public async Task SetVolumeAsync(float value)
         {
@@ -160,7 +159,7 @@ namespace WwiseTools.WwiseTypes
             await WwiseUtility.Instance.SetObjectPropertyAsync(WwiseObject, WwiseProperty.Prop_OverLimitBehavior(behavior));
         }
 
-        public Voice(WwiseObject wwiseObject) : base(wwiseObject, 
+        public ActorMixer(WwiseObject wwiseObject) : base(wwiseObject, 
             "Sound,ActorMixer,BlendContainer,SwitchContainer,RandomSequenceContainer,MusicTrack,MusicSwitchContainer,MusicPlaylistContainer,MusicSegment")
         {
         }

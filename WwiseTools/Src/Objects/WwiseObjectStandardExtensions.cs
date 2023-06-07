@@ -1,10 +1,14 @@
-﻿using WwiseTools.WwiseTypes;
+﻿using System;
+using WwiseTools.WwiseTypes;
 
 namespace WwiseTools.Objects
 {
     public static class WwiseObjectStandardExtensions
     {
+        [Obsolete("Use AsActorMixer instead")]
         public static Voice AsVoice(this WwiseObject obj) => new Voice(obj);
+        
+        public static ActorMixer AsActorMixer(this WwiseObject obj) => new ActorMixer(obj);
 
         public static SwitchContainer AsSwitchContainer(this WwiseObject obj) => new SwitchContainer(obj);
 

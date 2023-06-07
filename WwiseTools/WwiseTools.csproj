@@ -97,6 +97,7 @@
     <Compile Include="Src\Utils\Lists\WaapiTopicList.cs" />
     <Compile Include="Src\Utils\Lists\WaapiUICommandList.cs" />
     <Compile Include="Src\WwiseTypes\Action.cs" />
+    <Compile Include="Src\WwiseTypes\ActorMixer.cs" />
     <Compile Include="Src\WwiseTypes\AudioFileSource.cs" />
     <Compile Include="Src\WwiseTypes\WwiseTypeBase.cs" />
     <Compile Include="Src\WwiseTypes\Event.cs" />
