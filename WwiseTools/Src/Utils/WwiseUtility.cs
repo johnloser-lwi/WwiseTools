@@ -64,7 +64,7 @@ namespace WwiseTools.Utils
 
         public event Action<WwiseInfo> Connected;
 
-        public int TimeOut => 10000;
+        public int TimeOut { get; set; } = 10000;
 
 
         public static WwiseUtility Instance
