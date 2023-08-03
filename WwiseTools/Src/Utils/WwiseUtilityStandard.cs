@@ -1147,6 +1147,51 @@ namespace WwiseTools.Utils
             }
         }
         
+        public async Task<List<WwiseObject>> ImportTabDelimitedAsync(string filePath, string importLanguage = "SFX", ImportAction importAction = ImportAction.useExisting)
+        {
+            var ret = new List<WwiseObject>();
+            try
+            {
+                var importQ = new JObject // 导入配置
+                {
+                    new JProperty("importLanguage", importLanguage),
+                    
+                    new JProperty("importOperation", importAction.ToString()),
+                    
+                    new JProperty("importFile", filePath)
+                };
+
+                var options = new JObject(new JProperty("return", new object[] { "id" })); // 设置返回参数
+
+                var func = Function.Verify("ak.wwise.core.audio.importTabDelimited");
+
+                var result = await _client.Call(func, importQ, options); // 执行导入
+
+
+                if (result == null || result["objects"] == null) return null;
+                foreach (var token in result["objects"]!)
+                {
+                    if (token["id"] == null) continue;
+
+                    var id = token["id"]?.ToString();
+                    
+                    if (string.IsNullOrEmpty(id)) continue;
+
+                    var wwiseObject = await Instance.GetWwiseObjectByIDAsync(id!);
+
+                    if (wwiseObject != null && wwiseObject.Type == "Sound") ret.Add(wwiseObject);
+
+                }
+
+                return ret;
+            }
+            catch (Exception e)
+            {
+                WaapiLog.InternalLog($"Failed to import tab delimited : {filePath} ======> {e.Message}");
+                return ret;
+            }
+        }
+        
         public async Task<List<WwiseObject>> BatchImportSoundAsync(ImportInfo[] infos, ImportAction importAction = ImportAction.useExisting) // Async版本
         {
             var ret = new List<WwiseObject>();
