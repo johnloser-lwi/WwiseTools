@@ -15,7 +15,7 @@
     </dependencies>
   </metadata>
   <files>
-    <file src="..\README.md" target="README.md"/>
+    <file src="..\Documents\ReleaseNote.md" target="README.md"/>
     <file src="bin\Release\WwiseTools.dll" target="lib\net48\WwiseTools.dll"/>
     <file src="..\WwiseTools_DotNet6\bin\Release\net6.0\WwiseTools.dll" target="lib\net6.0\WwiseTools.dll"/>
   </files>
