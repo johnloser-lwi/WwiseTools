@@ -622,7 +622,7 @@ namespace WwiseTools.Utils
                 var options = new
                 {
 
-                    @return = new string[] { "name", "id", "type", "path", "musicPlaylistRoot" }
+                    @return = new string[] { "name", "id", "type" }
 
                 };
 
@@ -837,7 +837,7 @@ namespace WwiseTools.Utils
                 var options = new
                 {
 
-                    @return = new string[] { "name", "id", "type", "path" }
+                    @return = new string[] { "name", "id", "type" }
 
                 };
 
@@ -897,7 +897,7 @@ namespace WwiseTools.Utils
                 var options = new
                 {
 
-                    @return = new string[] { "name", "id", "type", "path" }
+                    @return = new string[] { "name", "id", "type" }
 
                 };
 
@@ -945,7 +945,7 @@ namespace WwiseTools.Utils
                 var options = new
                 {
 
-                    @return = new string[] { "name", "id", "type", "path" }
+                    @return = new string[] { "name", "id", "type" }
 
                 };
 
@@ -1116,7 +1116,7 @@ namespace WwiseTools.Utils
                     })
                 };
 
-                var options = new JObject(new JProperty("return", new object[] { "name", "id", "type", "path" })); // 设置返回参数
+                var options = new JObject(new JProperty("return", new object[] { "id" })); // 设置返回参数
 
                 var func = Function.Verify("ak.wwise.core.audio.import");
 
@@ -1132,7 +1132,7 @@ namespace WwiseTools.Utils
                     
                     if (string.IsNullOrEmpty(id)) continue;
 
-                    var wwiseObject = await WwiseUtility.Instance.GetWwiseObjectByIDAsync(id!);
+                    var wwiseObject = await WwiseUtility.Instance.GetWwiseObjectByIDAsync(id);
 
                     if (wwiseObject != null && wwiseObject.Type == "Sound") return wwiseObject;
 
@@ -1214,7 +1214,7 @@ namespace WwiseTools.Utils
                     new JProperty("imports", importArray)
                 };
 
-                var options = new JObject(new JProperty("return", new object[] { "name", "id", "type", "path" })); // 设置返回参数
+                var options = new JObject(new JProperty("return", new object[] { "id" })); // 设置返回参数
 
                 var func = Function.Verify("ak.wwise.core.audio.import");
 
@@ -1230,7 +1230,7 @@ namespace WwiseTools.Utils
                     
                     if (string.IsNullOrEmpty(id)) continue;
 
-                    var wwiseObject = await WwiseUtility.Instance.GetWwiseObjectByIDAsync(id!);
+                    var wwiseObject = await WwiseUtility.Instance.GetWwiseObjectByIDAsync(id);
 
                     if (wwiseObject != null && wwiseObject.Type == "Sound") ret.Add(wwiseObject);
                 }
