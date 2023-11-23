@@ -183,14 +183,21 @@ namespace WwiseTools.Utils
                 for (int i = 1; i <= retryCount; i++)
                 {
                     WaapiLog.InternalLog($"Trying to fetch connection info ({i}/{retryCount}) ...");
-
                     if (Function.Count == 0) await GetFunctionsAsync();
                     if (Topic.Count == 0) await GetTopicsAsync();
-                    if (UICommand.Count == 0) await GetCommandsAsync();
 
+                    // This must load first so we know if we are on a console or GUI version of Wwise
                     if (ConnectionInfo == null) ConnectionInfo = await GetWwiseInfoAsync();
+                    
+                    // Console versions of WAAPI cannot use UI commands, don't even bother
+                    // loading them, this improves connection speed
+                    if (ConnectionInfo == null || !ConnectionInfo.IsCommandLine)
+                    {
+                        if (UICommand.Count == 0) await GetCommandsAsync();
+                    }
 
-                    if (ConnectionInfo != null && Function.Count != 0 && Topic.Count != 0 && UICommand.Count != 0) break;
+
+                    if (ConnectionInfo != null && Function.Count != 0 && Topic.Count != 0 && (ConnectionInfo.IsCommandLine || UICommand.Count != 0)) break;
 
                     
                     WaapiLog.InternalLog("Failed to fetch connection info! Retry in 3 seconds ...");
