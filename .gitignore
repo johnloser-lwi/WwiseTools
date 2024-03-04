@@ -2,5 +2,6 @@ bin
 obj
 .vs
 .DS_Store
+*.DotSettings.user
 packages
 .idea/
