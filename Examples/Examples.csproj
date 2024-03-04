@@ -13,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\WwiseTools\WwiseTools.csproj" />
+    <ProjectReference Include="..\WwiseTools_DotNet6\WwiseTools_DotNet6.csproj" />
   </ItemGroup>
 
 </Project>
