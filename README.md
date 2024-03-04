@@ -15,7 +15,7 @@ Adjustments have been made to existing interfaces according to [Wwise 2022.1 Imp
 
 ## Instructions for Use
 ### Project Configuration
-Create a new project, add WwiseTools.dll as a dependency, and **obtain Newtonsoft.Json through Nuget Package Manager**.
+Find WwiseTools on NuGet and add to your project.
 ### Importing a Single Audio File
 ```csharp
 // All non-asynchronous functions will be gradually removed, please use asynchronous execution functions as much as possible
