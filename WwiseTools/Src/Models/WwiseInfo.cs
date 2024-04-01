@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
+using WwiseTools.Serialization;
 
 namespace WwiseTools.Models
 {
@@ -62,6 +63,15 @@ namespace WwiseTools.Models
             Minor = minor;
             Build = build;
             Schema = schema;
+        }
+        
+        public WwiseVersion(GetInfoVersionData data)
+        {
+            Year = data.Year;
+            Major = data.Major;
+            Minor = data.Minor;
+            Build = data.Build;
+            Schema = data.Schema;
         }
 
         public override bool Equals(object obj)

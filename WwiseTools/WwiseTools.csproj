@@ -91,6 +91,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Src\Serialization\GetInfoData.cs" />
+    <Compile Include="Src\Serialization\GetProjectInfoData.cs" />
+    <Compile Include="Src\Serialization\Shared.cs" />
+    <Compile Include="Src\Serialization\WaapiSerializer.cs" />
     <Compile Include="Src\Utils\Lists\WaapiFunctionList.cs" />
     <Compile Include="Src\Utils\Lists\WaapiListBase.cs" />
     <Compile Include="Src\Utils\Lists\WaapiStringListBase.cs" />

@@ -12,6 +12,7 @@ using WwiseTools.Models;
 using WwiseTools.Models.Import;
 using WwiseTools.Objects;
 using WwiseTools.Properties;
+using WwiseTools.Serialization;
 using WwiseTools.Src.Models.SoundBank;
 using WwiseTools.Utils.Feature2022;
 
@@ -617,28 +618,8 @@ namespace WwiseTools.Utils
                         id = new string[] { targetId }
                     }
                 };
+                return await GetSingleWwiseObjectAsync(query);
 
-                // ak.wwise.core.@object.get 返回参数设置
-                var options = new
-                {
-
-                    @return = new string[] { "name", "id", "type" }
-
-                };
-
-                JObject jresult = await _client.Call(func, query, options, TimeOut);
-                if (jresult["return"]?.Last == null) throw new Exception();
-                string? name = jresult["return"]?.Last?["name"]?.ToString();
-                string? id = jresult["return"]?.Last?["id"]?.ToString();
-                string? type = jresult["return"]?.Last?["type"]?.ToString();
-
-                if (!string.IsNullOrEmpty(id) && !string.IsNullOrEmpty(type))
-                {
-                    WaapiLog.InternalLog($"WwiseObject {name} successfully fetched!");
-
-                    return new WwiseObject(name, id, type);
-                }
-                
             }
             catch (Exception e)
             {
@@ -767,8 +748,6 @@ namespace WwiseTools.Utils
 
             try
             {
-                var func = WaapiFunctionList.CoreObjectGet;
-
                 // ak.wwise.core.@object.get 指令
                 var query = new
                 {
@@ -782,19 +761,22 @@ namespace WwiseTools.Utils
                 var options = new
                 {
 
-                    @return = new string[] { "name", "id", "type", "path" }
+                    @return = new string[] { "name", "id", "type" }
 
                 };
-
-
+                
+                var func = WaapiFunctionList.CoreObjectGet;
 
                 JObject jresult = await _client.Call(func, query, options, TimeOut);
-                var obj = jresult["return"]?.Last;
-                if (obj == null) throw new Exception("Object not found!");
-
-                string? name = obj["name"]?.ToString();
-                string? id = obj["id"]?.ToString();
-                string? type = obj["type"]?.ToString();
+                
+                var returnData = WaapiSerializer.Deserialize<ReturnData<WwiseObjectData>>(jresult.ToString());
+                
+                
+                if (returnData.Return == null) throw new Exception("Object not found!");
+                var obj = returnData.Return.Last();
+                string? name = obj.Name;
+                string? id = obj.ID;
+                string? type = obj.Type;
                 
                 if (!string.IsNullOrEmpty(id) && !string.IsNullOrEmpty(type))
                 {
@@ -822,8 +804,6 @@ namespace WwiseTools.Utils
 
             try
             {
-                var func = WaapiFunctionList.CoreObjectGet;
-
                 // ak.wwise.core.@object.get 指令
                 var query = new
                 {
@@ -832,6 +812,24 @@ namespace WwiseTools.Utils
                         path = new string[] { path }
                     }
                 };
+
+                return await GetSingleWwiseObjectAsync(query);
+            }
+            catch (Exception e)
+            {
+                WaapiLog.InternalLog($"Failed to return WwiseObject by path : {path}! ======> {e.Message}");
+                return null;
+            }
+
+            return null;
+
+        }
+
+        private async Task<WwiseObject?> GetSingleWwiseObjectAsync(object query)
+        {
+            try
+            {
+                var func = WaapiFunctionList.CoreObjectGet;
 
                 // ak.wwise.core.@object.get 返回参数设置
                 var options = new
@@ -842,12 +840,14 @@ namespace WwiseTools.Utils
                 };
 
                 JObject jresult = await _client.Call(func, query, options, TimeOut);
-                var obj = jresult["return"]?.Last;
-                if (obj == null) throw new Exception("Object not found!");
+                
+                var returnData = WaapiSerializer.Deserialize<ReturnData<WwiseObjectData>>(jresult.ToString());
+                if (returnData.Return is null || returnData.Return.Count <= 0) throw new Exception("Object not found!");
 
-                string? name = obj["name"]?.ToString();
-                string? id = obj["id"]?.ToString();
-                string? type = obj["type"]?.ToString();
+                var obj = returnData.Return.Last();
+                string? name = obj.Name;
+                string? id = obj.ID;
+                string? type = obj.Type;
                 
                 if (!string.IsNullOrEmpty(id) && !string.IsNullOrEmpty(type))
                 {
@@ -857,8 +857,7 @@ namespace WwiseTools.Utils
             }
             catch (Exception e)
             {
-                WaapiLog.InternalLog($"Failed to return WwiseObject by path : {path}! ======> {e.Message}");
-                return null;
+                throw;
             }
 
             return null;
@@ -906,14 +905,14 @@ namespace WwiseTools.Utils
                 var func = WaapiFunctionList.CoreObjectGet;
 
                 JObject jresult = await _client.Call(func, query, options, TimeOut);
-
+                var returnData = WaapiSerializer.Deserialize<ReturnData<WwiseObjectData>>(jresult.ToString());
                 
-                if (jresult["return"] == null) throw new Exception();
-                foreach (var obj in jresult["return"]!)
+                if (returnData.Return is null) throw new Exception();
+                foreach (var obj in returnData.Return)
                 {
-                    string? name = obj["name"]?.ToString();
-                    string? id = obj["id"]?.ToString();
-                    string? type = obj["type"]?.ToString();
+                    string? name = obj.Name;
+                    string? id = obj.ID;
+                    string? type = obj.Type;
 
                     if (!string.IsNullOrEmpty(id) && !string.IsNullOrEmpty(type)) 
                         result.Add(new WwiseObject(name, id, type));
@@ -951,17 +950,18 @@ namespace WwiseTools.Utils
 
                 var func = Function.Verify("ak.wwise.ui.getSelectedObjects");
 
-                JObject jresult = await _client.Call(func, null, options, TimeOut);
-
                 
+                JObject jresult = await _client.Call(func, null, options, TimeOut);
+                WaapiLog.Log(jresult.ToString());
+                var returnData = WaapiSerializer.Deserialize<ReturnData<WwiseObjectData>>(jresult.ToString());
 
 
-                if (jresult["objects"] == null) throw new Exception();
-                foreach (var obj in jresult["objects"])
+                if (returnData.Objects is null) throw new Exception("No object found!");
+                foreach (var obj in returnData.Objects)
                 {
-                    string? name = obj["name"]?.ToString();
-                    string? id = obj["id"]?.ToString();
-                    string? type = obj["type"]?.ToString();
+                    string? name = obj.Name;
+                    string? id = obj.ID;
+                    string? type = obj.Type;
 
                     if (!string.IsNullOrEmpty(id) && !string.IsNullOrEmpty(type)) 
                         result.Add(new WwiseObject(name, id, type));
@@ -1367,22 +1367,20 @@ namespace WwiseTools.Utils
                 var options = new
                 {
 
-                    @return = new string[] { "name" }
+                    @return = new string[] { "name"}
 
                 };
 
                 var func = WaapiFunctionList.CoreObjectGet;
 
                 JObject jresult = await _client.Call(func, query, options, TimeOut);
+                
+                var returnData = WaapiSerializer.Deserialize<ReturnData<CommonObjectData>>(jresult.ToString());
 
-                string? name = null;
-                if (jresult["return"] == null) throw new Exception();
-                foreach (var obj in jresult["return"]!)
-                {
-                    if (obj["name"] == null) continue;
-                    name = obj["name"]!.ToString();
-                }
-
+                if (returnData.Return is null || returnData.Return.Count == 0) throw new Exception("No project found!");
+                
+                string name = returnData.Return[0].Name;
+                
                 WaapiLog.InternalLog($"Project name successfully fetched!");
 
                 return name;
@@ -1404,34 +1402,16 @@ namespace WwiseTools.Utils
 
             try
             {
-                // ak.wwise.core.@object.get 指令
-                var query = new
-                {
-                    from = new
-                    {
-                        ofType = new string[] { "Project" }
-                    }
-                };
+               
+                var func = Function.Verify("ak.wwise.core.getProjectInfo");
 
-                // ak.wwise.core.@object.get 返回参数设置
-                var options = new
-                {
-
-                    @return = new string[] { "filePath" }
-
-                };
-
-                var func = WaapiFunctionList.CoreObjectGet;
-
-                JObject jresult = await _client.Call(func, query, options, TimeOut);
-
-                string? filePath = "";
-                if (jresult["return"] == null) throw new Exception();
-                foreach (var obj in jresult["return"]!)
-                {
-                    if (obj["filePath"] == null) continue;
-                    filePath = obj["filePath"]?.ToString();
-                }
+                JObject jresult = await _client.Call(func, null, null, TimeOut);
+                
+                var getProjectInfoData = WaapiSerializer.Deserialize<GetProjectInfoData>(jresult.ToString());
+                
+                if (getProjectInfoData.Path == null) throw new Exception("No project found!");
+                
+                string filePath = getProjectInfoData.Path;
 
                 WaapiLog.InternalLog($"Project path successfully fetched!");
 
@@ -1453,14 +1433,7 @@ namespace WwiseTools.Utils
                 var func = Function.Verify("ak.wwise.core.getInfo");
 
                 JObject result = await _client.Call(func, null, null);
-                if (result["version"] == null) throw new Exception("Failed to fetch version info!");
-                int.TryParse(result["version"]!["major"]?.ToString(), out int major);
-                int.TryParse(result["version"]!["minor"]?.ToString(), out int minor);
-                int.TryParse(result["version"]!["build"]?.ToString(), out int build);
-                int.TryParse(result["version"]!["year"]?.ToString(), out int year);
-                int.TryParse(result["version"]!["schema"]?.ToString(), out int schema);
-                int.TryParse(result["processId"]?.ToString(), out int processId);
-                bool.TryParse(result["isCommandLine"]?.ToString(), out bool isCommandLine);
+                var getInfoData = WaapiSerializer.Deserialize<GetInfoData>(result.ToString());
 
                 var projectName = await GetWwiseProjectNameAsync();
 
@@ -1479,9 +1452,9 @@ namespace WwiseTools.Utils
                 WwiseInfo wwiseInfo = new WwiseInfo()
                 {
                     ProjectName = projectName,
-                    Version = new WwiseVersion(year, major, minor, build, schema),
-                    ProcessID = processId,
-                    IsCommandLine = isCommandLine,
+                    Version = new WwiseVersion(getInfoData.Version),
+                    ProcessID = getInfoData.ProcessID,
+                    IsCommandLine = getInfoData.IsCommandLine,
                     ProjectPath = projectPath,
                     Languages = languages
                 };
