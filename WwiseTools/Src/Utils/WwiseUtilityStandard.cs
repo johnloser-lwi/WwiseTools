@@ -722,10 +722,10 @@ namespace WwiseTools.Utils
                 };
 
 
-                JObject jresult = await WwiseUtility.Instance._client.Call(func, query, options, TimeOut);
-                if (jresult["return"] == null || jresult["return"]!.Last == null || 
-                    jresult["return"]!.Last!["path"] == null) throw new Exception();
-                string? path = jresult["return"]?.Last!["path"]?.ToString();
+                JObject jresult = await Instance._client.Call(func, query, options, TimeOut);
+                var returnData = WaapiSerializer.Deserialize<ReturnData<WwiseObjectData>>(jresult.ToString());
+                if (returnData.Return is null || returnData.Return.Count <= 0) throw new Exception("Object not found!");
+                string? path = returnData.Return.Last().Path;
 
                 return path;
             }
@@ -1202,9 +1202,10 @@ namespace WwiseTools.Utils
                 for (var i = 0; i < infos.Length; i++)
                 {
                     var info = infos[i];
+                    var jobjecty = await info.ToJObjectImportProperty();
                     if (!info.IsValid) continue;
                     
-                    importArray.Add(await info.ToJObjectImportProperty());
+                    importArray.Add(jobjecty);
                 }
                 
                 var importQ = new JObject // 导入配置
@@ -1214,25 +1215,21 @@ namespace WwiseTools.Utils
                     new JProperty("imports", importArray)
                 };
 
-                var options = new JObject(new JProperty("return", new object[] { "id" })); // 设置返回参数
+                var options = new JObject(new JProperty("return", new object[] { "name", "id", "type" })); // 设置返回参数
 
                 var func = Function.Verify("ak.wwise.core.audio.import");
 
                 var result = await _client.Call(func, importQ, options); // 执行导入
 
-                if (result == null || result["objects"] == null) return ret;
+                var returnData = WaapiSerializer.Deserialize<ReturnData<WwiseObjectData>>(result.ToString());
 
-                foreach (var token in result["objects"]!)
+                foreach (var obj in returnData.Objects)
                 {
-                    if (token["id"] == null) continue;
+                    if (String.IsNullOrEmpty(obj.ID) || String.IsNullOrEmpty(obj.Type)) continue;
 
-                    var id = token["id"]?.ToString();
-                    
-                    if (string.IsNullOrEmpty(id)) continue;
+                    var wwiseObject = new WwiseObject(obj.Name, obj.ID, obj.Type);
 
-                    var wwiseObject = await WwiseUtility.Instance.GetWwiseObjectByIDAsync(id);
-
-                    if (wwiseObject != null && wwiseObject.Type == "Sound") ret.Add(wwiseObject);
+                    ret.Add(wwiseObject);
                 }
                 
                 return ret;
@@ -1277,14 +1274,9 @@ namespace WwiseTools.Utils
                 var func = WaapiFunctionList.CoreObjectGet;
 
                 JObject jresult = await _client.Call(func, query, options, TimeOut);
-
-                string? filePath = "";
-                if (jresult["return"] == null) throw new Exception();
-                foreach (var obj in jresult["return"]!)
-                {
-                    if (obj["filePath"] == null) continue;
-                    filePath = obj["filePath"]!.ToString();
-                }
+                var returnData = WaapiSerializer.Deserialize<ReturnData<WwiseObjectData>>(jresult.ToString());
+                if (returnData.Return is null || returnData.Return.Count == 0) throw new Exception("No object found!");
+                string? filePath = returnData.Return.Last().FilePath;
 
                 WaapiLog.InternalLog($"Work Unit file path of object {wwiseObject.Name} successfully fetched!");
 
@@ -1624,12 +1616,13 @@ namespace WwiseTools.Utils
                 var func = WaapiFunctionList.CoreObjectGet;
 
                 var jresult = await _client.Call(func, query, options, TimeOut);
-                if (jresult == null || jresult["return"] == null) return result;
-                foreach (var obj in jresult["return"]!)
+                var returnData = WaapiSerializer.Deserialize<ReturnData<WwiseObjectData>>(jresult.ToString());
+                if (returnData.Return is null || returnData.Return.Count <= 0) throw new Exception("No parent found!");
+                foreach (var obj in returnData.Return)
                 {
-                    string? name = obj["name"]?.ToString();
-                    string? id = obj["id"]?.ToString();
-                    string? type = obj["type"]?.ToString();
+                    string? name = obj.Name;
+                    string? id = obj.ID;
+                    string? type = obj.Type;
                     
                     if (!string.IsNullOrEmpty(id) && !string.IsNullOrEmpty(type)) 
                         result.Add(new WwiseObject(name, id, type));
@@ -1678,12 +1671,13 @@ namespace WwiseTools.Utils
                 var func = WaapiFunctionList.CoreObjectGet;
 
                 var jresult = await _client.Call(func, query, options, TimeOut);
-                if (jresult == null || jresult["return"] == null) return result;
-                foreach (var obj in jresult["return"]!)
+                var returnData = WaapiSerializer.Deserialize<ReturnData<WwiseObjectData>>(jresult.ToString());
+                if (returnData.Return is null || returnData.Return.Count <= 0) throw new Exception("No parent found!");
+                foreach (var obj in returnData.Return)
                 {
-                    string? name = obj["name"]?.ToString();
-                    string? id = obj["id"]?.ToString();
-                    string? type = obj["type"]?.ToString();
+                    string? name = obj.Name;
+                    string? id = obj.ID;
+                    string? type = obj.Type;
 
                     if (!string.IsNullOrEmpty(id) && !string.IsNullOrEmpty(type)) 
                         result.Add(new WwiseObject(name, id, type));
@@ -1731,12 +1725,13 @@ namespace WwiseTools.Utils
                 var func = WaapiFunctionList.CoreObjectGet;
 
                 var jresult = await _client.Call(func, query, options, TimeOut);
-                if (jresult == null || jresult["return"] == null) return null;
-                foreach (var obj in jresult["return"]!)
+                var returnData = WaapiSerializer.Deserialize<ReturnData<WwiseObjectData>>(jresult.ToString());
+                if (returnData.Return is null || returnData.Return.Count <= 0) throw new Exception("No parent found!");
+                foreach (var obj in returnData.Return)
                 {
-                    string? name = obj["name"]?.ToString();
-                    string? id = obj["id"]?.ToString();
-                    string? type = obj["type"]?.ToString();
+                    string? name = obj.Name;
+                    string? id = obj.ID;
+                    string? type = obj.Type;
                     
                     if (!string.IsNullOrEmpty(id) && !string.IsNullOrEmpty(type)) 
                         return new WwiseObject(name, id, type);
@@ -1785,12 +1780,13 @@ namespace WwiseTools.Utils
                 var func = WaapiFunctionList.CoreObjectGet;
 
                 var jresult = await _client.Call(func, query, options, TimeOut);
-                if (jresult == null || jresult["return"] == null) return result;
-                foreach (var obj in jresult["return"]!)
+                var returnData = WaapiSerializer.Deserialize<ReturnData<WwiseObjectData>>(jresult.ToString());
+                if (returnData.Return is null || returnData.Return.Count <= 0) throw new Exception("No children found!");
+                foreach (var obj in returnData.Return)
                 {
-                    string? name = obj["name"]?.ToString();
-                    string? id = obj["id"]?.ToString();
-                    string? type = obj["type"]?.ToString();
+                    string? name = obj.Name;
+                    string? id = obj.ID;
+                    string? type = obj.Type;
 
                     if (!string.IsNullOrEmpty(id) && !string.IsNullOrEmpty(type)) 
                         result.Add(new WwiseObject(name, id, type));

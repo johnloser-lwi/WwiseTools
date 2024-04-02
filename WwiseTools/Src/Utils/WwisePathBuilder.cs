@@ -99,7 +99,7 @@ public class WwisePathBuilder
     public async Task<string> GetImportPathAsync()
     {
         if (_root is null&& !string.IsNullOrEmpty(_rootPath)) _root = await WwiseUtility.Instance.GetWwiseObjectByPathAsync(_rootPath);
-        
+
         var rootPath = _root is null ? null : await _root.GetPathAsync();
         
 #if DEBUG

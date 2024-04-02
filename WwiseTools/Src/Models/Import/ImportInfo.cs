@@ -8,23 +8,25 @@ namespace WwiseTools.Models.Import;
 
 public class ImportInfo
 {
-    public ImportInfo(string audioFile, WwisePathBuilder objectPath, string language = "SFX", string subFolder = "")
+    public ImportInfo(string audioFile, WwisePathBuilder pathBuilder, string language = "SFX", string subFolder = "")
     {
         AudioFile = audioFile;
-        ObjectPath = objectPath;
-        Language = language;
-        SubFolder = subFolder;
-    }
-    
-    public ImportInfo(string audioFile, string objectPath, string language = "SFX", string subFolder = "")
-    {
-        AudioFile = audioFile;
-        ObjectPath = TryParseObjectPath(objectPath);
+        PathBuilder = pathBuilder;
         Language = language;
         SubFolder = subFolder;
     }
 
-    private WwisePathBuilder TryParseObjectPath(string path)
+    private string _objectPath;
+    public ImportInfo(string audioFile, string objectPath, string language = "SFX", string subFolder = "")
+    {
+        AudioFile = audioFile;
+        Language = language;
+        SubFolder = subFolder;
+
+        _objectPath = objectPath;
+    }
+
+    private async Task TryParseObjectPathAsync(string path)
     {
         var split = path.Replace('/', '\\').Split('\\');
 
@@ -42,6 +44,8 @@ public class ImportInfo
         
         foreach (var s in split)
         {
+            if (string.IsNullOrEmpty(s)) continue;
+            
             if (!s.StartsWith("<") && isRoot)
             {
                 root += s + "\\";
@@ -64,27 +68,28 @@ public class ImportInfo
 
             if (!res) ThrowException();
 
-            builder.AppendHierarchy(type, typeNameSplit[1]);
+            await builder.AppendHierarchy(type, typeNameSplit[1]);
         }
 
-        return builder;
+        PathBuilder = builder;
     }
 
     public string Language { get; private set; }
     public string AudioFile { get; private set; }
-    public WwisePathBuilder ObjectPath { get; private set; }
+    public WwisePathBuilder PathBuilder { get; private set; }
     public string SubFolder { get; private set; }
 
     public bool IsValid => !string.IsNullOrEmpty(Language) && !string.IsNullOrEmpty(AudioFile) &&
-                           ObjectPath != null;
+                           PathBuilder != null;
 
     internal async Task<JObject> ToJObjectImportProperty()
     {
+        if (!String.IsNullOrEmpty(_objectPath)) await TryParseObjectPathAsync(_objectPath);
         var properties = new JObject
         {
             new JProperty("importLanguage", Language),
             new JProperty("audioFile", AudioFile),
-            new JProperty("objectPath", await ObjectPath.GetImportPathAsync())
+            new JProperty("objectPath", await PathBuilder.GetImportPathAsync())
         };
         if (!string.IsNullOrEmpty(SubFolder))
         {

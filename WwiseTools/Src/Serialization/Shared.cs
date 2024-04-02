@@ -16,6 +16,12 @@ public class WwiseObjectData : CommonObjectData
 {
     [JsonProperty("type")]
     public string Type { get; set; }
+    
+    [JsonProperty("path")]
+    public string Path { get; set; }
+    
+    [JsonProperty("filePath")]
+    public string FilePath { get; set; }
 }
 
 [JsonObject]
