@@ -8,6 +8,7 @@ namespace WwiseTools.Models.Import;
 
 public class ImportInfo
 {
+    [Obsolete("Use FromPath or FromPathBuilder instead")]
     public ImportInfo(string audioFile, WwisePathBuilder pathBuilder, string language = "SFX", string subFolder = "")
     {
         AudioFile = audioFile;
@@ -16,15 +17,32 @@ public class ImportInfo
         SubFolder = subFolder;
     }
 
-    private string _objectPath;
-    public ImportInfo(string audioFile, string objectPath, string language = "SFX", string subFolder = "")
+    private ImportInfo()
     {
-        AudioFile = audioFile;
-        Language = language;
-        SubFolder = subFolder;
-
-        _objectPath = objectPath;
+        
     }
+    
+    public static async Task<ImportInfo> FromPath(string audioFile, string objectPath, string language = "SFX", string subFolder = "")
+    {
+        var info = new ImportInfo();
+        info.AudioFile = audioFile;
+        info.Language = language;
+        info.SubFolder = subFolder;
+
+        await info.TryParseObjectPathAsync(objectPath);
+        return info;
+    }
+    
+    public static ImportInfo FromPathBuilder(string audioFile, WwisePathBuilder pathBuilder, string language = "SFX", string subFolder = "")
+    {
+        var info = new ImportInfo();
+        info.AudioFile = audioFile;
+        info.PathBuilder = pathBuilder;
+        info.Language = language;
+        info.SubFolder = subFolder;
+        return info;
+    }
+    
 
     private async Task TryParseObjectPathAsync(string path)
     {
@@ -68,7 +86,7 @@ public class ImportInfo
 
             if (!res) ThrowException();
 
-            await builder.AppendHierarchy(type, typeNameSplit[1]);
+            await builder.AppendHierarchyAsync(type, typeNameSplit[1]);
         }
 
         PathBuilder = builder;
@@ -82,9 +100,8 @@ public class ImportInfo
     public bool IsValid => !string.IsNullOrEmpty(Language) && !string.IsNullOrEmpty(AudioFile) &&
                            PathBuilder != null;
 
-    internal async Task<JObject> ToJObjectImportProperty()
+    internal async Task<JObject> ToJObjectImportPropertyAsync()
     {
-        if (!String.IsNullOrEmpty(_objectPath)) await TryParseObjectPathAsync(_objectPath);
         var properties = new JObject
         {
             new JProperty("importLanguage", Language),

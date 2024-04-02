@@ -61,7 +61,7 @@ namespace WwiseTools.WwiseTypes
         {
             foreach (var item in items)
             {
-                if (!(await item.GetPathAsync()).Contains(await WwiseObject.GetPathAsync())) return;
+                if (!item.Path.Contains(WwiseObject.Path)) return;
             }
 
 

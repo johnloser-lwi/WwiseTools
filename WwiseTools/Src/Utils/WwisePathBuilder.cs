@@ -41,7 +41,7 @@ public class WwisePathBuilder
     /// <param name="type">Wwise对象类型</param>
     /// <param name="name">Wwise对象名称</param>
     /// <returns>返回路径是否成功添加</returns>
-    public async Task<bool> AppendHierarchy(WwiseObject.ObjectType type, string name)
+    public async Task<bool> AppendHierarchyAsync(WwiseObject.ObjectType type, string name)
     {
         WwiseObject? last;
 
@@ -55,7 +55,7 @@ public class WwisePathBuilder
             return false;
         }
 
-        _hierarchy.Add(new WwiseObject(name, "", type.ToString()));
+        _hierarchy.Add(new WwiseObject(name, "", type.ToString(), ""));
         return true;
     }
 
@@ -72,7 +72,7 @@ public class WwisePathBuilder
     {
         if (_root is null && !string.IsNullOrEmpty(_rootPath)) _root = await WwiseUtility.Instance.GetWwiseObjectByPathAsync(_rootPath);
         
-        var rootPath = _root is null ? null : await _root.GetPathAsync();
+        var rootPath = _root is null ? null : _root.Path;
         
 #if DEBUG
         if (rootPath == null && !WwiseUtility.Instance.IsConnected()) rootPath = "\\Actor-Mixer Hierarchy";
@@ -100,7 +100,7 @@ public class WwisePathBuilder
     {
         if (_root is null&& !string.IsNullOrEmpty(_rootPath)) _root = await WwiseUtility.Instance.GetWwiseObjectByPathAsync(_rootPath);
 
-        var rootPath = _root is null ? null : await _root.GetPathAsync();
+        var rootPath = _root is null ? null : _root.Path;
         
 #if DEBUG
         if (rootPath == null && !WwiseUtility.Instance.IsConnected()) rootPath = "\\Actor-Mixer Hierarchy";
@@ -119,4 +119,6 @@ public class WwisePathBuilder
         
         return rootPath + "\\" + hierarchy;
     }
+    
+    
 }

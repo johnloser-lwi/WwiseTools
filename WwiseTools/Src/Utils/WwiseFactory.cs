@@ -25,7 +25,7 @@ namespace WwiseTools.Utils
             string subFolder, WwiseObject parent)
         {
             var segment = await WwiseUtility.Instance.CreateObjectAsync(name, WwiseObject.ObjectType.MusicSegment, parent);
-            var parentPath = System.IO.Path.Combine(await parent.GetPathAsync(), name);
+            var parentPath = System.IO.Path.Combine(parent.Path, name);
             await WwiseUtility.Instance.ImportSoundAsync(filePath, "SFX", subFolder, parentPath);
 
             return segment;

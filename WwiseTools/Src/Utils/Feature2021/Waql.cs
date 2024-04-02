@@ -6,6 +6,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using WwiseTools.Objects;
+using WwiseTools.Serialization;
 
 namespace WwiseTools.Utils.Feature2021
 {
@@ -57,17 +58,19 @@ namespace WwiseTools.Utils.Feature2021
 
                 var option = new
                 {
-                    @return = new string[] { "name", "id", "type" }
+                    @return = new string[] { "name", "id", "type", "path" }
                 };
                 var jresult = await WwiseUtility.Instance.CallAsync("ak.wwise.core.object.get", query, option, WwiseUtility.Instance.TimeOut);
-                if (jresult == null || jresult["return"] == null) return false;
-                foreach (var obj in jresult["return"])
+                var returnData = WaapiSerializer.Deserialize<ReturnData<WwiseObjectData>>(jresult.ToString());
+                if (returnData.Return == null || returnData.Return.Count <= 0) return false;
+                foreach (var obj in returnData.Return)
                 {
-                    string name = obj["name"]?.ToString();
-                    string id = obj["id"]?.ToString();
-                    string type = obj["type"]?.ToString();
+                    string name = obj.Name;
+                    string id = obj.ID;
+                    string type = obj.Type;
+                    string path = obj.Path;
 
-                    Result.Add(new WwiseObject(name, id, type));
+                    Result.Add(new WwiseObject(name, id, type, path));
                 }
             }
             catch (Exception e)

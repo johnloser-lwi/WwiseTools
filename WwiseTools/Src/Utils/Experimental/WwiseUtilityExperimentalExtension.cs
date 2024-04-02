@@ -97,9 +97,9 @@ public static class WwiseUtilityExperimentalExtension
                 var subFolder = Path.GetDirectoryName(audioFilePath);
 
                 var pathBuilder = new WwisePathBuilder(parent);
-                pathBuilder.AppendHierarchy(WwiseObject.ObjectType.Sound, soundTarget.Name);
+                await pathBuilder.AppendHierarchyAsync(WwiseObject.ObjectType.Sound, soundTarget.Name);
 
-                var importInfo = new ImportInfo(validWavFile, pathBuilder, language, subFolder);
+                var importInfo = ImportInfo.FromPathBuilder(validWavFile, pathBuilder, language, subFolder);
                 
                 infos.Add(importInfo);
             }

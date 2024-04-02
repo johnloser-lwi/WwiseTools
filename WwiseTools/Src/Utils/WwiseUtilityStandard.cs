@@ -761,7 +761,7 @@ namespace WwiseTools.Utils
                 var options = new
                 {
 
-                    @return = new string[] { "name", "id", "type" }
+                    @return = new string[] { "name", "id", "type", "path" }
 
                 };
                 
@@ -777,11 +777,12 @@ namespace WwiseTools.Utils
                 string? name = obj.Name;
                 string? id = obj.ID;
                 string? type = obj.Type;
+                string? path = obj.Path;
                 
                 if (!string.IsNullOrEmpty(id) && !string.IsNullOrEmpty(type))
                 {
                     WaapiLog.InternalLog($"WwiseObject {name} successfully fetched!");
-                    return new WwiseObject(name, id, type);
+                    return new WwiseObject(name, id, type, path);
                 }
             }
             catch (Exception e)
@@ -835,7 +836,7 @@ namespace WwiseTools.Utils
                 var options = new
                 {
 
-                    @return = new string[] { "name", "id", "type" }
+                    @return = new string[] { "name", "id", "type", "path" }
 
                 };
 
@@ -848,11 +849,12 @@ namespace WwiseTools.Utils
                 string? name = obj.Name;
                 string? id = obj.ID;
                 string? type = obj.Type;
+                string? path = obj.Path;
                 
                 if (!string.IsNullOrEmpty(id) && !string.IsNullOrEmpty(type))
                 {
                     WaapiLog.InternalLog($"WwiseObject {name} successfully fetched!");
-                    return new WwiseObject(name, id, type);
+                    return new WwiseObject(name, id, type, path);
                 }
             }
             catch (Exception e)
@@ -896,7 +898,7 @@ namespace WwiseTools.Utils
                 var options = new
                 {
 
-                    @return = new string[] { "name", "id", "type" }
+                    @return = new string[] { "name", "id", "type", "path" }
 
                 };
 
@@ -913,9 +915,10 @@ namespace WwiseTools.Utils
                     string? name = obj.Name;
                     string? id = obj.ID;
                     string? type = obj.Type;
+                    string? path = obj.Path;
 
                     if (!string.IsNullOrEmpty(id) && !string.IsNullOrEmpty(type)) 
-                        result.Add(new WwiseObject(name, id, type));
+                        result.Add(new WwiseObject(name, id, type, path));
                 }
 
 
@@ -944,7 +947,7 @@ namespace WwiseTools.Utils
                 var options = new
                 {
 
-                    @return = new string[] { "name", "id", "type" }
+                    @return = new string[] { "name", "id", "type", "path" }
 
                 };
 
@@ -952,7 +955,6 @@ namespace WwiseTools.Utils
 
                 
                 JObject jresult = await _client.Call(func, null, options, TimeOut);
-                WaapiLog.Log(jresult.ToString());
                 var returnData = WaapiSerializer.Deserialize<ReturnData<WwiseObjectData>>(jresult.ToString());
 
 
@@ -962,9 +964,10 @@ namespace WwiseTools.Utils
                     string? name = obj.Name;
                     string? id = obj.ID;
                     string? type = obj.Type;
+                    string? path = obj.Path;
 
                     if (!string.IsNullOrEmpty(id) && !string.IsNullOrEmpty(type)) 
-                        result.Add(new WwiseObject(name, id, type));
+                        result.Add(new WwiseObject(name, id, type, path));
                 }
 
                 WaapiLog.InternalLog($"Selected WwiseObject list successfully fetched!");
@@ -1086,7 +1089,7 @@ namespace WwiseTools.Utils
             }
 
             var objectPath = new WwisePathBuilder(parent);
-            var res = await objectPath.AppendHierarchy(WwiseObject.ObjectType.Sound, soundName);
+            var res = await objectPath.AppendHierarchyAsync(WwiseObject.ObjectType.Sound, soundName);
 
             if (!res)
             {
@@ -1094,7 +1097,7 @@ namespace WwiseTools.Utils
                 return null;
             }
             
-            ImportInfo info = new ImportInfo(filePath, objectPath, language, subFolder);
+            ImportInfo info = ImportInfo.FromPathBuilder(filePath, objectPath, language, subFolder);
 
             return await ImportSoundAsync(info, importAction);
         }
@@ -1112,7 +1115,7 @@ namespace WwiseTools.Utils
                     
                     new JProperty("imports", new JArray
                     {
-                        await info.ToJObjectImportProperty()
+                        await info.ToJObjectImportPropertyAsync()
                     })
                 };
 
@@ -1202,9 +1205,9 @@ namespace WwiseTools.Utils
                 for (var i = 0; i < infos.Length; i++)
                 {
                     var info = infos[i];
-                    var jobjecty = await info.ToJObjectImportProperty();
                     if (!info.IsValid) continue;
                     
+                    var jobjecty = await info.ToJObjectImportPropertyAsync();
                     importArray.Add(jobjecty);
                 }
                 
@@ -1215,7 +1218,7 @@ namespace WwiseTools.Utils
                     new JProperty("imports", importArray)
                 };
 
-                var options = new JObject(new JProperty("return", new object[] { "name", "id", "type" })); // 设置返回参数
+                var options = new JObject(new JProperty("return", new object[] { "name", "id", "type", "path" })); // 设置返回参数
 
                 var func = Function.Verify("ak.wwise.core.audio.import");
 
@@ -1227,7 +1230,7 @@ namespace WwiseTools.Utils
                 {
                     if (String.IsNullOrEmpty(obj.ID) || String.IsNullOrEmpty(obj.Type)) continue;
 
-                    var wwiseObject = new WwiseObject(obj.Name, obj.ID, obj.Type);
+                    var wwiseObject = new WwiseObject(obj.Name, obj.ID, obj.Type, obj.Path);
 
                     ret.Add(wwiseObject);
                 }
@@ -1609,7 +1612,7 @@ namespace WwiseTools.Utils
                 var options = new
                 {
 
-                    @return = new string[] { "name", "id", "type" }
+                    @return = new string[] { "name", "id", "type", "path" }
 
                 };
 
@@ -1623,9 +1626,10 @@ namespace WwiseTools.Utils
                     string? name = obj.Name;
                     string? id = obj.ID;
                     string? type = obj.Type;
+                    string? path = obj.Path;
                     
                     if (!string.IsNullOrEmpty(id) && !string.IsNullOrEmpty(type)) 
-                        result.Add(new WwiseObject(name, id, type));
+                        result.Add(new WwiseObject(name, id, type, path));
                 }
 
 
@@ -1664,7 +1668,7 @@ namespace WwiseTools.Utils
                 var options = new
                 {
 
-                    @return = new string[] { "name", "id", "type" }
+                    @return = new string[] { "name", "id", "type", "path" }
 
                 };
 
@@ -1678,9 +1682,10 @@ namespace WwiseTools.Utils
                     string? name = obj.Name;
                     string? id = obj.ID;
                     string? type = obj.Type;
+                    string? path = obj.Path;
 
                     if (!string.IsNullOrEmpty(id) && !string.IsNullOrEmpty(type)) 
-                        result.Add(new WwiseObject(name, id, type));
+                        result.Add(new WwiseObject(name, id, type, path));
                 }
 
 
@@ -1718,7 +1723,7 @@ namespace WwiseTools.Utils
                 var options = new
                 {
 
-                    @return = new string[] { "name", "id", "type" }
+                    @return = new string[] { "name", "id", "type", "path" }
 
                 };
 
@@ -1732,9 +1737,10 @@ namespace WwiseTools.Utils
                     string? name = obj.Name;
                     string? id = obj.ID;
                     string? type = obj.Type;
+                    string? path = obj.Path;
                     
                     if (!string.IsNullOrEmpty(id) && !string.IsNullOrEmpty(type)) 
-                        return new WwiseObject(name, id, type);
+                        return new WwiseObject(name, id, type, path);
                 }
 
 
@@ -1773,7 +1779,7 @@ namespace WwiseTools.Utils
                 var options = new
                 {
 
-                    @return = new string[] { "name", "id", "type" }
+                    @return = new string[] { "name", "id", "type", "path" }
 
                 };
 
@@ -1787,9 +1793,10 @@ namespace WwiseTools.Utils
                     string? name = obj.Name;
                     string? id = obj.ID;
                     string? type = obj.Type;
+                    string? path = obj.Path;
 
                     if (!string.IsNullOrEmpty(id) && !string.IsNullOrEmpty(type)) 
-                        result.Add(new WwiseObject(name, id, type));
+                        result.Add(new WwiseObject(name, id, type, path));
                 }
 
 
@@ -1828,22 +1835,24 @@ namespace WwiseTools.Utils
                 var options = new
                 {
 
-                    @return = new string[] { "name", "id", "type" }
+                    @return = new string[] { "name", "id", "type", "path" }
 
                 };
 
                 var func = WaapiFunctionList.CoreObjectGet;
 
                 var jresult = await _client.Call(func, query, options, TimeOut);
-                if (jresult == null || jresult["return"] == null) return result;
-                foreach (var obj in jresult["return"]!)
+                var returnData = WaapiSerializer.Deserialize<ReturnData<WwiseObjectData>>(jresult.ToString());
+                if (returnData.Return is null || returnData.Return.Count <= 0) throw new Exception("No children found!");
+                foreach (var obj in returnData.Return!)
                 {
-                    string? name = obj["name"]?.ToString();
-                    string? id = obj["id"]?.ToString();
-                    string? type = obj["type"]?.ToString();
+                    string? name = obj.Name;
+                    string? id = obj.ID;
+                    string? type = obj.Type;
+                    string? path = obj.Path;
 
                     if (!string.IsNullOrEmpty(id) && !string.IsNullOrEmpty(type)) 
-                        result.Add(new WwiseObject(name, id, type));
+                        result.Add(new WwiseObject(name, id, type, path));
                 }
 
 
@@ -1882,22 +1891,24 @@ namespace WwiseTools.Utils
                 var options = new
                 {
 
-                    @return = new string[] { "name", "id", "type" }
+                    @return = new string[] { "name", "id", "type", "path" }
 
                 };
 
                 var func = WaapiFunctionList.CoreObjectGet;
 
                 var jresult = await _client.Call(func, query, options, TimeOut);
-                if (jresult == null || jresult["return"] == null) return result;
-                foreach (var obj in jresult["return"]!)
+                var returnData = WaapiSerializer.Deserialize<ReturnData<WwiseObjectData>>(jresult.ToString());
+                if (returnData.Return is null || returnData.Return.Count <= 0) throw new Exception("No parent found!");
+                foreach (var obj in returnData.Return)
                 {
-                    string? name = obj["name"]?.ToString();
-                    string? id = obj["id"]?.ToString();
-                    string? type = obj["type"]?.ToString();
+                    string? name = obj.Name;
+                    string? id = obj.ID;
+                    string? type = obj.Type;
+                    string? path = obj.Path;
 
                     if (!string.IsNullOrEmpty(id) && !string.IsNullOrEmpty(type)) 
-                        result.Add(new WwiseObject(name, id, type));
+                        result.Add(new WwiseObject(name, id, type, path));
                 }
 
 
@@ -1936,22 +1947,25 @@ namespace WwiseTools.Utils
                 var options = new
                 {
 
-                    @return = new string[] { "name", "id", "type" }
+                    @return = new string[] { "name", "id", "type", "path" }
 
                 };
 
                 var func = WaapiFunctionList.CoreObjectGet;
 
                 var jresult = await _client.Call(func, query, options, TimeOut);
-                if (jresult == null || jresult["return"] == null) return result;
-                foreach (var obj in jresult["return"]!)
+                var returnData = WaapiSerializer.Deserialize<ReturnData<WwiseObjectData>>(jresult.ToString());
+                if (returnData.Return is null || returnData.Return.Count <= 0) throw new Exception("No parent found!");
+                
+                foreach (var obj in returnData.Return)
                 {
-                    string? name = obj["name"]?.ToString();
-                    string? id = obj["id"]?.ToString();
-                    string? type = obj["type"]?.ToString();
+                    string? name = obj.Name;
+                    string? id = obj.ID;
+                    string? type = obj.Type;
+                    string? path = obj.Path;
 
                     if (!string.IsNullOrEmpty(id) && !string.IsNullOrEmpty(type)) 
-                        result.Add(new WwiseObject(name, id, type));
+                        result.Add(new WwiseObject(name, id, type, path));
                 }
 
 
