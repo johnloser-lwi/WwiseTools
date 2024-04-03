@@ -8,7 +8,8 @@ try
     if (await WwiseUtility.Instance.TryConnectWaapiAsync())
     {
         var obj = await WwiseUtility.Instance.GetWwiseObjectsBySelectionAsync();
-        WaapiLog.Log(obj[0].GetParentPath());
+        var note = await WwiseUtility.Instance.GetNotesAsync(obj[0]);
+        WaapiLog.Log(note);
     }
     else
     {

@@ -22,6 +22,9 @@ public class WwiseObjectData : CommonObjectData
     
     [JsonProperty("filePath")]
     public string FilePath { get; set; }
+    
+    [JsonProperty("notes")]
+    public string Notes { get; set; }
 }
 
 [JsonObject]

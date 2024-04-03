@@ -253,6 +253,7 @@ namespace WwiseTools.Utils
             try
             {
                 var func = Function.Verify("ak.wwise.core.object.copy");
+                
                 // 移动物体
                 await _client.Call(func
                     ,
@@ -293,6 +294,7 @@ namespace WwiseTools.Utils
             try
             {
                 var func = Function.Verify("ak.wwise.core.object.move");
+                
                 // 移动物体
                 await _client.Call(func,
                     new JObject
@@ -304,8 +306,10 @@ namespace WwiseTools.Utils
                     null,
                     TimeOut
                     );
-
+                
                 WaapiLog.InternalLog($"Moved {child.Name} to {parent.Name}!");
+
+                await child.GetPathAsync();
 
                 return true;
             }
@@ -319,8 +323,6 @@ namespace WwiseTools.Utils
 
         public async Task<string> GetNotesAsync(WwiseObject target)
         {
-            //ak.wwise.core.object.getPropertyAndReferenceNames
-
             if (!await TryConnectWaapiAsync()) return "";
 
             try
@@ -349,10 +351,10 @@ namespace WwiseTools.Utils
                     options, TimeOut);
                 WaapiLog.InternalLog("Notes fetched successfully!");
                 
-                if (result["return"] is null) return "";
-                if (result["return"].Last?["notes"] is null) return "";
+                var returnData = WaapiSerializer.Deserialize<ReturnData<WwiseObjectData>>(result.ToString());
+                if (returnData.Return is null || returnData.Return.Count <= 0) throw new Exception("Object not found!");
                 
-                return result["return"].Last["notes"].ToString();
+                return returnData.Return.Last().Notes;
 
             }
             catch (Exception e)
@@ -1698,7 +1700,7 @@ namespace WwiseTools.Utils
             return result;
         }
 
-        public async Task<WwiseObject?> GetWwiseObjectParentAsync(WwiseObject? wwiseObject)
+        public async Task<WwiseObject?>  GetWwiseObjectParentAsync(WwiseObject? wwiseObject)
         {
             if (wwiseObject is null || !await TryConnectWaapiAsync()) return null;
             try
