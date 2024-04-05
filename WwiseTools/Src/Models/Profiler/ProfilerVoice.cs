@@ -2,16 +2,16 @@
 {
     public class ProfilerVoice
     {
-        public int PipelineID { get; set; }
-        public int PlayingID{ get; set; }
-        public int SoundID{ get; set; }
-        public int PlayTargetID{ get; set; }
-        public int Priority{ get; set; }
+        public uint PipelineID { get; set; }
+        public uint PlayingID{ get; set; }
+        public uint SoundID{ get; set; }
+        public uint PlayTargetID{ get; set; }
+        public sbyte Priority{ get; set; }
         public string ObjectGUID { get; set; }
         public string ObjectName { get; set; }
         public string PlayTargetGUID { get; set; }
         public string PlayTargetName { get; set; }
-        public int GameObjectID { get; set; }
+        public ulong GameObjectID { get; set; }
         public string GameObjectName { get; set; }
         public float BaseVolume { get; set; }
         public float GameAuxSendVolume { get; set; }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using WaapiClient;
 using WwiseTools.Models.Profiler;
+using WwiseTools.Serialization;
 
 namespace WwiseTools.Utils.Profiler
 {
@@ -108,29 +109,21 @@ namespace WwiseTools.Utils.Profiler
                 
                 JsonClient.PublishHandler publishHandler = json =>
                 {
-                    string type = json["type"]?.ToString();
-                    string objectId = json["objectId"]?.ToString();
-                    string objectName = json["objectName"]?.ToString();
-                    string gameObjectName = json["gameObjectName"]?.ToString();
-                    string description = json["description"]?.ToString();
-                    string severity = json["severity"]?.ToString();
-                    int.TryParse(json["playingId"]?.ToString(), out int playingId);
-                    int.TryParse(json["objectShortId"]?.ToString(), out int objectShortId);
-                    int.TryParse(json["gameObjectId"]?.ToString(), out int gameObjectId);
-                    int.TryParse(json["time"]?.ToString(), out int time);
+                    var data = WaapiSerializer.Deserialize<ProfilerAddItemData>(json.ToString());
 
                     var item = new ProfilerCaptureLogItem()
                     {
-                        Type = type,
-                        ObjectID = objectId,
-                        ObjectName = objectName,
-                        Description = description,
-                        GameObjectID = gameObjectId,
-                        GameObjectName = gameObjectName,
-                        ObjectShortID = objectShortId,
-                        PlayingID = playingId,
-                        Severity = severity,
-                        Time = time
+                        Type = data.Type,
+                        ObjectID = data.ObjectID,
+                        ObjectName = data.ObjectName,
+                        Description = data.Description,
+                        GameObjectID = data.GameObjectID,
+                        GameObjectName = data.GameObjectName,
+                        ObjectShortID = data.ObjectShortID,
+                        PlayingID = data.PlayingID,
+                        Severity = data.Severity.ToString(),
+                        Time = data.Time,
+                        ErrorCodeName = data.ErrorCodeName
                     };
 
                     handler?.Invoke(item);
@@ -191,8 +184,8 @@ namespace WwiseTools.Utils.Profiler
 
                 var jresult = await util.CallAsync(func, null, null, util.TimeOut);
 
-                bool.TryParse(jresult["isConnected"]?.ToString(), out bool connected);
-                return connected;
+                var returnData = WaapiSerializer.Deserialize<GetConnectionStatusData>(jresult.ToString());
+                return returnData.IsConnected;
             }
             catch (Exception e)
             {
@@ -226,11 +219,11 @@ namespace WwiseTools.Utils.Profiler
             {
                 var func = util.Function.Verify("ak.wwise.core.profiler.stopCapture");
                 var jresult = await util.CallAsync(func, null, null, util.TimeOut);
-                int.TryParse(jresult["return"]?.ToString(), out int cursorTime);
+                var returnData = WaapiSerializer.Deserialize<CursorTimeData>(jresult.ToString());
 
                 WaapiLog.InternalLog("Profiler capture stop!");
 
-                return cursorTime;
+                return returnData.Time;
             }
             catch (Exception e)
             {
@@ -254,10 +247,10 @@ namespace WwiseTools.Utils.Profiler
                 };
 
                 var jresult = await util.CallAsync(func, option, null, util.TimeOut);
-                int.TryParse(jresult["return"]?.ToString(), out int cursorTime);
+                var returnData = WaapiSerializer.Deserialize<CursorTimeData>(jresult.ToString());
 
 
-                return cursorTime;
+                return returnData.Time;
             }
             catch (Exception e)
             {
@@ -283,22 +276,16 @@ namespace WwiseTools.Utils.Profiler
 
 
                 var jresult = await util.CallAsync(func, query, null, util.TimeOut);
-                var objects = jresult["return"];
-
-                if (objects == null) return result;
-                foreach (var rtpc in objects)
+                var returnData = WaapiSerializer.Deserialize<ReturnData<ProfilerRTPCData>>(jresult.ToString());
+                if (returnData.Return == null || returnData.Return.Count == 0) return result;
+                foreach (var rtpc in returnData.Return)
                 {
-                    string id = rtpc["id"]?.ToString();
-                    string name = rtpc["name"]?.ToString();
-                    int.TryParse(rtpc["gameObjectId"]?.ToString(), out int gameObjectId);
-                    float.TryParse(rtpc["value"]?.ToString(), out float value);
-
                     result.Add(new ProfilerRTPC()
                     {
-                        ID = id,
-                        Name = name,
-                        GameObjectID = gameObjectId,
-                        Value = value
+                        ID = rtpc.ID,
+                        Name = rtpc.Name,
+                        GameObjectID = rtpc.GameObjectID,
+                        Value = rtpc.Value
                     });
                 }
 
@@ -355,55 +342,33 @@ namespace WwiseTools.Utils.Profiler
                 };
 
                 var jresult = await util.CallAsync(func, query, options, util.TimeOut);
-                var objects = jresult["return"];
-                if (objects == null) return result;
+                var returnData = WaapiSerializer.Deserialize<ReturnData<VoiceReturnData>>(jresult.ToString());
+                if (returnData.Return == null || returnData.Return.Count == 0) return result;
 
-                foreach (var voice in objects)
+                foreach (var voice in returnData.Return)
                 {
-                    int.TryParse(voice["pipelineID"]?.ToString(), out int piplineID);
-                    int.TryParse(voice["playingID"]?.ToString(), out int playingID);
-                    int.TryParse(voice["soundID"]?.ToString(), out int soundID);
-                    int.TryParse(voice["playTargetID"]?.ToString(), out int playTargetID);
-                    int.TryParse(voice["priority"]?.ToString(), out int priority);
-                    int.TryParse(voice["gameObjectID"]?.ToString(), out int gameObjectID);
-                    float.TryParse(voice["baseVolume"]?.ToString(), out float baseVolume);
-                    float.TryParse(voice["gameAuxSendVolume"]?.ToString(), out float gameAuxSendVolume);
-                    float.TryParse(voice["envelope"]?.ToString(), out float envelope);
-                    float.TryParse(voice["normalizationGain"]?.ToString(), out float normalizationGain);
-                    float.TryParse(voice["lowPassFilter"]?.ToString(), out float lowPassFilter);
-                    float.TryParse(voice["highPassFilter"]?.ToString(), out float highPassFilter);
-                    string objectGUID = voice["objectGUID"]?.ToString();
-                    string objectName = voice["objectName"]?.ToString();
-                    string gameObjectName = voice["gameObjectName"]?.ToString();
-                    string playTargetGUID = voice["playTargetGUID"]?.ToString();
-                    string playTargetName = voice["playTargetName"]?.ToString();
-                    bool.TryParse(voice["isStarted"]?.ToString(), out bool isStarted);
-                    bool.TryParse(voice["isVirtual"]?.ToString(), out bool isVirtual);
-                    bool.TryParse(voice["isForcedVirtual"]?.ToString(), out bool isForcedVirtual);
-
-
                     result.Add(new ProfilerVoice()
                     {
-                        PipelineID = piplineID,
-                        PlayingID = playingID,
-                        SoundID = soundID,
-                        PlayTargetID = playTargetID,
-                        Priority = priority,
-                        BaseVolume = baseVolume,
-                        GameAuxSendVolume = gameAuxSendVolume,
-                        Envelope = envelope,
-                        NormalizationGain = normalizationGain,
-                        LowPassFilter = lowPassFilter,
-                        HighPassFilter = highPassFilter,
-                        ObjectGUID = objectGUID,
-                        ObjectName = objectName,
-                        GameObjectID = gameObjectID,
-                        GameObjectName = gameObjectName,
-                        PlayTargetGUID = playTargetGUID,
-                        PlayTargetName = playTargetName,
-                        IsStarted = isStarted,
-                        IsVirtual = isVirtual,
-                        IsForcedVirtual = isForcedVirtual
+                        PipelineID = voice.PipelineID,
+                        PlayingID = voice.PlayingID,
+                        SoundID = voice.SoundID,
+                        PlayTargetID = voice.PlayTargetID,
+                        Priority = voice.Priority,
+                        BaseVolume = voice.BaseVolume,
+                        GameAuxSendVolume = voice.GameAuxSendVolume,
+                        Envelope = voice.Envelope,
+                        NormalizationGain = voice.NormalizationGain,
+                        LowPassFilter = voice.LowPassFilter,
+                        HighPassFilter = voice.HighPassFilter,
+                        ObjectGUID = voice.ObjectGUID,
+                        ObjectName = voice.ObjectName,
+                        GameObjectID = voice.GameObjectID,
+                        GameObjectName = voice.GameObjectName,
+                        PlayTargetGUID = voice.PlayTargetGUID,
+                        PlayTargetName = voice.PlayTargetName,
+                        IsStarted = voice.IsStarted,
+                        IsVirtual = voice.IsVirtual,
+                        IsForcedVirtual = voice.IsForcedVirtual
                     });
 
                 }
@@ -453,38 +418,26 @@ namespace WwiseTools.Utils.Profiler
                 };
 
                 var jresult = await util.CallAsync(func, query, options, util.TimeOut);
-                var objects = jresult["return"];
-                if (objects == null) return result;
+                var returnData = WaapiSerializer.Deserialize<ReturnData<BusReturnData>>(jresult.ToString());
+                if (returnData.Return == null || returnData.Return.Count == 0) return result;
 
-                foreach (var bus in objects)
+                foreach (var bus in returnData.Return)
                 {
-                    int.TryParse(bus["pipelineID"]?.ToString(), out int piplineID);
-                    int.TryParse(bus["mixBusID"]?.ToString(), out int mixBusID);
-                    int.TryParse(bus["gameObjectID"]?.ToString(), out int gameObjectID);
-                    int.TryParse(bus["mixerID"]?.ToString(), out int mixerID);
-                    int.TryParse(bus["deviceID"]?.ToString(), out int deviceID);
-                    int.TryParse(bus["voiceCount"]?.ToString(), out int voiceCount);
-                    int.TryParse(bus["depth"]?.ToString(), out int depth);
-                    string objectGUID = bus["objectGUID"]?.ToString();
-                    string objectName = bus["objectName"]?.ToString();
-                    string gameObjectName = bus["gameObjectName"]?.ToString();
-                    float.TryParse(bus["volume"]?.ToString(), out float volume);
-                    float.TryParse(bus["downstreamGain"]?.ToString(), out float downstreamGain);
 
                     result.Add(new ProfilerBus()
                     {
-                        PipelineID = piplineID,
-                        MixBusID = mixBusID,
-                        GameObjectID = gameObjectID,
-                        MixerID = mixerID,
-                        DeviceID = deviceID,
-                        VoiceCount = voiceCount,
-                        Depth = depth,
-                        ObjectGUID = objectGUID,
-                        ObjectName = objectName,
-                        GameObjectName = gameObjectName,
-                        Volume = volume,
-                        DownStreamGain = downstreamGain
+                        PipelineID = bus.PipelineID,
+                        MixBusID = bus.MixBusID,
+                        GameObjectID = bus.GameObjectID,
+                        MixerID = bus.MixerID,
+                        DeviceID = bus.DeviceID,
+                        VoiceCount = bus.VoiceCount,
+                        Depth = bus.Depth,
+                        ObjectGUID = bus.ObjectGUID,
+                        ObjectName = bus.ObjectName,
+                        GameObjectName = bus.GameObjectName,
+                        Volume = bus.Volume,
+                        DownStreamGain = bus.DownstreamGain
                     });
                 }
 

@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using WwiseTools.Objects;
 using WwiseTools.Properties;
+using WwiseTools.Serialization;
 using WwiseTools.Utils;
 
 namespace WwiseTools.WwiseTypes
@@ -37,12 +38,12 @@ namespace WwiseTools.WwiseTypes
                     null
                 );
 
-                var results = jresult["return"];
-                if (results == null) return result;
-                foreach (var token in results)
+                var returnData = WaapiSerializer.Deserialize<ReturnData<GetSwitchAssingmentsData>>(jresult.ToString());
+                if (returnData.Return == null || returnData.Return.Count == 0) return result;
+                foreach (var token in returnData.Return)
                 {
-                    string childID = token["child"]?.ToString();
-                    string switchID = token["stateOrSwitch"]?.ToString();
+                    string childID = token.Child;
+                    string switchID = token.StateOrSwitch;
                     if (string.IsNullOrEmpty(childID) ||
                         string.IsNullOrEmpty(switchID)) continue;
 

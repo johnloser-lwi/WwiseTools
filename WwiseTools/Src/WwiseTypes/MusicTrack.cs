@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using WwiseTools.Objects;
 using WwiseTools.Properties;
+using WwiseTools.Serialization;
 using WwiseTools.Utils;
 
 namespace WwiseTools.WwiseTypes
@@ -33,7 +34,7 @@ namespace WwiseTools.WwiseTypes
                 // ak.wwise.core.@object.get 返回参数设置
                 var options = new
                 {
-                    @return = new string[] { "audioSource:maxDurationSource" }
+                    @return = new string[] { "maxDurationSource" }
                 };
 
 
@@ -42,11 +43,11 @@ namespace WwiseTools.WwiseTypes
 
                 JObject jresult = await WwiseUtility.Instance.CallAsync(func, query, options, WwiseUtility.Instance.TimeOut);
 
-                if (jresult["return"]?.Last == null) throw new Exception();
-                if (jresult["return"].Last["audioSource:maxDurationSource"] == null) throw new Exception();
-
-                float.TryParse(jresult["return"].Last["audioSource:maxDurationSource"]["trimmedDuration"]?.ToString(),
-                    out float duration);
+                var returnData = WaapiSerializer.Deserialize<ReturnData<WwiseObjectData>>(jresult.ToString());
+        
+                if (returnData.Return == null || returnData.Return.Count == 0) return 0;
+                
+                var duration = returnData.Return[0].MaxDurationSource.TrimmedDuration;
 
                 WaapiLog.InternalLog($"Duration of WwiseObject {WwiseObject.Name} is {duration}s");
 

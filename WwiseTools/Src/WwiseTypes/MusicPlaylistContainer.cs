@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using WwiseTools.Objects;
+using WwiseTools.Serialization;
 using WwiseTools.Utils;
 
 namespace WwiseTools.WwiseTypes
@@ -68,9 +69,9 @@ namespace WwiseTools.WwiseTypes
 
                 JObject jresult = await WwiseUtility.Instance.CallAsync(func, query, options, WwiseUtility.Instance.TimeOut);
 
-                if (jresult["return"]?.Last == null) throw new Exception();
-                if (jresult["return"].Last["musicPlaylistRoot"] == null) throw new Exception();
-                string id = jresult["return"].Last["musicPlaylistRoot"]["id"]?.ToString();
+                var returnData = WaapiSerializer.Deserialize<ReturnData<WwiseObjectData>>(jresult.ToString());
+                if (returnData.Return == null || returnData.Return.Count == 0) return null;
+                string id = returnData.Return[0].MusicPlaylistRoot.ID;
 
                 return await WwiseUtility.Instance.GetWwiseObjectByIDAsync(id);
             }

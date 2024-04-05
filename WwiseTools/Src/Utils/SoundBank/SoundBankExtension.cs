@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using System.Linq;
 using Newtonsoft.Json.Linq;
 using WwiseTools.Objects;
+using WwiseTools.Serialization;
 using WwiseTools.Src.Models.SoundBank;
 
 namespace WwiseTools.Utils.SoundBank;
@@ -155,22 +156,24 @@ public static class SoundBankExtension
             };
 
             var jresult = await util.CallAsync(func, args, null, util.TimeOut);
-            if (jresult == null || jresult["inclusions"] == null) return result;
-            foreach (var inclusion in jresult["inclusions"])
+            var returnData = WaapiSerializer.Deserialize<GetSoundBankInclusionData>(jresult.ToString());
+            if (returnData.Inclusions.Length == 0) return result;
+            foreach (var inclusion in returnData.Inclusions)
             {
-                var id = inclusion["object"]?.ToString();
+                var id = inclusion.Object;
                 if (string.IsNullOrEmpty(id)) continue;
 
-                var filter = inclusion["filter"]?.ToString();
-                if (filter == null) continue;
+                var filters = inclusion.Filter;
 
                 var soundBankInclusion = new SoundBankInclusion();
                 soundBankInclusion.Object = await WwiseUtility.Instance.GetWwiseObjectByIDAsync(id);
 
-                if (filter.Contains("events")) soundBankInclusion.Filter |= SoundBankInclusionFilter.Events;
-                if (filter.Contains("structures")) soundBankInclusion.Filter |= SoundBankInclusionFilter.Structures;
-                if (filter.Contains("media")) soundBankInclusion.Filter |= SoundBankInclusionFilter.Media;
-
+                foreach (var filter in filters)
+                {
+                    if (filter == InclusionFilterData.Events) soundBankInclusion.Filter |= SoundBankInclusionFilter.Events;
+                    if (filter == InclusionFilterData.Structures) soundBankInclusion.Filter |= SoundBankInclusionFilter.Structures;
+                    if (filter == InclusionFilterData.Media) soundBankInclusion.Filter |= SoundBankInclusionFilter.Media;
+                }
 
                 result.Add(soundBankInclusion);
             }

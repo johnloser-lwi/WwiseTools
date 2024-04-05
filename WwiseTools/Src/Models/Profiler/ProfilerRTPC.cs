@@ -4,7 +4,7 @@
     {
         public string ID { get; set; }
         public string Name { get; set; }
-        public int GameObjectID { get; set; }
+        public ulong GameObjectID { get; set; }
         public float Value { get; set; }
     }
 

@@ -7,6 +7,7 @@ using WwiseTools.Objects;
 using WwiseTools.Properties;
 using WwiseTools.Utils;
 using System.IO;
+using WwiseTools.Serialization;
 
 namespace WwiseTools.WwiseTypes;
 
@@ -32,7 +33,7 @@ public class AudioFileSource : WwiseTypeBase
             var options = new
             {
 
-                @return = new string[] {"audioSource:language"}
+                @return = new string[] {"audioSourceLanguage"}
 
             };
 
@@ -40,14 +41,12 @@ public class AudioFileSource : WwiseTypeBase
 
             JObject jresult =
                 await WwiseUtility.Instance.CallAsync(func, query, options, WwiseUtility.Instance.TimeOut);
-
-            if (jresult["return"] == null) return "";
-
-            var sourceLanguage = jresult["return"].First;
-            if (sourceLanguage == null) return "";
-
-            var name = sourceLanguage["audioSource:language"]?["name"];
-            return name == null ? "" : name.ToString();
+            
+            var returnData = WaapiSerializer.Deserialize<ReturnData<WwiseObjectData>>(jresult.ToString());
+            if (returnData.Return == null || returnData.Return.Count == 0) return "";
+            
+            var name = returnData.Return[0].AudioSourceLanguage.Name;
+            return name;
         }
         catch (Exception e)
         {

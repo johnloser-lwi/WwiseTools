@@ -93,7 +93,11 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Src\Serialization\GetInfoData.cs" />
     <Compile Include="Src\Serialization\GetProjectInfoData.cs" />
-    <Compile Include="Src\Serialization\Shared.cs" />
+    <Compile Include="Src\Serialization\GetSwitchAssingmentsData.cs" />
+    <Compile Include="Src\Serialization\ObjectData.cs" />
+    <Compile Include="Src\Serialization\GetSoundBankInclusionData.cs" />
+    <Compile Include="Src\Serialization\ProfilerData.cs" />
+    <Compile Include="Src\Serialization\RemoteData.cs" />
     <Compile Include="Src\Serialization\WaapiSerializer.cs" />
     <Compile Include="Src\Utils\Lists\WaapiFunctionList.cs" />
     <Compile Include="Src\Utils\Lists\WaapiListBase.cs" />
