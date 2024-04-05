@@ -69,8 +69,8 @@ namespace WwiseTools.WwiseTypes
 
                 JObject jresult = await WwiseUtility.Instance.CallAsync(func, query, options, WwiseUtility.Instance.TimeOut);
 
-                var returnData = WaapiSerializer.Deserialize<ReturnData<WwiseObjectData>>(jresult.ToString());
-                if (returnData.Return == null || returnData.Return.Count == 0) return null;
+                var returnData = WaapiSerializer.Deserialize<ReturnData<ObjectReturnData>>(jresult.ToString());
+                if (returnData.Return.Length == 0) return null;
                 string id = returnData.Return[0].MusicPlaylistRoot.ID;
 
                 return await WwiseUtility.Instance.GetWwiseObjectByIDAsync(id);

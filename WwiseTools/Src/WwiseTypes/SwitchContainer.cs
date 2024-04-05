@@ -39,7 +39,7 @@ namespace WwiseTools.WwiseTypes
                 );
 
                 var returnData = WaapiSerializer.Deserialize<ReturnData<GetSwitchAssingmentsData>>(jresult.ToString());
-                if (returnData.Return == null || returnData.Return.Count == 0) return result;
+                if (returnData.Return.Length == 0) return result;
                 foreach (var token in returnData.Return)
                 {
                     string childID = token.Child;

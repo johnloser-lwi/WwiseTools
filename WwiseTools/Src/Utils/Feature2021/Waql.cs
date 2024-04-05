@@ -61,8 +61,8 @@ namespace WwiseTools.Utils.Feature2021
                     @return = new string[] { "name", "id", "type", "path" }
                 };
                 var jresult = await WwiseUtility.Instance.CallAsync("ak.wwise.core.object.get", query, option, WwiseUtility.Instance.TimeOut);
-                var returnData = WaapiSerializer.Deserialize<ReturnData<WwiseObjectData>>(jresult.ToString());
-                if (returnData.Return == null || returnData.Return.Count <= 0) return false;
+                var returnData = WaapiSerializer.Deserialize<ReturnData<ObjectReturnData>>(jresult.ToString());
+                if (returnData.Return.Length == 0) return false;
                 foreach (var obj in returnData.Return)
                 {
                     string name = obj.Name;

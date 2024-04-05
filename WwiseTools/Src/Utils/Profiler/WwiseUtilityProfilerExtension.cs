@@ -277,7 +277,7 @@ namespace WwiseTools.Utils.Profiler
 
                 var jresult = await util.CallAsync(func, query, null, util.TimeOut);
                 var returnData = WaapiSerializer.Deserialize<ReturnData<ProfilerRTPCData>>(jresult.ToString());
-                if (returnData.Return == null || returnData.Return.Count == 0) return result;
+                if (returnData.Return == null || returnData.Return.Length == 0) return result;
                 foreach (var rtpc in returnData.Return)
                 {
                     result.Add(new ProfilerRTPC()
@@ -343,7 +343,7 @@ namespace WwiseTools.Utils.Profiler
 
                 var jresult = await util.CallAsync(func, query, options, util.TimeOut);
                 var returnData = WaapiSerializer.Deserialize<ReturnData<VoiceReturnData>>(jresult.ToString());
-                if (returnData.Return == null || returnData.Return.Count == 0) return result;
+                if (returnData.Return == null || returnData.Return.Length == 0) return result;
 
                 foreach (var voice in returnData.Return)
                 {
@@ -419,7 +419,7 @@ namespace WwiseTools.Utils.Profiler
 
                 var jresult = await util.CallAsync(func, query, options, util.TimeOut);
                 var returnData = WaapiSerializer.Deserialize<ReturnData<BusReturnData>>(jresult.ToString());
-                if (returnData.Return == null || returnData.Return.Count == 0) return result;
+                if (returnData.Return == null || returnData.Return.Length == 0) return result;
 
                 foreach (var bus in returnData.Return)
                 {

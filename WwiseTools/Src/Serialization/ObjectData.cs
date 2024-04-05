@@ -16,7 +16,7 @@ public class CommonObjectData : GuidIdObjectData
     public string Name { get; set; }
 }
 
-public class WwiseObjectData : ShortIDObjectData
+public class ObjectReturnData : ShortIDObjectData
 {
     [JsonProperty("type")]
     public string Type { get; set; }
@@ -34,7 +34,7 @@ public class WwiseObjectData : ShortIDObjectData
     public string PluginName { get; set; }
     
     [JsonProperty("parent")]
-    public WwiseObjectData Parent { get; set; }
+    public CommonObjectData Parent { get; set; }
     
     [JsonProperty("language")]
     public string Language { get; set; }
@@ -143,7 +143,7 @@ public class WwiseObjectData : ShortIDObjectData
 public class PointsData 
 {
     [JsonProperty("point")]
-    public List<PointItemData> Points { get; set; }
+    public PointItemData[] Points { get; set; }
 }
 
 [JsonObject]
@@ -256,9 +256,9 @@ public class ShortIDObjectData : CommonObjectData
 public class ReturnData<T>
 {
     [JsonProperty("return")]
-    public List<T> Return { get; set; }
+    public T[] Return { get; set; }
     [JsonProperty("objects")]
-    public List<T> Objects { get; set; }
+    public T[] Objects { get; set; }
 }
 
 [JsonObject]

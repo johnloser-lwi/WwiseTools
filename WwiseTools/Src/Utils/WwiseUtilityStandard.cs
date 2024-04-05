@@ -3,17 +3,13 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
 using System.Threading.Tasks;
-using System.Xml;
 using Newtonsoft.Json.Linq;
 using WwiseTools.Models;
 using WwiseTools.Models.Import;
 using WwiseTools.Objects;
 using WwiseTools.Properties;
 using WwiseTools.Serialization;
-using WwiseTools.Src.Models.SoundBank;
 using WwiseTools.Utils.Feature2022;
 
 namespace WwiseTools.Utils
@@ -43,18 +39,9 @@ namespace WwiseTools.Utils
                     null);
                 WaapiLog.InternalLog("Property and References fetched successfully!");
 
-                if (result == null) return new string[] { };
-                
-                if (result["return"] == null) return new string[] { };
+                var returnData = WaapiSerializer.Deserialize<ReturnData<string>>(result.ToString());
 
-                List<string> ret = new List<string>();
-
-                foreach (var val in result["return"])
-                {
-                    ret.Add(val.ToString());
-                }
-                
-                return ret.ToArray();
+                return returnData.Return;
 
 
             }
@@ -351,10 +338,10 @@ namespace WwiseTools.Utils
                     options, TimeOut);
                 WaapiLog.InternalLog("Notes fetched successfully!");
                 
-                var returnData = WaapiSerializer.Deserialize<ReturnData<WwiseObjectData>>(result.ToString());
-                if (returnData.Return is null || returnData.Return.Count <= 0) throw new Exception("Object not found!");
+                var returnData = WaapiSerializer.Deserialize<ReturnData<ObjectReturnData>>(result.ToString());
+                if (returnData.Return.Length == 0) throw new Exception("Object not found!");
                 
-                return returnData.Return.Last().Notes;
+                return returnData.Return[0].Notes;
 
             }
             catch (Exception e)
@@ -450,8 +437,11 @@ namespace WwiseTools.Utils
                     );
 
                 WaapiLog.InternalLog($"Event {eventName} created successfully!");
-                if (result["id"] == null) throw new Exception();
-                return await GetWwiseObjectByIDAsync(result["id"].ToString());
+
+                var returnData = WaapiSerializer.Deserialize<GuidIdObjectData>(result.ToString());
+
+                if (string.IsNullOrEmpty(returnData.ID)) throw new Exception();
+                return await GetWwiseObjectByIDAsync(returnData.ID);
             }
             catch (Exception e)
             {
@@ -523,10 +513,10 @@ namespace WwiseTools.Utils
                     null
                 );
 
-                
-                if (result["id"] == null) throw new Exception();
 
-                var ret = await GetWwiseObjectByIDAsync(result["id"]?.ToString());
+                var returnData = WaapiSerializer.Deserialize<GuidIdObjectData>(result.ToString());
+
+                var ret = await GetWwiseObjectByIDAsync(returnData.ID);
 
                 if (ret == null) return null;
                 
@@ -628,8 +618,6 @@ namespace WwiseTools.Utils
                 WaapiLog.InternalLog($"Failed to return WwiseObject from ID : {targetId}! ======> {e.Message}");
                 return null;
             }
-
-            return null;
         }
 
         public async Task<JToken?> GetWwiseObjectPropertyByIDAsync(string targetId, string wwiseProperty)
@@ -725,9 +713,9 @@ namespace WwiseTools.Utils
 
 
                 JObject jresult = await Instance._client.Call(func, query, options, TimeOut);
-                var returnData = WaapiSerializer.Deserialize<ReturnData<WwiseObjectData>>(jresult.ToString());
-                if (returnData.Return is null || returnData.Return.Count <= 0) throw new Exception("Object not found!");
-                string? path = returnData.Return.Last().Path;
+                var returnData = WaapiSerializer.Deserialize<ReturnData<ObjectReturnData>>(jresult.ToString());
+                if (returnData.Return.Length == 0) throw new Exception("Object not found!");
+                string? path = returnData.Return[0].Path;
 
                 return path;
             }
@@ -771,11 +759,11 @@ namespace WwiseTools.Utils
 
                 JObject jresult = await _client.Call(func, query, options, TimeOut);
                 
-                var returnData = WaapiSerializer.Deserialize<ReturnData<WwiseObjectData>>(jresult.ToString());
+                var returnData = WaapiSerializer.Deserialize<ReturnData<ObjectReturnData>>(jresult.ToString());
                 
                 
                 if (returnData.Return == null) throw new Exception("Object not found!");
-                var obj = returnData.Return.Last();
+                var obj = returnData.Return[0];
                 string? name = obj.Name;
                 string? id = obj.ID;
                 string? type = obj.Type;
@@ -824,8 +812,6 @@ namespace WwiseTools.Utils
                 return null;
             }
 
-            return null;
-
         }
 
         private async Task<WwiseObject?> GetSingleWwiseObjectAsync(object query)
@@ -844,10 +830,10 @@ namespace WwiseTools.Utils
 
                 JObject jresult = await _client.Call(func, query, options, TimeOut);
                 
-                var returnData = WaapiSerializer.Deserialize<ReturnData<WwiseObjectData>>(jresult.ToString());
-                if (returnData.Return is null || returnData.Return.Count <= 0) throw new Exception("Object not found!");
+                var returnData = WaapiSerializer.Deserialize<ReturnData<ObjectReturnData>>(jresult.ToString());
+                if (returnData.Return.Length == 0) throw new Exception("Object not found!");
 
-                var obj = returnData.Return.Last();
+                var obj = returnData.Return[0];
                 string? name = obj.Name;
                 string? id = obj.ID;
                 string? type = obj.Type;
@@ -859,7 +845,7 @@ namespace WwiseTools.Utils
                     return new WwiseObject(name, id, type, path);
                 }
             }
-            catch (Exception e)
+            catch
             {
                 throw;
             }
@@ -909,7 +895,7 @@ namespace WwiseTools.Utils
                 var func = WaapiFunctionList.CoreObjectGet;
 
                 JObject jresult = await _client.Call(func, query, options, TimeOut);
-                var returnData = WaapiSerializer.Deserialize<ReturnData<WwiseObjectData>>(jresult.ToString());
+                var returnData = WaapiSerializer.Deserialize<ReturnData<ObjectReturnData>>(jresult.ToString());
                 
                 if (returnData.Return is null) throw new Exception();
                 foreach (var obj in returnData.Return)
@@ -957,7 +943,7 @@ namespace WwiseTools.Utils
 
                 
                 JObject jresult = await _client.Call(func, null, options, TimeOut);
-                var returnData = WaapiSerializer.Deserialize<ReturnData<WwiseObjectData>>(jresult.ToString());
+                var returnData = WaapiSerializer.Deserialize<ReturnData<ObjectReturnData>>(jresult.ToString());
 
 
                 if (returnData.Objects is null) throw new Exception("No object found!");
@@ -1042,11 +1028,14 @@ namespace WwiseTools.Utils
                 var func = WaapiFunctionList.CoreObjectGet;
 
                 var result = await _client.Call(func, query, options, TimeOut);
-                if (result["return"] == null) throw new Exception();
-                foreach (var r in result["return"]!)
+
+                var returnData = WaapiSerializer.Deserialize<ReturnData<CommonObjectData>>(result.ToString());
+
+                if (returnData.Return.Length == 0) throw new Exception();
+                foreach (var r in returnData.Return)
                 {
-                    if (r["name"] == null) continue;
-                    string name = r["name"]!.ToString();
+                    if (string.IsNullOrEmpty(r.Name)) continue;
+                    string name = r.Name;
                     var ignoreList = new string[] { "Mixed", "SFX", "External", "SoundSeed Grain" };
                     if (!ignoreList.Contains(name))
                         resultList.Add(name);
@@ -1127,13 +1116,12 @@ namespace WwiseTools.Utils
 
                 var result = await _client.Call(func, importQ, options); // 执行导入
 
-
-                if (result == null || result["objects"] == null) return null;
-                foreach (var token in result["objects"]!)
+                var returnData = WaapiSerializer.Deserialize<ReturnData<GuidIdObjectData>>(result.ToString());
+                if (returnData.Objects.Length == 0) return null;
+                    foreach (var token in returnData.Objects)
                 {
-                    if (token["id"] == null) continue;
-
-                    var id = token["id"]?.ToString();
+                   
+                    var id = token.ID;
                     
                     if (string.IsNullOrEmpty(id)) continue;
 
@@ -1171,14 +1159,13 @@ namespace WwiseTools.Utils
                 var func = Function.Verify("ak.wwise.core.audio.importTabDelimited");
 
                 var result = await _client.Call(func, importQ, options); // 执行导入
+                var returnData = WaapiSerializer.Deserialize<ReturnData<GuidIdObjectData>>(result.ToString());
 
-
-                if (result == null || result["objects"] == null) return null;
-                foreach (var token in result["objects"]!)
+                if (returnData.Objects.Length == 0) return ret;
+                foreach (var token in returnData.Objects)
                 {
-                    if (token["id"] == null) continue;
-
-                    var id = token["id"]?.ToString();
+                   
+                    var id = token.ID;
                     
                     if (string.IsNullOrEmpty(id)) continue;
 
@@ -1226,7 +1213,7 @@ namespace WwiseTools.Utils
 
                 var result = await _client.Call(func, importQ, options); // 执行导入
 
-                var returnData = WaapiSerializer.Deserialize<ReturnData<WwiseObjectData>>(result.ToString());
+                var returnData = WaapiSerializer.Deserialize<ReturnData<ObjectReturnData>>(result.ToString());
 
                 foreach (var obj in returnData.Objects)
                 {
@@ -1279,9 +1266,9 @@ namespace WwiseTools.Utils
                 var func = WaapiFunctionList.CoreObjectGet;
 
                 JObject jresult = await _client.Call(func, query, options, TimeOut);
-                var returnData = WaapiSerializer.Deserialize<ReturnData<WwiseObjectData>>(jresult.ToString());
-                if (returnData.Return is null || returnData.Return.Count == 0) throw new Exception("No object found!");
-                string? filePath = returnData.Return.Last().FilePath;
+                var returnData = WaapiSerializer.Deserialize<ReturnData<ObjectReturnData>>(jresult.ToString());
+                if (returnData.Return.Length == 0) throw new Exception("No object found!");
+                string? filePath = returnData.Return[0].FilePath;
 
                 WaapiLog.InternalLog($"Work Unit file path of object {wwiseObject.Name} successfully fetched!");
 
@@ -1374,7 +1361,7 @@ namespace WwiseTools.Utils
                 
                 var returnData = WaapiSerializer.Deserialize<ReturnData<CommonObjectData>>(jresult.ToString());
 
-                if (returnData.Return is null || returnData.Return.Count == 0) throw new Exception("No project found!");
+                if (returnData.Return.Length == 0) throw new Exception("No project found!");
                 
                 string name = returnData.Return[0].Name;
                 
@@ -1458,7 +1445,7 @@ namespace WwiseTools.Utils
 
                 return wwiseInfo;
             }
-            catch (Exception e)
+            catch
             {
                 //WaapiLog.InternalLog($"Failed to get Wwise info! ======> {e.Message}");
             }
@@ -1621,8 +1608,8 @@ namespace WwiseTools.Utils
                 var func = WaapiFunctionList.CoreObjectGet;
 
                 var jresult = await _client.Call(func, query, options, TimeOut);
-                var returnData = WaapiSerializer.Deserialize<ReturnData<WwiseObjectData>>(jresult.ToString());
-                if (returnData.Return is null || returnData.Return.Count <= 0) throw new Exception("No parent found!");
+                var returnData = WaapiSerializer.Deserialize<ReturnData<ObjectReturnData>>(jresult.ToString());
+                if (returnData.Return.Length == 0) throw new Exception("No parent found!");
                 foreach (var obj in returnData.Return)
                 {
                     string? name = obj.Name;
@@ -1677,8 +1664,8 @@ namespace WwiseTools.Utils
                 var func = WaapiFunctionList.CoreObjectGet;
 
                 var jresult = await _client.Call(func, query, options, TimeOut);
-                var returnData = WaapiSerializer.Deserialize<ReturnData<WwiseObjectData>>(jresult.ToString());
-                if (returnData.Return is null || returnData.Return.Count <= 0) throw new Exception("No parent found!");
+                var returnData = WaapiSerializer.Deserialize<ReturnData<ObjectReturnData>>(jresult.ToString());
+                if (returnData.Return.Length == 0) throw new Exception("No parent found!");
                 foreach (var obj in returnData.Return)
                 {
                     string? name = obj.Name;
@@ -1732,8 +1719,8 @@ namespace WwiseTools.Utils
                 var func = WaapiFunctionList.CoreObjectGet;
 
                 var jresult = await _client.Call(func, query, options, TimeOut);
-                var returnData = WaapiSerializer.Deserialize<ReturnData<WwiseObjectData>>(jresult.ToString());
-                if (returnData.Return is null || returnData.Return.Count <= 0) throw new Exception("No parent found!");
+                var returnData = WaapiSerializer.Deserialize<ReturnData<ObjectReturnData>>(jresult.ToString());
+                if (returnData.Return.Length == 0) throw new Exception("No parent found!");
                 foreach (var obj in returnData.Return)
                 {
                     string? name = obj.Name;
@@ -1788,8 +1775,8 @@ namespace WwiseTools.Utils
                 var func = WaapiFunctionList.CoreObjectGet;
 
                 var jresult = await _client.Call(func, query, options, TimeOut);
-                var returnData = WaapiSerializer.Deserialize<ReturnData<WwiseObjectData>>(jresult.ToString());
-                if (returnData.Return is null || returnData.Return.Count <= 0) throw new Exception("No children found!");
+                var returnData = WaapiSerializer.Deserialize<ReturnData<ObjectReturnData>>(jresult.ToString());
+                if (returnData.Return.Length == 0) throw new Exception("No children found!");
                 foreach (var obj in returnData.Return)
                 {
                     string? name = obj.Name;
@@ -1844,8 +1831,8 @@ namespace WwiseTools.Utils
                 var func = WaapiFunctionList.CoreObjectGet;
 
                 var jresult = await _client.Call(func, query, options, TimeOut);
-                var returnData = WaapiSerializer.Deserialize<ReturnData<WwiseObjectData>>(jresult.ToString());
-                if (returnData.Return is null || returnData.Return.Count <= 0) throw new Exception("No children found!");
+                var returnData = WaapiSerializer.Deserialize<ReturnData<ObjectReturnData>>(jresult.ToString());
+                if (returnData.Return.Length == 0) throw new Exception("No children found!");
                 foreach (var obj in returnData.Return!)
                 {
                     string? name = obj.Name;
@@ -1900,8 +1887,8 @@ namespace WwiseTools.Utils
                 var func = WaapiFunctionList.CoreObjectGet;
 
                 var jresult = await _client.Call(func, query, options, TimeOut);
-                var returnData = WaapiSerializer.Deserialize<ReturnData<WwiseObjectData>>(jresult.ToString());
-                if (returnData.Return is null || returnData.Return.Count <= 0) throw new Exception("No parent found!");
+                var returnData = WaapiSerializer.Deserialize<ReturnData<ObjectReturnData>>(jresult.ToString());
+                if (returnData.Return.Length == 0) throw new Exception("No parent found!");
                 foreach (var obj in returnData.Return)
                 {
                     string? name = obj.Name;
@@ -1956,8 +1943,8 @@ namespace WwiseTools.Utils
                 var func = WaapiFunctionList.CoreObjectGet;
 
                 var jresult = await _client.Call(func, query, options, TimeOut);
-                var returnData = WaapiSerializer.Deserialize<ReturnData<WwiseObjectData>>(jresult.ToString());
-                if (returnData.Return is null || returnData.Return.Count <= 0) throw new Exception("No parent found!");
+                var returnData = WaapiSerializer.Deserialize<ReturnData<ObjectReturnData>>(jresult.ToString());
+                if (returnData.Return.Length == 0) throw new Exception("No parent found!");
                 
                 foreach (var obj in returnData.Return)
                 {
@@ -2047,7 +2034,7 @@ namespace WwiseTools.Utils
 
                 return true;
             }
-            catch (Exception e)
+            catch
             {
             }
 
@@ -2072,7 +2059,7 @@ namespace WwiseTools.Utils
 
                 return true;
             }
-            catch (Exception e)
+            catch
             {
             }
 
@@ -2096,7 +2083,7 @@ namespace WwiseTools.Utils
 
                 return true;
             }
-            catch (Exception e)
+            catch
             {
             }
 

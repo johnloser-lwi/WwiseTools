@@ -19,9 +19,9 @@ public class GetProjectInfoData : CommonObjectData
     [JsonProperty("isDirty")]
     public bool IsDirty { get; set; }
     [JsonProperty("languages")]
-    public List<ShortIDObjectData> Languages { get; set; }
+    public ShortIDObjectData[] Languages { get; set; }
     [JsonProperty("platforms")]
-    public List<ProjectInfoPlatformData> Platforms { get; set; }
+    public ProjectInfoPlatformData[] Platforms { get; set; }
     [JsonProperty("path")]    
     public string Path { get; set; }
     [JsonProperty("referenceLanguageId")]

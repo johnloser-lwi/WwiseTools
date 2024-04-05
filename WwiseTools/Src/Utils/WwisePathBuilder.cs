@@ -43,8 +43,6 @@ public class WwisePathBuilder
     /// <returns>返回路径是否成功添加</returns>
     public async Task<bool> AppendHierarchyAsync(WwiseObject.ObjectType type, string name)
     {
-        WwiseObject? last;
-
         var initializedWithPath = !string.IsNullOrEmpty(_rootPath);
 
         if (initializedWithPath) _root = await WwiseUtility.Instance.GetWwiseObjectByPathAsync(_rootPath);

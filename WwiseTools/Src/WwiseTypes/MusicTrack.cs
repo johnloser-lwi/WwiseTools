@@ -43,9 +43,9 @@ namespace WwiseTools.WwiseTypes
 
                 JObject jresult = await WwiseUtility.Instance.CallAsync(func, query, options, WwiseUtility.Instance.TimeOut);
 
-                var returnData = WaapiSerializer.Deserialize<ReturnData<WwiseObjectData>>(jresult.ToString());
+                var returnData = WaapiSerializer.Deserialize<ReturnData<ObjectReturnData>>(jresult.ToString());
         
-                if (returnData.Return == null || returnData.Return.Count == 0) return 0;
+                if (returnData.Return.Length == 0) return 0;
                 
                 var duration = returnData.Return[0].MaxDurationSource.TrimmedDuration;
 

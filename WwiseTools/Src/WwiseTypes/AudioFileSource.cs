@@ -15,7 +15,7 @@ public class AudioFileSource : WwiseTypeBase
 {
     public async Task<string> GetLanguageAsync()
     {
-        if (!await WwiseUtility.Instance.TryConnectWaapiAsync()) return null;
+        if (!await WwiseUtility.Instance.TryConnectWaapiAsync()) return "";
 
         try
         {
@@ -42,8 +42,8 @@ public class AudioFileSource : WwiseTypeBase
             JObject jresult =
                 await WwiseUtility.Instance.CallAsync(func, query, options, WwiseUtility.Instance.TimeOut);
             
-            var returnData = WaapiSerializer.Deserialize<ReturnData<WwiseObjectData>>(jresult.ToString());
-            if (returnData.Return == null || returnData.Return.Count == 0) return "";
+            var returnData = WaapiSerializer.Deserialize<ReturnData<ObjectReturnData>>(jresult.ToString());
+            if (returnData.Return.Length == 0) return "";
             
             var name = returnData.Return[0].AudioSourceLanguage.Name;
             return name;
@@ -51,7 +51,7 @@ public class AudioFileSource : WwiseTypeBase
         catch (Exception e)
         {
             WaapiLog.InternalLog($"Failed to return Language from ID : {WwiseObject.ID}! ======> {e.Message}");
-            return null;
+            return "";
         }
     }
 
