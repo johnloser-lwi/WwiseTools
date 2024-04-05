@@ -314,31 +314,7 @@ namespace WwiseTools.Utils
 
             try
             {
-                var func = Function.Verify(WaapiFunctionList.CoreObjectGet);
-
-                var query = new
-                {
-                    from = new
-                    {
-                        id = new string[]{ target.ID }
-                    }
-                };
-                
-                var options = new
-                {
-
-                    @return = new string[] { "notes" }
-
-                };
-                
-                var result = await _client.Call(func,
-
-                    query,
-
-                    options, TimeOut);
-                WaapiLog.InternalLog("Notes fetched successfully!");
-                
-                var returnData = WaapiSerializer.Deserialize<ReturnData<ObjectReturnData>>(result.ToString());
+                var returnData = await CoreObjectGetAsync(target.ID, "notes");
                 if (returnData.Return.Length == 0) throw new Exception("Object not found!");
                 
                 return returnData.Return[0].Notes;
@@ -686,34 +662,13 @@ namespace WwiseTools.Utils
         }
 
 
-        public async Task<string?> GetWwiseObjectPathAsync(string Id)
+        public async Task<string?> GetWwiseObjectPathAsync(string id)
         {
-            if (!await TryConnectWaapiAsync() || string.IsNullOrEmpty(Id)) return null;
+            if (!await TryConnectWaapiAsync() || string.IsNullOrEmpty(id)) return null;
 
             try
             {
-                var func = WaapiFunctionList.CoreObjectGet;
-
-                // ak.wwise.core.@object.get 指令
-                var query = new
-                {
-                    from = new
-                    {
-                        id = new string[] { Id }
-                    }
-                };
-
-                // ak.wwise.core.@object.get 返回参数设置
-                var options = new
-                {
-
-                    @return = new string[] { "path" }
-
-                };
-
-
-                JObject jresult = await Instance._client.Call(func, query, options, TimeOut);
-                var returnData = WaapiSerializer.Deserialize<ReturnData<ObjectReturnData>>(jresult.ToString());
+                var returnData = await CoreObjectGetAsync(id, "path");
                 if (returnData.Return.Length == 0) throw new Exception("Object not found!");
                 string? path = returnData.Return[0].Path;
 
@@ -721,7 +676,7 @@ namespace WwiseTools.Utils
             }
             catch (Exception e)
             {
-                WaapiLog.InternalLog($"Failed to get path of object : {Id}! =======> {e.Message}");
+                WaapiLog.InternalLog($"Failed to get path of object : {id}! =======> {e.Message}");
                 return null;
             }
 
@@ -747,33 +702,8 @@ namespace WwiseTools.Utils
                     }
                 };
 
-                // ak.wwise.core.@object.get 返回参数设置
-                var options = new
-                {
+                return await GetSingleWwiseObjectAsync(query);
 
-                    @return = new string[] { "name", "id", "type", "path" }
-
-                };
-                
-                var func = WaapiFunctionList.CoreObjectGet;
-
-                JObject jresult = await _client.Call(func, query, options, TimeOut);
-                
-                var returnData = WaapiSerializer.Deserialize<ReturnData<ObjectReturnData>>(jresult.ToString());
-                
-                
-                if (returnData.Return == null) throw new Exception("Object not found!");
-                var obj = returnData.Return[0];
-                string? name = obj.Name;
-                string? id = obj.ID;
-                string? type = obj.Type;
-                string? path = obj.Path;
-                
-                if (!string.IsNullOrEmpty(id) && !string.IsNullOrEmpty(type))
-                {
-                    WaapiLog.InternalLog($"WwiseObject {name} successfully fetched!");
-                    return new WwiseObject(name, id, type, path);
-                }
             }
             catch (Exception e)
             {
@@ -834,15 +764,11 @@ namespace WwiseTools.Utils
                 if (returnData.Return.Length == 0) throw new Exception("Object not found!");
 
                 var obj = returnData.Return[0];
-                string? name = obj.Name;
-                string? id = obj.ID;
-                string? type = obj.Type;
-                string? path = obj.Path;
                 
-                if (!string.IsNullOrEmpty(id) && !string.IsNullOrEmpty(type))
+                if (!string.IsNullOrEmpty(obj.ID) && !string.IsNullOrEmpty(obj.Type))
                 {
-                    WaapiLog.InternalLog($"WwiseObject {name} successfully fetched!");
-                    return new WwiseObject(name, id, type, path);
+                    WaapiLog.InternalLog($"WwiseObject {obj.Name} successfully fetched!");
+                    return new WwiseObject(obj.Name, obj.ID, obj.Type, obj.Path);
                 }
             }
             catch
@@ -897,19 +823,8 @@ namespace WwiseTools.Utils
                 JObject jresult = await _client.Call(func, query, options, TimeOut);
                 var returnData = WaapiSerializer.Deserialize<ReturnData<ObjectReturnData>>(jresult.ToString());
                 
-                if (returnData.Return is null) throw new Exception();
-                foreach (var obj in returnData.Return)
-                {
-                    string? name = obj.Name;
-                    string? id = obj.ID;
-                    string? type = obj.Type;
-                    string? path = obj.Path;
-
-                    if (!string.IsNullOrEmpty(id) && !string.IsNullOrEmpty(type)) 
-                        result.Add(new WwiseObject(name, id, type, path));
-                }
-
-
+                if (returnData.Return.Length == 0) throw new Exception();
+                result.AddRange(returnData.Objects.Select(o => new WwiseObject(o.Name, o.ID, o.Type, o.Path)));
 
                 WaapiLog.InternalLog($"WwiseObject list of type {targetType} successfully fetched!");
 
@@ -946,17 +861,8 @@ namespace WwiseTools.Utils
                 var returnData = WaapiSerializer.Deserialize<ReturnData<ObjectReturnData>>(jresult.ToString());
 
 
-                if (returnData.Objects is null) throw new Exception("No object found!");
-                foreach (var obj in returnData.Objects)
-                {
-                    string? name = obj.Name;
-                    string? id = obj.ID;
-                    string? type = obj.Type;
-                    string? path = obj.Path;
-
-                    if (!string.IsNullOrEmpty(id) && !string.IsNullOrEmpty(type)) 
-                        result.Add(new WwiseObject(name, id, type, path));
-                }
+                if (returnData.Objects.Length == 0) throw new Exception("No object found!");
+                result.AddRange(returnData.Objects.Select(o => new WwiseObject(o.Name, o.ID, o.Type, o.Path)));
 
                 WaapiLog.InternalLog($"Selected WwiseObject list successfully fetched!");
 
@@ -1110,26 +1016,16 @@ namespace WwiseTools.Utils
                     })
                 };
 
-                var options = new JObject(new JProperty("return", new object[] { "id" })); // 设置返回参数
+                var options = new JObject(new JProperty("return", new object[] { "id", "name", "path", "type" })); // 设置返回参数
 
                 var func = Function.Verify("ak.wwise.core.audio.import");
 
                 var result = await _client.Call(func, importQ, options); // 执行导入
 
-                var returnData = WaapiSerializer.Deserialize<ReturnData<GuidIdObjectData>>(result.ToString());
+                var returnData = WaapiSerializer.Deserialize<ReturnData<ObjectReturnData>>(result.ToString());
                 if (returnData.Objects.Length == 0) return null;
-                    foreach (var token in returnData.Objects)
-                {
-                   
-                    var id = token.ID;
-                    
-                    if (string.IsNullOrEmpty(id)) continue;
-
-                    var wwiseObject = await WwiseUtility.Instance.GetWwiseObjectByIDAsync(id);
-
-                    if (wwiseObject != null && wwiseObject.Type == "Sound") return wwiseObject;
-
-                }
+                var wo = returnData.Objects[0];
+                return new WwiseObject(wo.Name, wo.ID, wo.Type, wo.Path);
 
                 return null;
             }
@@ -1154,26 +1050,15 @@ namespace WwiseTools.Utils
                     new JProperty("importFile", filePath)
                 };
 
-                var options = new JObject(new JProperty("return", new object[] { "id" })); // 设置返回参数
+                var options = new JObject(new JProperty("return", new object[] { "id", "path", "type", "name" })); // 设置返回参数
 
                 var func = Function.Verify("ak.wwise.core.audio.importTabDelimited");
 
                 var result = await _client.Call(func, importQ, options); // 执行导入
-                var returnData = WaapiSerializer.Deserialize<ReturnData<GuidIdObjectData>>(result.ToString());
+                var returnData = WaapiSerializer.Deserialize<ReturnData<ObjectReturnData>>(result.ToString());
 
                 if (returnData.Objects.Length == 0) return ret;
-                foreach (var token in returnData.Objects)
-                {
-                   
-                    var id = token.ID;
-                    
-                    if (string.IsNullOrEmpty(id)) continue;
-
-                    var wwiseObject = await Instance.GetWwiseObjectByIDAsync(id!);
-
-                    if (wwiseObject != null && wwiseObject.Type == "Sound") ret.Add(wwiseObject);
-
-                }
+                ret.AddRange(returnData.Objects.Select(o => new WwiseObject(o.Name, o.ID, o.Type, o.Path)));
 
                 return ret;
             }
@@ -1215,14 +1100,7 @@ namespace WwiseTools.Utils
 
                 var returnData = WaapiSerializer.Deserialize<ReturnData<ObjectReturnData>>(result.ToString());
 
-                foreach (var obj in returnData.Objects)
-                {
-                    if (String.IsNullOrEmpty(obj.ID) || String.IsNullOrEmpty(obj.Type)) continue;
-
-                    var wwiseObject = new WwiseObject(obj.Name, obj.ID, obj.Type, obj.Path);
-
-                    ret.Add(wwiseObject);
-                }
+                ret.AddRange(returnData.Return.Select(o => new WwiseObject(o.Name, o.ID, o.Type, o.Path)));
                 
                 return ret;
 
@@ -1246,27 +1124,7 @@ namespace WwiseTools.Utils
 
             try
             {
-                // ak.wwise.core.@object.get 指令
-                var query = new
-                {
-                    from = new
-                    {
-                        id = new string[] { wwiseObject.ID }
-                    }
-                };
-
-                // ak.wwise.core.@object.get 返回参数设置
-                var options = new
-                {
-
-                    @return = new string[] { "filePath" }
-
-                };
-
-                var func = WaapiFunctionList.CoreObjectGet;
-
-                JObject jresult = await _client.Call(func, query, options, TimeOut);
-                var returnData = WaapiSerializer.Deserialize<ReturnData<ObjectReturnData>>(jresult.ToString());
+                var returnData = await CoreObjectGetAsync(wwiseObject.ID, "filePath");
                 if (returnData.Return.Length == 0) throw new Exception("No object found!");
                 string? filePath = returnData.Return[0].FilePath;
 
@@ -1501,15 +1359,21 @@ namespace WwiseTools.Utils
 
             var references = await GetEventsReferencingWwiseObjectAndParentsAsync(wwiseObject);
 
-            foreach (var reference in references)
+            if (references.Count > 0)
             {
+                var ancestors = await CoreObjectGetAsync(references.Select(o => o.ID).ToArray(),
+                    new []{"ancestors"}, new []{"name", "id", "type", "path"});
+            
+                var ids = ancestors.Return.Select(a => a.ID).Distinct().ToList();
+                ids.AddRange(references.Select(r => r.ID).Distinct().ToList());
+            
+                var indirectRefs = await CoreObjectGetAsync(ids.ToArray(), new []{"referencesTo"}, new []{"name", "id", "type", "path"});
+            
+                result.AddRange(indirectRefs.Return.Where(r => r.Type == "SoundBank").Select(o => new WwiseObject(o.Name, o.ID,o.Type, o.Path)).Distinct().ToList());
 
-                var soundBankRefs = (await GetReferencesToWwiseObjectAndParentsAsync(reference)).Where(b => b.Type == "SoundBank")
-                    .Distinct().ToList();
-
-                result.AddRange(soundBankRefs);
             }
-
+            
+           
             var directRefs = await GetReferencesToWwiseObjectAndParentsAsync(wwiseObject);
 
             result.AddRange(directRefs.Where(r => r.Type == "SoundBank").Distinct().ToList());
@@ -1521,58 +1385,39 @@ namespace WwiseTools.Utils
 
         public async Task<List<WwiseObject>> GetEventsReferencingWwiseObjectAsync(WwiseObject wwiseObject)
         {
-            List<WwiseObject> result = new List<WwiseObject>();
-
             var references = await GetReferencesToWwiseObjectAsync(wwiseObject);
+            
+            var actions = references.Where(r => r.Type == "Action").ToList();
+            var result = await BatchGetWwiseObjectParentAsync(actions);
 
-            if (references.Count == 0) return result;
-
-            foreach (var reference in references.Where(r => r.Type == "Action"))
-            {
-                var e = await GetWwiseObjectParentAsync(reference);
-                if (e == null || e.Type != "Event") continue;
-
-                if (!result.Contains(e)) result.Add(e);
-            }
-
-            return result.Distinct().ToList();
+            return result;
         }
 
         public async Task<List<WwiseObject>> GetEventsReferencingWwiseObjectAndParentsAsync(WwiseObject wwiseObject)
         {
-
-            List<WwiseObject> result = new List<WwiseObject>();
-
-            WwiseObject? current = wwiseObject;
+            var references = await GetReferencesToWwiseObjectAndParentsAsync(wwiseObject);
             
-            while (true)
-            {
-                if (current is null) break;
-                result.AddRange(await GetEventsReferencingWwiseObjectAsync(current));
+            var actions = references.Where(r => r.Type == "Action").ToList();
 
-                current = await GetWwiseObjectParentAsync(current);
-            }
+            var result = await BatchGetWwiseObjectParentAsync(actions);
 
-            return result.Distinct().ToList();
+            return result;
         }
 
 
         public async Task<List<WwiseObject>> GetReferencesToWwiseObjectAndParentsAsync(WwiseObject wwiseObject)
         {
             List<WwiseObject> result = new List<WwiseObject>();
-
-            WwiseObject? current = wwiseObject;
             
-            while (true)
-            {
-                if (current is null) break;
-                
-                result.AddRange(await GetReferencesToWwiseObjectAsync(current));
+            var objectList = await GetWwiseObjectAncestorsAsync(wwiseObject);
+            if (!objectList.Contains(wwiseObject)) objectList.Add(wwiseObject);
+            
+            var returnData = await CoreObjectGetAsync(objectList.Select(o => o.ID).ToArray(), new []{"referencesTo"}, new []{"name", "id", "type", "path"});
+            
+            if (returnData.Return.Length == 0) throw new Exception("No object found!");
+            result.AddRange(returnData.Return.Select(o => new WwiseObject(o.Name, o.ID, o.Type, o.Path)).Distinct());
 
-                current = await GetWwiseObjectParentAsync(current);
-            }
-
-            return result.Distinct().ToList();
+            return result;
         }
 
         public async Task<List<WwiseObject>> GetReferencesToWwiseObjectAsync(WwiseObject? wwiseObject)
@@ -1581,47 +1426,9 @@ namespace WwiseTools.Utils
             if (wwiseObject is null || !await TryConnectWaapiAsync()) return result;
             try
             {
-                var query = new
-                {
-                    from = new
-                    {
-                        id = new string[] { wwiseObject.ID }
-                    },
-                    transform = new object[] {
-                        new
-                        {
-                            select = new string[]
-                            {
-                                "referencesTo"
-                            }
-                        }
-                    }
-                };
-
-                var options = new
-                {
-
-                    @return = new string[] { "name", "id", "type", "path" }
-
-                };
-
-                var func = WaapiFunctionList.CoreObjectGet;
-
-                var jresult = await _client.Call(func, query, options, TimeOut);
-                var returnData = WaapiSerializer.Deserialize<ReturnData<ObjectReturnData>>(jresult.ToString());
+                var returnData = await CoreObjectGetAsync(wwiseObject.ID, new []{"referencesTo"});
                 if (returnData.Return.Length == 0) throw new Exception("No parent found!");
-                foreach (var obj in returnData.Return)
-                {
-                    string? name = obj.Name;
-                    string? id = obj.ID;
-                    string? type = obj.Type;
-                    string? path = obj.Path;
-                    
-                    if (!string.IsNullOrEmpty(id) && !string.IsNullOrEmpty(type)) 
-                        result.Add(new WwiseObject(name, id, type, path));
-                }
-
-
+                result.AddRange(returnData.Return.Select(o => new WwiseObject(o.Name, o.ID, o.Type, o.Path)));
             }
             catch (Exception e)
             {
@@ -1637,47 +1444,12 @@ namespace WwiseTools.Utils
             if (wwiseObjects.Count == 0 || !await TryConnectWaapiAsync()) return result;
             try
             {
-                var query = new
-                {
-                    from = new
-                    {
-                        id = wwiseObjects.Select(w => w.ID).ToArray()
-                    },
-                    transform = new object[] {
-                        new
-                        {
-                            select = new string[]
-                            {
-                                "parent"
-                            }
-                        }
-                    }
-                };
-
-                var options = new
-                {
-
-                    @return = new string[] { "name", "id", "type", "path" }
-
-                };
-
-                var func = WaapiFunctionList.CoreObjectGet;
-
-                var jresult = await _client.Call(func, query, options, TimeOut);
-                var returnData = WaapiSerializer.Deserialize<ReturnData<ObjectReturnData>>(jresult.ToString());
+                var returnData =
+                    await CoreObjectGetAsync(wwiseObjects.Select(w => w.ID).ToArray(), 
+                        new[] { "parent" },
+                        new string[] { "name", "id", "type", "path" });
                 if (returnData.Return.Length == 0) throw new Exception("No parent found!");
-                foreach (var obj in returnData.Return)
-                {
-                    string? name = obj.Name;
-                    string? id = obj.ID;
-                    string? type = obj.Type;
-                    string? path = obj.Path;
-
-                    if (!string.IsNullOrEmpty(id) && !string.IsNullOrEmpty(type)) 
-                        result.Add(new WwiseObject(name, id, type, path));
-                }
-
-
+                result.AddRange(returnData.Return.Select(o => new WwiseObject(o.Name, o.ID, o.Type, o.Path)));
             }
             catch (Exception e)
             {
@@ -1692,47 +1464,10 @@ namespace WwiseTools.Utils
             if (wwiseObject is null || !await TryConnectWaapiAsync()) return null;
             try
             {
-                var query = new
-                {
-                    from = new
-                    {
-                        id = new string[] { wwiseObject.ID }
-                    },
-                    transform = new object[] {
-                        new
-                        {
-                            select = new string[]
-                            {
-                                "parent"
-                            }
-                        }
-                    }
-                };
-
-                var options = new
-                {
-
-                    @return = new string[] { "name", "id", "type", "path" }
-
-                };
-
-                var func = WaapiFunctionList.CoreObjectGet;
-
-                var jresult = await _client.Call(func, query, options, TimeOut);
-                var returnData = WaapiSerializer.Deserialize<ReturnData<ObjectReturnData>>(jresult.ToString());
+                var returnData = await CoreObjectGetAsync(wwiseObject.ID, new []{"parent"});
                 if (returnData.Return.Length == 0) throw new Exception("No parent found!");
-                foreach (var obj in returnData.Return)
-                {
-                    string? name = obj.Name;
-                    string? id = obj.ID;
-                    string? type = obj.Type;
-                    string? path = obj.Path;
-                    
-                    if (!string.IsNullOrEmpty(id) && !string.IsNullOrEmpty(type)) 
-                        return new WwiseObject(name, id, type, path);
-                }
-
-
+                var obj = returnData.Return[0];
+                return new WwiseObject(obj.Name, obj.ID, obj.Type, obj.Path);
             }
             catch (Exception e)
             {
@@ -1748,47 +1483,12 @@ namespace WwiseTools.Utils
             if (wwiseObjects.Count == 0 || !await TryConnectWaapiAsync()) return result;
             try
             {
-                var query = new
-                {
-                    from = new
-                    {
-                        id = wwiseObjects.Select(w => w.ID).ToArray()
-                    },
-                    transform = new object[] {
-                        new
-                        {
-                            select = new string[]
-                            {
-                                "children"
-                            }
-                        }
-                    }
-                };
-
-                var options = new
-                {
-
-                    @return = new string[] { "name", "id", "type", "path" }
-
-                };
-
-                var func = WaapiFunctionList.CoreObjectGet;
-
-                var jresult = await _client.Call(func, query, options, TimeOut);
-                var returnData = WaapiSerializer.Deserialize<ReturnData<ObjectReturnData>>(jresult.ToString());
+                var returnData =
+                    await CoreObjectGetAsync(wwiseObjects.Select(w => w.ID).ToArray(), 
+                        new[] { "children" },
+                        new string[] { "name", "id", "type", "path" });
                 if (returnData.Return.Length == 0) throw new Exception("No children found!");
-                foreach (var obj in returnData.Return)
-                {
-                    string? name = obj.Name;
-                    string? id = obj.ID;
-                    string? type = obj.Type;
-                    string? path = obj.Path;
-
-                    if (!string.IsNullOrEmpty(id) && !string.IsNullOrEmpty(type)) 
-                        result.Add(new WwiseObject(name, id, type, path));
-                }
-
-
+                result.AddRange(returnData.Return.Select(o => new WwiseObject(o.Name, o.ID, o.Type, o.Path)));
             }
             catch (Exception e)
             {
@@ -1804,47 +1504,9 @@ namespace WwiseTools.Utils
             if (wwiseObject is null || !await TryConnectWaapiAsync()) return result;
             try
             {
-                var query = new
-                {
-                    from = new
-                    {
-                        id = new string[]{ wwiseObject.ID }
-                    },
-                    transform = new object[] {
-                        new
-                        {
-                            select = new string[]
-                            {
-                                "children"
-                            }
-                        }
-                    }
-                };
-
-                var options = new
-                {
-
-                    @return = new string[] { "name", "id", "type", "path" }
-
-                };
-
-                var func = WaapiFunctionList.CoreObjectGet;
-
-                var jresult = await _client.Call(func, query, options, TimeOut);
-                var returnData = WaapiSerializer.Deserialize<ReturnData<ObjectReturnData>>(jresult.ToString());
+                var returnData = await CoreObjectGetAsync(wwiseObject.ID, new []{"children"});
                 if (returnData.Return.Length == 0) throw new Exception("No children found!");
-                foreach (var obj in returnData.Return!)
-                {
-                    string? name = obj.Name;
-                    string? id = obj.ID;
-                    string? type = obj.Type;
-                    string? path = obj.Path;
-
-                    if (!string.IsNullOrEmpty(id) && !string.IsNullOrEmpty(type)) 
-                        result.Add(new WwiseObject(name, id, type, path));
-                }
-
-
+                result.AddRange(returnData.Return.Select(o => new WwiseObject(o.Name, o.ID, o.Type, o.Path)));
             }
             catch (Exception e)
             {
@@ -1860,45 +1522,10 @@ namespace WwiseTools.Utils
             if (wwiseObject is null || !await TryConnectWaapiAsync()) return result;
             try
             {
-                var query = new
-                {
-                    from = new
-                    {
-                        id = new string[] { wwiseObject.ID }
-                    },
-                    transform = new object[] {
-                        new
-                        {
-                            select = new string[]
-                            {
-                                "ancestors"
-                            }
-                        }
-                    }
-                };
 
-                var options = new
-                {
-
-                    @return = new string[] { "name", "id", "type", "path" }
-
-                };
-
-                var func = WaapiFunctionList.CoreObjectGet;
-
-                var jresult = await _client.Call(func, query, options, TimeOut);
-                var returnData = WaapiSerializer.Deserialize<ReturnData<ObjectReturnData>>(jresult.ToString());
+                var returnData = await CoreObjectGetAsync(wwiseObject.ID, new []{"ancestors"});
                 if (returnData.Return.Length == 0) throw new Exception("No parent found!");
-                foreach (var obj in returnData.Return)
-                {
-                    string? name = obj.Name;
-                    string? id = obj.ID;
-                    string? type = obj.Type;
-                    string? path = obj.Path;
-
-                    if (!string.IsNullOrEmpty(id) && !string.IsNullOrEmpty(type)) 
-                        result.Add(new WwiseObject(name, id, type, path));
-                }
+                result.AddRange(returnData.Return.Select(o => new WwiseObject(o.Name, o.ID, o.Type, o.Path)));
 
 
             }
@@ -1916,48 +1543,10 @@ namespace WwiseTools.Utils
             if (wwiseObject is null || !await TryConnectWaapiAsync()) return result;
             try
             {
-                var query = new
-                {
-                    from = new
-                    {
-                        id = new string[] { wwiseObject.ID }
-                    },
-                    transform = new object[] {
-                        new
-                        {
-                            select = new string[]
-                            {
-                                "descendants"
-                            }
-                        }
-                    }
-                };
-
-                var options = new
-                {
-
-                    @return = new string[] { "name", "id", "type", "path" }
-
-                };
-
-                var func = WaapiFunctionList.CoreObjectGet;
-
-                var jresult = await _client.Call(func, query, options, TimeOut);
-                var returnData = WaapiSerializer.Deserialize<ReturnData<ObjectReturnData>>(jresult.ToString());
+                var returnData = await CoreObjectGetAsync(wwiseObject.ID, new []{"descendants"});
                 if (returnData.Return.Length == 0) throw new Exception("No parent found!");
                 
-                foreach (var obj in returnData.Return)
-                {
-                    string? name = obj.Name;
-                    string? id = obj.ID;
-                    string? type = obj.Type;
-                    string? path = obj.Path;
-
-                    if (!string.IsNullOrEmpty(id) && !string.IsNullOrEmpty(type)) 
-                        result.Add(new WwiseObject(name, id, type, path));
-                }
-
-
+                result.AddRange(returnData.Return.Select(o => new WwiseObject(o.Name, o.ID, o.Type, o.Path)));
             }
             catch (Exception e)
             {
@@ -2089,28 +1678,60 @@ namespace WwiseTools.Utils
 
             return false;
         }
+        
+        public async Task<ReturnData<ObjectReturnData>> CoreObjectGetAsync(string id, string returnSingle)
+        {
+            return await CoreObjectGetAsync(new []{id}, new string[]{}, new []{ returnSingle});
+        }
+        
+        public async Task<ReturnData<ObjectReturnData>> CoreObjectGetAsync(string id, string[] select)
+        {
+            return await CoreObjectGetAsync(new []{id}, select, new []{ "name", "path", "type", "id"});
+        }
 
 
         public async Task<ReturnData<ObjectReturnData>> CoreObjectGetAsync(string[] ids, string[] select, string[] returns)
         {
-
-            var query = new JObject
+            JObject query;
+            if (ConnectionInfo.Version < VersionHelper.V2022_1_0_7929)
             {
-                new JProperty("from",
-                    new JProperty("id", new JArray(ids))
-                ),
-            };
-
-            if (select.Length > 0)
-            {
-                query.Add("transform", new JArray(
-                        new JProperty(
+                if (select.Length > 1) throw new Exception($"Select can only have one element in Wwise {ConnectionInfo.Version.VersionString}!");
+                
+                query = new JObject
+                {
+                    new JProperty("from",
+                        new JObject
+                        {
+                            new JProperty("id", new JArray(ids))
+                        }
+                    ),
+                };
+                if (select.Length > 0)
+                {
+                    query.Add("transform", new JArray(
+                        new JObject(
                             new JProperty("select", new JArray(select))
                         )
                     ));
+                }
             }
-
-
+            else
+            {
+                var waql = $"where {string.Join(" or ", ids.Select(id => $"id=\"{id}\""))}";
+                if (select.Length > 0) waql += " select ";
+                for (int i = 0; i < select.Length; i++)
+                {
+                    waql += select[i];
+                    if (i < select.Length - 1) waql += ", ";
+                }
+                query = new JObject
+                {
+                    new JProperty("waql",
+                        waql
+                    ),
+                };
+            }
+            
             var options = new
             {
 
@@ -2119,7 +1740,6 @@ namespace WwiseTools.Utils
             };
 
             var func = WaapiFunctionList.CoreObjectGet;
-
             var jresult = await _client.Call(func, query, options, TimeOut);
             var returnData = WaapiSerializer.Deserialize<ReturnData<ObjectReturnData>>(jresult.ToString());
             return returnData;
