@@ -2090,6 +2090,41 @@ namespace WwiseTools.Utils
             return false;
         }
 
+
+        public async Task<ReturnData<ObjectReturnData>> CoreObjectGetAsync(string[] ids, string[] select, string[] returns)
+        {
+
+            var query = new JObject
+            {
+                new JProperty("from",
+                    new JProperty("id", new JArray(ids))
+                ),
+            };
+
+            if (select.Length > 0)
+            {
+                query.Add("transform", new JArray(
+                        new JProperty(
+                            new JProperty("select", new JArray(select))
+                        )
+                    ));
+            }
+
+
+            var options = new
+            {
+
+                @return = returns
+
+            };
+
+            var func = WaapiFunctionList.CoreObjectGet;
+
+            var jresult = await _client.Call(func, query, options, TimeOut);
+            var returnData = WaapiSerializer.Deserialize<ReturnData<ObjectReturnData>>(jresult.ToString());
+            return returnData;
+        }
+
         /// <summary>
         /// 保存工程
         /// </summary>
