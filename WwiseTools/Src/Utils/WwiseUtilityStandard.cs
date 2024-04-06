@@ -16,11 +16,6 @@ namespace WwiseTools.Utils
 {
     public  partial class WwiseUtility
     {
-      
-      
-      
-      
-      
         public async Task<string[]> GetPropertyAndReferenceNamesAsync(WwiseObject wwiseObject)
         {
           

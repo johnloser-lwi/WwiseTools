@@ -12,7 +12,9 @@ namespace WwiseTools.Utils
 {
   
   
-  
+    /// <summary>
+    /// Standard Wwise Utility class for WAAPI operations.
+    /// </summary>
     public partial class WwiseUtility
     {
         private JsonClient _client;
@@ -25,6 +27,9 @@ namespace WwiseTools.Utils
 
         private WaapiUICommandList _uiCommand;
 
+        /// <summary>
+        /// Connection information of the current Wwise instance.
+        /// </summary>
         public WwiseInfo ConnectionInfo { get; private set; }
 
         public WaapiFunctionList Function
