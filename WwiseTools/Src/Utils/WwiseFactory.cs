@@ -8,7 +8,7 @@ namespace WwiseTools.Utils
 {
     public class WwiseFactory
     {
-        // Actor Mixer Hierarchy
+      
         public static async Task<WwiseObject> CreateRandomSequenceContainer(string objectName, bool isRandomContainer,
             WwiseObject parent, NameConflictBehaviour conflictBehaviour = NameConflictBehaviour.fail)
         {
@@ -20,7 +20,7 @@ namespace WwiseTools.Utils
             return result;
         }
 
-        // Interactive Music
+      
         public static async Task<WwiseObject> CreateMusicSegmentAsync(string name, string filePath,
             string subFolder, WwiseObject parent)
         {

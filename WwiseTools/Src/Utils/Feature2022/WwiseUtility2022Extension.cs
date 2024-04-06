@@ -27,16 +27,16 @@ namespace WwiseTools.Utils.Feature2022
             addKeep
         }
         
-        /// <summary>
-        /// 复制属性
-        /// </summary>
-        /// <param name="utility"></param>
-        /// <param name="source"></param>
-        /// <param name="targets"></param>
-        /// <param name="properties"></param>
-        /// <param name="pasteMode"></param>
-        /// <param name="inclusionMode"></param>
-        /// <returns></returns>
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
         public static async Task<bool> PastePropertiesAsync(this WwiseUtility utility, WwiseObject source, WwiseObject[] targets,
             PasteMode pasteMode = PasteMode.replaceEntire, bool inclusionMode = true, params string[] properties)
         {
@@ -59,8 +59,8 @@ namespace WwiseTools.Utils.Feature2022
                     new JProperty("targets", jTargets),
                 };
                 
-                // Specify inclusion or exclusion according to inclusionMode.
-                // Skip this step if no property provided, all properties will be copied to targets
+              
+              
                 if (properties.Length != 0)
                 {
                     var jProperties = new JArray();
@@ -89,13 +89,13 @@ namespace WwiseTools.Utils.Feature2022
             return true;
         }
 
-        /// <summary>
-        /// 批量配置属性
-        /// </summary>
-        /// <param name="utility"></param>
-        /// <param name="wwiseObjects"></param>
-        /// <param name="wwiseProperties"></param>
-        /// <returns></returns>
+      
+      
+      
+      
+      
+      
+      
         public static async Task BatchSetObjectPropertyAsync(this WwiseUtility utility, WwiseObject[] wwiseObjects, 
             params WwiseProperty[] wwiseProperties)
         {

@@ -11,20 +11,20 @@ namespace WwiseTools.Utils
 {
     public class VersionHelper
     {
-        // 2019
+      
         public static readonly WwiseVersion V2019_2_11_7512 = new(2019, 2, 11, 7512);
 
-        // 2021
+      
         public static readonly WwiseVersion V2021_1_0_7575 = new(2021, 1, 0, 7575);
 
-        // 2022
+      
         public static readonly WwiseVersion V2022_1_0_7929 = new(2022, 1, 0, 7929);
 
         public static bool VersionVerify(WwiseVersion minimumVersion, [CallerMemberName] string caller = "")
         {
             if (WwiseUtility.Instance.ConnectionInfo.Version < minimumVersion)
             {
-                //var caller = (new System.Diagnostics.StackTrace()).GetFrame(0).GetMethod().Name;
+              
                 WaapiLog.InternalLog($"Warning: {caller} required minimum Wwise version {minimumVersion.ToString()}! " +
                              $"Current Wwise minimumVersion is {WwiseUtility.Instance.ConnectionInfo.Version.ToString()}.");
                 return false;

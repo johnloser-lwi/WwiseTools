@@ -38,17 +38,17 @@ namespace WwiseTools.WwiseTypes
         }
 
 
-        /// <summary>
-        /// 获取播放列表根，同步执行
-        /// </summary>
-        /// <returns></returns>
+      
+      
+      
+      
         public async Task<WwiseObject> GetRootPlaylistItemAsync()
         {
             if (!await WwiseUtility.Instance.TryConnectWaapiAsync()) return null;
 
             try
             {
-                // ak.wwise.core.@object.get 指令
+              
                 var query = new
                 {
                     from = new
@@ -57,7 +57,7 @@ namespace WwiseTools.WwiseTypes
                     }
                 };
 
-                // ak.wwise.core.@object.get 返回参数设置
+              
                 var options = new
                 {
 

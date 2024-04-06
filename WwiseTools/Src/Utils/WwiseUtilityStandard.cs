@@ -16,14 +16,14 @@ namespace WwiseTools.Utils
 {
     public  partial class WwiseUtility
     {
-        /// <summary>
-        /// 获取属性、引用名称
-        /// </summary>
-        /// <param name="wwiseObject"></param>
-        /// <returns></returns>
+      
+      
+      
+      
+      
         public async Task<string[]> GetPropertyAndReferenceNamesAsync(WwiseObject wwiseObject)
         {
-            //ak.wwise.core.object.getPropertyAndReferenceNames
+          
 
             if (!await TryConnectWaapiAsync()) return new string[]{};
 
@@ -102,13 +102,13 @@ namespace WwiseTools.Utils
             return ret;
         }
         
-        /// <summary>
-        /// 设置参数
-        /// </summary>
-        /// <param name="wwiseObject"></param>
-        /// <param name="property"></param>
-        /// <param name="value"></param>
-        /// <returns></returns>
+      
+      
+      
+      
+      
+      
+      
         public async Task<bool> SetObjectPropertyAsync(WwiseObject wwiseObject, WwiseProperty wwiseProperty)
         {
             if (!await TryConnectWaapiAsync()) return false;
@@ -191,12 +191,12 @@ namespace WwiseTools.Utils
         }
         
 
-        /// <summary>
-        /// 修改名称
-        /// </summary>
-        /// <param name="renameObject"></param>
-        /// <param name="newName"></param>
-        /// <returns></returns>
+      
+      
+      
+      
+      
+      
         public async Task<bool> ChangeObjectNameAsync(WwiseObject renameObject, string newName)
         {
             if (!await TryConnectWaapiAsync() || String.IsNullOrEmpty(newName)) return false;
@@ -227,12 +227,12 @@ namespace WwiseTools.Utils
             return false;
         }
         
-        /// <summary>
-        /// 将物体移动至指定父物体
-        /// </summary>
-        /// <param name="child"></param>
-        /// <param name="parent"></param>
-        /// <returns></returns>
+      
+      
+      
+      
+      
+      
         public async Task<bool> CopyToParentAsync(WwiseObject child, WwiseObject parent, NameConflictBehaviour conflictBehaviour = NameConflictBehaviour.rename)
         {
             if (!await TryConnectWaapiAsync()) return false;
@@ -241,7 +241,7 @@ namespace WwiseTools.Utils
             {
                 var func = Function.Verify("ak.wwise.core.object.copy");
                 
-                // 移动物体
+              
                 await _client.Call(func
                     ,
                     new JObject
@@ -268,12 +268,12 @@ namespace WwiseTools.Utils
 
         
 
-        /// <summary>
-        /// 将物体复制至指定父物体
-        /// </summary>
-        /// <param name="child"></param>
-        /// <param name="parent"></param>
-        /// <returns></returns>
+      
+      
+      
+      
+      
+      
         public async Task<bool> MoveToParentAsync(WwiseObject child, WwiseObject parent, NameConflictBehaviour conflictBehaviour = NameConflictBehaviour.rename)
         {
             if (!await TryConnectWaapiAsync()) return false;
@@ -282,7 +282,7 @@ namespace WwiseTools.Utils
             {
                 var func = Function.Verify("ak.wwise.core.object.move");
                 
-                // 移动物体
+              
                 await _client.Call(func,
                     new JObject
                     {
@@ -334,7 +334,7 @@ namespace WwiseTools.Utils
             try
             {
                 var func = Function.Verify("ak.wwise.core.object.setNotes");
-                // 移动物体
+              
                 await _client.Call(func,
                     new JObject
                     {
@@ -357,13 +357,13 @@ namespace WwiseTools.Utils
             return false;
         }
 
-        /// <summary>
-        /// 生成播放事件
-        /// </summary>
-        /// <param name="eventName"></param>
-        /// <param name="objectPath"></param>
-        /// <param name="parentPath"></param>
-        /// <returns></returns>
+      
+      
+      
+      
+      
+      
+      
         [Obsolete("Use Event component instead!")]
         public async Task<WwiseObject?> CreatePlayEventAsync(string eventName, string objectPath, string parentPath = @"\Events\Default Work Unit")
         {
@@ -372,13 +372,13 @@ namespace WwiseTools.Utils
         }
         
 
-        /// <summary>
-        /// 生成播放事件
-        /// </summary>
-        /// <param name="eventName"></param>
-        /// <param name="objectPath"></param>
-        /// <param name="parentPath"></param>
-        /// <returns></returns>
+      
+      
+      
+      
+      
+      
+      
         [Obsolete("Use Event component instead!")]
         public async Task<WwiseObject?> AddEventActionAsync(string eventName, string objectPath, string parentPath = @"\Events\Default Work Unit", 
             WwiseProperty.Option_ActionType actionType = WwiseProperty.Option_ActionType.Play, NameConflictBehaviour conflictBehaviour = NameConflictBehaviour.merge)
@@ -475,7 +475,7 @@ namespace WwiseTools.Utils
             {
                 var func = Function.Verify("ak.wwise.core.object.create");
 
-                // 创建物体
+              
                 var result = await _client.Call
                 (
                     func,
@@ -512,13 +512,13 @@ namespace WwiseTools.Utils
             }
         }
 
-        /// <summary>
-        /// 创建物体
-        /// </summary>
-        /// <param name="objectName"></param>
-        /// <param name="objectType"></param>
-        /// <param name="parentPath"></param>
-        /// <returns></returns>
+      
+      
+      
+      
+      
+      
+      
         public async Task<WwiseObject?> CreateObjectAtPathAsync(string objectName, WwiseObject.ObjectType objectType, 
             string parentPath = @"\Actor-Mixer Hierarchy\Default Work Unit", NameConflictBehaviour conflictBehaviour = NameConflictBehaviour.fail,
             params WwiseProperty[] properties)
@@ -541,7 +541,7 @@ namespace WwiseTools.Utils
             {
                 var func = Function.Verify("ak.wwise.core.object.delete");
 
-                // 创建物体
+              
                 var result = await _client.Call
                     (
                         func,
@@ -565,11 +565,11 @@ namespace WwiseTools.Utils
         }
 
         
-        /// <summary>
-        /// 通过ID搜索物体
-        /// </summary>
-        /// <param name="targetId"></param>
-        /// <returns></returns>
+      
+      
+      
+      
+      
         public async Task<WwiseObject?> GetWwiseObjectByIDAsync(string targetId)
         {
             if (!await TryConnectWaapiAsync() || String.IsNullOrWhiteSpace(targetId)) return null;
@@ -578,7 +578,7 @@ namespace WwiseTools.Utils
             {
                 var func = WaapiFunctionList.CoreObjectGet;
 
-                // ak.wwise.core.@object.get 指令
+              
                 var query = new
                 {
                     from = new
@@ -610,7 +610,7 @@ namespace WwiseTools.Utils
             {
                 var func = WaapiFunctionList.CoreObjectGet;
 
-                // ak.wwise.core.@object.get 指令
+              
                 var query = new
                 {
                     from = new
@@ -619,7 +619,7 @@ namespace WwiseTools.Utils
                     }
                 };
 
-                // ak.wwise.core.@object.get 返回参数设置
+              
                 var options = new
                 {
 
@@ -688,18 +688,18 @@ namespace WwiseTools.Utils
 
         }
         
-        /// <summary>
-        /// 通过名称搜索唯一命名对象，格式必须为"type:name"
-        /// </summary>
-        /// <param name="targetName"></param>
-        /// <returns></returns>
+      
+      
+      
+      
+      
         public async Task<WwiseObject?> GetWwiseObjectByNameAsync(string targetName)
         {
             if (!await TryConnectWaapiAsync() || String.IsNullOrWhiteSpace(targetName)) return null;
 
             try
             {
-                // ak.wwise.core.@object.get 指令
+              
                 var query = new
                 {
                     from = new
@@ -720,18 +720,18 @@ namespace WwiseTools.Utils
             return null;
         }
         
-        /// <summary>
-        /// 通过路径获取对象
-        /// </summary>
-        /// <param name="path"></param>
-        /// <returns></returns>
+      
+      
+      
+      
+      
         public async Task<WwiseObject?> GetWwiseObjectByPathAsync(string path)
         {
             if (!await TryConnectWaapiAsync() || String.IsNullOrWhiteSpace(path)) return null;
 
             try
             {
-                // ak.wwise.core.@object.get 指令
+              
                 var query = new
                 {
                     from = new
@@ -756,7 +756,7 @@ namespace WwiseTools.Utils
             {
                 var func = WaapiFunctionList.CoreObjectGet;
 
-                // ak.wwise.core.@object.get 返回参数设置
+              
                 var options = new
                 {
 
@@ -791,11 +791,11 @@ namespace WwiseTools.Utils
             return await GetWwiseObjectsOfTypeAsync(targetType.ToString());
         }
         
-        /// <summary>
-        /// 获取指定类型的对象
-        /// </summary>
-        /// <param name="targetType"></param>
-        /// <returns></returns>
+      
+      
+      
+      
+      
         public async Task<List<WwiseObject>> GetWwiseObjectsOfTypeAsync(string targetType)
         {
             List<WwiseObject> result = new List<WwiseObject>();
@@ -805,7 +805,7 @@ namespace WwiseTools.Utils
             try
             {
 
-                // ak.wwise.core.@object.get 指令
+              
                 var query = new
                 {
                     from = new
@@ -814,7 +814,7 @@ namespace WwiseTools.Utils
                     }
                 };
 
-                // ak.wwise.core.@object.get 返回参数设置
+              
                 var options = new
                 {
 
@@ -852,7 +852,7 @@ namespace WwiseTools.Utils
             if (!await TryConnectWaapiAsync()) return result;
             try
             {
-                // ak.wwise.core.@object.get 返回参数设置
+              
                 var options = new
                 {
 
@@ -966,15 +966,15 @@ namespace WwiseTools.Utils
             return resultList;
         }
 
-        /// <summary>
-        /// 从指定路径导入音频
-        /// </summary>
-        /// <param name="filePath"></param>
-        /// <param name="language"></param>
-        /// <param name="subFolder"></param>
-        /// <param name="parentPath"></param>
-        /// <param name="soundName"></param>
-        /// <returns></returns>
+      
+      
+      
+      
+      
+      
+      
+      
+      
         public async Task<WwiseObject?> ImportSoundAsync(string filePath, string language = "SFX", string subFolder = "", string parentPath = @"\Actor-Mixer Hierarchy\Default Work Unit", string soundName = "", ImportAction importAction = ImportAction.useExisting) // Async版本
         {
             var parent = await GetWwiseObjectByPathAsync(parentPath);
@@ -1119,11 +1119,11 @@ namespace WwiseTools.Utils
             }
         }
         
-        /// <summary>
-        /// 获取工作单元文件路径
-        /// </summary>
-        /// <param name="wwiseObject"></param>
-        /// <returns></returns>
+      
+      
+      
+      
+      
         public async Task<string?> GetWorkUnitFilePathAsync(WwiseObject wwiseObject)
         {
             if (!await TryConnectWaapiAsync()) return null;
@@ -1155,12 +1155,12 @@ namespace WwiseTools.Utils
             return await ConnectAsync();
         }
         
-        /// <summary>
-        /// 加载工程
-        /// </summary>
-        /// <param name="path"></param>
-        /// <param name="saveCurrent"></param>
-        /// <returns></returns>
+      
+      
+      
+      
+      
+      
         public async Task<bool> LoadWwiseProjectAsync(string path, bool saveCurrent = true)
         {
             if (!await TryConnectWaapiAsync()) return false;
@@ -1171,7 +1171,7 @@ namespace WwiseTools.Utils
 
             try
             {
-                //await Client.Call(ak.wwise.ui.project.close);
+              
                 var query = new
                 {
                     path = projectPath
@@ -1192,17 +1192,17 @@ namespace WwiseTools.Utils
             return false;
         }
         
-        /// <summary>
-        /// 获取工程路径
-        /// </summary>
-        /// <returns></returns>
+      
+      
+      
+      
         public async Task<string?> GetWwiseProjectNameAsync()
         {
             if (!await TryConnectWaapiAsync()) return null;
 
             try
             {
-                // ak.wwise.core.@object.get 指令
+              
                 var query = new
                 {
                     from = new
@@ -1211,7 +1211,7 @@ namespace WwiseTools.Utils
                     }
                 };
 
-                // ak.wwise.core.@object.get 返回参数设置
+              
                 var options = new
                 {
 
@@ -1240,10 +1240,10 @@ namespace WwiseTools.Utils
             }
         }
         
-        /// <summary>
-        /// 获取工程路径
-        /// </summary>
-        /// <returns></returns>
+      
+      
+      
+      
         public async Task<string?> GetWwiseProjectPathAsync()
         {
             if (!await TryConnectWaapiAsync()) return null;
@@ -1311,18 +1311,18 @@ namespace WwiseTools.Utils
             }
             catch
             {
-                //WaapiLog.InternalLog($"Failed to get Wwise info! ======> {e.Message}");
+              
             }
 
             return null;
         }
 
 
-        /// <summary>
-        /// 支持command访问：https://www.audiokinetic.com/library/2019.2.14_7616/?source=SDK&id=globalcommandsids.html
-        /// </summary>
-        /// <param name="command"></param>
-        /// <returns></returns>
+      
+      
+      
+      
+      
         public async Task<bool> ExecuteUICommandAsync(string command, string[]? objectIDs = null)
         {
             if (!await TryConnectWaapiAsync()) return false;
@@ -1757,10 +1757,10 @@ namespace WwiseTools.Utils
             return returnData;
         }
 
-        /// <summary>
-        /// 保存工程
-        /// </summary>
-        /// <returns></returns>
+      
+      
+      
+      
         public async Task<bool> SaveWwiseProjectAsync()
         {
             if (!await TryConnectWaapiAsync()) return false;

@@ -8,7 +8,7 @@ namespace WwiseTools.WwiseTypes
 {
     public class RandomSequenceContainer : WwiseTypeBase
     {
-        // RandomSequenceContainer
+      
 
         public async Task<WwiseProperty.Option_RandomOrSequence> GetPlayTypeAsync()
         {
@@ -42,7 +42,7 @@ namespace WwiseTools.WwiseTypes
         }
 
 
-        // Sequence Container
+      
 
 
         public async Task SetSequenceEndBehaviorAsync(WwiseProperty.Option_RestartBeginningOrBackward option)
@@ -78,7 +78,7 @@ namespace WwiseTools.WwiseTypes
             {
 
                 containerNode.RemoveChild(playlistNode);
-                //parser.SaveFile();
+              
             }
 
 
@@ -102,7 +102,7 @@ namespace WwiseTools.WwiseTypes
         }
 
 
-        // Random Container
+      
 
         public async Task SetRandomModeAsync(WwiseProperty.Option_NormalOrShuffle option)
         {

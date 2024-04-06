@@ -25,10 +25,10 @@ namespace WwiseTools.Utils
             
         }
 
-        /// <summary>
-        /// 解析文件
-        /// </summary>
-        /// <param name="filePath"></param>
+      
+      
+      
+      
         public void Parse(string filePath)
         {
             try
@@ -49,11 +49,11 @@ namespace WwiseTools.Utils
             }
         }
 
-        /// <summary>
-        /// 增加xml node至指定对象
-        /// </summary>
-        /// <param name="wwiseObject"></param>
-        /// <param name="node"></param>
+      
+      
+      
+      
+      
         public void AddToUnit(WwiseObject wwiseObject, XmlNode node)
         {
             XmlCheck();
@@ -83,9 +83,9 @@ namespace WwiseTools.Utils
                 throw new Exception($"{nameof(WwiseWorkUnitParser)} doesn't have a valid XML file parsed!");
         }
 
-        /// <summary>
-        /// 保存文件
-        /// </summary>
+      
+      
+      
         public void SaveFile()
         {
             XML.Save(_filePath);

@@ -11,10 +11,10 @@ namespace WwiseTools.WwiseTypes
     public class MusicTrack : WwiseTypeBase
     {
 
-        /// <summary>
-        /// 获取轨道长度，同步执行
-        /// </summary>
-        /// <returns></returns>
+      
+      
+      
+      
         public async Task<float> GetTrackLengthAsync()
         {
             if (!await WwiseUtility.Instance.TryConnectWaapiAsync()) return 0;
@@ -22,7 +22,7 @@ namespace WwiseTools.WwiseTypes
 
             try
             {
-                // ak.wwise.core.@object.get 指令
+              
                 var query = new
                 {
                     from = new
@@ -31,7 +31,7 @@ namespace WwiseTools.WwiseTypes
                     }
                 };
 
-                // ak.wwise.core.@object.get 返回参数设置
+              
                 var options = new
                 {
                     @return = new string[] { "maxDurationSource" }

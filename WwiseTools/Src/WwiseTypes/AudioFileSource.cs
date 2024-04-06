@@ -19,7 +19,7 @@ public class AudioFileSource : WwiseTypeBase
 
         try
         {
-            // ak.wwise.core.@object.get 指令
+          
             var query = new
             {
                 from = new
@@ -29,7 +29,7 @@ public class AudioFileSource : WwiseTypeBase
             };
             
 
-            // ak.wwise.core.@object.get 返回参数设置
+          
             var options = new
             {
 
@@ -81,7 +81,7 @@ public class AudioFileSource : WwiseTypeBase
 
         try
         {
-            // ak.wwise.core.@object.get 指令
+          
             var query = new
             {
                 from = new
@@ -91,12 +91,11 @@ public class AudioFileSource : WwiseTypeBase
             };
 
             
-            // Wwise 2022 兼容
+          
             string originalWavFilePath = "sound:originalWavFilePath";
-            /*if (WwiseUtility.Instance.ConnectionInfo.Version.Year >= 2022) 
-                originalWavFilePath = "sound:originalFilePath";*/
             
-            // ak.wwise.core.@object.get 返回参数设置
+            
+          
             var options = new
             {
 

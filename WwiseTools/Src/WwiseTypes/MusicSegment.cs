@@ -60,12 +60,12 @@ namespace WwiseTools.WwiseTypes
             }
         }
 
-        /// <summary>
-        /// 创建新的Cue，异步执行
-        /// </summary>
-        /// <param name="name"></param>
-        /// <param name="timeMs"></param>
-        /// <returns></returns>
+      
+      
+      
+      
+      
+      
         public async Task CreateCueAsync(string name, float timeMs, NameConflictBehaviour conflictBehaviour = NameConflictBehaviour.replace)
         {
             if (!await WwiseUtility.Instance.TryConnectWaapiAsync()) return;
@@ -74,7 +74,7 @@ namespace WwiseTools.WwiseTypes
             {
                 var func = WwiseUtility.Instance.Function.Verify("ak.wwise.core.object.create");
 
-                // 创建物体
+              
                 var result = await WwiseUtility.Instance.CallAsync
                     (
                         func,

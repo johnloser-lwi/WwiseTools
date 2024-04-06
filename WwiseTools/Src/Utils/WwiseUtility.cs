@@ -10,9 +10,9 @@ using WwiseTools.Models;
 
 namespace WwiseTools.Utils
 {
-    /// <summary>
-    /// 用于实现基础功能
-    /// </summary>
+  
+  
+  
     public partial class WwiseUtility
     {
         private JsonClient _client;
@@ -178,7 +178,7 @@ namespace WwiseTools.Utils
                     WaapiLog.InternalLog("Connection closed!"); // 丢失连接提示
                 };
 
-                // 由于工程加载可能会导致信息获取失败，这里进行5次重复检查
+              
                 var retryCount = 5;
                 for (int i = 1; i <= retryCount; i++)
                 {
@@ -186,11 +186,11 @@ namespace WwiseTools.Utils
                     if (Function.Count == 0) await GetFunctionsAsync();
                     if (Topic.Count == 0) await GetTopicsAsync();
 
-                    // This must load first so we know if we are on a console or GUI version of Wwise
+                  
                     if (ConnectionInfo == null) ConnectionInfo = await GetWwiseInfoAsync();
                     
-                    // Console versions of WAAPI cannot use UI commands, don't even bother
-                    // loading them, this improves connection speed
+                  
+                  
                     if (ConnectionInfo == null || !ConnectionInfo.IsCommandLine)
                     {
                         if (UICommand.Count == 0) await GetCommandsAsync();

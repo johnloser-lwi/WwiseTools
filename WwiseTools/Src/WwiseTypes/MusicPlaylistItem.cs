@@ -80,7 +80,7 @@ namespace WwiseTools.WwiseTypes
             if (await GetPlaylistItemTypeAsync() == WwiseProperty.Option_PlaylistItemType.Segment) return null;
 
             var item = await WwiseUtility.Instance.CreateObjectAtPathAsync("", WwiseObject.ObjectType.MusicPlaylistItem, WwiseObject.ID);
-            //var item = new WwiseMusicPlaylistItem(tempObj);
+          
             await item.AsMusicPlaylistItem().SetPlaylistItemTypeAsync(WwiseProperty.Option_PlaylistItemType.Segment);
             await item.AsMusicPlaylistItem().SetSegmentRefAsync(segment);
 

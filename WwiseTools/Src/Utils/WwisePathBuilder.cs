@@ -17,10 +17,10 @@ public class WwisePathBuilder
     private List<WwiseObject> _hierarchy;
     
     
-    /// <summary>
-    /// 规范Wwise路径格式
-    /// </summary>
-    /// <param name="root">root为现有的Wwise对象路径，无需指定类别</param>
+  
+  
+  
+  
     public WwisePathBuilder(WwiseObject root)
     {
         _root = root;
@@ -35,12 +35,12 @@ public class WwisePathBuilder
     }
 
 
-    /// <summary>
-    /// 添加路径
-    /// </summary>
-    /// <param name="type">Wwise对象类型</param>
-    /// <param name="name">Wwise对象名称</param>
-    /// <returns>返回路径是否成功添加</returns>
+  
+  
+  
+  
+  
+  
     public async Task<bool> AppendHierarchyAsync(WwiseObject.ObjectType type, string name)
     {
         var initializedWithPath = !string.IsNullOrEmpty(_rootPath);
@@ -62,10 +62,10 @@ public class WwisePathBuilder
         _hierarchy.Clear();
     }
 
-    /// <summary>
-    /// 获取不包含wwise类型的路径
-    /// </summary>
-    /// <returns></returns>
+  
+  
+  
+  
     public async Task<string> GetPurePathAsync()
     {
         if (_root is null && !string.IsNullOrEmpty(_rootPath)) _root = await WwiseUtility.Instance.GetWwiseObjectByPathAsync(_rootPath);
@@ -90,10 +90,10 @@ public class WwisePathBuilder
         return rootPath + "\\" + hierarchy;
     }
 
-    /// <summary>
-    /// 获取包含wwise类型的路径
-    /// </summary>
-    /// <returns></returns>
+  
+  
+  
+  
     public async Task<string> GetImportPathAsync()
     {
         if (_root is null&& !string.IsNullOrEmpty(_rootPath)) _root = await WwiseUtility.Instance.GetWwiseObjectByPathAsync(_rootPath);

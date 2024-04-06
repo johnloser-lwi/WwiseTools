@@ -61,7 +61,7 @@ namespace WwiseTools.Objects
             {
                 var func = WwiseUtility.Instance.Function.Verify("ak.wwise.core.object.getPropertyAndReferenceNames");
 
-                // 创建物体
+              
                 var result = await WwiseUtility.Instance.CallAsync
                     (
                         func,

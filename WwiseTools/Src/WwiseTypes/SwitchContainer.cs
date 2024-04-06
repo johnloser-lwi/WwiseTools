@@ -27,7 +27,7 @@ namespace WwiseTools.WwiseTypes
             {
                 var func = WwiseUtility.Instance.Function.Verify("ak.wwise.core.switchContainer.getAssignments");
 
-                // 获取信息
+              
                 var jresult = await WwiseUtility.Instance.CallAsync
                 (
                     func,
@@ -75,7 +75,7 @@ namespace WwiseTools.WwiseTypes
             {
                 var func = WwiseUtility.Instance.Function.Verify("ak.wwise.core.switchContainer.removeAssignment");
 
-                // 创建物体
+              
                 var result = await WwiseUtility.Instance.CallAsync
                 (
                     func,
@@ -93,12 +93,12 @@ namespace WwiseTools.WwiseTypes
             }
         }
 
-        /// <summary>
-        /// 分配子对象至State或者Switch，异步执行
-        /// </summary>
-        /// <param name="child"></param>
-        /// <param name="stateOrSwitch"></param>
-        /// <returns></returns>
+      
+      
+      
+      
+      
+      
         public async Task AssignChildToStateOrSwitchAsync(WwiseObject child, WwiseObject stateOrSwitch)
         {
             if (!await WwiseUtility.Instance.TryConnectWaapiAsync()) return;
@@ -121,7 +121,7 @@ namespace WwiseTools.WwiseTypes
             {
                 var func = WwiseUtility.Instance.Function.Verify("ak.wwise.core.switchContainer.addAssignment");
 
-                // 创建物体
+              
                 var result = await WwiseUtility.Instance.CallAsync
                 (
                     func,

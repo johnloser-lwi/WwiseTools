@@ -8,12 +8,12 @@ namespace WwiseTools.Utils.Feature2021
     public static class WwiseUtility2021Extension
     {
         
-        /// <summary>
-        /// 通过Waql检索
-        /// </summary>
-        /// <param name="util"></param>
-        /// <param name="query"></param>
-        /// <returns></returns>
+      
+      
+      
+      
+      
+      
         public static async Task<List<WwiseObject>> Waql(this WwiseUtility util, string query)
         {
             if (!await WwiseUtility.Instance.TryConnectWaapiAsync() || string.IsNullOrEmpty(query)) return new List<WwiseObject>();
