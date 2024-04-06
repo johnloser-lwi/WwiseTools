@@ -97,6 +97,7 @@
     <Compile Include="Src\Serialization\ObjectData.cs" />
     <Compile Include="Src\Serialization\GetSoundBankInclusionData.cs" />
     <Compile Include="Src\Serialization\ProfilerData.cs" />
+    <Compile Include="Src\Serialization\PropertyData.cs" />
     <Compile Include="Src\Serialization\RemoteData.cs" />
     <Compile Include="Src\Serialization\WaapiSerializer.cs" />
     <Compile Include="Src\Utils\Lists\WaapiFunctionList.cs" />

@@ -596,6 +596,12 @@ namespace WwiseTools.Utils
             }
         }
 
+        public async Task<ReturnData<PropertyData>> BatchGetWwiseObjectProperties(string[] ids, string[] properties)
+        {
+            return await WwiseUtility.Instance.CoreObjectGetAsync<PropertyData>(ids, 
+                new string[]{}, properties);
+        }
+
         public async Task<JToken?> GetWwiseObjectPropertyByIDAsync(string targetId, string wwiseProperty)
         {
             if (!await TryConnectWaapiAsync() || String.IsNullOrWhiteSpace(targetId)) return null;
@@ -617,7 +623,7 @@ namespace WwiseTools.Utils
                 var options = new
                 {
 
-                    @return = new string[] { "@" + wwiseProperty }
+                    @return = new string[] { "@" + wwiseProperty }  
 
                 };
 
@@ -1692,6 +1698,12 @@ namespace WwiseTools.Utils
 
         public async Task<ReturnData<ObjectReturnData>> CoreObjectGetAsync(string[] ids, string[] select, string[] returns)
         {
+            return await CoreObjectGetAsync<ObjectReturnData>(ids, select, returns);
+        }
+        
+        
+        public async Task<ReturnData<T>> CoreObjectGetAsync<T>(string[] ids, string[] select, string[] returns)
+        {
             JObject query;
             if (ConnectionInfo.Version < VersionHelper.V2022_1_0_7929)
             {
@@ -1741,7 +1753,7 @@ namespace WwiseTools.Utils
 
             var func = WaapiFunctionList.CoreObjectGet;
             var jresult = await _client.Call(func, query, options, TimeOut);
-            var returnData = WaapiSerializer.Deserialize<ReturnData<ObjectReturnData>>(jresult.ToString());
+            var returnData = WaapiSerializer.Deserialize<ReturnData<T>>(jresult.ToString());
             return returnData;
         }
 
