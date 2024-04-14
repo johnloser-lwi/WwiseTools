@@ -1,8 +1,6 @@
 ﻿#nullable enable
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using WwiseTools.Objects;
 
@@ -78,7 +76,7 @@ public class WwisePathBuilder
 
         if (string.IsNullOrEmpty(rootPath)) throw new Exception("Invalid root!");
         
-        string hierarchy = "";
+        var hierarchy = "";
 
         foreach (var wwiseObject in _hierarchy)
         {
@@ -106,7 +104,7 @@ public class WwisePathBuilder
         
         if (string.IsNullOrEmpty(rootPath)) throw new Exception("Invalid root!");
         
-        string hierarchy = "";
+        var hierarchy = "";
 
         foreach (var wwiseObject in _hierarchy)
         {

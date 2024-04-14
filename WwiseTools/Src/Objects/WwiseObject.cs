@@ -1,7 +1,6 @@
 ﻿using System;
-
-using Newtonsoft.Json.Linq;
 using System.Threading.Tasks;
+using Newtonsoft.Json.Linq;
 using WwiseTools.Utils;
 
 namespace WwiseTools.Objects
@@ -25,7 +24,7 @@ namespace WwiseTools.Objects
         {
             var split = Path.Split('\\');
             var parent = "";
-            for (int i = 0; i < split.Length - 1; i++)
+            for (var i = 0; i < split.Length - 1; i++)
             {
                 parent += split[i] + "\\";
             }

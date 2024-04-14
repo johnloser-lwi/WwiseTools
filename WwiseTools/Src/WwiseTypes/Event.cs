@@ -108,7 +108,7 @@ public class Event : WwiseTypeBase
     {
         var actions = await GetActionsAsync();
 
-        bool result = false;
+        var result = false;
         
         foreach (var action in actions)
         {

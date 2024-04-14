@@ -48,8 +48,8 @@ public class ImportInfo
     {
         var split = path.Replace('/', '\\').Split('\\');
 
-        bool isRoot = true;
-        string root = "";
+        var isRoot = true;
+        var root = "";
 
         WwisePathBuilder builder = null;
 

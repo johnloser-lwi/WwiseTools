@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
 using System.Threading.Tasks;
 using WwiseTools.Objects;
 using WwiseTools.Serialization;
@@ -65,10 +62,10 @@ namespace WwiseTools.Utils.Feature2021
                 if (returnData.Return.Length == 0) return false;
                 foreach (var obj in returnData.Return)
                 {
-                    string name = obj.Name;
-                    string id = obj.ID;
-                    string type = obj.Type;
-                    string path = obj.Path;
+                    var name = obj.Name;
+                    var id = obj.ID;
+                    var type = obj.Type;
+                    var path = obj.Path;
 
                     Result.Add(new WwiseObject(name, id, type, path));
                 }

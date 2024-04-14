@@ -43,8 +43,8 @@ namespace WwiseTools.Utils.Profiler
                     var platform = console["platform"]?.ToString();
                     var host = console["host"]?.ToString();
                     var appName = console["appName"]?.ToString();
-                    int.TryParse(console["commandPort"]?.ToString(), out int commandPort);
-                    int.TryParse(console["notificationPort"]?.ToString(), out int notificationPort);
+                    int.TryParse(console["commandPort"]?.ToString(), out var commandPort);
+                    int.TryParse(console["notificationPort"]?.ToString(), out var notificationPort);
 
                     var remoteInfo = new ProfilerRemoteInfo()
                     {

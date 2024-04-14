@@ -9,9 +9,9 @@
         {
             get
             {
-                int seconds = (int)(Time / 1000) % 60;
-                int minutes = (int)((Time / (1000 * 60)) % 60);
-                int hours = (int)((Time / (1000 * 60 * 60)) % 24);
+                var seconds = (int)(Time / 1000) % 60;
+                var minutes = (int)((Time / (1000 * 60)) % 60);
+                var hours = (int)((Time / (1000 * 60 * 60)) % 24);
 
                 return $"{hours:D2}:{minutes:D2}:{seconds:D2}";
             }

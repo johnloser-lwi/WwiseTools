@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace WwiseTools.Models.Profiler
+﻿namespace WwiseTools.Models.Profiler
 {
     public class ProfilerRemoteInfo
     {

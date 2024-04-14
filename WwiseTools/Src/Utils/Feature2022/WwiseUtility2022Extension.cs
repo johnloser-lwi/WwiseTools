@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using WwiseTools.Objects;
@@ -108,7 +107,7 @@ namespace WwiseTools.Utils.Feature2022
                     objects = new List<object>()
                 };
 
-                foreach (WwiseObject wwiseObject in wwiseObjects)
+                foreach (var wwiseObject in wwiseObjects)
                 {
                     var jObject = new JObject(
                         new JProperty("object", wwiseObject.ID)
@@ -125,7 +124,7 @@ namespace WwiseTools.Utils.Feature2022
                     query,
                     null, utility.TimeOut);
 
-                for (int i = 0; i < wwiseProperties.Length; i++)
+                for (var i = 0; i < wwiseProperties.Length; i++)
                 {
                     WaapiLog.InternalLog($"Property {wwiseProperties[i].Name} successfully changed to {wwiseProperties[i].Value}!");
                 }
@@ -134,7 +133,7 @@ namespace WwiseTools.Utils.Feature2022
             }
             catch (Exception e)
             {
-                for (int i = 0; i < wwiseProperties.Length; i++)
+                for (var i = 0; i < wwiseProperties.Length; i++)
                     WaapiLog.InternalLog($"Failed to set property \"{wwiseProperties[i].Name}\" for {wwiseObjects.Length} object(s) ======> {e.Message}");
 
                 return false;

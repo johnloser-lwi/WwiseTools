@@ -16,7 +16,7 @@ public static class WwiseUtilityExperimentalExtension
     {
         List<string> GetFilesRecursively(string folder)
         {
-            List<string> results = new List<string>();
+            var results = new List<string>();
 
             foreach (var file in Directory.GetFiles(folder))
             {
@@ -55,7 +55,7 @@ public static class WwiseUtilityExperimentalExtension
 
         try
         {
-            List<ImportInfo> infos = new List<ImportInfo>();
+            var infos = new List<ImportInfo>();
             
             foreach (var soundTarget in soundTargets)
             {
@@ -66,8 +66,8 @@ public static class WwiseUtilityExperimentalExtension
                 
                 var sources = await sound.GetAudioFileSourcesAsync();
 
-                string validWavFile = "";
-                string audioFilePath = "";
+                var validWavFile = "";
+                var audioFilePath = "";
 
                 foreach (var wavFile in wavFiles)
                 {

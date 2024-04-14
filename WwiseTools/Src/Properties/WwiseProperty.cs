@@ -199,7 +199,7 @@ namespace WwiseTools.Properties
 
         public static WwiseProperty Prop_IsZeroLatency(bool zeroLatency)
         {
-            string name = "IsZeroLantency";
+            var name = "IsZeroLantency";
             if (!WwiseUtility.Instance.IsConnected()) 
                 return new WwiseProperty(name, zeroLatency);
 
@@ -1085,7 +1085,7 @@ namespace WwiseTools.Properties
 
         private static float valueLimiter(float value, float min, float max)
         {
-            float result = value;
+            var result = value;
             if (result < min) value = min;
             if (result > max) value = max;
 
@@ -1094,7 +1094,7 @@ namespace WwiseTools.Properties
 
         private static int valueLimiter(int value, int min, int max)
         {
-            int result = value;
+            var result = value;
             if (result < min) value = min;
             if (result > max) value = max;
 
@@ -1103,7 +1103,7 @@ namespace WwiseTools.Properties
 
         private static uint valueLimiter(uint value, uint min, uint max)
         {
-            uint result = value;
+            var result = value;
             if (result < min) value = min;
             if (result > max) value = max;
 

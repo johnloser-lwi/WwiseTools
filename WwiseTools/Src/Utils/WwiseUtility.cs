@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using WaapiClient;
@@ -115,7 +112,7 @@ namespace WwiseTools.Utils
 
             try
             {
-                int id = await _client.Subscribe(topic, options, publishHandler, timeOut);
+                var id = await _client.Subscribe(topic, options, publishHandler, timeOut);
 
                 _subscriptions.Add(topic, id);
             }
@@ -185,7 +182,7 @@ namespace WwiseTools.Utils
 
               
                 var retryCount = 5;
-                for (int i = 1; i <= retryCount; i++)
+                for (var i = 1; i <= retryCount; i++)
                 {
                     WaapiLog.InternalLog($"Trying to fetch connection info ({i}/{retryCount}) ...");
                     if (Function.Count == 0) await GetFunctionsAsync();

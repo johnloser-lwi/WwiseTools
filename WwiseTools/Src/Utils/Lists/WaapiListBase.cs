@@ -37,7 +37,7 @@ public abstract class WaapiListBase<T> : IEnumerable<T>
 
     public override string ToString()
     {
-        StringBuilder builder = new StringBuilder();
+        var builder = new StringBuilder();
         builder.AppendLine($"\nAvailable {ListContent}(s): ");
         foreach (var item in _items)
         {

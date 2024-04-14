@@ -1,13 +1,12 @@
 #nullable enable
 using System;
-using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using WwiseTools.Objects;
 using WwiseTools.Properties;
-using WwiseTools.Utils;
-using System.IO;
 using WwiseTools.Serialization;
+using WwiseTools.Utils;
 
 namespace WwiseTools.WwiseTypes;
 
@@ -39,7 +38,7 @@ public class AudioFileSource : WwiseTypeBase
 
             var func = WaapiFunctionList.CoreObjectGet;
 
-            JObject jresult =
+            var jresult =
                 await WwiseUtility.Instance.CallAsync(func, query, options, WwiseUtility.Instance.TimeOut);
             
             var returnData = WaapiSerializer.Deserialize<ReturnData<ObjectReturnData>>(jresult.ToString());
@@ -92,7 +91,7 @@ public class AudioFileSource : WwiseTypeBase
 
             
           
-            string originalWavFilePath = "sound:originalWavFilePath";
+            var originalWavFilePath = "sound:originalWavFilePath";
             
             
           
@@ -105,7 +104,7 @@ public class AudioFileSource : WwiseTypeBase
 
             var func = WaapiFunctionList.CoreObjectGet;
 
-            JObject jresult = await WwiseUtility.Instance.CallAsync(func, query, options, WwiseUtility.Instance.TimeOut);
+            var jresult = await WwiseUtility.Instance.CallAsync(func, query, options, WwiseUtility.Instance.TimeOut);
 
             return jresult;
         }

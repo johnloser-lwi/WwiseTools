@@ -117,7 +117,7 @@ namespace WaapiClient
             if (options == null)
                 options = new Newtonsoft.Json.Linq.JObject();
 
-            string result = await client.Call(uri, args.ToString(), options.ToString(), timeout);
+            var result = await client.Call(uri, args.ToString(), options.ToString(), timeout);
 
             return Newtonsoft.Json.Linq.JObject.Parse(result);
         }

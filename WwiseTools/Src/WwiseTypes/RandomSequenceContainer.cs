@@ -66,7 +66,7 @@ namespace WwiseTools.WwiseTypes
 
 
             await WwiseUtility.Instance.SaveWwiseProjectAsync();
-            WwiseWorkUnitParser parser = new WwiseWorkUnitParser(await WwiseUtility.Instance.GetWorkUnitFilePathAsync((WwiseObject)));
+            var parser = new WwiseWorkUnitParser(await WwiseUtility.Instance.GetWorkUnitFilePathAsync((WwiseObject)));
 
             var xpath = "//*[@ID='" + WwiseObject.ID + "']/Playlist";
             var playlistNode = parser.XML.SelectSingleNode(xpath);

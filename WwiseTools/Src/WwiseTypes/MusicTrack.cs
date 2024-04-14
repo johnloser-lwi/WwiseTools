@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Newtonsoft.Json.Linq;
 using WwiseTools.Objects;
 using WwiseTools.Properties;
 using WwiseTools.Serialization;
@@ -41,7 +40,7 @@ namespace WwiseTools.WwiseTypes
 
                 var func = WaapiFunctionList.CoreObjectGet;
 
-                JObject jresult = await WwiseUtility.Instance.CallAsync(func, query, options, WwiseUtility.Instance.TimeOut);
+                var jresult = await WwiseUtility.Instance.CallAsync(func, query, options, WwiseUtility.Instance.TimeOut);
 
                 var returnData = WaapiSerializer.Deserialize<ReturnData<ObjectReturnData>>(jresult.ToString());
         

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using System.Linq;
+using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using WwiseTools.Objects;
 using WwiseTools.Serialization;
@@ -17,7 +17,7 @@ public static class SoundBankExtension
 
         var filter = inclusion.Filter;
 
-        JArray inclusionFilterArray = new JArray();
+        var inclusionFilterArray = new JArray();
         
         if (filter.HasFlag(SoundBankInclusionFilter.Events))
             inclusionFilterArray.Add("events");

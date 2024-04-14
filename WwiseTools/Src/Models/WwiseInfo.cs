@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using System.IO;
 using WwiseTools.Serialization;
 
@@ -26,7 +22,7 @@ namespace WwiseTools.Models
 
         public override string ToString()
         {
-            string result = "";
+            var result = "";
             result += "Project Name: " + ProjectName + "\n";
             result += "Project Path: " + ProjectPath + "\n";
             result += "Wwise Version: " + Version.VersionString + "\n";
@@ -76,7 +72,7 @@ namespace WwiseTools.Models
 
         public override bool Equals(object obj)
         {
-            WwiseVersion other = obj as WwiseVersion;
+            var other = obj as WwiseVersion;
             return VersionString == other?.VersionString;
         }
 

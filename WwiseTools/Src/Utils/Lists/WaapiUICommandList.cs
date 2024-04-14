@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-
-namespace WwiseTools.Utils;
+﻿namespace WwiseTools.Utils;
 
 public class WaapiUICommandList : WaapiStringListBase
 {

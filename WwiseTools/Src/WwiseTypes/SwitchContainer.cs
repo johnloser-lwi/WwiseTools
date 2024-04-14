@@ -42,8 +42,8 @@ namespace WwiseTools.WwiseTypes
                 if (returnData.Return.Length == 0) return result;
                 foreach (var token in returnData.Return)
                 {
-                    string childID = token.Child;
-                    string switchID = token.StateOrSwitch;
+                    var childID = token.Child;
+                    var switchID = token.StateOrSwitch;
                     if (string.IsNullOrEmpty(childID) ||
                         string.IsNullOrEmpty(switchID)) continue;
 

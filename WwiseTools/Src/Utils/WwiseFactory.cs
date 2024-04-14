@@ -1,6 +1,4 @@
-﻿using System.Diagnostics.SymbolStore;
-using System.Threading.Tasks;
-using WwiseTools.WwiseTypes;
+﻿using System.Threading.Tasks;
 using WwiseTools.Objects;
 using WwiseTools.Properties;
 

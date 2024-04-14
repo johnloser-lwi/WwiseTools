@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Runtime.CompilerServices;
 using WwiseTools.Models;
-using WwiseTools.Objects;
 
 namespace WwiseTools.Utils
 {

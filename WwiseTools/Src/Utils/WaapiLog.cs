@@ -43,7 +43,7 @@ namespace WwiseTools.Utils
         internal static void InternalLog(object message, [CallerMemberName] string caller = "")
         {
             if (!Instance._enableInternalLog || !Instance._enabled) return;
-            string msg = message?.ToString();
+            var msg = message?.ToString();
             msg = !string.IsNullOrEmpty(msg) ? $"[{caller}] " + msg : "";
 
             Instance.Logger?.Invoke(msg);

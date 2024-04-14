@@ -60,15 +60,15 @@ namespace WaapiClient
             public static ErrorException FromResponse(string response)
             {
                 // [ERROR, CALL, CALL.Request|id, Details|dict, Error|uri, Arguments|list, ArgumentsKw|dict]
-                string pattern = @"^\[\s*8,\s*(\d+)\s*,\s*(\d+)\s*,\s*\{\s*\}\s*,\s*""([^,\s]+)""\s*,\[\s*\]\s*,\s*(\{)";
+                var pattern = @"^\[\s*8,\s*(\d+)\s*,\s*(\d+)\s*,\s*\{\s*\}\s*,\s*""([^,\s]+)""\s*,\[\s*\]\s*,\s*(\{)";
                 var match = System.Text.RegularExpressions.Regex.Match(response, pattern, System.Text.RegularExpressions.RegexOptions.Singleline);
                 if (match.Groups.Count != 5)
                     throw new ErrorException("Invalid ERROR message.");
 
-                Messages messageId = (Messages)int.Parse(match.Groups[1].Value);
-                int requestId = int.Parse(match.Groups[2].Value);
-                string uri = match.Groups[3].Value;
-                string json = response.Substring(match.Groups[4].Index, response.Length - match.Groups[4].Index - 1);
+                var messageId = (Messages)int.Parse(match.Groups[1].Value);
+                var requestId = int.Parse(match.Groups[2].Value);
+                var uri = match.Groups[3].Value;
+                var json = response.Substring(match.Groups[4].Index, response.Length - match.Groups[4].Index - 1);
 
                 return new ErrorException($"Error {uri} in {messageId.ToString()} operation.")
                 {
@@ -144,7 +144,7 @@ namespace WaapiClient
             if(match.Groups.Count != 2)
                 throw new ErrorException("Error while parsing response from server.");
 
-            Messages messageId = (Messages)int.Parse(match.Groups[1].Value);
+            var messageId = (Messages)int.Parse(match.Groups[1].Value);
             switch (messageId)
             {
                 case Messages.WELCOME:
@@ -264,15 +264,15 @@ namespace WaapiClient
         private async System.Threading.Tasks.Task<Response> ReceiveMessage()
         {
             // Receive one web socket message
-            System.Collections.Generic.List<System.Collections.Generic.IEnumerable<byte>> segments = new System.Collections.Generic.List<System.Collections.Generic.IEnumerable<byte>>();
+            var segments = new System.Collections.Generic.List<System.Collections.Generic.IEnumerable<byte>>();
 
             try
             {
                 while (true)
                 {
-                    byte[] buffer = new byte[4096];
+                    var buffer = new byte[4096];
                     var segment = new System.ArraySegment<byte>(buffer, 0, buffer.Length);
-                    System.Net.WebSockets.WebSocketReceiveResult rcvResult = await ws.ReceiveAsync(segment, stopServerTokenSource.Token);
+                    var rcvResult = await ws.ReceiveAsync(segment, stopServerTokenSource.Token);
 
                     // Accumulate the byte arrays in a list, we will join them later
                     segments.Add(segment.Skip(segment.Offset).Take(rcvResult.Count));
@@ -288,8 +288,8 @@ namespace WaapiClient
 
             try
             {
-                byte[] bytes = segments.SelectMany(t => t).ToArray<byte>();
-                string msg = System.Text.Encoding.UTF8.GetString(bytes);
+                var bytes = segments.SelectMany(t => t).ToArray<byte>();
+                var msg = System.Text.Encoding.UTF8.GetString(bytes);
                 return Parse(msg);
             }
             catch (ErrorException e)
@@ -309,7 +309,7 @@ namespace WaapiClient
         /// <returns>The response from the server.</returns>
         private async System.Threading.Tasks.Task<Response> Receive(int timeout)
         {
-            System.Threading.Tasks.Task task = await System.Threading.Tasks.Task.WhenAny(
+            var task = await System.Threading.Tasks.Task.WhenAny(
                 taskCompletion.Task, 
                 System.Threading.Tasks.Task.Delay(timeout));
 
@@ -347,7 +347,7 @@ namespace WaapiClient
         private async System.Threading.Tasks.Task<Response> ReceiveExpect(Messages message, int requestId, int timeout)
         {
             // Should receive the expected message or ERROR
-            Response response = await Receive(timeout);
+            var response = await Receive(timeout);
 
             if (response.MessageId != message)
                 throw new ErrorException($"{message.ToString()}: invalid response. Did not receive expected answer.");
@@ -367,7 +367,7 @@ namespace WaapiClient
         {
             try
             {
-                System.Uri uri = new System.Uri(host);
+                var uri = new System.Uri(host);
                 using (var cts = new System.Threading.CancellationTokenSource(timeout))
                 {
                     // Connect
@@ -384,7 +384,7 @@ namespace WaapiClient
 
                 {
                     // Should receive the WELCOME
-                    Response response = await ReceiveExpect(Messages.WELCOME, 0, timeout);
+                    var response = await ReceiveExpect(Messages.WELCOME, 0, timeout);
 
                     sessionId = response.ContextSpecificResultId;
                 }
@@ -414,7 +414,7 @@ namespace WaapiClient
             // [GOODBYE, Details|dict, Reason|uri]
             await Send($"[{(int)Messages.GOODBYE},{{}},\"bye_from_csharp_client\"]", timeout);
 
-            Response response = await ReceiveExpect(Messages.GOODBYE, 0, timeout);
+            var response = await ReceiveExpect(Messages.GOODBYE, 0, timeout);
 
             stopServerTokenSource.Cancel();
 
@@ -427,7 +427,7 @@ namespace WaapiClient
 
         private void ProcessEvent(Response message)
         {
-            int subscriptionId = message.ContextSpecificResultId;
+            var subscriptionId = message.ContextSpecificResultId;
 
             PublishHandler publishEvent = null;
             if (!subscriptions.TryGetValue(subscriptionId, out publishEvent))
@@ -439,7 +439,7 @@ namespace WaapiClient
         private void StartListen()
         {
             // Start the receive task, that will remain running for the whole connection
-            System.Threading.CancellationToken ct = stopServerTokenSource.Token;
+            var ct = stopServerTokenSource.Token;
             var task = System.Threading.Tasks.Task.Factory.StartNew(() =>
             {
                 ct.ThrowIfCancellationRequested();
@@ -447,7 +447,7 @@ namespace WaapiClient
                 {
                     try
                     {
-                        System.Threading.Tasks.Task<Response> receiveTask = ReceiveMessage();
+                        var receiveTask = ReceiveMessage();
                         receiveTask.Wait();
 
                         if (receiveTask.Result.MessageId == Messages.EVENT)
@@ -495,13 +495,13 @@ namespace WaapiClient
         /// <returns></returns>
         internal async System.Threading.Tasks.Task<string> Call(string uri, string args, string options, int timeout)
         {
-            int requestId = ++currentRequestId;
+            var requestId = ++currentRequestId;
 
             // [CALL, Request|id, Options|dict, Procedure|uri, Arguments|list, ArgumentsKw|dict]
             await Send($"[{(int)Messages.CALL},{requestId},{options},\"{uri}\",[],{args}]", timeout);
 
             // Should receive the RESULT or ERROR
-            Response response = await ReceiveExpect(Messages.RESULT, requestId, timeout);
+            var response = await ReceiveExpect(Messages.RESULT, requestId, timeout);
             return response.Json;
         }
 
@@ -515,13 +515,13 @@ namespace WaapiClient
         /// <returns>Subscription id, that you can use to unsubscribe.</returns>
         internal async System.Threading.Tasks.Task<int> Subscribe(string topic, string options, PublishHandler publishEvent, int timeout)
         {
-            int requestId = ++currentRequestId;
+            var requestId = ++currentRequestId;
 
             // [SUBSCRIBE, Request|id, Options|dict, Topic|uri]
             await Send($"[{(int)Messages.SUBSCRIBE},{requestId},{options},\"{topic}\"]", timeout);
 
             // Should receive the SUBSCRIBED or ERROR
-            Response response = await ReceiveExpect(Messages.SUBSCRIBED, requestId, timeout);
+            var response = await ReceiveExpect(Messages.SUBSCRIBED, requestId, timeout);
 
             subscriptions.TryAdd(response.ContextSpecificResultId, publishEvent);
             return response.ContextSpecificResultId;
@@ -531,12 +531,12 @@ namespace WaapiClient
         /// <param name="subscriptionId">The subscription id received from the initial subscription.</param>
         internal async System.Threading.Tasks.Task Unsubscribe(int subscriptionId, int timeout)
         {
-            int requestId = ++currentRequestId;
+            var requestId = ++currentRequestId;
 
             // [UNSUBSCRIBE, Request|id, SUBSCRIBED.Subscription|id]
             await Send($"[{(int)Messages.UNSUBSCRIBE},{requestId},{subscriptionId}]", timeout);
 
-            Response response = await ReceiveExpect(Messages.UNSUBSCRIBED, requestId, timeout);
+            var response = await ReceiveExpect(Messages.UNSUBSCRIBED, requestId, timeout);
             PublishHandler oldEvent;
             subscriptions.TryRemove(subscriptionId, out oldEvent);
         }

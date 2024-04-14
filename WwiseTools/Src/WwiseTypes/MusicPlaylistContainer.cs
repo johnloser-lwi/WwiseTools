@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Newtonsoft.Json.Linq;
 using WwiseTools.Objects;
 using WwiseTools.Serialization;
 using WwiseTools.Utils;
@@ -67,11 +66,11 @@ namespace WwiseTools.WwiseTypes
 
                 var func = WaapiFunctionList.CoreObjectGet;
 
-                JObject jresult = await WwiseUtility.Instance.CallAsync(func, query, options, WwiseUtility.Instance.TimeOut);
+                var jresult = await WwiseUtility.Instance.CallAsync(func, query, options, WwiseUtility.Instance.TimeOut);
 
                 var returnData = WaapiSerializer.Deserialize<ReturnData<ObjectReturnData>>(jresult.ToString());
                 if (returnData.Return.Length == 0) return null;
-                string id = returnData.Return[0].MusicPlaylistRoot.ID;
+                var id = returnData.Return[0].MusicPlaylistRoot.ID;
 
                 return await WwiseUtility.Instance.GetWwiseObjectByIDAsync(id);
             }
