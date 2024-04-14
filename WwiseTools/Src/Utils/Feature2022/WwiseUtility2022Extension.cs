@@ -96,11 +96,11 @@ namespace WwiseTools.Utils.Feature2022
       
       
       
-        public static async Task BatchSetObjectPropertyAsync(this WwiseUtility utility, WwiseObject[] wwiseObjects, 
+        public static async Task<bool> BatchSetObjectPropertyAsync(this WwiseUtility utility, WwiseObject[] wwiseObjects, 
             params WwiseProperty[] wwiseProperties)
         {
-            if (!await WwiseUtility.Instance.TryConnectWaapiAsync() || wwiseObjects.Length == 0 || wwiseProperties.Length == 0) return;
-            if (!VersionHelper.VersionVerify(VersionHelper.V2022_1_0_7929)) return;
+            if (!await WwiseUtility.Instance.TryConnectWaapiAsync() || wwiseObjects.Length == 0 || wwiseProperties.Length == 0) return false;
+            if (!VersionHelper.VersionVerify(VersionHelper.V2022_1_0_7929)) return false;
             try
             {
                 var query = new
@@ -129,12 +129,15 @@ namespace WwiseTools.Utils.Feature2022
                 {
                     WaapiLog.InternalLog($"Property {wwiseProperties[i].Name} successfully changed to {wwiseProperties[i].Value}!");
                 }
-                
+
+                return true;
             }
             catch (Exception e)
             {
                 for (int i = 0; i < wwiseProperties.Length; i++)
                     WaapiLog.InternalLog($"Failed to set property \"{wwiseProperties[i].Name}\" for {wwiseObjects.Length} object(s) ======> {e.Message}");
+
+                return false;
             }
         }
     }

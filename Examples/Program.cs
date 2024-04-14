@@ -11,16 +11,9 @@ try
     {
         var wo = await WwiseUtility.Instance.GetWwiseObjectsBySelectionAsync();
 
-        
-
-        Console.WriteLine("Make Changes!");
-        await Task.Delay(5000);
-
-        var res = await WwiseUtility.Instance.BatchUpdateObjectPathAsync(wo);
-        
-        foreach (var w in wo)
+        foreach (var wwiseObject in wo)
         {
-            Console.WriteLine(w.Path);
+            await WwiseUtility.Instance.SetWwiseObjectColorAsync(wwiseObject, WwiseColor.Bittersweet);
         }
     }
     else

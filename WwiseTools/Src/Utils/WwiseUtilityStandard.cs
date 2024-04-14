@@ -1680,6 +1680,24 @@ namespace WwiseTools.Utils
             return false;
         }
 
+
+        public async Task<bool> SetWwiseObjectColorAsync(WwiseObject wwiseObject, WwiseColor color, bool overrideColor = true)
+        {
+            if (ConnectionInfo.Version >= VersionHelper.V2022_1_0_7929)
+            {
+                return await Instance.BatchSetObjectPropertyAsync(new[] { wwiseObject }, new[]
+                {
+                    WwiseProperty.Prop_OverrideColor(overrideColor),
+                    WwiseProperty.Prop_Color((uint)color), 
+                });
+            }
+            
+            var res = true;
+            res &= await SetObjectPropertyAsync(wwiseObject, WwiseProperty.Prop_OverrideColor(overrideColor));
+            res &= await SetObjectPropertyAsync(wwiseObject, WwiseProperty.Prop_Color((uint)color));
+            return res;
+        }
+
         public async Task<bool> BatchUpdateObjectPathAsync(List<WwiseObject> wwiseObjects)
         {
             if (wwiseObjects.Count == 0) return true;
