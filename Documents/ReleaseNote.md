@@ -1,13 +1,11 @@
 # [Wwise Tools](https://github.com/johnloser-lwi/WwiseTools)
 ---
-## v2.5.11
+## v2.6.1
 ### New Features
-### Bug Fixes
-- 修复Wwise2022以上版本的OriginalWavFilePath获取
----
-## v2.5.10
-### New Features
-- 增加ImportTabDelemitedAsync
-- AsVoice修改为AsActorMixer，暂时保留AsVoice
-### Bug Fixes
----
+- WwiseColor enum
+- Get wwiseObject path without waapi call
+- Batch update wwiseObject color
+- CoreObjectGetAsync for getting properties and information of wwiseObject
+### Improvements
+- Deserialize Json data with proper JsonSerializer
+- Performance improve by reducing waapi calls in multiple functions
