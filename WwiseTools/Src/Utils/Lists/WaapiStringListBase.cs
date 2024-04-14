@@ -7,7 +7,7 @@ public abstract class WaapiStringListBase : WaapiListBase<string>
     public override string Verify(string item)
     {
         item = item.Trim();
-        bool result = false;
+        var result = false;
         string final = null;
         if (_items.Contains(item))
         {

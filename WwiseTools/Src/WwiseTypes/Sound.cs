@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Newtonsoft.Json.Linq;
 using WwiseTools.Objects;
 using WwiseTools.Properties;
 using WwiseTools.Utils;
@@ -61,7 +59,7 @@ namespace WwiseTools.WwiseTypes
         {
             var sources = await GetAudioFileSourcesAsync();
 
-            bool isValid = true;
+            var isValid = true;
             
             foreach (var audioFileSource in sources)
             {

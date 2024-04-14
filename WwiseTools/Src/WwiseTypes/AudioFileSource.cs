@@ -1,12 +1,12 @@
 #nullable enable
 using System;
-using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using WwiseTools.Objects;
 using WwiseTools.Properties;
+using WwiseTools.Serialization;
 using WwiseTools.Utils;
-using System.IO;
 
 namespace WwiseTools.WwiseTypes;
 
@@ -14,11 +14,11 @@ public class AudioFileSource : WwiseTypeBase
 {
     public async Task<string> GetLanguageAsync()
     {
-        if (!await WwiseUtility.Instance.TryConnectWaapiAsync()) return null;
+        if (!await WwiseUtility.Instance.TryConnectWaapiAsync()) return "";
 
         try
         {
-            // ak.wwise.core.@object.get 指令
+          
             var query = new
             {
                 from = new
@@ -28,31 +28,29 @@ public class AudioFileSource : WwiseTypeBase
             };
             
 
-            // ak.wwise.core.@object.get 返回参数设置
+          
             var options = new
             {
 
-                @return = new string[] {"audioSource:language"}
+                @return = new string[] {"audioSourceLanguage"}
 
             };
 
             var func = WaapiFunctionList.CoreObjectGet;
 
-            JObject jresult =
+            var jresult =
                 await WwiseUtility.Instance.CallAsync(func, query, options, WwiseUtility.Instance.TimeOut);
-
-            if (jresult["return"] == null) return "";
-
-            var sourceLanguage = jresult["return"].First;
-            if (sourceLanguage == null) return "";
-
-            var name = sourceLanguage["audioSource:language"]?["name"];
-            return name == null ? "" : name.ToString();
+            
+            var returnData = WaapiSerializer.Deserialize<ReturnData<ObjectReturnData>>(jresult.ToString());
+            if (returnData.Return.Length == 0) return "";
+            
+            var name = returnData.Return[0].AudioSourceLanguage.Name;
+            return name;
         }
         catch (Exception e)
         {
             WaapiLog.InternalLog($"Failed to return Language from ID : {WwiseObject.ID}! ======> {e.Message}");
-            return null;
+            return "";
         }
     }
 
@@ -82,7 +80,7 @@ public class AudioFileSource : WwiseTypeBase
 
         try
         {
-            // ak.wwise.core.@object.get 指令
+          
             var query = new
             {
                 from = new
@@ -92,12 +90,11 @@ public class AudioFileSource : WwiseTypeBase
             };
 
             
-            // Wwise 2022 兼容
-            string originalWavFilePath = "sound:originalWavFilePath";
-            /*if (WwiseUtility.Instance.ConnectionInfo.Version.Year >= 2022) 
-                originalWavFilePath = "sound:originalFilePath";*/
+          
+            var originalWavFilePath = "sound:originalWavFilePath";
             
-            // ak.wwise.core.@object.get 返回参数设置
+            
+          
             var options = new
             {
 
@@ -107,7 +104,7 @@ public class AudioFileSource : WwiseTypeBase
 
             var func = WaapiFunctionList.CoreObjectGet;
 
-            JObject jresult = await WwiseUtility.Instance.CallAsync(func, query, options, WwiseUtility.Instance.TimeOut);
+            var jresult = await WwiseUtility.Instance.CallAsync(func, query, options, WwiseUtility.Instance.TimeOut);
 
             return jresult;
         }

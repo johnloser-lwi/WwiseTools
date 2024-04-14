@@ -25,7 +25,7 @@ namespace WwiseTools.WwiseTypes
             WwiseObject entryCue = null;
             foreach (var cue in cues)
             {
-                if (Path.GetDirectoryName(await cue.GetPathAsync())!.Contains(await WwiseObject.GetPathAsync()) && cue.Name == "Entry Cue")
+                if (Path.GetDirectoryName(cue.Path)!.Contains(WwiseObject.Path) && cue.Name == "Entry Cue")
                 {
                     entryCue = cue;
                     break;
@@ -45,7 +45,7 @@ namespace WwiseTools.WwiseTypes
             WwiseObject exitCue = null;
             foreach (var cue in cues)
             {
-                if (Path.GetDirectoryName(await cue.GetPathAsync())!.Contains(await WwiseObject.GetPathAsync()) && cue.Name == "Exit Cue")
+                if (Path.GetDirectoryName(cue.Path)!.Contains(WwiseObject.Path) && cue.Name == "Exit Cue")
                 {
                     exitCue = cue;
                     break;
@@ -60,12 +60,12 @@ namespace WwiseTools.WwiseTypes
             }
         }
 
-        /// <summary>
-        /// 创建新的Cue，异步执行
-        /// </summary>
-        /// <param name="name"></param>
-        /// <param name="timeMs"></param>
-        /// <returns></returns>
+      
+      
+      
+      
+      
+      
         public async Task CreateCueAsync(string name, float timeMs, NameConflictBehaviour conflictBehaviour = NameConflictBehaviour.replace)
         {
             if (!await WwiseUtility.Instance.TryConnectWaapiAsync()) return;
@@ -74,7 +74,7 @@ namespace WwiseTools.WwiseTypes
             {
                 var func = WwiseUtility.Instance.Function.Verify("ak.wwise.core.object.create");
 
-                // 创建物体
+              
                 var result = await WwiseUtility.Instance.CallAsync
                     (
                         func,
@@ -82,7 +82,7 @@ namespace WwiseTools.WwiseTypes
                         {
                             new JProperty("name", name),
                             new JProperty("type", "MusicCue"),
-                            new JProperty("parent", await WwiseObject.GetPathAsync()),
+                            new JProperty("parent", WwiseObject.Path),
                             new JProperty("onNameConflict", conflictBehaviour.ToString()),
                             new JProperty("list", "Cues"),
                             new JProperty("@TimeMs", timeMs),

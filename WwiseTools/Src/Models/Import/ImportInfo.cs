@@ -8,28 +8,48 @@ namespace WwiseTools.Models.Import;
 
 public class ImportInfo
 {
-    public ImportInfo(string audioFile, WwisePathBuilder objectPath, string language = "SFX", string subFolder = "")
+    [Obsolete("Use FromPath or FromPathBuilder instead")]
+    public ImportInfo(string audioFile, WwisePathBuilder pathBuilder, string language = "SFX", string subFolder = "")
     {
         AudioFile = audioFile;
-        ObjectPath = objectPath;
-        Language = language;
-        SubFolder = subFolder;
-    }
-    
-    public ImportInfo(string audioFile, string objectPath, string language = "SFX", string subFolder = "")
-    {
-        AudioFile = audioFile;
-        ObjectPath = TryParseObjectPath(objectPath);
+        PathBuilder = pathBuilder;
         Language = language;
         SubFolder = subFolder;
     }
 
-    private WwisePathBuilder TryParseObjectPath(string path)
+    private ImportInfo()
+    {
+        
+    }
+    
+    public static async Task<ImportInfo> FromPath(string audioFile, string objectPath, string language = "SFX", string subFolder = "")
+    {
+        var info = new ImportInfo();
+        info.AudioFile = audioFile;
+        info.Language = language;
+        info.SubFolder = subFolder;
+
+        await info.TryParseObjectPathAsync(objectPath);
+        return info;
+    }
+    
+    public static ImportInfo FromPathBuilder(string audioFile, WwisePathBuilder pathBuilder, string language = "SFX", string subFolder = "")
+    {
+        var info = new ImportInfo();
+        info.AudioFile = audioFile;
+        info.PathBuilder = pathBuilder;
+        info.Language = language;
+        info.SubFolder = subFolder;
+        return info;
+    }
+    
+
+    private async Task TryParseObjectPathAsync(string path)
     {
         var split = path.Replace('/', '\\').Split('\\');
 
-        bool isRoot = true;
-        string root = "";
+        var isRoot = true;
+        var root = "";
 
         WwisePathBuilder builder = null;
 
@@ -42,6 +62,8 @@ public class ImportInfo
         
         foreach (var s in split)
         {
+            if (string.IsNullOrEmpty(s)) continue;
+            
             if (!s.StartsWith("<") && isRoot)
             {
                 root += s + "\\";
@@ -64,27 +86,27 @@ public class ImportInfo
 
             if (!res) ThrowException();
 
-            builder.AppendHierarchy(type, typeNameSplit[1]);
+            await builder.AppendHierarchyAsync(type, typeNameSplit[1]);
         }
 
-        return builder;
+        PathBuilder = builder;
     }
 
     public string Language { get; private set; }
     public string AudioFile { get; private set; }
-    public WwisePathBuilder ObjectPath { get; private set; }
+    public WwisePathBuilder PathBuilder { get; private set; }
     public string SubFolder { get; private set; }
 
     public bool IsValid => !string.IsNullOrEmpty(Language) && !string.IsNullOrEmpty(AudioFile) &&
-                           ObjectPath != null;
+                           PathBuilder != null;
 
-    internal async Task<JObject> ToJObjectImportProperty()
+    internal async Task<JObject> ToJObjectImportPropertyAsync()
     {
         var properties = new JObject
         {
             new JProperty("importLanguage", Language),
             new JProperty("audioFile", AudioFile),
-            new JProperty("objectPath", await ObjectPath.GetImportPathAsync())
+            new JProperty("objectPath", await PathBuilder.GetImportPathAsync())
         };
         if (!string.IsNullOrEmpty(SubFolder))
         {

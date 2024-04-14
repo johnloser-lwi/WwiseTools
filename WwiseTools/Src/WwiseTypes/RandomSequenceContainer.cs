@@ -8,7 +8,7 @@ namespace WwiseTools.WwiseTypes
 {
     public class RandomSequenceContainer : WwiseTypeBase
     {
-        // RandomSequenceContainer
+      
 
         public async Task<WwiseProperty.Option_RandomOrSequence> GetPlayTypeAsync()
         {
@@ -42,7 +42,7 @@ namespace WwiseTools.WwiseTypes
         }
 
 
-        // Sequence Container
+      
 
 
         public async Task SetSequenceEndBehaviorAsync(WwiseProperty.Option_RestartBeginningOrBackward option)
@@ -61,12 +61,12 @@ namespace WwiseTools.WwiseTypes
         {
             foreach (var item in items)
             {
-                if (!(await item.GetPathAsync()).Contains(await WwiseObject.GetPathAsync())) return;
+                if (!item.Path.Contains(WwiseObject.Path)) return;
             }
 
 
             await WwiseUtility.Instance.SaveWwiseProjectAsync();
-            WwiseWorkUnitParser parser = new WwiseWorkUnitParser(await WwiseUtility.Instance.GetWorkUnitFilePathAsync((WwiseObject)));
+            var parser = new WwiseWorkUnitParser(await WwiseUtility.Instance.GetWorkUnitFilePathAsync((WwiseObject)));
 
             var xpath = "//*[@ID='" + WwiseObject.ID + "']/Playlist";
             var playlistNode = parser.XML.SelectSingleNode(xpath);
@@ -78,7 +78,7 @@ namespace WwiseTools.WwiseTypes
             {
 
                 containerNode.RemoveChild(playlistNode);
-                //parser.SaveFile();
+              
             }
 
 
@@ -102,7 +102,7 @@ namespace WwiseTools.WwiseTypes
         }
 
 
-        // Random Container
+      
 
         public async Task SetRandomModeAsync(WwiseProperty.Option_NormalOrShuffle option)
         {

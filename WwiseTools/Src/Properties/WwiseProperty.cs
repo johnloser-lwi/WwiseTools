@@ -23,11 +23,8 @@ namespace WwiseTools.Properties
             IsReference = isReference;
         }
 
-        public WwiseProperty(string name)
-        {
-            Name = name;
-            IsReference = false;
-        }
+
+        public static  WwiseProperty Invalid => new WwiseProperty("INVALID", "INVALID");
 
         public enum Option_3DPosition { Emitter = 0, EmitterWithAutomation = 1, ListenerWithAutomation = 2 }
         public static WwiseProperty Prop_3DPosition(Option_3DPosition mode)
@@ -202,7 +199,7 @@ namespace WwiseTools.Properties
 
         public static WwiseProperty Prop_IsZeroLatency(bool zeroLatency)
         {
-            string name = "IsZeroLantency";
+            var name = "IsZeroLantency";
             if (!WwiseUtility.Instance.IsConnected()) 
                 return new WwiseProperty(name, zeroLatency);
 
@@ -940,147 +937,147 @@ namespace WwiseTools.Properties
         
         public static WwiseProperty Prop_Attenuation(WwiseObject wwiseObject)
         {
-            //if (wwiseObject == null) return null;
+            if (wwiseObject == null) return WwiseProperty.Invalid;
 
             if (wwiseObject != null && wwiseObject.Type != WwiseObject.ObjectType.Attenuation.ToString())
             {
-                return null;
+                return WwiseProperty.Invalid;
             }
             return new WwiseProperty("Attenuation", wwiseObject.ID, true);
         }
 
         public static WwiseProperty Prop_Conversion(WwiseObject wwiseObject)
         {
-            if (wwiseObject == null) return null;
+            if (wwiseObject == null) return WwiseProperty.Invalid;
             if (wwiseObject.Type != WwiseObject.ObjectType.Conversion.ToString())
             {
-                return null;
+                return WwiseProperty.Invalid;
             }
             return new WwiseProperty("Conversion", wwiseObject.ID, true);
         }
 
         public static WwiseProperty Prop_Effect0(WwiseObject wwiseObject)
         {
-            if (wwiseObject == null) return null;
+            if (wwiseObject == null) return WwiseProperty.Invalid;
             if (wwiseObject.Type != "Effect")
             {
-                return null;
+                return WwiseProperty.Invalid;
             }
             return new WwiseProperty("Effect0", wwiseObject.ID, true);
         }
 
         public static WwiseProperty Prop_Effect1(WwiseObject wwiseObject)
         {
-            if (wwiseObject == null) return null;
+            if (wwiseObject == null) return WwiseProperty.Invalid;
             if (wwiseObject.Type != "Effect")
             {
-                return null;
+                return WwiseProperty.Invalid;
             }
             return new WwiseProperty("Effect1", wwiseObject.ID, true);
         }
 
         public static WwiseProperty Prop_Effect2(WwiseObject wwiseObject)
         {
-            if (wwiseObject == null) return null;
+            if (wwiseObject == null) return WwiseProperty.Invalid;
             if (wwiseObject.Type != "Effect")
             {
-                return null;
+                return WwiseProperty.Invalid;
             }
             return new WwiseProperty("Effect2", wwiseObject.ID, true);
         }
 
         public static WwiseProperty Prop_Effect3(WwiseObject wwiseObject)
         {
-            if (wwiseObject == null) return null;
+            if (wwiseObject == null) return WwiseProperty.Invalid;
             if (wwiseObject.Type != "Effect")
             {
-                return null;
+                return WwiseProperty.Invalid;
             }
             return new WwiseProperty("Effect3", wwiseObject.ID, true);
         }
 
         public static WwiseProperty Prop_OutputBus(WwiseObject wwiseObject)
         {
-            if (wwiseObject == null) return null;
+            if (wwiseObject == null) return WwiseProperty.Invalid;
             if (wwiseObject.Type != "Bus")
             {
-                return null;
+                return WwiseProperty.Invalid;
             }
             return new WwiseProperty("OutputBus", wwiseObject.ID, true);
         }
         public static WwiseProperty Prop_ReflectionsAuxSend(WwiseObject wwiseObject)
         {
-            if (wwiseObject == null) return null;
+            if (wwiseObject == null) return WwiseProperty.Invalid;
             if (wwiseObject.Type != "AuxBus")
             {
-                return null;
+                return WwiseProperty.Invalid;
             }
             return new WwiseProperty("ReflectionsAuxSend", wwiseObject.ID, true);
         }
 
         public static WwiseProperty Prop_UserAuxSend0(WwiseObject wwiseObject)
         {
-            //if (wwiseObject == null) return null;
+            if (wwiseObject == null) return WwiseProperty.Invalid;
             if (wwiseObject != null && wwiseObject.Type != "AuxBus")
             {
-                return null;
+                return WwiseProperty.Invalid;
             }
             return new WwiseProperty("UserAuxSend0", wwiseObject.ID, true);
         }
 
         public static WwiseProperty Prop_UserAuxSend1(WwiseObject wwiseObject)
         {
-            //if (wwiseObject == null) return null;
+            if (wwiseObject == null) return WwiseProperty.Invalid;
             if (wwiseObject != null && wwiseObject.Type != "AuxBus")
             {
-                return null;
+                return WwiseProperty.Invalid;
             }
             return new WwiseProperty("UserAuxSend1", wwiseObject.ID, true);
         }
 
         public static WwiseProperty Prop_UserAuxSend2(WwiseObject wwiseObject)
         {
-            //if (wwiseObject == null) return null;
+            if (wwiseObject == null) return WwiseProperty.Invalid;
             if (wwiseObject != null && wwiseObject.Type != "AuxBus")
             {
-                return null;
+                return WwiseProperty.Invalid;
             }
             return new WwiseProperty("UserAuxSend2", wwiseObject.ID, true);
         }
 
         public static WwiseProperty Prop_UserAuxSend3(WwiseObject wwiseObject)
         {
-            //if (wwiseObject == null) return null;
+            if (wwiseObject == null) return WwiseProperty.Invalid;
             if (wwiseObject != null && wwiseObject.Type != "AuxBus")
             {
-                return null;
+                return WwiseProperty.Invalid;
             }
             return new WwiseProperty("UserAuxSend3", wwiseObject.ID, true);
         }
 
         public static WwiseProperty Prop_SwitchGroupOrStateGroup(WwiseObject wwiseObject)
         {
-            if (wwiseObject == null) return null;
+            if (wwiseObject == null) return WwiseProperty.Invalid;
             if (wwiseObject.Type != "SwitchGroup" && wwiseObject.Type != "StateGroup")
             {
-                return null;
+                return WwiseProperty.Invalid;
             }
             return new WwiseProperty("SwitchGroupOrStateGroup", wwiseObject.ID, true);
         }
 
         public static WwiseProperty Prop_DefaultSwitchOrState(WwiseObject wwiseObject)
         {
-            if (wwiseObject == null) return null;
+            if (wwiseObject == null) return WwiseProperty.Invalid;
             if (wwiseObject.Type != "Switch" && wwiseObject.Type != "State")
             {
-                return null;
+                return WwiseProperty.Invalid;
             }
             return new WwiseProperty("DefaultSwitchOrState", wwiseObject.ID, true);
         }
         
         public static WwiseProperty Prop_Target(WwiseObject wwiseObject)
         {
-            if (wwiseObject == null) return null;
+            if (wwiseObject == null) return WwiseProperty.Invalid;
 
             return new WwiseProperty("Target", wwiseObject.ID, true);
         }
@@ -1088,7 +1085,7 @@ namespace WwiseTools.Properties
 
         private static float valueLimiter(float value, float min, float max)
         {
-            float result = value;
+            var result = value;
             if (result < min) value = min;
             if (result > max) value = max;
 
@@ -1097,7 +1094,7 @@ namespace WwiseTools.Properties
 
         private static int valueLimiter(int value, int min, int max)
         {
-            int result = value;
+            var result = value;
             if (result < min) value = min;
             if (result > max) value = max;
 
@@ -1106,7 +1103,7 @@ namespace WwiseTools.Properties
 
         private static uint valueLimiter(uint value, uint min, uint max)
         {
-            uint result = value;
+            var result = value;
             if (result < min) value = min;
             if (result > max) value = max;
 

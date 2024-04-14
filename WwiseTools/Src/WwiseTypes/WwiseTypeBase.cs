@@ -23,7 +23,7 @@ namespace WwiseTools.WwiseTypes
 
         private bool CanCastToType(string typeFilter, string type)
         {
-            bool excludeMode = false;
+            var excludeMode = false;
             if (typeFilter.StartsWith("!"))
             {
                 typeFilter = typeFilter.Substring(1, typeFilter.Length - 1);

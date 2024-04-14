@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using WaapiClient;
@@ -10,8 +7,10 @@ using WwiseTools.Models;
 
 namespace WwiseTools.Utils
 {
+  
+  
     /// <summary>
-    /// 用于实现基础功能
+    /// Standard Wwise Utility class for WAAPI operations.
     /// </summary>
     public partial class WwiseUtility
     {
@@ -25,6 +24,9 @@ namespace WwiseTools.Utils
 
         private WaapiUICommandList _uiCommand;
 
+        /// <summary>
+        /// Connection information of the current Wwise instance.
+        /// </summary>
         public WwiseInfo ConnectionInfo { get; private set; }
 
         public WaapiFunctionList Function
@@ -110,7 +112,7 @@ namespace WwiseTools.Utils
 
             try
             {
-                int id = await _client.Subscribe(topic, options, publishHandler, timeOut);
+                var id = await _client.Subscribe(topic, options, publishHandler, timeOut);
 
                 _subscriptions.Add(topic, id);
             }
@@ -178,19 +180,19 @@ namespace WwiseTools.Utils
                     WaapiLog.InternalLog("Connection closed!"); // 丢失连接提示
                 };
 
-                // 由于工程加载可能会导致信息获取失败，这里进行5次重复检查
+              
                 var retryCount = 5;
-                for (int i = 1; i <= retryCount; i++)
+                for (var i = 1; i <= retryCount; i++)
                 {
                     WaapiLog.InternalLog($"Trying to fetch connection info ({i}/{retryCount}) ...");
                     if (Function.Count == 0) await GetFunctionsAsync();
                     if (Topic.Count == 0) await GetTopicsAsync();
 
-                    // This must load first so we know if we are on a console or GUI version of Wwise
+                  
                     if (ConnectionInfo == null) ConnectionInfo = await GetWwiseInfoAsync();
                     
-                    // Console versions of WAAPI cannot use UI commands, don't even bother
-                    // loading them, this improves connection speed
+                  
+                  
                     if (ConnectionInfo == null || !ConnectionInfo.IsCommandLine)
                     {
                         if (UICommand.Count == 0) await GetCommandsAsync();

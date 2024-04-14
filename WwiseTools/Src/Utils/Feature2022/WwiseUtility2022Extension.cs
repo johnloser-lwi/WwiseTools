@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using WwiseTools.Objects;
@@ -27,16 +26,16 @@ namespace WwiseTools.Utils.Feature2022
             addKeep
         }
         
-        /// <summary>
-        /// 复制属性
-        /// </summary>
-        /// <param name="utility"></param>
-        /// <param name="source"></param>
-        /// <param name="targets"></param>
-        /// <param name="properties"></param>
-        /// <param name="pasteMode"></param>
-        /// <param name="inclusionMode"></param>
-        /// <returns></returns>
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
         public static async Task<bool> PastePropertiesAsync(this WwiseUtility utility, WwiseObject source, WwiseObject[] targets,
             PasteMode pasteMode = PasteMode.replaceEntire, bool inclusionMode = true, params string[] properties)
         {
@@ -59,8 +58,8 @@ namespace WwiseTools.Utils.Feature2022
                     new JProperty("targets", jTargets),
                 };
                 
-                // Specify inclusion or exclusion according to inclusionMode.
-                // Skip this step if no property provided, all properties will be copied to targets
+              
+              
                 if (properties.Length != 0)
                 {
                     var jProperties = new JArray();
@@ -89,18 +88,18 @@ namespace WwiseTools.Utils.Feature2022
             return true;
         }
 
-        /// <summary>
-        /// 批量配置属性
-        /// </summary>
-        /// <param name="utility"></param>
-        /// <param name="wwiseObjects"></param>
-        /// <param name="wwiseProperties"></param>
-        /// <returns></returns>
-        public static async Task BatchSetObjectPropertyAsync(this WwiseUtility utility, WwiseObject[] wwiseObjects, 
+      
+      
+      
+      
+      
+      
+      
+        public static async Task<bool> BatchSetObjectPropertyAsync(this WwiseUtility utility, WwiseObject[] wwiseObjects, 
             params WwiseProperty[] wwiseProperties)
         {
-            if (!await WwiseUtility.Instance.TryConnectWaapiAsync() || wwiseObjects.Length == 0 || wwiseProperties.Length == 0) return;
-            if (!VersionHelper.VersionVerify(VersionHelper.V2022_1_0_7929)) return;
+            if (!await WwiseUtility.Instance.TryConnectWaapiAsync() || wwiseObjects.Length == 0 || wwiseProperties.Length == 0) return false;
+            if (!VersionHelper.VersionVerify(VersionHelper.V2022_1_0_7929)) return false;
             try
             {
                 var query = new
@@ -108,7 +107,7 @@ namespace WwiseTools.Utils.Feature2022
                     objects = new List<object>()
                 };
 
-                foreach (WwiseObject wwiseObject in wwiseObjects)
+                foreach (var wwiseObject in wwiseObjects)
                 {
                     var jObject = new JObject(
                         new JProperty("object", wwiseObject.ID)
@@ -125,16 +124,19 @@ namespace WwiseTools.Utils.Feature2022
                     query,
                     null, utility.TimeOut);
 
-                for (int i = 0; i < wwiseProperties.Length; i++)
+                for (var i = 0; i < wwiseProperties.Length; i++)
                 {
                     WaapiLog.InternalLog($"Property {wwiseProperties[i].Name} successfully changed to {wwiseProperties[i].Value}!");
                 }
-                
+
+                return true;
             }
             catch (Exception e)
             {
-                for (int i = 0; i < wwiseProperties.Length; i++)
+                for (var i = 0; i < wwiseProperties.Length; i++)
                     WaapiLog.InternalLog($"Failed to set property \"{wwiseProperties[i].Name}\" for {wwiseObjects.Length} object(s) ======> {e.Message}");
+
+                return false;
             }
         }
     }

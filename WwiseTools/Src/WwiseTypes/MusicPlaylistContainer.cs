@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Newtonsoft.Json.Linq;
 using WwiseTools.Objects;
+using WwiseTools.Serialization;
 using WwiseTools.Utils;
 
 namespace WwiseTools.WwiseTypes
@@ -37,17 +37,17 @@ namespace WwiseTools.WwiseTypes
         }
 
 
-        /// <summary>
-        /// 获取播放列表根，同步执行
-        /// </summary>
-        /// <returns></returns>
+      
+      
+      
+      
         public async Task<WwiseObject> GetRootPlaylistItemAsync()
         {
             if (!await WwiseUtility.Instance.TryConnectWaapiAsync()) return null;
 
             try
             {
-                // ak.wwise.core.@object.get 指令
+              
                 var query = new
                 {
                     from = new
@@ -56,7 +56,7 @@ namespace WwiseTools.WwiseTypes
                     }
                 };
 
-                // ak.wwise.core.@object.get 返回参数设置
+              
                 var options = new
                 {
 
@@ -66,11 +66,11 @@ namespace WwiseTools.WwiseTypes
 
                 var func = WaapiFunctionList.CoreObjectGet;
 
-                JObject jresult = await WwiseUtility.Instance.CallAsync(func, query, options, WwiseUtility.Instance.TimeOut);
+                var jresult = await WwiseUtility.Instance.CallAsync(func, query, options, WwiseUtility.Instance.TimeOut);
 
-                if (jresult["return"]?.Last == null) throw new Exception();
-                if (jresult["return"].Last["musicPlaylistRoot"] == null) throw new Exception();
-                string id = jresult["return"].Last["musicPlaylistRoot"]["id"]?.ToString();
+                var returnData = WaapiSerializer.Deserialize<ReturnData<ObjectReturnData>>(jresult.ToString());
+                if (returnData.Return.Length == 0) return null;
+                var id = returnData.Return[0].MusicPlaylistRoot.ID;
 
                 return await WwiseUtility.Instance.GetWwiseObjectByIDAsync(id);
             }

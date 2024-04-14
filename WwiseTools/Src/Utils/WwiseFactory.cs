@@ -1,6 +1,4 @@
-﻿using System.Diagnostics.SymbolStore;
-using System.Threading.Tasks;
-using WwiseTools.WwiseTypes;
+﻿using System.Threading.Tasks;
 using WwiseTools.Objects;
 using WwiseTools.Properties;
 
@@ -8,7 +6,7 @@ namespace WwiseTools.Utils
 {
     public class WwiseFactory
     {
-        // Actor Mixer Hierarchy
+      
         public static async Task<WwiseObject> CreateRandomSequenceContainer(string objectName, bool isRandomContainer,
             WwiseObject parent, NameConflictBehaviour conflictBehaviour = NameConflictBehaviour.fail)
         {
@@ -20,12 +18,12 @@ namespace WwiseTools.Utils
             return result;
         }
 
-        // Interactive Music
+      
         public static async Task<WwiseObject> CreateMusicSegmentAsync(string name, string filePath,
             string subFolder, WwiseObject parent)
         {
             var segment = await WwiseUtility.Instance.CreateObjectAsync(name, WwiseObject.ObjectType.MusicSegment, parent);
-            var parentPath = System.IO.Path.Combine(await parent.GetPathAsync(), name);
+            var parentPath = System.IO.Path.Combine(parent.Path, name);
             await WwiseUtility.Instance.ImportSoundAsync(filePath, "SFX", subFolder, parentPath);
 
             return segment;

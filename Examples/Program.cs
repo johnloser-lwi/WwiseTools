@@ -1,16 +1,31 @@
 ﻿// See https://aka.ms/new-console-template for more information
 using Examples;
+using WwiseTools.Models.Import;
 using WwiseTools.Objects;
+using WwiseTools.Serialization;
 using WwiseTools.Utils;
-using WwiseTools.Utils.Feature2022;
 
 try
 {
     WaapiLog.AddCustomLogger(ExampleFunctions.CustomLogger);
-
-    if (await WwiseUtility.Instance.TryConnectWaapiAsync("172.27.82.225"))
+    if (await WwiseUtility.Instance.TryConnectWaapiAsync())
     {
-        //await SoundBankExamples.RemoveSoundBankInclusion(); // 尝试不同的方法
+        var files = Directory.GetFiles("C:\\Test");
+        List<ImportInfo> infos = new List<ImportInfo>();
+        foreach (var file in files)
+        {
+            var pathBuilder = new WwisePathBuilder("\\Actor-Mixer Hierarchy\\Default Work Unit");
+            await pathBuilder.AppendHierarchyAsync(WwiseObject.ObjectType.RandomSequenceContainer, "player_jump");
+            await pathBuilder.AppendHierarchyAsync(WwiseObject.ObjectType.Sound, (new FileInfo(file).Name));
+            var i = new ImportInfo(file, pathBuilder);
+            infos.Add(i);
+        }
+
+        var wos= await WwiseUtility.Instance.BatchImportSoundAsync(infos.ToArray());
+        foreach (var wo in wos)
+        {
+            Console.WriteLine($"{wo.Name}  {wo.Path}");
+        }
     }
     else
     {

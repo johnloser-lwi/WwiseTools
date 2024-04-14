@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using WwiseTools.Objects;
 using WwiseTools.Properties;
 using WwiseTools.Utils;
@@ -30,14 +29,14 @@ namespace WwiseTools.WwiseTypes
         {
             var property = await WwiseUtility.Instance.GetWwiseObjectPropertyAsync(WwiseObject, "PlaylistItemType");
 
-            int.TryParse(property.Value.ToString(), out int type);
+            int.TryParse(property.Value.ToString(), out var type);
             return (WwiseProperty.Option_PlaylistItemType)type;
         }
 
 
         public async Task SetRandomAsync(bool shuffle = true, uint avoidRepeatCount = 1)
         {
-            int standard = 0;
+            var standard = 0;
             if (!shuffle) standard = 1;
             await WwiseUtility.Instance.SetObjectPropertyAsync(WwiseObject, new WwiseProperty("NormalOrShuffle", standard));
             await WwiseUtility.Instance.SetObjectPropertyAsync(WwiseObject, new WwiseProperty("RandomAvoidRepeatingCount", avoidRepeatCount));
@@ -47,7 +46,7 @@ namespace WwiseTools.WwiseTypes
         public async Task SetSegmentRefAsync(WwiseObject segment)
         {
             await WwiseUtility.Instance.SaveWwiseProjectAsync();
-            WwiseWorkUnitParser parser = new WwiseWorkUnitParser(await WwiseUtility.Instance.GetWorkUnitFilePathAsync(WwiseObject));
+            var parser = new WwiseWorkUnitParser(await WwiseUtility.Instance.GetWorkUnitFilePathAsync(WwiseObject));
 
             var node = parser.XML.CreateElement("SegmentRef");
             node.SetAttribute("Name", segment.Name);
@@ -80,7 +79,7 @@ namespace WwiseTools.WwiseTypes
             if (await GetPlaylistItemTypeAsync() == WwiseProperty.Option_PlaylistItemType.Segment) return null;
 
             var item = await WwiseUtility.Instance.CreateObjectAtPathAsync("", WwiseObject.ObjectType.MusicPlaylistItem, WwiseObject.ID);
-            //var item = new WwiseMusicPlaylistItem(tempObj);
+          
             await item.AsMusicPlaylistItem().SetPlaylistItemTypeAsync(WwiseProperty.Option_PlaylistItemType.Segment);
             await item.AsMusicPlaylistItem().SetSegmentRefAsync(segment);
 

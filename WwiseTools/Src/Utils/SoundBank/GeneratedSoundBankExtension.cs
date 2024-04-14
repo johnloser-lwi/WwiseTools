@@ -17,9 +17,9 @@ namespace WwiseTools.Utils.SoundBank
             if (!(await util.TryConnectWaapiAsync())) return result;
 
             var projectPath = util.ConnectionInfo.ProjectPath;
-            XmlDocument doc = new XmlDocument();
+            var doc = new XmlDocument();
             doc.Load(projectPath);
-            XmlElement pathValues = doc.SelectSingleNode("//*/PropertyList/Property[@Name='SoundBankPaths']/ValueList") as XmlElement;
+            var pathValues = doc.SelectSingleNode("//*/PropertyList/Property[@Name='SoundBankPaths']/ValueList") as XmlElement;
             if (pathValues == null) return result;
 
             foreach (XmlElement value in pathValues.GetElementsByTagName("Value"))
@@ -40,7 +40,7 @@ namespace WwiseTools.Utils.SoundBank
 
         public static double BytesToMB(this WwiseUtility util, long bytes)
         {
-            double result = (double)bytes / Math.Pow(1024.0, 2);
+            var result = (double)bytes / Math.Pow(1024.0, 2);
 
             return result;
         }
@@ -96,7 +96,7 @@ namespace WwiseTools.Utils.SoundBank
                 var soundBankInfoPath = Path.Combine(path, "SoundbanksInfo.xml");
                 if (!File.Exists(soundBankInfoPath)) continue;
 
-                XmlDocument doc = new XmlDocument();
+                var doc = new XmlDocument();
                 doc.Load(soundBankInfoPath);
 
                 var soundBankNodes = doc.GetElementsByTagName("SoundBank");
@@ -129,8 +129,8 @@ namespace WwiseTools.Utils.SoundBank
                                 var fileRelativePath = info.Language == "SFX" ? "Media\\" : info.Language + "\\Media\\";
                                 fileRelativePath += mediaFile.GetAttribute("Id") + ".wem";
 
-                                string isStreaming = mediaFile.GetAttribute("Streaming");
-                                string location = mediaFile.GetAttribute("Location");
+                                var isStreaming = mediaFile.GetAttribute("Streaming");
+                                var location = mediaFile.GetAttribute("Location");
 
                             
                             

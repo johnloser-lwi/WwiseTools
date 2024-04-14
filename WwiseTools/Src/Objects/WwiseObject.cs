@@ -1,7 +1,6 @@
 ﻿using System;
-
-using Newtonsoft.Json.Linq;
 using System.Threading.Tasks;
+using Newtonsoft.Json.Linq;
 using WwiseTools.Utils;
 
 namespace WwiseTools.Objects
@@ -13,29 +12,43 @@ namespace WwiseTools.Objects
         public string Name { get; set; }
         public string ID { get; set; }
         public string Type { get; set; }
+        
+        public string Path { get; set; }
 
         public async Task<WwiseObject> GetParentAsync()
         {
-            string path = await GetPathAsync();
             return await WwiseUtility.Instance.GetWwiseObjectParentAsync(this);
+        }
+
+        public string GetParentPath()
+        {
+            var split = Path.Split('\\');
+            var parent = "";
+            for (var i = 0; i < split.Length - 1; i++)
+            {
+                parent += split[i] + "\\";
+            }
+            return parent.TrimEnd('\\');
         }
         
         public async Task<string> GetPathAsync()
         {
-            return await WwiseUtility.Instance.GetWwiseObjectPathAsync(ID);
+            Path = await WwiseUtility.Instance.GetWwiseObjectPathAsync(ID);
+            return Path;
         }
 
-        public WwiseObject(string name, string id, string type)
+        public WwiseObject(string name, string id, string type, string path)
         {
-            this.Name = name;
-            this.ID = id;
-            this.Type = type;
+            Name = name;
+            ID = id;
+            Type = type;
+            Path = path;
         }
         
         public static WwiseObject Empty(ObjectType type)
         {
             return new WwiseObject("", "{00000000-0000-0000-0000-000000000000}",
-                type.ToString());
+                type.ToString(), "");
         }
 
         public async Task<string> GetPropertyAndReferenceNamesAsync()
@@ -47,7 +60,7 @@ namespace WwiseTools.Objects
             {
                 var func = WwiseUtility.Instance.Function.Verify("ak.wwise.core.object.getPropertyAndReferenceNames");
 
-                // 创建物体
+              
                 var result = await WwiseUtility.Instance.CallAsync
                     (
                         func,
