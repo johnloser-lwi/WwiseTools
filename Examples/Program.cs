@@ -9,12 +9,19 @@ try
     WaapiLog.AddCustomLogger(ExampleFunctions.CustomLogger);
     if (await WwiseUtility.Instance.TryConnectWaapiAsync())
     {
-        var prop = await WwiseUtility.Instance.CoreObjectGetAsync<PropertyData>(new []{"{CAFE56CB-8F13-4E96-A757-53D31EE541CA}"}, 
-            new string[]{}, new []{"@@OutputBus", "Volume", "Conversion"});
+        var wo = await WwiseUtility.Instance.GetWwiseObjectsBySelectionAsync();
+
         
-        WaapiLog.Log($"Bus: {prop.Return[0].GetProperty<CommonObjectData>("@@OutputBus").Name}");
-        WaapiLog.Log($"Volume: {prop.Return[0].GetProperty<float>("Volume")}");
-        WaapiLog.Log($"Conversion: {prop.Return[0].GetProperty<CommonObjectData>("Conversion").Name}");
+
+        Console.WriteLine("Make Changes!");
+        await Task.Delay(5000);
+
+        var res = await WwiseUtility.Instance.BatchUpdateObjectPathAsync(wo);
+        
+        foreach (var w in wo)
+        {
+            Console.WriteLine(w.Path);
+        }
     }
     else
     {

@@ -1679,6 +1679,35 @@ namespace WwiseTools.Utils
 
             return false;
         }
+
+        public async Task<bool> BatchUpdateObjectPathAsync(List<WwiseObject> wwiseObjects)
+        {
+            if (wwiseObjects.Count == 0) return true;
+            
+            var returnData = await CoreObjectGetAsync(wwiseObjects.Select(o => o.ID).ToArray(), new string[] { }, new[] { "name", "id", "path" });
+
+            if (returnData.Return.Length == 0) return false;
+
+            var res = true;
+            foreach (var data in returnData.Return)
+            {
+                var id = data.ID;
+                var path = data.Path;
+                var name = data.Name;
+
+                var wo = wwiseObjects.First(o => o.ID == id);
+                if (wo is null)
+                {
+                    WaapiLog.InternalLog($"Failed to update path for {name}");
+                    res = false;
+                    continue;
+                }
+
+                wo.Path = path;
+            }
+
+            return res;
+        }
         
         public async Task<ReturnData<ObjectReturnData>> CoreObjectGetAsync(string id, string returnSingle)
         {
