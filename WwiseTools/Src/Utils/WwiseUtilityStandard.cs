@@ -1101,7 +1101,9 @@ namespace WwiseTools.Utils
 
                 var returnData = WaapiSerializer.Deserialize<ReturnData<ObjectReturnData>>(result.ToString());
 
-                ret.AddRange(returnData.Return.Select(o => new WwiseObject(o.Name, o.ID, o.Type, o.Path)));
+                if (returnData.Objects.Length == 0) return ret;
+                
+                ret.AddRange(returnData.Objects.Select(o => new WwiseObject(o.Name, o.ID, o.Type, o.Path)).Where(o => o.Type == "Sound"));
                 
                 return ret;
 
