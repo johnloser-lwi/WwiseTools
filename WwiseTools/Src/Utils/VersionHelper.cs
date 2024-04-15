@@ -13,6 +13,8 @@ namespace WwiseTools.Utils
 
       
         public static readonly WwiseVersion V2022_1_0_7929 = new(2022, 1, 0, 7929);
+        
+        public static readonly WwiseVersion V2023_1_0_8367 = new(2023, 1, 0, 8367);
 
         public static bool VersionVerify(WwiseVersion minimumVersion, [CallerMemberName] string caller = "")
         {

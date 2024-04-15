@@ -4,28 +4,14 @@ using WwiseTools.Models.Import;
 using WwiseTools.Objects;
 using WwiseTools.Serialization;
 using WwiseTools.Utils;
+using WwiseTools.Utils.Feature2023;
 
 try
 {
     WaapiLog.AddCustomLogger(ExampleFunctions.CustomLogger);
     if (await WwiseUtility.Instance.TryConnectWaapiAsync())
     {
-        var files = Directory.GetFiles("C:\\Test");
-        List<ImportInfo> infos = new List<ImportInfo>();
-        foreach (var file in files)
-        {
-            var pathBuilder = new WwisePathBuilder("\\Actor-Mixer Hierarchy\\Default Work Unit");
-            await pathBuilder.AppendHierarchyAsync(WwiseObject.ObjectType.RandomSequenceContainer, "player_jump");
-            await pathBuilder.AppendHierarchyAsync(WwiseObject.ObjectType.Sound, (new FileInfo(file).Name));
-            var i = new ImportInfo(file, pathBuilder);
-            infos.Add(i);
-        }
-
-        var wos= await WwiseUtility.Instance.BatchImportSoundAsync(infos.ToArray());
-        foreach (var wo in wos)
-        {
-            Console.WriteLine($"{wo.Name}  {wo.Path}");
-        }
+        var ret = await WwiseUtility.Instance.ExecuteLuaScriptAsync("D:\\Temp\\main.lua", new string[] {}, new string[] {}, new string[]{});
     }
     else
     {

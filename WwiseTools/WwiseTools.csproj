@@ -100,6 +100,7 @@
     <Compile Include="Src\Serialization\PropertyData.cs" />
     <Compile Include="Src\Serialization\RemoteData.cs" />
     <Compile Include="Src\Serialization\WaapiSerializer.cs" />
+    <Compile Include="Src\Utils\Feature2023\WwiseUtility2023Extension.cs" />
     <Compile Include="Src\Utils\Lists\WaapiFunctionList.cs" />
     <Compile Include="Src\Utils\Lists\WaapiListBase.cs" />
     <Compile Include="Src\Utils\Lists\WaapiStringListBase.cs" />
