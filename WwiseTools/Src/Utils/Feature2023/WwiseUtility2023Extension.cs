@@ -7,6 +7,21 @@ namespace WwiseTools.Utils.Feature2023;
 
 public static class WwiseUtility2023Extension
 {
+    public static async Task<Object> ExecuteLuaScriptAsync(this WwiseUtility utility, string luaSctript)
+    {
+        return await WwiseUtility.Instance.ExecuteLuaScriptAsync(luaSctript, new string[]{});
+    }
+    
+    public static async Task<Object> ExecuteLuaScriptAsync(this WwiseUtility utility, string luaSctript, string[] luaPaths)
+    {
+        return await WwiseUtility.Instance.ExecuteLuaScriptAsync(luaSctript, luaPaths, new string[]{});
+    }
+    
+    public static async Task<Object> ExecuteLuaScriptAsync(this WwiseUtility utility, string luaSctript, string[] luaPaths, string[] requires)
+    {
+        return await WwiseUtility.Instance.ExecuteLuaScriptAsync(luaSctript, luaPaths, requires, new string[]{});
+    }
+    
     public static async Task<object> ExecuteLuaScriptAsync(this WwiseUtility utility, string luaScript, string[] luaPaths, string[] requires, string[] doFiles)
     {
         if (!await utility.TryConnectWaapiAsync()) return null;
