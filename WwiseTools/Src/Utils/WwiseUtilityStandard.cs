@@ -1025,8 +1025,11 @@ namespace WwiseTools.Utils
 
                 var returnData = WaapiSerializer.Deserialize<ReturnData<ObjectReturnData>>(result.ToString());
                 if (returnData.Objects.Length == 0) return null;
-                var wo = returnData.Objects[0];
-                return new WwiseObject(wo.Name, wo.ID, wo.Type, wo.Path);
+                foreach (var wo in returnData.Objects)
+                {
+                    if (wo.Type == "Sound")
+                        return new WwiseObject(wo.Name, wo.ID, wo.Type, wo.Path);
+                }
 
                 return null;
             }
